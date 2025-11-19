@@ -1,5 +1,5 @@
 import type { Word } from "@/model/entity/types";
-import { getDueWords, markWordLearned } from "@/model/repository/wordRepo";
+import { getDailyWords, markWordLearned } from "@/model/repository/wordRepo";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { SQLiteDatabase } from "expo-sqlite";
 
@@ -9,19 +9,14 @@ type WordsState = {
   error?: string;
 };
 
-const initialState: WordsState = {
-  items: [],
-  status: "idle",
-};
-
-export const loadDueWords = createAsyncThunk<Word[], SQLiteDatabase>(
+export const loadDailyWordsThunk = createAsyncThunk<Word[], SQLiteDatabase>(
   "words/loadDueWords",
   async (db) => {
-    return await getDueWords(db);
+    return await getDailyWords(db);
   }
 );
 
-export const markWordLearnedThunk = createAsyncThunk<
+export const markWordReviewedThunk = createAsyncThunk<
   number,
   { db: SQLiteDatabase; id: number }
 >("words/markWordLearned", async ({ db, id }) => {
@@ -31,26 +26,29 @@ export const markWordLearnedThunk = createAsyncThunk<
 
 const wordsSlice = createSlice({
   name: "words",
-  initialState,
+  initialState: {
+    items: [],
+    status: "idle",
+  } as WordsState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadDueWords.pending, (state) => {
+      .addCase(loadDailyWordsThunk.pending, (state) => {
         state.status = "loading";
       })
       .addCase(
-        loadDueWords.fulfilled,
+        loadDailyWordsThunk.fulfilled,
         (state, action: PayloadAction<Word[]>) => {
           state.status = "succeeded";
           state.items = action.payload;
         }
       )
-      .addCase(loadDueWords.rejected, (state, action) => {
+      .addCase(loadDailyWordsThunk.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(
-        markWordLearnedThunk.fulfilled,
+        markWordReviewedThunk.fulfilled,
         (state, action: PayloadAction<number>) => {
           state.items = state.items.filter((w) => w.id !== action.payload);
         }

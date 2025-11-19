@@ -1,102 +1,122 @@
 [
   {
+    "id": 0,
     "word_en": "river",
     "word_ru": "река",
     "transcription": "[ˈrɪvər]",
     "type": "pre_loaded",
-    "category_id": 1,
     "priority": 1,
-    "next_review": null,
-    "text_example": "The river flows through the valley."
+    "next_review": "null",
+    "text_example": "The river flows through the valley.",
+    "category": { "id": 1, "name": "Nature", "type": "pre_loaded", "icon": "🌿" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "mountain",
     "word_ru": "гора",
     "transcription": "[ˈmaʊntən]",
     "type": "pre_loaded",
-    "category_id": 1,
     "priority": 1,
-    "next_review": null,
-    "text_example": "We climbed a high mountain."
+    "next_review": "null",
+    "text_example": "We climbed a high mountain.",
+    "category": { "id": 1, "name": "Nature", "type": "pre_loaded", "icon": "🌿" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "forest",
     "word_ru": "лес",
     "transcription": "[ˈfɒrɪst]",
     "type": "pre_loaded",
-    "category_id": 1,
     "priority": 1,
-    "next_review": null,
-    "text_example": "The forest is quiet at dawn."
+    "next_review": "null",
+    "text_example": "The forest is quiet at dawn.",
+    "category": { "id": 1, "name": "Nature", "type": "pre_loaded", "icon": "🌿" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "apple",
     "word_ru": "яблоко",
     "transcription": "[ˈæpəl]",
     "type": "pre_loaded",
-    "category_id": 2,
     "priority": 1,
-    "next_review": null,
-    "text_example": "She ate a red apple."
+    "next_review": "null",
+    "text_example": "She ate a red apple.",
+    "category": { "id": 2, "name": "Food", "type": "pre_loaded", "icon": "🍎" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "bread",
     "word_ru": "хлеб",
     "transcription": "[brɛd]",
     "type": "pre_loaded",
-    "category_id": 2,
     "priority": 1,
-    "next_review": null,
-    "text_example": "Fresh bread smells amazing."
+    "next_review": "null",
+    "text_example": "Fresh bread smells amazing.",
+    "category": { "id": 2, "name": "Food", "type": "pre_loaded", "icon": "🍎" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "cheese",
     "word_ru": "сыр",
     "transcription": "[tʃiːz]",
     "type": "pre_loaded",
-    "category_id": 2,
     "priority": 1,
-    "next_review": null,
-    "text_example": "We bought cheddar cheese."
+    "next_review": "null",
+    "text_example": "We bought cheddar cheese.",
+    "category": { "id": 2, "name": "Food", "type": "pre_loaded", "icon": "🍎" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "airport",
     "word_ru": "аэропорт",
     "transcription": "[ˈeəpɔːt]",
     "type": "pre_loaded",
-    "category_id": 3,
     "priority": 1,
-    "next_review": null,
-    "text_example": "The airport was crowded."
+    "next_review": "null",
+    "text_example": "The airport was crowded.",
+    "category": { "id": 3, "name": "Travel", "type": "pre_loaded", "icon": "✈️" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "ticket",
     "word_ru": "билет",
     "transcription": "[ˈtɪkɪt]",
     "type": "pre_loaded",
-    "category_id": 3,
     "priority": 1,
-    "next_review": null,
-    "text_example": "I bought a train ticket."
+    "next_review": "null",
+    "text_example": "I bought a train ticket.",
+    "category": { "id": 3, "name": "Travel", "type": "pre_loaded", "icon": "✈️" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "hotel",
     "word_ru": "отель",
     "transcription": "[həʊˈtɛl]",
     "type": "pre_loaded",
-    "category_id": 3,
     "priority": 1,
-    "next_review": null,
-    "text_example": "We stayed at a small hotel."
+    "next_review": "null",
+    "text_example": "We stayed at a small hotel.",
+    "category": { "id": 3, "name": "Travel", "type": "pre_loaded", "icon": "✈️" },
+    "learned": false
   },
   {
+    "id": 0,
     "word_en": "guide",
     "word_ru": "гид",
     "transcription": "[ɡaɪd]",
     "type": "pre_loaded",
-    "category_id": 3,
     "priority": 1,
-    "next_review": null,
-    "text_example": "The guide showed us around."
+    "next_review": "null",
+    "text_example": "The guide showed us around.",
+    "category": { "id": 3, "name": "Travel", "type": "pre_loaded", "icon": "✈️" },
+    "learned": false
   }
 ]
