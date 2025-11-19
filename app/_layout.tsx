@@ -1,24 +1,23 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import LoadingSpinner from "@/components/LoadingScreen";
+import { runMigrations } from "@/model/database/migrations";
+import { store } from "@/store";
+import { Stack } from "expo-router";
+import { SQLiteProvider } from "expo-sqlite";
+import React, { Suspense } from "react";
+import { Provider as PaperProvider } from "react-native-paper";
+import "react-native-reanimated";
+import { Provider as ReduxProvider } from "react-redux";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Suspense fallback={<LoadingSpinner />}>
+       <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense>
+        <ReduxProvider store={store}>
+          <PaperProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+          </PaperProvider>
+          </ReduxProvider>
+       </SQLiteProvider>
+    </Suspense>
   );
 }

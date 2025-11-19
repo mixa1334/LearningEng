@@ -1,33 +1,41 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { MaterialIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+function VocabularyIcon({ color }: { color: string }) {
+  return <MaterialIcons name="book" size={24} color={color} />;
+}
+
+function LearnIcon({ color }: { color: string }) {
+  return <MaterialIcons name="school" size={24} color={color} />;
+}
+
+function ProfileIcon({ color }: { color: string }) {
+  return <MaterialIcons name="person" size={24} color={color} />;
+}
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+    <Tabs>
       <Tabs.Screen
-        name="index"
+        name="vocabulary"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Vocabulary",
+          tabBarIcon: VocabularyIcon, // pass component reference
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="learn"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Learn",
+          tabBarIcon: LearnIcon,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ProfileIcon,
         }}
       />
     </Tabs>

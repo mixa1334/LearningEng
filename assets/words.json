@@ -1,0 +1,102 @@
+[
+  {
+    "word_en": "river",
+    "word_ru": "река",
+    "transcription": "[ˈrɪvər]",
+    "type": "pre_loaded",
+    "category_id": 1,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "The river flows through the valley."
+  },
+  {
+    "word_en": "mountain",
+    "word_ru": "гора",
+    "transcription": "[ˈmaʊntən]",
+    "type": "pre_loaded",
+    "category_id": 1,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "We climbed a high mountain."
+  },
+  {
+    "word_en": "forest",
+    "word_ru": "лес",
+    "transcription": "[ˈfɒrɪst]",
+    "type": "pre_loaded",
+    "category_id": 1,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "The forest is quiet at dawn."
+  },
+  {
+    "word_en": "apple",
+    "word_ru": "яблоко",
+    "transcription": "[ˈæpəl]",
+    "type": "pre_loaded",
+    "category_id": 2,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "She ate a red apple."
+  },
+  {
+    "word_en": "bread",
+    "word_ru": "хлеб",
+    "transcription": "[brɛd]",
+    "type": "pre_loaded",
+    "category_id": 2,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "Fresh bread smells amazing."
+  },
+  {
+    "word_en": "cheese",
+    "word_ru": "сыр",
+    "transcription": "[tʃiːz]",
+    "type": "pre_loaded",
+    "category_id": 2,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "We bought cheddar cheese."
+  },
+  {
+    "word_en": "airport",
+    "word_ru": "аэропорт",
+    "transcription": "[ˈeəpɔːt]",
+    "type": "pre_loaded",
+    "category_id": 3,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "The airport was crowded."
+  },
+  {
+    "word_en": "ticket",
+    "word_ru": "билет",
+    "transcription": "[ˈtɪkɪt]",
+    "type": "pre_loaded",
+    "category_id": 3,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "I bought a train ticket."
+  },
+  {
+    "word_en": "hotel",
+    "word_ru": "отель",
+    "transcription": "[həʊˈtɛl]",
+    "type": "pre_loaded",
+    "category_id": 3,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "We stayed at a small hotel."
+  },
+  {
+    "word_en": "guide",
+    "word_ru": "гид",
+    "transcription": "[ɡaɪd]",
+    "type": "pre_loaded",
+    "category_id": 3,
+    "priority": 1,
+    "next_review": null,
+    "text_example": "The guide showed us around."
+  }
+]
