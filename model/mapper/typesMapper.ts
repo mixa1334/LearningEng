@@ -20,17 +20,6 @@ export function rowToWord(row: any): Word {
   };
 }
 
-export function wordToRow(word: Word): any[] {
-  let learned = +word.learned;
-  return [
-    word.word_en,
-    word.word_ru,
-    word.transcription,
-    word.type,
-    learned,
-    word.category.id,
-    word.next_review,
-    word.priority,
-    word.text_example,
-  ];
-}
+// export function rowToCategory(row: any): Category {
+
+// }

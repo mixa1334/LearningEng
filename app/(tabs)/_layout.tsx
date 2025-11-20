@@ -21,7 +21,7 @@ export default function TabLayout() {
         name="vocabulary"
         options={{
           title: "Vocabulary",
-          tabBarIcon: VocabularyIcon, // pass component reference
+          tabBarIcon: VocabularyIcon,
         }}
       />
       <Tabs.Screen

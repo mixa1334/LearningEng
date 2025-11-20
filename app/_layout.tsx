@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/LoadingScreen";
+import LoadingSpinner from "@/components/LoadingApp";
 import { runMigrations } from "@/model/database/migrations";
 import { store } from "@/store";
 import { Stack } from "expo-router";

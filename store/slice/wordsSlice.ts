@@ -1,5 +1,5 @@
 import type { Word } from "@/model/entity/types";
-import { getDailyWords, markWordLearned } from "@/model/repository/wordRepo";
+import { getDailyWords, markWordLearned } from "@/model/repository/wordService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { SQLiteDatabase } from "expo-sqlite";
 
@@ -10,7 +10,7 @@ type WordsState = {
 };
 
 export const loadDailyWordsThunk = createAsyncThunk<Word[], SQLiteDatabase>(
-  "words/loadDueWords",
+  "words/loadDailyWordsThunk",
   async (db) => {
     return await getDailyWords(db);
   }
@@ -19,7 +19,7 @@ export const loadDailyWordsThunk = createAsyncThunk<Word[], SQLiteDatabase>(
 export const markWordReviewedThunk = createAsyncThunk<
   number,
   { db: SQLiteDatabase; id: number }
->("words/markWordLearned", async ({ db, id }) => {
+>("words/markWordReviewedThunk", async ({ db, id }) => {
   await markWordLearned(db, id);
   return id;
 });

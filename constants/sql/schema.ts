@@ -17,8 +17,8 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
       learned INTEGER NOT NULL DEFAULT 0,
       category_id INTEGER NOT NULL,
       next_review TEXT NOT NULL DEFAULT (datetime('now')),
-      priority INTEGER NOT NULL DEFAULT 1,
+      priority INTEGER NOT NULL DEFAULT 0,
       text_example TEXT NOT NULL,
-      FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+      FOREIGN KEY (category_id) REFERENCES categories(id)
     );
   `;
