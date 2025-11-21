@@ -38,10 +38,22 @@ export async function getDailyWordsToLearn(
   const rows = await db.getAllAsync<any>(
     `${SELECT_WORD}
     WHERE w.learned = 0
-      AND datetime(w.next_review) <= datetime('now')
-    ORDER BY datetime(w.next_review) ASC
-    LIMIT ?;`,
+      AND w.priority = 0
+    LIMIT ?`,
     [limit]
+  );
+  return rows.map(rowToWord);
+}
+
+export async function getDailyWordsToReview(
+  db: SQLiteDatabase,
+): Promise<Word[]> {
+  const rows = await db.getAllAsync<any>(
+    `${SELECT_WORD}
+    WHERE w.learned = 0
+      AND datetime(w.next_review) <= datetime('now')
+      AND w.priority > 0
+    ORDER BY datetime(w.next_review) ASC;`
   );
   return rows.map(rowToWord);
 }
@@ -51,11 +63,17 @@ export async function startLearningWord(
   word: Word
 ): Promise<void> {}
 
-export async function learnWord(db: SQLiteDatabase, word: Word): Promise<Word> {
-  const newPriority = word.priority > 0 ? word.priority : 1;
+export async function markWordCompletelyLearned(
+  db: SQLiteDatabase,
+  word: Word
+): Promise<void> {}
+
+export async function reviewWord(db: SQLiteDatabase, word: Word): Promise<void> {
+  const newPriority = word.priority + 1;
+  const days = newPriority + (newPriority - 1) * 2;
   let isLearned = +(newPriority > 50);
 
-  const result = await db.runAsync(
+  await db.runAsync(
     `UPDATE words
      SET next_review = datetime('now', ?),
          priority = ?,
@@ -63,5 +81,4 @@ export async function learnWord(db: SQLiteDatabase, word: Word): Promise<Word> {
      WHERE id = ?;`,
     [`+${days} days`, newPriority, isLearned, word.id]
   );
-  return;
 }

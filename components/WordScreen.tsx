@@ -1,29 +1,32 @@
 import { Word } from "@/model/entity/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import WordCard from "./WordCard";
 
-export default function WordScreen({ words }: { words: Word[] }) {
-  const [queue, setQueue] = useState<Word[]>(words);
+export default function WordScreen({
+  words,
+  learnedCallback,
+}: {
+  words: Word[];
+  learnedCallback: (word: Word) => void;
+}) {
   const [index, setIndex] = useState(0);
 
+  useEffect(() => {
+    setIndex(0);
+  }, [words]);
+
   const handleKnow = () => {
-    const newQueue = [...queue];
-    newQueue.splice(index, 1);
-    setQueue(newQueue);
-    if (index >= newQueue.length) setIndex(0);
+    learnedCallback(words[index]);
+    if (index >= words.length) setIndex(0);
   };
 
   const handleDontKnow = () => {
-    const word = queue[index];
-    const newQueue = [...queue];
-    newQueue.splice(index, 1);
-    newQueue.push(word);
-    setQueue(newQueue);
-    if (index >= newQueue.length) setIndex(0);
+    setIndex(index + 1);
+    if (index >= words.length) setIndex(0);
   };
 
-  if (queue.length === 0) {
+  if (words.length === 0) {
     return (
       <View style={styles.center}>
         <Text>You completed tasks, come back later!</Text>
@@ -33,7 +36,7 @@ export default function WordScreen({ words }: { words: Word[] }) {
 
   return (
     <WordCard
-      word={queue[index]}
+      word={words[index]}
       onKnow={handleKnow}
       onDontKnow={handleDontKnow}
     />

@@ -1,115 +1,90 @@
 import WordScreen from "@/components/WordScreen";
-import { Category, Word } from "@/model/entity/types";
+import { useLoadDailySet, useMarkWordReviewed, useStartLearnWord } from "@/hooks/useWords";
 import React, { useState } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-// Example categories + words (replace with SQLite fetch later)
-const categories: Category[] = [
-  { id: 1, name: "Nature", type: "pre_loaded", icon: "🌿" },
-  { id: 2, name: "Food", type: "pre_loaded", icon: "🍎" },
-];
-
-const learnWords: Word[] = [
-  {
-    id: 1,
-    word_en: "river",
-    word_ru: "река",
-    transcription: "[ˈrɪvər]",
-    type: "pre_loaded",
-    learned: false,
-    category: categories[0],
-    next_review: new Date().toISOString(),
-    priority: 0,
-    text_example: "The river flows through the valley.",
-  },
-  {
-    id: 2,
-    word_en: "apple",
-    word_ru: "яблоко",
-    transcription: "[ˈæpəl]",
-    type: "pre_loaded",
-    learned: false,
-    category: categories[1],
-    next_review: new Date().toISOString(),
-    priority: 0,
-    text_example: "She ate a red apple.",
-  },
-];
-
-const reviewWords: Word[] = [
-  {
-    id: 3,
-    word_en: "mountain",
-    word_ru: "гора",
-    transcription: "[ˈmaʊntən]",
-    type: "pre_loaded",
-    learned: false,
-    category: categories[0],
-    next_review: new Date().toISOString(),
-    priority: 1,
-    text_example: "We climbed a high mountain.",
-  },
-  {
-    id: 4,
-    word_en: "bread",
-    word_ru: "хлеб",
-    transcription: "[brɛd]",
-    type: "pre_loaded",
-    learned: false,
-    category: categories[1],
-    next_review: new Date().toISOString(),
-    priority: 1,
-    text_example: "Fresh bread smells amazing.",
-  },
-  {
-    id: 5,
-    word_en: "forest",
-    word_ru: "лес",
-    transcription: "[ˈfɒrɪst]",
-    type: "pre_loaded",
-    learned: false,
-    category: categories[0],
-    next_review: new Date().toISOString(),
-    priority: 1,
-    text_example: "The forest is quiet at dawn.",
-  },
-];
+enum ActiveLearningTab {
+  learn = "learn_tab",
+  review = "review_tab",
+}
 
 export default function LearnTab() {
-  const [activeTab, setActiveTab] = useState<"learn" | "review">("learn");
+  const [activeTab, setActiveTab] = useState<ActiveLearningTab>(
+    ActiveLearningTab.review
+  );
   const fadeAnim = useState(new Animated.Value(1))[0];
+  const { wordsToReview, wordsToLearn, status, error, reload } = useLoadDailySet();
+  const markWordReviewed = useMarkWordReviewed();
+  const startLearnWord = useStartLearnWord();
 
-  const switchTab = (tab: "learn" | "review") => {
+  const switchTab = (tab: ActiveLearningTab) => {
     Animated.sequence([
-      Animated.timing(fadeAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
-      Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
     ]).start(() => setActiveTab(tab));
   };
 
+  if (status === "loading") {
+    return (
+      <View style={styles.center}>
+        <Text>Loading words...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={{ color: "red" }}>Error: {error}</Text>
+        <TouchableOpacity onPress={reload}>
+          <Text>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
-      {/* Top buttons */}
       <View style={styles.topBar}>
         <TouchableOpacity
-          style={[styles.topBtn, activeTab === "learn" && styles.activeBtn]}
-          onPress={() => switchTab("learn")}
+          style={[
+            styles.topBtn,
+            activeTab === ActiveLearningTab.learn && styles.activeBtn,
+          ]}
+          onPress={() => switchTab(ActiveLearningTab.learn)}
         >
           <Text style={styles.topBtnText}>Learn</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.topBtn, activeTab === "review" && styles.activeBtn]}
-          onPress={() => switchTab("review")}
+          style={[
+            styles.topBtn,
+            activeTab === ActiveLearningTab.review && styles.activeBtn,
+          ]}
+          onPress={() => switchTab(ActiveLearningTab.review)}
         >
           <Text style={styles.topBtnText}>Review</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Animated screen switch */}
       <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
-        {activeTab === "learn" ? (
-          <WordScreen words={learnWords} />
+        {activeTab === ActiveLearningTab.learn ? (
+          <WordScreen words={wordsToLearn} learnedCallback={startLearnWord}/>
         ) : (
-          <WordScreen words={reviewWords} />
+          <WordScreen words={wordsToReview} learnedCallback={markWordReviewed} />
         )}
       </Animated.View>
     </View>
@@ -117,6 +92,7 @@ export default function LearnTab() {
 }
 
 const styles = StyleSheet.create({
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
   topBar: {
     flexDirection: "row",
     justifyContent: "center",

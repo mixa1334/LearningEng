@@ -1,23 +1,52 @@
+import { Word } from "@/model/entity/types";
 import type { AppDispatch, RootState } from "@/store";
-import { loadDailyWordsThunk, markWordReviewedThunk } from "@/store/slice/wordsSlice";
+import {
+  loadDailyWordSetThunk,
+  markWordReviewedThunk,
+  startLearnWordThunk,
+} from "@/store/slice/wordsSlice";
 import { useSQLiteContext } from "expo-sqlite";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export function useWordsDueToday() {
+export function useLoadDailySet() {
   const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
-  const { items, status, error } = useSelector((s: RootState) => s.words);
+  const { wordsToReview, wordsToLearn, status, error } = useSelector(
+    (s: RootState) => s.words
+  );
 
   useEffect(() => {
-    dispatch(loadDailyWordsThunk(db));
+    if (db) dispatch(loadDailyWordSetThunk(db));
   }, [db, dispatch]);
 
-  return { items, status, error, reload: () => dispatch(loadDailyWordsThunk(db)) };
+  const reload = useCallback(() => {
+    if (db) dispatch(loadDailyWordSetThunk(db));
+  }, [db, dispatch]);
+
+  return { wordsToReview, wordsToLearn, status, error, reload };
 }
 
-export function useMarkWordLearned() {
+export function useMarkWordReviewed() {
   const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
-  return (id: number) => dispatch(markWordReviewedThunk({ db, id }));
+  const markWordReviewed = useCallback(
+    (word: Word) => {
+      if (db) dispatch(markWordReviewedThunk({ db, word }));
+    },
+    [db, dispatch]
+  );
+  return markWordReviewed;
+}
+
+export function useStartLearnWord() {
+  const db = useSQLiteContext();
+  const dispatch = useDispatch<AppDispatch>();
+  const startLearn = useCallback(
+    (word: Word) => {
+      if (db) dispatch(startLearnWordThunk({ db, word }));
+    },
+    [db, dispatch]
+  );
+  return startLearn;
 }
