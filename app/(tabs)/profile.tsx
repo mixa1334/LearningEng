@@ -18,18 +18,15 @@ export default function ProfileTab() {
 
   return (
     <View style={styles.page}>
-      {/* Profile picture */}
       <Image
         source={{ uri: "wasap" }}
         style={styles.avatar}
       />
 
-      {/* Name */}
       <Text variant="titleLarge" style={styles.name}>
         Mikhail
       </Text>
 
-      {/* Daily goal */}
       <View style={styles.goalRow}>
         <IconButton
           icon="minus"
@@ -46,13 +43,11 @@ export default function ProfileTab() {
         />
       </View>
 
-      {/* Streak */}
       <View style={styles.streakRow}>
         <Ionicons name="flame" size={28} color="#FF5722" />
         <Text style={styles.streakText}>{streak} day streak</Text>
       </View>
 
-      {/* Settings button */}
       <Button
         mode="contained-tonal"
         icon="cog"
@@ -62,28 +57,23 @@ export default function ProfileTab() {
         Settings
       </Button>
 
-      {/* Settings dialog */}
       <Portal>
         <Dialog visible={settingsVisible} onDismiss={() => setSettingsVisible(false)}>
           <Dialog.Title>Settings</Dialog.Title>
           <Dialog.Content>
-            {/* Theme toggle */}
             <View style={styles.settingRow}>
               <Text>Dark Theme</Text>
               <Switch value={darkTheme} onValueChange={setDarkTheme} />
             </View>
 
-            {/* Reset statistics */}
             <Button mode="outlined" style={styles.settingBtn}>
               Reset Statistics
             </Button>
 
-            {/* Reset vocabulary */}
             <Button mode="outlined" style={styles.settingBtn}>
               Reset Vocabulary
             </Button>
 
-            {/* Backup buttons */}
             <Button mode="outlined" style={styles.settingBtn}>
               Backup to File
             </Button>

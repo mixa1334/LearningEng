@@ -16,7 +16,30 @@ function ProfileIcon({ color }: { color: string }) {
 
 export default function TabLayout() {
   return (
-    <Tabs>
+<Tabs
+  screenOptions={{
+    tabBarStyle: {
+      backgroundColor: "#cdafebff",
+      borderRadius: 16,
+      position: "absolute",
+      marginHorizontal: 16,
+      marginBottom: 30,
+      height: 70,
+      shadowColor: "#000",
+      shadowOpacity: 0.05,
+      shadowRadius: 6,
+      elevation: 3,
+    },
+    tabBarActiveTintColor: "#007AFF",
+    tabBarInactiveTintColor: "#333",
+    tabBarLabelStyle: {
+      fontWeight: "600",
+      fontSize: 14,
+    },
+    headerShown: true,
+  }}
+>
+
       <Tabs.Screen
         name="vocabulary"
         options={{
@@ -41,3 +64,4 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+

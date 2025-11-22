@@ -12,23 +12,16 @@ import {
 } from "react-native-paper";
 
 export default function VocabularyTab() {
-  // add to form state
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
 
-  const [expandedSection, setExpandedSection] = useState<
-    "words" | "categories" | null
-  >("words");
-
-  // Example categories
+  const [expandedSection, setExpandedSection] = useState<"words" | "categories" | null>(null);
   const [categories, setCategories] = useState<Category[]>([
     { id: 1, name: "Animals", type: EntityType.preloaded, icon: "🐶" },
     { id: 2, name: "Food", type: EntityType.preloaded, icon: "🍎" },
     { id: 3, name: "Travel", type: EntityType.useradd, icon: "✈️" },
   ]);
-
-  // Example words
   const [words, setWords] = useState<Word[]>([
     {
       id: 1,
@@ -68,11 +61,8 @@ export default function VocabularyTab() {
     },
   ]);
 
-  // Modal state
   const [showWordModal, setShowWordModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-
-  // Form state (simplified)
   const [newWordEn, setNewWordEn] = useState("");
   const [newWordRu, setNewWordRu] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -102,7 +92,7 @@ export default function VocabularyTab() {
       transcription: "",
       type: EntityType.useradd,
       learned: false,
-      category: selectedCategory, // ✅ use chosen category
+      category: selectedCategory,
       next_review: new Date().toISOString(),
       priority: 1,
       text_example: "",
@@ -145,7 +135,6 @@ export default function VocabularyTab() {
         onChangeText={setNewWordRu}
         style={styles.input}
       />
-      {/* Category Picker */}
       <Text style={styles.sectionLabel}>Select Category:</Text>
       <FlatList
         data={categories}
@@ -185,7 +174,6 @@ export default function VocabularyTab() {
 </Portal>
 
 
-      {/* Words Section */}
       <View style={styles.section}>
         <Button
           mode="contained-tonal"
@@ -274,7 +262,7 @@ export default function VocabularyTab() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: "#f5f5f5",   // same as ProfileTab
+    backgroundColor: "#f5f5f5", 
     padding: 20,
   },
   section: {
@@ -300,12 +288,12 @@ const styles = StyleSheet.create({
   wordText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",   // darker text
+    color: "#333",  
   },
   input: {
     marginVertical: 8,
     borderRadius: 12,
-    backgroundColor: "#fafafa",   // subtle, matches profile theme
+    backgroundColor: "#fafafa", 
   },
   sectionLabel: {
     marginVertical: 8,
