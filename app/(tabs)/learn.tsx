@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useTheme } from "react-native-paper";
 
 enum ActiveLearningTab {
   learn = "learn_tab",
@@ -34,6 +35,7 @@ export default function LearnTab() {
   const rotateWordInReview = useLoopWordInReview();
 
   const [refreshing, setRefreshing] = useState(false);
+  const theme = useTheme();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -45,10 +47,10 @@ export default function LearnTab() {
 
   if (status === "loading") {
     return (
-      <View style={styles.page}>
-        <View style={styles.card}>
+      <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
+        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
           <View style={styles.fullCenter}>
-            <Text>Loading words...</Text>
+            <Text style={{ color: theme.colors.onSurface }}>Loading words...</Text>
           </View>
         </View>
       </View>
@@ -57,14 +59,16 @@ export default function LearnTab() {
 
   if (error) {
     return (
-      <View style={styles.page}>
-        <View style={styles.card}>
+      <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
+        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
           <View style={styles.fullCenter}>
-            <Text style={{ color: "red", marginBottom: 12 }}>
+            <Text style={{ color: theme.colors.error, marginBottom: 12 }}>
               Error: {error}
             </Text>
             <TouchableOpacity onPress={reload}>
-              <Text style={{ color: "#007AFF", fontWeight: "600" }}>Retry</Text>
+              <Text style={{ color: theme.colors.primary, fontWeight: "600" }}>
+                Retry
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -75,31 +79,45 @@ export default function LearnTab() {
   return (
     <ScrollView
       style={{ flex: 1 }}
-      contentContainerStyle={styles.page}
+      contentContainerStyle={[styles.page, { backgroundColor: theme.colors.background }]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={styles.card}>
-        {/* Tab strip */}
-        <View style={styles.tabButtons}>
+      <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+        <View
+          style={[
+            styles.tabButtons,
+            { borderBottomColor: theme.colors.outline, backgroundColor: theme.colors.surfaceVariant },
+          ]}
+        >
           <TouchableOpacity
             style={[
               styles.topBtn,
-              activeTab === ActiveLearningTab.learn && styles.activeBtn,
+              activeTab === ActiveLearningTab.learn && {
+                borderBottomColor: theme.colors.primary,
+                backgroundColor: theme.colors.surface,
+              },
             ]}
             onPress={() => setActiveTab(ActiveLearningTab.learn)}
           >
-            <Text style={styles.topBtnText}>Learn</Text>
+            <Text style={[styles.topBtnText, { color: theme.colors.onSurface }]}>
+              Learn
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.topBtn,
-              activeTab === ActiveLearningTab.review && styles.activeBtn,
+              activeTab === ActiveLearningTab.review && {
+                borderBottomColor: theme.colors.primary,
+                backgroundColor: theme.colors.surface,
+              },
             ]}
             onPress={() => setActiveTab(ActiveLearningTab.review)}
           >
-            <Text style={styles.topBtnText}>Review</Text>
+            <Text style={[styles.topBtnText, { color: theme.colors.onSurface }]}>
+              Review
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -126,13 +144,13 @@ export default function LearnTab() {
 const styles = StyleSheet.create({
   page: {
     flexGrow: 1,
-    backgroundColor: "#f0f0f0",
     paddingHorizontal: "5%",
     paddingVertical: "5%",
+    paddingBottom: "30%",
+    paddingTop: "20%"
   },
   card: {
     flex: 1,
-    backgroundColor: "#fff",
     borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -145,8 +163,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    backgroundColor: "#f5f5f5",
   },
   topBtn: {
     flex: 1,
@@ -155,14 +171,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: "transparent",
   },
-  activeBtn: {
-    borderBottomColor: "#007AFF",
-    backgroundColor: "#fff",
-  },
   topBtnText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
   },
   content: {
     flex: 1,
@@ -177,3 +188,4 @@ const styles = StyleSheet.create({
     padding: "5%",
   },
 });
+

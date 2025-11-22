@@ -2,6 +2,7 @@ import { Word } from "@/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useTheme } from "react-native-paper";
 
 export default function WordCard({
   word,
@@ -14,11 +15,11 @@ export default function WordCard({
 }) {
   const [showTranslation, setShowTranslation] = useState(false);
   const [pendingKnow, setPendingKnow] = useState(false);
-
+  const theme = useTheme();
   useEffect(() => {
     setShowTranslation(false);
     setPendingKnow(false);
-  }, [word]); 
+  }, [word]);
 
   const handleKnow = () => {
     if (!showTranslation) {
@@ -30,36 +31,57 @@ export default function WordCard({
   };
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.category}>
+    <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+      <Text style={[styles.category, { color: theme.colors.onSurfaceVariant }]}>
         {word.category.icon} {word.category.name}
       </Text>
-      <Text style={styles.word}>
+      <Text style={[styles.word, { color: theme.colors.onSurface }]}>
         {word.word_en} {word.transcription}
       </Text>
 
       {showTranslation ? (
-        <Text style={styles.translation}>{word.word_ru}</Text>
+        <Text style={[styles.translation, { color: theme.colors.primary }]}>
+          {word.word_ru}
+        </Text>
       ) : (
-        <TouchableOpacity style={styles.eyeBtn} onPress={() => setShowTranslation(true)}>
-          <Ionicons name="eye-outline" size={24} color="#007AFF" />
-          <Text style={styles.eyeText}>Show translation</Text>
+        <TouchableOpacity
+          style={styles.eyeBtn}
+          onPress={() => setShowTranslation(true)}
+        >
+          <Ionicons name="eye-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.eyeText, { color: theme.colors.primary }]}>
+            Show translation
+          </Text>
         </TouchableOpacity>
       )}
 
-      <Text style={styles.example}>{word.text_example}</Text>
+      <Text style={[styles.example, { color: theme.colors.onSurfaceVariant }]}>
+        {word.text_example}
+      </Text>
 
       <View style={styles.bottomBar}>
         {pendingKnow ? (
-          <TouchableOpacity style={styles.btnKnow} onPress={handleKnow}>
+          <TouchableOpacity
+            style={[styles.btnKnow, { backgroundColor: theme.colors.primary }]}
+            onPress={handleKnow}
+          >
             <Text style={styles.btnText}>Continue</Text>
           </TouchableOpacity>
         ) : (
           <>
-            <TouchableOpacity style={styles.btnKnow} onPress={handleKnow}>
+            <TouchableOpacity
+              style={[styles.btnKnow, { backgroundColor: theme.colors.primary }]}
+              onPress={handleKnow}
+            >
               <Text style={styles.btnText}>I know</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnDontKnow} onPress={onDontKnow}>
+            <TouchableOpacity
+              style={[
+                styles.btnDontKnow,
+                { backgroundColor: theme.colors.error },
+              ]}
+              onPress={onDontKnow}
+            >
               <Text style={styles.btnText}>I don’t know</Text>
             </TouchableOpacity>
           </>
@@ -71,26 +93,40 @@ export default function WordCard({
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,                 // take available space
-    width: "100%",           // stretch across parent
     padding: 20,
-    alignItems: "center",    // center children horizontally
-    justifyContent: "center" // center children vertically if needed
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+    elevation: 2,
+    alignSelf: "center",
+    maxWidth: "90%", 
+    marginVertical: 16,
   },
-  category: { fontWeight: "600", color: "#666", marginBottom: 6 },
-  word: { fontSize: 22, fontWeight: "700", marginBottom: 6, textAlign: "center" },
-  translation: { fontSize: 20, color: "#007AFF", marginBottom: 10, textAlign: "center" },
-  example: { fontSize: 14, color: "#444", marginBottom: 20, textAlign: "center" },
+  category: { fontWeight: "600", marginBottom: 6 },
+  word: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 6,
+    textAlign: "center",
+  },
+  translation: {
+    fontSize: 20,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  example: {
+    fontSize: 14,
+    marginBottom: 20,
+    textAlign: "center",
+  },
   eyeBtn: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
-  eyeText: { marginLeft: 6, color: "#007AFF", fontWeight: "600" },
+  eyeText: { marginLeft: 6, fontWeight: "600" },
   bottomBar: {
     flexDirection: "row",
     justifyContent: "center",
-    width: "100%",
-    padding: 20,
+    paddingTop: 10,
   },
   btnKnow: {
-    backgroundColor: "#4CAF50",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -98,12 +134,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnDontKnow: {
-    backgroundColor: "#F44336",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
     marginHorizontal: 5,
     alignItems: "center",
   },
-  btnText: { color: "#fff", fontWeight: "600", fontSize: 16 },
+  btnText: { fontWeight: "600", fontSize: 16 },
 });
+
+

@@ -1,6 +1,7 @@
 import { Word } from "@/model/entity/types";
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 import WordCard from "./WordCard";
 
 export default function WordScreen({
@@ -12,19 +13,22 @@ export default function WordScreen({
   accept: (word: Word) => void;
   reject: (word: Word) => void;
 }) {
+  const theme = useTheme();
 
   const handleKnow = () => {
-      accept(words[0]);
+    accept(words[0]);
   };
 
   const handleDontKnow = () => {
-      reject(words[0]);
+    reject(words[0]);
   };
 
   if (words.length === 0) {
     return (
       <View style={styles.center}>
-        <Text>You completed tasks, come back later!</Text>
+        <Text style={[styles.emptyText, { color: theme.colors.onBackground }]}>
+          You completed tasks, come back later!
+        </Text>
       </View>
     );
   }
@@ -39,5 +43,16 @@ export default function WordScreen({
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
+  },
 });
+

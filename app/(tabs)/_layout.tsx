@@ -36,7 +36,7 @@ export default function TabLayout() {
       fontWeight: "600",
       fontSize: 14,
     },
-    headerShown: true,
+    headerShown: false,
   }}
 >
 

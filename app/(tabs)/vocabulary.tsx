@@ -215,7 +215,6 @@ export default function VocabularyTab() {
         )}
       </View>
 
-      {/* Categories Section */}
       <View style={styles.section}>
         <Button
           mode="contained-tonal"
@@ -263,6 +262,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: "#f5f5f5", 
+    paddingTop: "20%",
     padding: 20,
   },
   section: {
