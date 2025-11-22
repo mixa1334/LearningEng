@@ -1,8 +1,15 @@
 import WordScreen from "@/components/WordScreen";
-import { useLoadDailySet, useMarkWordReviewed, useStartLearnWord } from "@/hooks/useWords";
+import {
+  useLearnWordCompletely,
+  useLoadDailySet,
+  useLoopWordInReview,
+  useMarkWordReviewed,
+  useStartLearnWord,
+} from "@/hooks/useWords";
 import React, { useState } from "react";
 import {
-  Animated,
+  RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,94 +25,155 @@ export default function LearnTab() {
   const [activeTab, setActiveTab] = useState<ActiveLearningTab>(
     ActiveLearningTab.review
   );
-  const fadeAnim = useState(new Animated.Value(1))[0];
-  const { wordsToReview, wordsToLearn, status, error, reload } = useLoadDailySet();
+  const { wordsToReview, wordsToLearn, status, error, reload } =
+    useLoadDailySet();
+
   const markWordReviewed = useMarkWordReviewed();
   const startLearnWord = useStartLearnWord();
+  const markWordCompleted = useLearnWordCompletely();
+  const rotateWordInReview = useLoopWordInReview();
 
-  const switchTab = (tab: ActiveLearningTab) => {
-    Animated.sequence([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start(() => setActiveTab(tab));
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      reload();
+      setRefreshing(false);
+    }, 200);
   };
 
   if (status === "loading") {
     return (
-      <View style={styles.center}>
-        <Text>Loading words...</Text>
+      <View style={styles.page}>
+        <View style={styles.card}>
+          <View style={styles.fullCenter}>
+            <Text>Loading words...</Text>
+          </View>
+        </View>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={{ color: "red" }}>Error: {error}</Text>
-        <TouchableOpacity onPress={reload}>
-          <Text>Retry</Text>
-        </TouchableOpacity>
+      <View style={styles.page}>
+        <View style={styles.card}>
+          <View style={styles.fullCenter}>
+            <Text style={{ color: "red", marginBottom: 12 }}>
+              Error: {error}
+            </Text>
+            <TouchableOpacity onPress={reload}>
+              <Text style={{ color: "#007AFF", fontWeight: "600" }}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={[
-            styles.topBtn,
-            activeTab === ActiveLearningTab.learn && styles.activeBtn,
-          ]}
-          onPress={() => switchTab(ActiveLearningTab.learn)}
-        >
-          <Text style={styles.topBtnText}>Learn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.topBtn,
-            activeTab === ActiveLearningTab.review && styles.activeBtn,
-          ]}
-          onPress={() => switchTab(ActiveLearningTab.review)}
-        >
-          <Text style={styles.topBtnText}>Review</Text>
-        </TouchableOpacity>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={styles.page}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View style={styles.card}>
+        {/* Tab strip */}
+        <View style={styles.tabButtons}>
+          <TouchableOpacity
+            style={[
+              styles.topBtn,
+              activeTab === ActiveLearningTab.learn && styles.activeBtn,
+            ]}
+            onPress={() => setActiveTab(ActiveLearningTab.learn)}
+          >
+            <Text style={styles.topBtnText}>Learn</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.topBtn,
+              activeTab === ActiveLearningTab.review && styles.activeBtn,
+            ]}
+            onPress={() => setActiveTab(ActiveLearningTab.review)}
+          >
+            <Text style={styles.topBtnText}>Review</Text>
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.content}>
+          {activeTab === ActiveLearningTab.learn ? (
+            <WordScreen
+              words={wordsToLearn}
+              accept={markWordCompleted}
+              reject={startLearnWord}
+            />
+          ) : (
+            <WordScreen
+              words={wordsToReview}
+              accept={markWordReviewed}
+              reject={rotateWordInReview}
+            />
+          )}
+        </View>
       </View>
-
-      <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
-        {activeTab === ActiveLearningTab.learn ? (
-          <WordScreen words={wordsToLearn} learnedCallback={startLearnWord}/>
-        ) : (
-          <WordScreen words={wordsToReview} learnedCallback={markWordReviewed} />
-        )}
-      </Animated.View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: "center", justifyContent: "center" },
-  topBar: {
+  page: {
+    flexGrow: 1,
+    backgroundColor: "#f0f0f0",
+    paddingHorizontal: "5%",
+    paddingVertical: "5%",
+  },
+  card: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    overflow: "hidden",
+  },
+  tabButtons: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingVertical: 20,
-    backgroundColor: "#f0f0f0",
-    gap: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+    backgroundColor: "#f5f5f5",
   },
   topBtn: {
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 12,
-    backgroundColor: "#ddd",
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent",
   },
-  activeBtn: { backgroundColor: "#007AFF" },
-  topBtnText: { color: "#000", fontWeight: "700", fontSize: 18 },
+  activeBtn: {
+    borderBottomColor: "#007AFF",
+    backgroundColor: "#fff",
+  },
+  topBtnText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "5%",
+  },
+  fullCenter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "5%",
+  },
 });

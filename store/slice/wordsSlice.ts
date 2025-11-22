@@ -2,6 +2,7 @@ import type { Word } from "@/model/entity/types";
 import {
   getDailyWordsToLearn,
   getDailyWordsToReview,
+  markWordCompletelyLearned,
   reviewWord,
   startLearningWord,
 } from "@/model/repository/wordService";
@@ -39,11 +40,29 @@ export const markWordReviewedThunk = createAsyncThunk<
   return word.id;
 });
 
+export const loopWordInReviewThunk = createAsyncThunk<
+  Word[],
+  void,
+  { state: { words: { wordsToReview: Word[] } } }
+>("words/loopWordInReviewThunk", async (_, { getState }) => {
+  const current = getState().words.wordsToReview;
+  if (current.length <= 1) return current;
+  return [...current.slice(1), current[0]];
+});
+
 export const startLearnWordThunk = createAsyncThunk<
   number,
   { db: SQLiteDatabase; word: Word }
 >("words/startLearnWordThunk", async ({ db, word }) => {
   await startLearningWord(db, word);
+  return word.id;
+});
+
+export const markWordCompletelyLearnedThunk = createAsyncThunk<
+  number,
+  { db: SQLiteDatabase; word: Word }
+>("words/markWordCompletelyLearned", async ({ db, word }) => {
+  await markWordCompletelyLearned(db, word);
   return word.id;
 });
 
@@ -86,9 +105,23 @@ const wordsSlice = createSlice({
       .addCase(
         startLearnWordThunk.fulfilled,
         (state, action: PayloadAction<number>) => {
-          state.wordsToReview = state.wordsToReview.filter(
+          state.wordsToLearn = state.wordsToLearn.filter(
             (w) => w.id !== action.payload
           );
+        }
+      )
+      .addCase(
+        markWordCompletelyLearnedThunk.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.wordsToLearn = state.wordsToLearn.filter(
+            (w) => w.id !== action.payload
+          );
+        }
+      )
+      .addCase(
+        loopWordInReviewThunk.fulfilled,
+        (state, action: PayloadAction<Word[]>) => {
+          state.wordsToReview = action.payload;
         }
       );
   },

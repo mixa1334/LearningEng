@@ -1,29 +1,24 @@
 import { Word } from "@/model/entity/types";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import WordCard from "./WordCard";
 
 export default function WordScreen({
   words,
-  learnedCallback,
+  accept,
+  reject,
 }: {
   words: Word[];
-  learnedCallback: (word: Word) => void;
+  accept: (word: Word) => void;
+  reject: (word: Word) => void;
 }) {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    setIndex(0);
-  }, [words]);
 
   const handleKnow = () => {
-    learnedCallback(words[index]);
-    if (index >= words.length) setIndex(0);
+      accept(words[0]);
   };
 
   const handleDontKnow = () => {
-    setIndex(index + 1);
-    if (index >= words.length) setIndex(0);
+      reject(words[0]);
   };
 
   if (words.length === 0) {
@@ -36,7 +31,7 @@ export default function WordScreen({
 
   return (
     <WordCard
-      word={words[index]}
+      word={words[0]}
       onKnow={handleKnow}
       onDontKnow={handleDontKnow}
     />

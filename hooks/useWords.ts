@@ -2,6 +2,8 @@ import { Word } from "@/model/entity/types";
 import type { AppDispatch, RootState } from "@/store";
 import {
   loadDailyWordSetThunk,
+  loopWordInReviewThunk,
+  markWordCompletelyLearnedThunk,
   markWordReviewedThunk,
   startLearnWordThunk,
 } from "@/store/slice/wordsSlice";
@@ -39,6 +41,15 @@ export function useMarkWordReviewed() {
   return markWordReviewed;
 }
 
+export function useLoopWordInReview() {
+  const dispatch = useDispatch<AppDispatch>();
+  const loopWordInReview = useCallback(
+    () => dispatch(loopWordInReviewThunk()),
+    [dispatch]
+  );
+  return loopWordInReview;
+}
+
 export function useStartLearnWord() {
   const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
@@ -49,4 +60,16 @@ export function useStartLearnWord() {
     [db, dispatch]
   );
   return startLearn;
+}
+
+export function useLearnWordCompletely() {
+  const db = useSQLiteContext();
+  const dispatch = useDispatch<AppDispatch>();
+  const completelyLearned = useCallback(
+    (word: Word) => {
+      if (db) dispatch(markWordCompletelyLearnedThunk({ db, word }));
+    },
+    [db, dispatch]
+  );
+  return completelyLearned;
 }

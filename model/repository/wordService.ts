@@ -61,12 +61,26 @@ export async function getDailyWordsToReview(
 export async function startLearningWord(
   db: SQLiteDatabase,
   word: Word
-): Promise<void> {}
+): Promise<void> {
+  await db.runAsync(
+    `UPDATE words
+     SET priority = ?
+     WHERE id = ?;`,
+    [1, word.id]
+  );
+}
 
 export async function markWordCompletelyLearned(
   db: SQLiteDatabase,
   word: Word
-): Promise<void> {}
+): Promise<void> {
+    await db.runAsync(
+    `UPDATE words
+     SET learned = ?
+     WHERE id = ?;`,
+    [1, word.id]
+  );
+}
 
 export async function reviewWord(db: SQLiteDatabase, word: Word): Promise<void> {
   const newPriority = word.priority + 1;
