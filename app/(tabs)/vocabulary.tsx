@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
   Button,
+  Dialog,
   Divider,
   IconButton,
-  Modal,
   Portal,
   Text,
-  TextInput,
+  TextInput
 } from "react-native-paper";
 
 export default function VocabularyTab() {
@@ -130,68 +130,60 @@ export default function VocabularyTab() {
   return (
     <View style={styles.page}>
       <Portal>
-        {/* Word Modal */}
-        <Modal
-          visible={showWordModal}
-          onDismiss={() => setShowWordModal(false)}
-          contentContainerStyle={styles.modal}
-        >
-          <Text style={styles.modalTitle}>Add New Word</Text>
-          <TextInput
-            label="English word"
-            value={newWordEn}
-            onChangeText={setNewWordEn}
-            style={styles.input}
-          />
-          <TextInput
-            label="Russian word"
-            value={newWordRu}
-            onChangeText={setNewWordRu}
-            style={styles.input}
-          />
-          {/* Category Picker */}
-          <Text style={{ marginVertical: 8, fontWeight: "600" }}>
-            Select Category:
-          </Text>
-          <FlatList
-            data={categories}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <Button
-                mode={
-                  selectedCategory?.id === item.id ? "contained" : "outlined"
-                }
-                style={{ marginVertical: 4 }}
-                onPress={() => setSelectedCategory(item)}
-              >
-                {item.icon} {item.name}
-              </Button>
-            )}
-          />
-
-          <Button mode="contained" onPress={handleAddWord}>
-            Add Word
+  <Dialog visible={showWordModal} onDismiss={() => setShowWordModal(false)}>
+    <Dialog.Title>Add New Word</Dialog.Title>
+    <Dialog.Content>
+      <TextInput
+        label="English word"
+        value={newWordEn}
+        onChangeText={setNewWordEn}
+        style={styles.input}
+      />
+      <TextInput
+        label="Russian word"
+        value={newWordRu}
+        onChangeText={setNewWordRu}
+        style={styles.input}
+      />
+      {/* Category Picker */}
+      <Text style={styles.sectionLabel}>Select Category:</Text>
+      <FlatList
+        data={categories}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Button
+            mode={selectedCategory?.id === item.id ? "contained" : "outlined"}
+            style={styles.categoryBtn}
+            onPress={() => setSelectedCategory(item)}
+          >
+            {item.icon} {item.name}
           </Button>
-        </Modal>
+        )}
+      />
+    </Dialog.Content>
+    <Dialog.Actions>
+      <Button onPress={() => setShowWordModal(false)}>Close</Button>
+      <Button mode="contained" onPress={handleAddWord}>Add Word</Button>
+    </Dialog.Actions>
+  </Dialog>
 
-        {/* Category Modal */}
-        <Modal
-          visible={showCategoryModal}
-          onDismiss={() => setShowCategoryModal(false)}
-          contentContainerStyle={styles.modal}
-        >
-          <Text style={styles.modalTitle}>Add New Category</Text>
-          <TextInput
-            label="Category name"
-            value={newCategoryName}
-            onChangeText={setNewCategoryName}
-            style={styles.input}
-          />
-          <Button mode="contained" onPress={handleAddCategory}>
-            Add Category
-          </Button>
-        </Modal>
-      </Portal>
+  <Dialog visible={showCategoryModal} onDismiss={() => setShowCategoryModal(false)}>
+    <Dialog.Title>Add New Category</Dialog.Title>
+    <Dialog.Content>
+      <TextInput
+        label="Category name"
+        value={newCategoryName}
+        onChangeText={setNewCategoryName}
+        style={styles.input}
+      />
+    </Dialog.Content>
+    <Dialog.Actions>
+      <Button onPress={() => setShowCategoryModal(false)}>Close</Button>
+      <Button mode="contained" onPress={handleAddCategory}>Add Category</Button>
+    </Dialog.Actions>
+  </Dialog>
+</Portal>
+
 
       {/* Words Section */}
       <View style={styles.section}>
@@ -280,41 +272,50 @@ export default function VocabularyTab() {
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: "#f0f0f0", padding: 16 },
+  page: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",   // same as ProfileTab
+    padding: 20,
+  },
   section: {
     marginBottom: 16,
     backgroundColor: "#fff",
     borderRadius: 12,
     shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  sectionHeader: { borderTopLeftRadius: 12, borderTopRightRadius: 12 },
-  sectionContent: { padding: 12 },
+  sectionHeader: {
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+  },
+  sectionContent: { padding: 16 },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 10,
   },
   wordText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#222", // ✅ darker text
+    color: "#333",   // darker text
   },
   input: {
     marginVertical: 8,
-    borderRadius: 12, // ✅ rounded corners
-    backgroundColor: "#6d10deff", // optional subtle background
-  },
-
-  addBtn: { marginTop: 12 },
-  modal: {
-    backgroundColor: "white",
-    padding: 20,
-    margin: 20,
     borderRadius: 12,
+    backgroundColor: "#fafafa",   // subtle, matches profile theme
   },
-  modalTitle: { fontSize: 18, fontWeight: "700", marginBottom: 12 },
+  sectionLabel: {
+    marginVertical: 8,
+    fontWeight: "600",
+    color: "#333",
+  },
+  categoryBtn: {
+    marginVertical: 4,
+    borderRadius: 8,
+  },
+  addBtn: { marginTop: 12 },
 });
+

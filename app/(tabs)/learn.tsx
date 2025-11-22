@@ -23,7 +23,7 @@ enum ActiveLearningTab {
 
 export default function LearnTab() {
   const [activeTab, setActiveTab] = useState<ActiveLearningTab>(
-    ActiveLearningTab.review
+    ActiveLearningTab.learn
   );
   const { wordsToReview, wordsToLearn, status, error, reload } =
     useLoadDailySet();
@@ -102,7 +102,7 @@ export default function LearnTab() {
             <Text style={styles.topBtnText}>Review</Text>
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.content}>
           {activeTab === ActiveLearningTab.learn ? (
             <WordScreen
