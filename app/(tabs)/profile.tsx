@@ -1,37 +1,73 @@
+import { useUserStats } from "@/hooks/useUserStats";
 import { useThemeContext } from "@/provider/ThemeProvider";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   Button,
   Dialog,
   IconButton,
   Portal,
   Switch,
-  Text, useTheme
+  Text,
+  TextInput,
+  useTheme,
 } from "react-native-paper";
 
 export default function ProfileTab() {
-  const [dailyGoal, setDailyGoal] = useState(10);
-  const [streak, setStreak] = useState(5);
+  const {
+    name,
+    streak,
+    lastLearningDate,
+    reviewedToday,
+    dailyGoal,
+    changeGoal,
+    changeName,
+  } = useUserStats();
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const [editableName, setEditableName] = useState(false);
   const { isDark, toggleTheme } = useThemeContext();
   const theme = useTheme();
 
+  const toggleEditableName = () => setEditableName(!editableName);
+  const toggleSettings = () => setSettingsVisible(!settingsVisible);
+  const increaseGoal = () => changeGoal(dailyGoal + 1);
+  const decreaseGoal = () => {
+    const newDailyGoal = dailyGoal - 1;
+    if (newDailyGoal > 0) {
+      changeGoal(newDailyGoal);
+    }
+  };
+
   return (
     <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
-      <Image source={{ uri: "wasap" }} style={styles.avatar} />
-
-      <Text variant="titleLarge" style={[styles.name, { color: theme.colors.onBackground }]}>
-        Mikhail
-      </Text>
+      {editableName ? (
+        <TextInput
+          value={name}
+          onChangeText={changeName}
+          onBlur={toggleEditableName}
+          autoFocus
+          style={[styles.name, { color: theme.colors.onBackground }]}
+        />
+      ) : (
+        <Text
+          variant="titleLarge"
+          style={[styles.name, { color: theme.colors.onBackground }]}
+          onPress={toggleEditableName}
+        >
+          Name: {name}
+        </Text>
+      )}
 
       <View style={styles.goalRow}>
         <IconButton
           icon="minus"
           mode="contained"
-          style={[styles.roundBtn, { backgroundColor: theme.colors.surfaceVariant }]}
-          onPress={() => setDailyGoal(Math.max(1, dailyGoal - 1))}
+          style={[
+            styles.roundBtn,
+            { backgroundColor: theme.colors.surfaceVariant },
+          ]}
+          onPress={decreaseGoal}
         />
         <Text style={[styles.goalText, { color: theme.colors.onBackground }]}>
           Daily Goal: {dailyGoal} words
@@ -39,8 +75,11 @@ export default function ProfileTab() {
         <IconButton
           icon="plus"
           mode="contained"
-          style={[styles.roundBtn, { backgroundColor: theme.colors.surfaceVariant }]}
-          onPress={() => setDailyGoal(dailyGoal + 1)}
+          style={[
+            styles.roundBtn,
+            { backgroundColor: theme.colors.surfaceVariant },
+          ]}
+          onPress={increaseGoal}
         />
       </View>
 
@@ -54,27 +93,35 @@ export default function ProfileTab() {
       <Button
         mode="contained-tonal"
         icon="cog"
-        onPress={() => setSettingsVisible(true)}
+        onPress={toggleSettings}
         style={styles.settingsBtn}
       >
         Settings
       </Button>
 
       <Portal>
-        <Dialog visible={settingsVisible} onDismiss={() => setSettingsVisible(false)}>
+        <Dialog visible={settingsVisible} onDismiss={toggleSettings}>
           <Dialog.Title>Settings</Dialog.Title>
           <Dialog.Content>
             <View style={styles.settingRow}>
               <Text>Dark Theme</Text>
               <Switch value={isDark} onValueChange={toggleTheme} />
             </View>
-            <Button mode="outlined" style={styles.settingBtn}>Reset Statistics</Button>
-            <Button mode="outlined" style={styles.settingBtn}>Reset Vocabulary</Button>
-            <Button mode="outlined" style={styles.settingBtn}>Backup to File</Button>
-            <Button mode="outlined" style={styles.settingBtn}>Restore from File</Button>
+            <Button mode="outlined" style={styles.settingBtn}>
+              Reset Statistics
+            </Button>
+            <Button mode="outlined" style={styles.settingBtn}>
+              Reset Vocabulary
+            </Button>
+            <Button mode="outlined" style={styles.settingBtn}>
+              Backup to File
+            </Button>
+            <Button mode="outlined" style={styles.settingBtn}>
+              Restore from File
+            </Button>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setSettingsVisible(false)}>Close</Button>
+            <Button onPress={toggleSettings}>Close</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -134,7 +181,3 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
 });
-
-
-
-

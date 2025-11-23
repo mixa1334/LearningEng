@@ -6,7 +6,7 @@ import {
   reviewWord,
   startLearningWord,
 } from "@/model/repository/wordService";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { SQLiteDatabase } from "expo-sqlite";
 
 enum StateType {
@@ -79,51 +79,33 @@ const wordsSlice = createSlice({
       .addCase(loadDailyWordSetThunk.pending, (state) => {
         state.status = StateType.loading;
       })
-      .addCase(
-        loadDailyWordSetThunk.fulfilled,
-        (
-          state,
-          action: PayloadAction<{ wordsToLearn: Word[]; wordsToReview: Word[] }>
-        ) => {
-          state.status = StateType.succeeded;
-          state.wordsToLearn = action.payload.wordsToLearn;
-          state.wordsToReview = action.payload.wordsToReview;
-        }
-      )
+      .addCase(loadDailyWordSetThunk.fulfilled, (state, action) => {
+        state.status = StateType.succeeded;
+        state.wordsToLearn = action.payload.wordsToLearn;
+        state.wordsToReview = action.payload.wordsToReview;
+      })
       .addCase(loadDailyWordSetThunk.rejected, (state, action) => {
         state.status = StateType.failed;
         state.error = action.error.message;
       })
-      .addCase(
-        markWordReviewedThunk.fulfilled,
-        (state, action: PayloadAction<number>) => {
-          state.wordsToReview = state.wordsToReview.filter(
-            (w) => w.id !== action.payload
-          );
-        }
-      )
-      .addCase(
-        startLearnWordThunk.fulfilled,
-        (state, action: PayloadAction<number>) => {
-          state.wordsToLearn = state.wordsToLearn.filter(
-            (w) => w.id !== action.payload
-          );
-        }
-      )
-      .addCase(
-        markWordCompletelyLearnedThunk.fulfilled,
-        (state, action: PayloadAction<number>) => {
-          state.wordsToLearn = state.wordsToLearn.filter(
-            (w) => w.id !== action.payload
-          );
-        }
-      )
-      .addCase(
-        loopWordInReviewThunk.fulfilled,
-        (state, action: PayloadAction<Word[]>) => {
-          state.wordsToReview = action.payload;
-        }
-      );
+      .addCase(markWordReviewedThunk.fulfilled, (state, action) => {
+        state.wordsToReview = state.wordsToReview.filter(
+          (w) => w.id !== action.payload
+        );
+      })
+      .addCase(startLearnWordThunk.fulfilled, (state, action) => {
+        state.wordsToLearn = state.wordsToLearn.filter(
+          (w) => w.id !== action.payload
+        );
+      })
+      .addCase(markWordCompletelyLearnedThunk.fulfilled, (state, action) => {
+        state.wordsToLearn = state.wordsToLearn.filter(
+          (w) => w.id !== action.payload
+        );
+      })
+      .addCase(loopWordInReviewThunk.fulfilled, (state, action) => {
+        state.wordsToReview = action.payload;
+      });
   },
 });
 
