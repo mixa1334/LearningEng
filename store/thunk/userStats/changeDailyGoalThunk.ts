@@ -12,6 +12,7 @@ export const changeDailyGoalThunk = createAsyncThunk<
   number
 >("stats/changeDailyGoalThunk", async (newDailyGoal, { getState }) => {
   const state = getState() as RootState;
+  newDailyGoal = Math.max(1, newDailyGoal);
   let dailyGoal = state.stats.dailyGoal;
   let reviewedToday = state.stats.reviewedToday;
   let streak = state.stats.streak;
