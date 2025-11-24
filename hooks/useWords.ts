@@ -19,11 +19,11 @@ export function useLoadDailySet() {
   );
 
   useEffect(() => {
-    if (db) dispatch(loadDailyWordSetThunk(db));
+    dispatch(loadDailyWordSetThunk({db}));
   }, [db, dispatch]);
 
   const reload = useCallback(() => {
-    if (db) dispatch(loadDailyWordSetThunk(db));
+    dispatch(loadDailyWordSetThunk({db}));
   }, [db, dispatch]);
 
   return { wordsToReview, wordsToLearn, status, error, reload };

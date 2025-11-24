@@ -7,7 +7,9 @@ import {
   startLearningWord,
 } from "@/model/repository/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { SQLiteDatabase } from "expo-sqlite";
+import { type SQLiteDatabase } from "expo-sqlite";
+import { RootState } from "..";
+import { updateStatsAfterLearnThunk } from "../thunk/userStats/updateStatsAfterLearnThunk";
 
 enum StateType {
   idle = "idle",
@@ -25,12 +27,22 @@ type WordsState = {
 
 export const loadDailyWordSetThunk = createAsyncThunk<
   { wordsToLearn: Word[]; wordsToReview: Word[] },
-  SQLiteDatabase
->("words/loadDailyWordSetThunk", async (db) => {
-  const wordsToLearn = await getDailyWordsToLearn(db);
-  const wordsToReview = await getDailyWordsToReview(db);
-  return { wordsToLearn, wordsToReview };
-});
+  { db: SQLiteDatabase; dailyGoalOverload?: number }
+>(
+  "words/loadDailyWordSetThunk",
+  async ({ db, dailyGoalOverload }, { getState }) => {
+    const state = getState() as RootState;
+    const dailyGoal = dailyGoalOverload ?? state.stats.dailyGoal;
+    const reviewedToday = state.stats.reviewedToday;
+    const needToLearn = dailyGoal - reviewedToday;
+    let wordsToLearn: Word[] = [];
+    if (needToLearn > 0) {
+      wordsToLearn = await getDailyWordsToLearn(db, needToLearn);
+    }
+    const wordsToReview = await getDailyWordsToReview(db);
+    return { wordsToLearn, wordsToReview };
+  }
+);
 
 export const markWordReviewedThunk = createAsyncThunk<
   number,
@@ -53,16 +65,18 @@ export const loopWordInReviewThunk = createAsyncThunk<
 export const startLearnWordThunk = createAsyncThunk<
   number,
   { db: SQLiteDatabase; word: Word }
->("words/startLearnWordThunk", async ({ db, word }) => {
+>("words/startLearnWordThunk", async ({ db, word }, { dispatch }) => {
   await startLearningWord(db, word);
+  dispatch(updateStatsAfterLearnThunk());
   return word.id;
 });
 
 export const markWordCompletelyLearnedThunk = createAsyncThunk<
   number,
   { db: SQLiteDatabase; word: Word }
->("words/markWordCompletelyLearned", async ({ db, word }) => {
+>("words/markWordCompletelyLearned", async ({ db, word }, { dispatch }) => {
   await markWordCompletelyLearned(db, word);
+  // dispatch(updateStatsAfterLearnThunk());
   return word.id;
 });
 

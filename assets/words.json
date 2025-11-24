@@ -1,72 +1,352 @@
 [
   {
-    "word_en": "river",
-    "word_ru": "река",
-    "transcription": "[ˈrɪvər]",
-    "text_example": "The river flows through the valley.",
+    "word_en": "lake",
+    "word_ru": "озеро",
+    "transcription": "[leɪk]",
+    "text_example": "The lake reflects the mountains.",
     "category_id": 2
   },
   {
-    "word_en": "mountain",
-    "word_ru": "гора",
-    "transcription": "[ˈmaʊntən]",
-    "text_example": "We climbed a high mountain.",
+    "word_en": "desert",
+    "word_ru": "пустыня",
+    "transcription": "[ˈdɛzərt]",
+    "text_example": "Camels live in the desert.",
     "category_id": 2
   },
   {
-    "word_en": "forest",
-    "word_ru": "лес",
-    "transcription": "[ˈfɒrɪst]",
-    "text_example": "The forest is quiet at dawn.",
+    "word_en": "island",
+    "word_ru": "остров",
+    "transcription": "[ˈaɪlənd]",
+    "text_example": "We sailed to a small island.",
     "category_id": 2
   },
   {
-    "word_en": "apple",
-    "word_ru": "яблоко",
-    "transcription": "[ˈæpəl]",
-    "text_example": "She ate a red apple.",
+    "word_en": "ocean",
+    "word_ru": "океан",
+    "transcription": "[ˈoʊʃən]",
+    "text_example": "The ocean waves were strong.",
+    "category_id": 2
+  },
+  {
+    "word_en": "valley",
+    "word_ru": "долина",
+    "transcription": "[ˈvæli]",
+    "text_example": "The valley was full of flowers.",
+    "category_id": 2
+  },
+  {
+    "word_en": "hill",
+    "word_ru": "холм",
+    "transcription": "[hɪl]",
+    "text_example": "Children ran down the hill.",
+    "category_id": 2
+  },
+  {
+    "word_en": "cave",
+    "word_ru": "пещера",
+    "transcription": "[keɪv]",
+    "text_example": "The cave was dark and cold.",
+    "category_id": 2
+  },
+  {
+    "word_en": "meadow",
+    "word_ru": "луг",
+    "transcription": "[ˈmɛdoʊ]",
+    "text_example": "Cows grazed in the meadow.",
+    "category_id": 2
+  },
+  {
+    "word_en": "cliff",
+    "word_ru": "утес",
+    "transcription": "[klɪf]",
+    "text_example": "The cliff overlooked the sea.",
+    "category_id": 2
+  },
+  {
+    "word_en": "waterfall",
+    "word_ru": "водопад",
+    "transcription": "[ˈwɔːtərfɔːl]",
+    "text_example": "The waterfall was breathtaking.",
+    "category_id": 2
+  },
+  {
+    "word_en": "banana",
+    "word_ru": "банан",
+    "transcription": "[bəˈnænə]",
+    "text_example": "He peeled a ripe banana.",
     "category_id": 3
   },
   {
-    "word_en": "bread",
-    "word_ru": "хлеб",
-    "transcription": "[brɛd]",
-    "text_example": "Fresh bread smells amazing.",
+    "word_en": "carrot",
+    "word_ru": "морковь",
+    "transcription": "[ˈkærət]",
+    "text_example": "Rabbits love eating carrots.",
     "category_id": 3
   },
   {
-    "word_en": "cheese",
-    "word_ru": "сыр",
-    "transcription": "[tʃiːz]",
-    "text_example": "We bought cheddar cheese.",
+    "word_en": "milk",
+    "word_ru": "молоко",
+    "transcription": "[mɪlk]",
+    "text_example": "She poured milk into the glass.",
     "category_id": 3
   },
   {
-    "word_en": "airport",
-    "word_ru": "аэропорт",
-    "transcription": "[ˈeəpɔːt]",
-    "text_example": "The airport was crowded.",
+    "word_en": "egg",
+    "word_ru": "яйцо",
+    "transcription": "[ɛɡ]",
+    "text_example": "He fried an egg for breakfast.",
+    "category_id": 3
+  },
+  {
+    "word_en": "orange",
+    "word_ru": "апельсин",
+    "transcription": "[ˈɔːrɪndʒ]",
+    "text_example": "She squeezed fresh orange juice.",
+    "category_id": 3
+  },
+  {
+    "word_en": "tomato",
+    "word_ru": "помидор",
+    "transcription": "[təˈmeɪtoʊ]",
+    "text_example": "Tomatoes are used in salads.",
+    "category_id": 3
+  },
+  {
+    "word_en": "potato",
+    "word_ru": "картофель",
+    "transcription": "[pəˈteɪtoʊ]",
+    "text_example": "He baked a potato in the oven.",
+    "category_id": 3
+  },
+  {
+    "word_en": "fish",
+    "word_ru": "рыба",
+    "transcription": "[fɪʃ]",
+    "text_example": "We grilled fresh fish.",
+    "category_id": 3
+  },
+  {
+    "word_en": "meat",
+    "word_ru": "мясо",
+    "transcription": "[miːt]",
+    "text_example": "They roasted meat for dinner.",
+    "category_id": 3
+  },
+  {
+    "word_en": "cake",
+    "word_ru": "торт",
+    "transcription": "[keɪk]",
+    "text_example": "She baked a chocolate cake.",
+    "category_id": 3
+  },
+  {
+    "word_en": "bus",
+    "word_ru": "автобус",
+    "transcription": "[bʌs]",
+    "text_example": "The bus arrived late.",
     "category_id": 4
   },
   {
-    "word_en": "ticket",
-    "word_ru": "билет",
-    "transcription": "[ˈtɪkɪt]",
-    "text_example": "I bought a train ticket.",
+    "word_en": "train",
+    "word_ru": "поезд",
+    "transcription": "[treɪn]",
+    "text_example": "We boarded the train at noon.",
     "category_id": 4
   },
   {
-    "word_en": "hotel",
-    "word_ru": "отель",
-    "transcription": "[həʊˈtɛl]",
-    "text_example": "We stayed at a small hotel.",
+    "word_en": "station",
+    "word_ru": "станция",
+    "transcription": "[ˈsteɪʃən]",
+    "text_example": "The station was busy.",
     "category_id": 4
   },
   {
-    "word_en": "guide",
-    "word_ru": "гид",
-    "transcription": "[ɡaɪd]",
-    "text_example": "The guide showed us around.",
+    "word_en": "passport",
+    "word_ru": "паспорт",
+    "transcription": "[ˈpæspɔːrt]",
+    "text_example": "He showed his passport at customs.",
     "category_id": 4
+  },
+  {
+    "word_en": "map",
+    "word_ru": "карта",
+    "transcription": "[mæp]",
+    "text_example": "She unfolded the map to find the route.",
+    "category_id": 4
+  },
+  {
+    "word_en": "luggage",
+    "word_ru": "багаж",
+    "transcription": "[ˈlʌɡɪdʒ]",
+    "text_example": "His luggage was heavy.",
+    "category_id": 4
+  },
+  {
+    "word_en": "taxi",
+    "word_ru": "такси",
+    "transcription": "[ˈtæksi]",
+    "text_example": "We took a taxi to the hotel.",
+    "category_id": 4
+  },
+  {
+    "word_en": "visa",
+    "word_ru": "виза",
+    "transcription": "[ˈviːzə]",
+    "text_example": "She applied for a travel visa.",
+    "category_id": 4
+  },
+  {
+    "word_en": "journey",
+    "word_ru": "путешествие",
+    "transcription": "[ˈdʒɜːrni]",
+    "text_example": "The journey took three hours.",
+    "category_id": 4
+  },
+  {
+    "word_en": "bridge",
+    "word_ru": "мост",
+    "transcription": "[brɪdʒ]",
+    "text_example": "We crossed a long bridge.",
+    "category_id": 4
+  },
+  {
+    "word_en": "flower",
+    "word_ru": "цветок",
+    "transcription": "[ˈflaʊər]",
+    "text_example": "The flower bloomed in spring.",
+    "category_id": 2
+  },
+  {
+    "word_en": "snow",
+    "word_ru": "снег",
+    "transcription": "[snoʊ]",
+    "text_example": "Snow covered the mountains.",
+    "category_id": 2
+  },
+  {
+    "word_en": "sun",
+    "word_ru": "солнце",
+    "transcription": "[sʌn]",
+    "text_example": "The sun was shining brightly.",
+    "category_id": 2
+  },
+  {
+    "word_en": "grape",
+    "word_ru": "виноград",
+    "transcription": "[ɡreɪp]",
+    "text_example": "She ate a bunch of grapes.",
+    "category_id": 3
+  },
+  {
+    "word_en": "pear",
+    "word_ru": "груша",
+    "transcription": "[peər]",
+    "text_example": "The pear was sweet and juicy.",
+    "category_id": 3
+  },
+  {
+    "word_en": "strawberry",
+    "word_ru": "клубника",
+    "transcription": "[ˈstrɔːbəri]",
+    "text_example": "He picked a fresh strawberry.",
+    "category_id": 3
+  },
+  {
+    "word_en": "honey",
+    "word_ru": "мёд",
+    "transcription": "[ˈhʌni]",
+    "text_example": "Bees make honey from nectar.",
+    "category_id": 3
+  },
+  {
+    "word_en": "butter",
+    "word_ru": "масло",
+    "transcription": "[ˈbʌtər]",
+    "text_example": "She spread butter on bread.",
+    "category_id": 3
+  },
+  {
+    "word_en": "rain",
+    "word_ru": "дождь",
+    "transcription": "[reɪn]",
+    "text_example": "The rain fell softly.",
+    "category_id": 2
+  },
+  {
+    "word_en": "wind",
+    "word_ru": "ветер",
+    "transcription": "[wɪnd]",
+    "text_example": "The wind blew through the trees.",
+    "category_id": 2
+  },
+  {
+    "word_en": "road",
+    "word_ru": "дорога",
+    "transcription": "[roʊd]",
+    "text_example": "The road was long and narrow.",
+    "category_id": 4
+  },
+  {
+    "word_en": "city",
+    "word_ru": "город",
+    "transcription": "[ˈsɪti]",
+    "text_example": "The city lights were beautiful.",
+    "category_id": 4
+  },
+  {
+    "word_en": "village",
+    "word_ru": "деревня",
+    "transcription": "[ˈvɪlɪdʒ]",
+    "text_example": "The village was quiet and small.",
+    "category_id": 4
+  },
+  {
+    "word_en": "museum",
+    "word_ru": "музей",
+    "transcription": "[mjuːˈziːəm]",
+    "text_example": "We visited the art museum.",
+    "category_id": 4
+  },
+  {
+    "word_en": "park",
+    "word_ru": "парк",
+    "transcription": "[pɑːrk]",
+    "text_example": "Children played in the park.",
+    "category_id": 4
+  },
+  {
+    "word_en": "street",
+    "word_ru": "улица",
+    "transcription": "[striːt]",
+    "text_example": "The street was busy with cars.",
+    "category_id": 4
+  },
+  {
+    "word_en": "house",
+    "word_ru": "дом",
+    "transcription": "[haʊs]",
+    "text_example": "They built a new house.",
+    "category_id": 1
+  },
+  {
+    "word_en": "school",
+    "word_ru": "школа",
+    "transcription": "[skuːl]",
+    "text_example": "Children go to school every day.",
+    "category_id": 1
+  },
+  {
+    "word_en": "book",
+    "word_ru": "книга",
+    "transcription": "[bʊk]",
+    "text_example": "He read an interesting book.",
+    "category_id": 1
+  },
+  {
+    "word_en": "friend",
+    "word_ru": "друг",
+    "transcription": "[frɛnd]",
+    "text_example": "She met her best friend.",
+    "category_id": 1
   }
 ]

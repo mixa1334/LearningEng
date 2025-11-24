@@ -4,7 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../..";
 
 export const updateStatsAfterLearnThunk = createAsyncThunk(
-  "stats/updateAfterReview",
+  "stats/updateStatsAfterLearnThunk",
   async (_, { getState }) => {
     const state = getState() as RootState;
     const today = getCurrentDate();
@@ -13,19 +13,24 @@ export const updateStatsAfterLearnThunk = createAsyncThunk(
     let streak = state.stats.streak;
     let lastLearningDate = state.stats.lastLearningDate;
     const dailyGoal = state.stats.dailyGoal;
+    let dailyGoalAchieve = state.stats.dailyGoalAchieve;
 
     reviewedToday++;
     if (lastLearningDate !== today) {
       lastLearningDate = today;
-      if (reviewedToday === dailyGoal) streak++;
+    }
+    if (!dailyGoalAchieve && dailyGoal === reviewedToday) {
+      dailyGoalAchieve = true;
+      streak++;
     }
 
     await AsyncStorage.multiSet([
       ["reviewedToday", String(reviewedToday)],
       ["streak", String(streak)],
       ["lastLearningDate", lastLearningDate],
+      ["dailyGoalAchieve", String(dailyGoalAchieve)],
     ]);
 
-    return { reviewedToday, streak, lastLearningDate };
+    return { reviewedToday, streak, lastLearningDate, dailyGoalAchieve };
   }
 );

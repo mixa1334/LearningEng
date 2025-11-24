@@ -1,3 +1,4 @@
+import { GoalAchieveOverlay } from "@/components/GoalAchieveOverlay";
 import LoadingSpinner from "@/components/LoadingApp";
 import { runMigrations } from "@/model/database/migrations";
 import { ThemeProvider } from "@/provider/ThemeProvider";
@@ -18,6 +19,7 @@ function AppInitializer() {
 
   return (
     <ThemeProvider>
+      <GoalAchieveOverlay />
       <Stack screenOptions={{ headerShown: false }} />
     </ThemeProvider>
   );
