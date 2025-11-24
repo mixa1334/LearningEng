@@ -1,5 +1,5 @@
-import categoriesSeed from "@/assets/categories.json";
-import wordsSeed from "@/assets/words.json";
+import categoriesSeed from "@/assets/data/categories.json";
+import wordsSeed from "@/assets/data/words.json";
 import { COUNT_CATEGORIES } from "@/constants/sql/categoriesTable";
 import { SCHEMA_CREATION_IF_NOT_EXISTS } from "@/constants/sql/schema";
 import { COUNT_WORDS } from "@/constants/sql/wordsTable";
