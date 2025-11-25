@@ -1,5 +1,5 @@
 import { AppDispatch, useAppSelector } from "@/store";
-import { loadDailyWordSetThunk } from "@/store/slice/wordsSlice";
+import { loadDailyWordSetThunk } from "@/store/thunk/learn/loadDailyWordSetThunk";
 import { changeDailyGoalThunk } from "@/store/thunk/userStats/changeDailyGoalThunk";
 import { changeNameThunk } from "@/store/thunk/userStats/changeNameThunk";
 import { resetUserStatsThunk } from "@/store/thunk/userStats/resetUserStatsThunk";

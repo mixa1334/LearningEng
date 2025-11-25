@@ -143,7 +143,7 @@ export default function ProfileTab() {
               Reset Statistics
             </Button>
             <Button mode="outlined" style={styles.settingBtn}>
-              Reset Vocabulary
+              Reset Vocabulary Progress
             </Button>
             <Button mode="outlined" style={styles.settingBtn}>
               Backup to File

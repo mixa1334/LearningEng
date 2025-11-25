@@ -1,11 +1,5 @@
 import WordScreen from "@/components/WordScreen";
-import {
-  useLearnWordCompletely,
-  useLoadDailySet,
-  useLoopWordInReview,
-  useMarkWordReviewed,
-  useStartLearnWord,
-} from "@/hooks/useWords";
+import { useLearningDailySet, useLearnUtil } from "@/hooks/useLearn";
 import React, { useState } from "react";
 import {
   RefreshControl,
@@ -26,21 +20,26 @@ export default function LearnTab() {
   const [activeTab, setActiveTab] = useState<ActiveLearningTab>(
     ActiveLearningTab.learn
   );
-  const { wordsToReview, wordsToLearn, status, error, reload } =
-    useLoadDailySet();
+  const { wordsToReview, wordsToLearn, status, error, reloadDailySet } =
+    useLearningDailySet();
 
-  const markWordReviewed = useMarkWordReviewed();
-  const startLearnWord = useStartLearnWord();
-  const markWordCompleted = useLearnWordCompletely();
-  const rotateWordInReview = useLoopWordInReview();
+  const {
+    markWordReviewed,
+    markWordNotReviewed,
+    startLearnNewWord,
+    markWordCompletelyLearned,
+  } = useLearnUtil();
 
   const [refreshing, setRefreshing] = useState(false);
   const theme = useTheme();
 
+  const switchToLearnScreen = () => setActiveTab(ActiveLearningTab.learn);
+  const switchToReviewScreen = () => setActiveTab(ActiveLearningTab.review);
+
   const onRefresh = async () => {
     setRefreshing(true);
     setTimeout(() => {
-      reload();
+      reloadDailySet();
       setRefreshing(false);
     }, 200);
   };
@@ -50,7 +49,9 @@ export default function LearnTab() {
       <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
         <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
           <View style={styles.fullCenter}>
-            <Text style={{ color: theme.colors.onSurface }}>Loading words...</Text>
+            <Text style={{ color: theme.colors.onSurface }}>
+              Loading words...
+            </Text>
           </View>
         </View>
       </View>
@@ -65,7 +66,7 @@ export default function LearnTab() {
             <Text style={{ color: theme.colors.error, marginBottom: 12 }}>
               Error: {error}
             </Text>
-            <TouchableOpacity onPress={reload}>
+            <TouchableOpacity onPress={reloadDailySet}>
               <Text style={{ color: theme.colors.primary, fontWeight: "600" }}>
                 Retry
               </Text>
@@ -79,7 +80,10 @@ export default function LearnTab() {
   return (
     <ScrollView
       style={{ flex: 1 }}
-      contentContainerStyle={[styles.page, { backgroundColor: theme.colors.background }]}
+      contentContainerStyle={[
+        styles.page,
+        { backgroundColor: theme.colors.background },
+      ]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -88,7 +92,10 @@ export default function LearnTab() {
         <View
           style={[
             styles.tabButtons,
-            { borderBottomColor: theme.colors.outline, backgroundColor: theme.colors.surfaceVariant },
+            {
+              borderBottomColor: theme.colors.outline,
+              backgroundColor: theme.colors.surfaceVariant,
+            },
           ]}
         >
           <TouchableOpacity
@@ -99,9 +106,11 @@ export default function LearnTab() {
                 backgroundColor: theme.colors.surface,
               },
             ]}
-            onPress={() => setActiveTab(ActiveLearningTab.learn)}
+            onPress={switchToLearnScreen}
           >
-            <Text style={[styles.topBtnText, { color: theme.colors.onSurface }]}>
+            <Text
+              style={[styles.topBtnText, { color: theme.colors.onSurface }]}
+            >
               Learn
             </Text>
           </TouchableOpacity>
@@ -113,9 +122,11 @@ export default function LearnTab() {
                 backgroundColor: theme.colors.surface,
               },
             ]}
-            onPress={() => setActiveTab(ActiveLearningTab.review)}
+            onPress={switchToReviewScreen}
           >
-            <Text style={[styles.topBtnText, { color: theme.colors.onSurface }]}>
+            <Text
+              style={[styles.topBtnText, { color: theme.colors.onSurface }]}
+            >
               Review
             </Text>
           </TouchableOpacity>
@@ -125,14 +136,18 @@ export default function LearnTab() {
           {activeTab === ActiveLearningTab.learn ? (
             <WordScreen
               words={wordsToLearn}
-              accept={markWordCompleted}
-              reject={startLearnWord}
+              accept={markWordCompletelyLearned}
+              acceptBtnName="I know"
+              reject={startLearnNewWord}
+              rejectBtnName="Start learn"
             />
           ) : (
             <WordScreen
               words={wordsToReview}
               accept={markWordReviewed}
-              reject={rotateWordInReview}
+              acceptBtnName="I remember"
+              reject={markWordNotReviewed}
+              rejectBtnName="Show late"
             />
           )}
         </View>
@@ -147,7 +162,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     paddingVertical: "5%",
     paddingBottom: "30%",
-    paddingTop: "20%"
+    paddingTop: "20%",
   },
   card: {
     flex: 1,
@@ -188,4 +203,3 @@ const styles = StyleSheet.create({
     padding: "5%",
   },
 });
-

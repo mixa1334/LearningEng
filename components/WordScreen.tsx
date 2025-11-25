@@ -7,11 +7,15 @@ import WordCard from "./WordCard";
 export default function WordScreen({
   words,
   accept,
+  acceptBtnName,
   reject,
+  rejectBtnName
 }: {
   words: Word[];
   accept: (word: Word) => void;
+  acceptBtnName: string;
   reject: (word: Word) => void;
+  rejectBtnName: string;
 }) {
   const theme = useTheme();
 
@@ -36,8 +40,10 @@ export default function WordScreen({
   return (
     <WordCard
       word={words[0]}
-      onKnow={handleKnow}
-      onDontKnow={handleDontKnow}
+      accept={handleKnow}
+      acceptBtnName={acceptBtnName}
+      reject={handleDontKnow}
+      rejectBtnName={rejectBtnName}
     />
   );
 }

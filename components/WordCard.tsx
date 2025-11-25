@@ -6,28 +6,49 @@ import { useTheme } from "react-native-paper";
 
 export default function WordCard({
   word,
-  onKnow,
-  onDontKnow,
+  accept,
+  acceptBtnName,
+  reject,
+  rejectBtnName,
 }: {
   word: Word;
-  onKnow: () => void;
-  onDontKnow: () => void;
+  accept: () => void;
+  acceptBtnName: string;
+  reject: () => void;
+  rejectBtnName: string;
 }) {
   const [showTranslation, setShowTranslation] = useState(false);
-  const [pendingKnow, setPendingKnow] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const theme = useTheme();
+
   useEffect(() => {
     setShowTranslation(false);
-    setPendingKnow(false);
+    setPending(false);
+    setAccepted(false);
   }, [word]);
 
-  const handleKnow = () => {
-    if (!showTranslation) {
-      setShowTranslation(true);
-      setPendingKnow(true);
+  const handleShowTranslation = () => setShowTranslation(true);
+
+  const handleUserInput = (action: () => void) => {
+    if (pending) {
+      action();
     } else {
-      onKnow();
+      setShowTranslation(true);
+      setPending(true);
     }
+  };
+
+  const handleAccept = () => {
+    handleUserInput(accept);
+    setAccepted(true);
+  };
+  const handleReject = () => {
+    handleUserInput(reject);
+    setAccepted(false);
+  };
+  const handleContinue = () => {
+    handleUserInput(accepted ? accept : reject);
   };
 
   return (
@@ -44,10 +65,7 @@ export default function WordCard({
           {word.word_ru}
         </Text>
       ) : (
-        <TouchableOpacity
-          style={styles.eyeBtn}
-          onPress={() => setShowTranslation(true)}
-        >
+        <TouchableOpacity style={styles.eyeBtn} onPress={handleShowTranslation}>
           <Ionicons name="eye-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.eyeText, { color: theme.colors.primary }]}>
             Show translation
@@ -60,29 +78,35 @@ export default function WordCard({
       </Text>
 
       <View style={styles.bottomBar}>
-        {pendingKnow ? (
+        {pending ? (
           <TouchableOpacity
-            style={[styles.btnKnow, { backgroundColor: theme.colors.primary }]}
-            onPress={handleKnow}
+            style={[
+              styles.btnAccept,
+              { backgroundColor: theme.colors.primary },
+            ]}
+            onPress={handleContinue}
           >
             <Text style={styles.btnText}>Continue</Text>
           </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity
-              style={[styles.btnKnow, { backgroundColor: theme.colors.primary }]}
-              onPress={handleKnow}
+              style={[
+                styles.btnAccept,
+                { backgroundColor: theme.colors.primary },
+              ]}
+              onPress={handleAccept}
             >
-              <Text style={styles.btnText}>I know</Text>
+              <Text style={styles.btnText}>{acceptBtnName}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
-                styles.btnDontKnow,
+                styles.btnReject,
                 { backgroundColor: theme.colors.error },
               ]}
-              onPress={onDontKnow}
+              onPress={handleReject}
             >
-              <Text style={styles.btnText}>I don’t know</Text>
+              <Text style={styles.btnText}>{rejectBtnName}</Text>
             </TouchableOpacity>
           </>
         )}
@@ -99,7 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 2,
     alignSelf: "center",
-    maxWidth: "90%", 
+    maxWidth: "90%",
     marginVertical: 16,
   },
   category: { fontWeight: "600", marginBottom: 6 },
@@ -126,14 +150,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 10,
   },
-  btnKnow: {
+  btnAccept: {
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
     marginHorizontal: 5,
     alignItems: "center",
   },
-  btnDontKnow: {
+  btnReject: {
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -142,5 +166,3 @@ const styles = StyleSheet.create({
   },
   btnText: { fontWeight: "600", fontSize: 16 },
 });
-
-

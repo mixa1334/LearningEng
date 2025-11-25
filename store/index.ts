@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { learnReducer } from "./slice/learnSlice";
 import { userStatsReducer } from "./slice/userStatsSlice";
-import { wordsReducer } from "./slice/wordsSlice";
 
 export const store = configureStore({
   reducer: {
-    words: wordsReducer,
+    learn: learnReducer,
     stats: userStatsReducer,
   },
 });

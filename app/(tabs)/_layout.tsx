@@ -41,21 +41,21 @@ export default function TabLayout() {
 >
 
       <Tabs.Screen
-        name="vocabulary"
+        name="VocabularyTab"
         options={{
           title: "Vocabulary",
           tabBarIcon: VocabularyIcon,
         }}
       />
       <Tabs.Screen
-        name="learn"
+        name="LearnTab"
         options={{
           title: "Learn",
           tabBarIcon: LearnIcon,
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="ProfileTab"
         options={{
           title: "Profile",
           tabBarIcon: ProfileIcon,

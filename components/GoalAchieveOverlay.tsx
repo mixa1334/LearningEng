@@ -11,7 +11,7 @@ export function GoalAchieveOverlay() {
   useEffect(() => {
     if (dailyGoalAchieve) {
       setVisible(true);
-      const timer = setTimeout(() => setVisible(false), 3000);
+      const timer = setTimeout(() => setVisible(false), 1500);
       return () => clearTimeout(timer);
     }
   }, [dailyGoalAchieve]);
