@@ -1,7 +1,7 @@
 import type { Word } from "@/model/entity/types";
 import {
-    getDailyWordsToLearn,
-    getDailyWordsToReview,
+  getDailyWordsToLearn,
+  getDailyWordsToReview,
 } from "@/model/repository/wordService";
 import { RootState } from "@/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";

@@ -7,3 +7,19 @@ export const INSERT_INTO_CATEGORIES = `
     (name, type, icon)
     VALUES (?, ?, ?);
 `;
+
+export const SELECT_CATEGORIES = `
+    SELECT id, name, type, icon
+    FROM categories
+`;
+
+export const DELETE_CATEGORY = `
+    DELETE
+    FROM categories
+    WHERE type = 'user_added' AND id = ?
+`;
+
+export const UPDATE_CATEGORY = `
+    UPDATE categories
+    SET name = ?, icon = ?
+`;

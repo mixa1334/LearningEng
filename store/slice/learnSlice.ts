@@ -5,15 +5,9 @@ import { markWordCompletelyLearnedThunk } from "../thunk/learn/markWordCompletel
 import { markWordNotReviewedThunk } from "../thunk/learn/markWordNotReviewedThunk";
 import { markWordReviewedThunk } from "../thunk/learn/markWordReviewedThunk";
 import { startLearnWordThunk } from "../thunk/learn/startLearnWordThunk";
+import { StateType } from "./stateType";
 
-enum StateType {
-  idle = "idle",
-  loading = "loading",
-  succeeded = "succeeded",
-  failed = "failed",
-}
-
-type WordsState = {
+export type WordsState = {
   wordsToReview: Word[];
   wordsToLearn: Word[];
   status: StateType;

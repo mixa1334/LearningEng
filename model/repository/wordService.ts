@@ -1,15 +1,23 @@
-import { INSERT_INTO_WORDS, SELECT_WORD } from "@/constants/sql/wordsTable";
+import {
+  DELETE_WORD,
+  INSERT_INTO_WORDS,
+  SELECT_WORDS,
+} from "@/constants/sql/wordsTable";
 import { EntityType, type Word } from "@/model/entity/types";
 import type { SQLiteDatabase } from "expo-sqlite";
 import { rowToWord } from "../mapper/typesMapper";
 
-type NewWordDto = {
+export type NewWordDto = {
   word_en: string;
   word_ru: string;
   transcription: string;
   category_id: number;
   text_example: string;
 };
+
+export async function resetWordLearningProgress(db: SQLiteDatabase){
+  await db.runAsync('UPDATE words SET learned = 0, priority = 0');
+}
 
 export async function addNewWord(
   db: SQLiteDatabase,
@@ -31,25 +39,65 @@ export async function addNewWord(
   await db.runAsync(INSERT_INTO_WORDS, insertionRow);
 }
 
+export async function deleteUserWord(
+  db: SQLiteDatabase,
+  wordToDelete: Word
+): Promise<void> {
+  await db.runAsync(
+    `${DELETE_WORD} 
+    WHERE type = 'user_added' AND id = ?`,
+    [wordToDelete.id]
+  );
+}
+
+//todo refactor add category check before update and wrap all in a single transaction
+export async function editUserWord(
+  db: SQLiteDatabase,
+  word: Word
+): Promise<void> {
+  await db.runAsync(
+    `UPDATE words
+    SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
+    WHERE id = ?`,
+    [
+      word.word_en,
+      word.word_ru,
+      word.transcription,
+      word.category.id,
+      word.text_example,
+      word.id,
+    ]
+  );
+}
+
+export async function getUserWords(
+  db: SQLiteDatabase
+): Promise<Word[]>{
+  const rows = await db.getAllAsync<any>(`${SELECT_WORDS} WHERE w.type = 'user_added'`);
+  return rows.map(rowToWord);
+}
+
 export async function getDailyWordsToLearn(
   db: SQLiteDatabase,
   limit: number = 5
 ): Promise<Word[]> {
   const rows = await db.getAllAsync<any>(
-    `${SELECT_WORD}
+    `${SELECT_WORDS}
     WHERE w.learned = 0
       AND w.priority = 0
+    ORDER BY w.type DESC
     LIMIT ?`,
     [limit]
   );
-  return rows.map(rowToWord);
+  const ws = rows.map(rowToWord);
+  return ws;
 }
 
 export async function getDailyWordsToReview(
-  db: SQLiteDatabase,
+  db: SQLiteDatabase
 ): Promise<Word[]> {
   const rows = await db.getAllAsync<any>(
-    `${SELECT_WORD}
+    `${SELECT_WORDS}
     WHERE w.learned = 0
       AND datetime(w.next_review) <= datetime('now')
       AND w.priority > 0
@@ -74,7 +122,7 @@ export async function markWordCompletelyLearned(
   db: SQLiteDatabase,
   word: Word
 ): Promise<void> {
-    await db.runAsync(
+  await db.runAsync(
     `UPDATE words
      SET learned = ?
      WHERE id = ?;`,
@@ -82,7 +130,10 @@ export async function markWordCompletelyLearned(
   );
 }
 
-export async function reviewWord(db: SQLiteDatabase, word: Word): Promise<void> {
+export async function reviewWord(
+  db: SQLiteDatabase,
+  word: Word
+): Promise<void> {
   const newPriority = word.priority + 1;
   const days = newPriority + (newPriority - 1) * 2;
   let isLearned = +(newPriority > 50);

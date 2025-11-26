@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { changeDailyGoalThunk } from "../thunk/userStats/changeDailyGoalThunk";
 import { changeNameThunk } from "../thunk/userStats/changeNameThunk";
 import { loadStatsThunk } from "../thunk/userStats/loadStatsThunk";
-import { resetUserStatsThunk } from "../thunk/userStats/resetUserStatsThunk";
 import { updateStatsAfterLearnThunk } from "../thunk/userStats/updateStatsAfterLearnThunk";
 
 export type StatsState = {
@@ -14,7 +13,7 @@ export type StatsState = {
   dailyGoalAchieve: boolean;
 };
 
-export const initialState: StatsState = {
+export const initialStatistics: StatsState = {
   name: "User",
   streak: 0,
   lastLearningDate: null,
@@ -25,7 +24,7 @@ export const initialState: StatsState = {
 
 const userStatsSlice = createSlice({
   name: "stats",
-  initialState,
+  initialState: initialStatistics,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(updateStatsAfterLearnThunk.fulfilled, (state, action) => {
@@ -37,7 +36,7 @@ const userStatsSlice = createSlice({
       state.dailyGoalAchieve = dailyGoalAchieve;
     });
     builder.addCase(loadStatsThunk.fulfilled, (state, action) => {
-      return { ...state, ...action.payload };
+      return { ...initialStatistics, ...action.payload };
     });
     builder.addCase(changeDailyGoalThunk.fulfilled, (state, action) => {
       const { dailyGoal, streak, dailyGoalAchieve } = action.payload;
@@ -47,9 +46,6 @@ const userStatsSlice = createSlice({
     });
     builder.addCase(changeNameThunk.fulfilled, (state, action) => {
       state.name = action.payload;
-    });
-    builder.addCase(resetUserStatsThunk.fulfilled, (state, action) => {
-      return initialState;
     });
   },
 });

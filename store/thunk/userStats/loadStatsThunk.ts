@@ -3,8 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { StatsState } from "../../slice/userStatsSlice";
 
-/// REFACTOR !!!!!!!!!!!!!!!
-export const loadStatsThunk = createAsyncThunk<Partial<StatsState>, void>(
+/// REFACTOR !!!!!!!!!!!!!!! (set up as lazy init in initial state in slice!!!)
+export const loadStatsThunk = createAsyncThunk<Partial<StatsState>>(
   "stats/loadStatsThunk",
   async () => {
     const keys: (keyof StatsState)[] = [
@@ -50,7 +50,6 @@ export const loadStatsThunk = createAsyncThunk<Partial<StatsState>, void>(
         await AsyncStorage.setItem("streak", String(0));
       }
     }
-
     return parsed;
   }
 );

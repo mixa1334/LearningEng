@@ -1,12 +1,13 @@
 import { AppDispatch, useAppSelector } from "@/store";
-import { loadDailyWordSetThunk } from "@/store/thunk/learn/loadDailyWordSetThunk";
+import { resetWordLearningProgressThunk } from "@/store/thunk/learn/resetLearningStatsThunk";
 import { changeDailyGoalThunk } from "@/store/thunk/userStats/changeDailyGoalThunk";
 import { changeNameThunk } from "@/store/thunk/userStats/changeNameThunk";
 import { resetUserStatsThunk } from "@/store/thunk/userStats/resetUserStatsThunk";
 import { useSQLiteContext } from "expo-sqlite";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
-export function useUserStats() {
+export function useStatistics() {
   const dispatch = useDispatch<AppDispatch>();
   const db = useSQLiteContext();
   const name = useAppSelector((s) => s.stats.name);
@@ -16,12 +17,18 @@ export function useUserStats() {
   const dailyGoal = useAppSelector((s) => s.stats.dailyGoal);
 
   // todo refactor
-  const changeGoal = async (goal: number) => {
-    dispatch(changeDailyGoalThunk(goal));
-    dispatch(loadDailyWordSetThunk({ db, dailyGoalOverload: goal }));
-  };
+  const changeGoal = useCallback(
+    (goal: number) => {
+      if (db) dispatch(changeDailyGoalThunk({ newDailyGoal: goal, db }));
+    },
+    [dispatch, db]
+  );
+
   const changeName = (name: string) => dispatch(changeNameThunk(name));
   const resetUserStats = () => dispatch(resetUserStatsThunk());
+  const resetWordsProgress = useCallback(() => {
+    if (db) dispatch(resetWordLearningProgressThunk(db));
+  }, [db, dispatch]);
 
   return {
     name,
@@ -32,5 +39,6 @@ export function useUserStats() {
     changeGoal,
     changeName,
     resetUserStats,
+    resetWordsProgress,
   };
 }

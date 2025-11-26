@@ -20,6 +20,11 @@ export function rowToWord(row: any): Word {
   };
 }
 
-// export function rowToCategory(row: any): Category {
-
-// }
+export function rowToCategory(row: any): Category {
+  return {
+    id: row.id,
+    name: row.name,
+    type: row.type,
+    icon: row.icon,
+  };
+}

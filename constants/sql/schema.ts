@@ -1,4 +1,7 @@
 export const SCHEMA_CREATION_IF_NOT_EXISTS = `
+    -- DROP TABLE IF EXISTS categories;
+    -- DROP TABLE IF EXISTS words;
+
     PRAGMA foreign_keys = ON;
 
     CREATE TABLE IF NOT EXISTS categories (

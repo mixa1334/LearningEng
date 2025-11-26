@@ -1,5 +1,5 @@
 [
-  { "name": "Default", "icon": "default" },
+  { "name": "Default", "icon": "" },
   { "name": "Nature", "icon": "🌿" },
   { "name": "Food", "icon": "🍎" },
   { "name": "Travel", "icon": "✈️" }

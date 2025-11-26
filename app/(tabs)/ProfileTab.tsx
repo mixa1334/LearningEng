@@ -1,4 +1,4 @@
-import { useUserStats } from "@/hooks/useUserStats";
+import { useStatistics } from "@/hooks/useStatistics";
 import { useThemeContext } from "@/provider/ThemeProvider";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
@@ -23,8 +23,9 @@ export default function ProfileTab() {
     dailyGoal,
     changeGoal,
     changeName,
-    resetUserStats
-  } = useUserStats();
+    resetUserStats,
+    resetWordsProgress
+  } = useStatistics();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [editableName, setEditableName] = useState(false);
   const { isDark, toggleTheme } = useThemeContext();
@@ -68,7 +69,7 @@ export default function ProfileTab() {
             variant="titleLarge"
             style={[styles.name, { color: theme.colors.onBackground }]}
           >
-            Name: {name}
+            {name}
           </Text>
           <IconButton
             icon="pencil"
@@ -87,7 +88,7 @@ export default function ProfileTab() {
           Last Learning: {lastLearningDate || "—"}
         </Text>
         <Text style={[styles.statsText, { color: theme.colors.onBackground }]}>
-          Reviewed Today: {reviewedToday}
+          Learned Today: {reviewedToday}
         </Text>
       </View>
 
@@ -118,7 +119,7 @@ export default function ProfileTab() {
       <View style={styles.streakRow}>
         <Ionicons name="flame" size={28} color={theme.colors.primary} />
         <Text style={[styles.streakText, { color: theme.colors.onBackground }]}>
-          {streak} day streak
+          {streak} days in a row
         </Text>
       </View>
 
@@ -139,10 +140,14 @@ export default function ProfileTab() {
               <Text>Dark Theme</Text>
               <Switch value={isDark} onValueChange={toggleTheme} />
             </View>
-            <Button mode="outlined" style={styles.settingBtn} onPress={resetUserStats}>
+            <Button
+              mode="outlined"
+              style={styles.settingBtn}
+              onPress={resetUserStats}
+            >
               Reset Statistics
             </Button>
-            <Button mode="outlined" style={styles.settingBtn}>
+            <Button mode="outlined" style={styles.settingBtn} onPress={resetWordsProgress}>
               Reset Vocabulary Progress
             </Button>
             <Button mode="outlined" style={styles.settingBtn}>
@@ -166,12 +171,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     padding: "20%",
-  },
-  avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 16,
   },
   nameRow: {
     flexDirection: "row",

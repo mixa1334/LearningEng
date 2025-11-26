@@ -1,6 +1,10 @@
+import { useVocabulary } from "@/hooks/useVocabulary";
 import { Category, EntityType, Word } from "@/model/entity/types";
+import { NewCategoryDto } from "@/model/repository/categoryService";
+import { NewWordDto } from "@/model/repository/wordService";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import EmojiSelector from "react-native-emoji-selector";
 import {
   Button,
   Dialog,
@@ -8,173 +12,214 @@ import {
   IconButton,
   Portal,
   Text,
-  TextInput
+  TextInput,
+  useTheme,
 } from "react-native-paper";
 
 export default function VocabularyTab() {
+  const theme = useTheme();
+
+  const [expandedSection, setExpandedSection] = useState<
+    "words" | "categories" | null
+  >(null);
+
+  const { words, categories, addWord, addCategory } = useVocabulary();
+
+  const [showWordModal, setShowWordModal] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showEditWordModal, setShowEditWordModal] = useState(false);
+
+  const [newWordEn, setNewWordEn] = useState("");
+  const [newWordRu, setNewWordRu] = useState("");
+  const [newWordTranscription, setNewWordTranscription] = useState("");
+  const [newWordTextExample, setNewWordTextExample] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
 
-  const [expandedSection, setExpandedSection] = useState<"words" | "categories" | null>(null);
-  const [categories, setCategories] = useState<Category[]>([
-    { id: 1, name: "Animals", type: EntityType.preloaded, icon: "🐶" },
-    { id: 2, name: "Food", type: EntityType.preloaded, icon: "🍎" },
-    { id: 3, name: "Travel", type: EntityType.useradd, icon: "✈️" },
-  ]);
-  const [words, setWords] = useState<Word[]>([
-    {
-      id: 1,
-      word_en: "Dog",
-      word_ru: "Собака",
-      transcription: "[dɒg]",
-      type: EntityType.preloaded,
-      learned: false,
-      category: categories[0],
-      next_review: "2025-11-22",
-      priority: 1,
-      text_example: "The dog is barking loudly.",
-    },
-    {
-      id: 2,
-      word_en: "Apple",
-      word_ru: "Яблоко",
-      transcription: "[ˈæpl]",
-      type: EntityType.preloaded,
-      learned: false,
-      category: categories[1],
-      next_review: "2025-11-22",
-      priority: 1,
-      text_example: "She ate a red apple.",
-    },
-    {
-      id: 3,
-      word_en: "Ticket",
-      word_ru: "Билет",
-      transcription: "[ˈtɪkɪt]",
-      type: EntityType.useradd,
-      learned: false,
-      category: categories[2],
-      next_review: "2025-11-22",
-      priority: 2,
-      text_example: "I bought a ticket for the flight.",
-    },
-  ]);
+  const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
 
-  const [showWordModal, setShowWordModal] = useState(false);
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [newWordEn, setNewWordEn] = useState("");
-  const [newWordRu, setNewWordRu] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryEmoji, setNewCategoryEmoji] = useState("");
 
   const toggleSection = (section: "words" | "categories") => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  const handleDeleteWord = (id: number, type: EntityType) => {
-    if (type === EntityType.useradd) {
-      setWords(words.filter((w) => w.id !== id));
-    }
+  const handleDeleteWord = () => {
+    //todo
   };
 
-  const handleDeleteCategory = (id: number, type: EntityType) => {
-    if (type === EntityType.useradd) {
-      setCategories(categories.filter((c) => c.id !== id));
-    }
+  const handleEditWord = () => {
+    //todo
+  };
+
+  const handleDeleteCategory = (category: Category) => {
+    //todo
+  };
+
+  const handleEditCategory = () => {
+    //todo
   };
 
   const handleAddWord = () => {
     if (!newWordEn || !newWordRu || !selectedCategory) return;
-    const newWord: Word = {
-      id: words.length + 1,
+    const newWord: NewWordDto = {
       word_en: newWordEn,
       word_ru: newWordRu,
-      transcription: "",
-      type: EntityType.useradd,
-      learned: false,
-      category: selectedCategory,
-      next_review: new Date().toISOString(),
-      priority: 1,
-      text_example: "",
+      transcription: newWordTranscription,
+      category_id: selectedCategory.id,
+      text_example: newWordTextExample,
     };
-    setWords([...words, newWord]);
+    addWord(newWord);
+    setShowWordModal(false);
     setNewWordEn("");
     setNewWordRu("");
+    setNewWordTranscription("");
+    setNewWordTextExample("");
     setSelectedCategory(null);
-    setShowWordModal(false);
   };
 
   const handleAddCategory = () => {
     if (!newCategoryName) return;
-    const newCategory: Category = {
-      id: categories.length + 1,
+    const newCategory: NewCategoryDto = {
       name: newCategoryName,
-      type: EntityType.useradd,
-      icon: "📘",
+      icon: newCategoryEmoji,
     };
-    setCategories([...categories, newCategory]);
-    setNewCategoryName("");
+    addCategory(newCategory);
     setShowCategoryModal(false);
+    setNewCategoryName("");
+    setNewCategoryEmoji("");
   };
 
   return (
-    <View style={styles.page}>
+    <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
       <Portal>
-  <Dialog visible={showWordModal} onDismiss={() => setShowWordModal(false)}>
-    <Dialog.Title>Add New Word</Dialog.Title>
-    <Dialog.Content>
-      <TextInput
-        label="English word"
-        value={newWordEn}
-        onChangeText={setNewWordEn}
-        style={styles.input}
-      />
-      <TextInput
-        label="Russian word"
-        value={newWordRu}
-        onChangeText={setNewWordRu}
-        style={styles.input}
-      />
-      <Text style={styles.sectionLabel}>Select Category:</Text>
-      <FlatList
-        data={categories}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Button
-            mode={selectedCategory?.id === item.id ? "contained" : "outlined"}
-            style={styles.categoryBtn}
-            onPress={() => setSelectedCategory(item)}
-          >
-            {item.icon} {item.name}
-          </Button>
-        )}
-      />
-    </Dialog.Content>
-    <Dialog.Actions>
-      <Button onPress={() => setShowWordModal(false)}>Close</Button>
-      <Button mode="contained" onPress={handleAddWord}>Add Word</Button>
-    </Dialog.Actions>
-  </Dialog>
+        {/* Add Word Dialog */}
+        <Dialog
+          visible={showWordModal}
+          onDismiss={() => setShowWordModal(false)}
+        >
+          <Dialog.Title style={{ color: theme.colors.onBackground }}>
+            Add New Word
+          </Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="English word"
+              value={newWordEn}
+              onChangeText={setNewWordEn}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { background: theme.colors.surface } }}
+            />
+            <TextInput
+              label="Russian word"
+              value={newWordRu}
+              onChangeText={setNewWordRu}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { background: theme.colors.surface } }}
+            />
+            <TextInput
+              label="Transcription (optional)"
+              value={newWordTranscription}
+              onChangeText={setNewWordTranscription}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { background: theme.colors.surface } }}
+            />
+            <TextInput
+              label="Text example (optional)"
+              value={newWordTextExample}
+              onChangeText={setNewWordTextExample}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { background: theme.colors.surface } }}
+            />
+            <Text
+              style={[
+                styles.sectionLabel,
+                { color: theme.colors.onBackground },
+              ]}
+            >
+              Select Category:
+            </Text>
+            <FlatList
+              data={categories}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <Button
+                  mode={
+                    selectedCategory?.id === item.id ? "contained" : "outlined"
+                  }
+                  style={styles.categoryBtn}
+                  onPress={() => setSelectedCategory(item)}
+                >
+                  {item.icon} {item.name}
+                </Button>
+              )}
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setShowWordModal(false)}>Close</Button>
+            <Button mode="contained" onPress={handleAddWord}>
+              Add
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
 
-  <Dialog visible={showCategoryModal} onDismiss={() => setShowCategoryModal(false)}>
-    <Dialog.Title>Add New Category</Dialog.Title>
-    <Dialog.Content>
-      <TextInput
-        label="Category name"
-        value={newCategoryName}
-        onChangeText={setNewCategoryName}
-        style={styles.input}
-      />
-    </Dialog.Content>
-    <Dialog.Actions>
-      <Button onPress={() => setShowCategoryModal(false)}>Close</Button>
-      <Button mode="contained" onPress={handleAddCategory}>Add Category</Button>
-    </Dialog.Actions>
-  </Dialog>
-</Portal>
+        {/* Add Category Dialog */}
+        <Dialog
+          visible={showCategoryModal}
+          onDismiss={() => setShowCategoryModal(false)}
+        >
+          <Dialog.Title style={{ color: theme.colors.onBackground }}>
+            Add New Category
+          </Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="Category name"
+              value={newCategoryName}
+              onChangeText={setNewCategoryName}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { background: theme.colors.surface } }}
+            />
+            {!showEmojiPicker && (
+              <Button
+                onPress={() => setShowEmojiPicker(true)}
+                style={{ marginTop: 10 }}
+              >
+                {newCategoryEmoji} Choose emoji
+              </Button>
+            )}
+            {showEmojiPicker && (
+              <View style={styles.emojiPickerContainer}>
+                <EmojiSelector
+                  onEmojiSelected={(emoji) => {
+                    setNewCategoryEmoji(emoji);
+                    setShowEmojiPicker(false);
+                  }}
+                  showSearchBar={false}
+                  showTabs={true}
+                  showHistory={true}
+                  columns={8}
+                />
+              </View>
+            )}
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setShowCategoryModal(false)}>Close</Button>
+            <Button mode="contained" onPress={handleAddCategory}>
+              Add
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
-
-      <View style={styles.section}>
+      {/* Words Section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
         <Button
           mode="contained-tonal"
           onPress={() => toggleSection("words")}
@@ -184,25 +229,6 @@ export default function VocabularyTab() {
         </Button>
         {expandedSection === "words" && (
           <View style={styles.sectionContent}>
-            <FlatList
-              data={words}
-              keyExtractor={(item) => item.id.toString()}
-              ItemSeparatorComponent={() => <Divider />}
-              renderItem={({ item }) => (
-                <View style={styles.itemRow}>
-                  <Text style={styles.wordText}>
-                    {item.word_en} ({item.word_ru}) — {item.category.icon}{" "}
-                    {item.category.name}
-                  </Text>
-                  {item.type === EntityType.useradd && (
-                    <IconButton
-                      icon="delete"
-                      onPress={() => handleDeleteWord(item.id, item.type)}
-                    />
-                  )}
-                </View>
-              )}
-            />
             <Button
               icon="plus"
               mode="outlined"
@@ -211,11 +237,38 @@ export default function VocabularyTab() {
             >
               Add Word
             </Button>
+            <FlatList
+              data={words}
+              keyExtractor={(item) => item.id.toString()}
+              ItemSeparatorComponent={() => <Divider />}
+              renderItem={({ item }) => (
+                <View style={styles.itemRow}>
+                  {/* <TouchableOpacity
+                    style={styles.itemRow}
+                    onPress={() => {
+                      setWordToEdit(item); // store the word you want to edit
+                      setShowEditWordModal(true); // open the edit modal
+                    }}
+                  > */}
+                  <Text
+                    style={[
+                      styles.wordText,
+                      { color: theme.colors.onBackground },
+                    ]}
+                  >
+                    {item.word_en} ({item.word_ru}) — {item.category.icon}{" "}
+                    {item.category.name}
+                  </Text>
+                  {/* </TouchableOpacity> */}
+                </View>
+              )}
+            />
           </View>
         )}
       </View>
 
-      <View style={styles.section}>
+      {/* Categories Section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
         <Button
           mode="contained-tonal"
           onPress={() => toggleSection("categories")}
@@ -225,24 +278,6 @@ export default function VocabularyTab() {
         </Button>
         {expandedSection === "categories" && (
           <View style={styles.sectionContent}>
-            <FlatList
-              data={categories}
-              keyExtractor={(item) => item.id.toString()}
-              ItemSeparatorComponent={() => <Divider />}
-              renderItem={({ item }) => (
-                <View style={styles.itemRow}>
-                  <Text style={styles.wordText}>
-                    {item.icon} {item.name}
-                  </Text>
-                  {item.type === EntityType.useradd && (
-                    <IconButton
-                      icon="delete"
-                      onPress={() => handleDeleteCategory(item.id, item.type)}
-                    />
-                  )}
-                </View>
-              )}
-            />
             <Button
               icon="plus"
               mode="outlined"
@@ -251,6 +286,29 @@ export default function VocabularyTab() {
             >
               Add Category
             </Button>
+            <FlatList
+              data={categories}
+              keyExtractor={(item) => item.id.toString()}
+              ItemSeparatorComponent={() => <Divider />}
+              renderItem={({ item }) => (
+                <View style={styles.itemRow}>
+                  <Text
+                    style={[
+                      styles.wordText,
+                      { color: theme.colors.onBackground },
+                    ]}
+                  >
+                    {item.icon} {item.name}
+                  </Text>
+                  {item.type === EntityType.useradd && (
+                    <IconButton
+                      icon="delete"
+                      onPress={() => handleDeleteCategory(item)}
+                    />
+                  )}
+                </View>
+              )}
+            />
           </View>
         )}
       </View>
@@ -261,13 +319,11 @@ export default function VocabularyTab() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: "#f5f5f5", 
     paddingTop: "20%",
     padding: 20,
   },
   section: {
     marginBottom: 16,
-    backgroundColor: "#fff",
     borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -288,22 +344,34 @@ const styles = StyleSheet.create({
   wordText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",  
   },
   input: {
     marginVertical: 8,
     borderRadius: 12,
-    backgroundColor: "#fafafa", 
   },
   sectionLabel: {
     marginVertical: 8,
     fontWeight: "600",
-    color: "#333",
   },
   categoryBtn: {
     marginVertical: 4,
     borderRadius: 8,
   },
-  addBtn: { marginTop: 12 },
-});
+  addBtn: { marginBottom: 12 },
+  emojiPickerContainer: {
+    height: 250,
+    margin: 10,
+  },
 
+  // new styles for dialog
+  // dialogTitle: {
+  //   fontWeight: "700",
+  // },
+  // closeBtn: {
+  //   marginRight: 8,
+  // },
+  // deleteBtn: {
+  //   marginLeft: 8,
+  //   borderColor: "red",
+  // },
+});

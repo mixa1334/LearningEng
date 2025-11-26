@@ -6,6 +6,7 @@ import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 export function GoalAchieveOverlay() {
   const { width, height } = useWindowDimensions();
   const dailyGoalAchieve = useAppSelector((s) => s.stats.dailyGoalAchieve);
+  const name = useAppSelector((s) => s.stats.name);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export function GoalAchieveOverlay() {
   return (
     <View style={styles.overlay}>
       <View style={styles.content}>
-        <Text style={styles.congratsText}>🎉 You met your daily goal!</Text>
+        <Text style={styles.congratsText}>🎉 {name}, you met your daily goal!</Text>
         <LottieView
           source={require("@/assets/animations/confetti_daily_goal.json")}
           autoPlay
