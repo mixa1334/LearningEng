@@ -78,7 +78,7 @@ export default function CreateWordDialog({ visible, exit }: CreateWordDialogProp
         </Text>
         <FlatList
           style={{
-            maxHeight: MAX_SELECT_CATEGORY_HEIGHT,
+            minHeight: MAX_SELECT_CATEGORY_HEIGHT,
           }}
           data={categories}
           keyExtractor={(item) => item.id.toString()}

@@ -1,34 +1,72 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
-import { EntityType } from "@/model/entity/types";
+import { Category, EntityType } from "@/model/entity/types";
 import { MAX_LIST_HEIGHT } from "@/resources/constants/constants";
-import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
-import { Divider, IconButton, Text, useTheme } from "react-native-paper";
+import React, { useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Divider,
+  IconButton,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
+import EditCategoryDialog from "./EditCategoryDialog";
 
 const ItemSeparator = () => <Divider />;
 
 export default function CategoriesList() {
   const { categories, removeCategory } = useVocabulary();
   const theme = useTheme();
+
+  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
+
+  const openEditCategoryModal = (category: Category) => {
+    setCategoryToEdit(category);
+    setShowEditCategoryModal(true);
+  };
+
   return (
-    <FlatList
-      style={{
-        maxHeight: MAX_LIST_HEIGHT,
-      }}
-      data={categories}
-      keyExtractor={(item) => item.id.toString()}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => (
-        <View style={styles.itemRow}>
-          <Text style={[styles.wordText, { color: theme.colors.onBackground }]}>
-            {item.icon} {item.name}
-          </Text>
-          {item.type === EntityType.useradd && (
-            <IconButton size={17} icon="delete" onPress={() => removeCategory(item)} />
-          )}
-        </View>
-      )}
-    />
+    <>
+      <Portal>
+        {showEditCategoryModal && categoryToEdit && (
+          <EditCategoryDialog
+            visible={showEditCategoryModal}
+            exit={() => setShowEditCategoryModal(false)}
+            category={categoryToEdit}
+          />
+        )}
+      </Portal>
+      <FlatList
+        style={{
+          minHeight: MAX_LIST_HEIGHT,
+        }}
+        data={categories}
+        keyExtractor={(item) => item.id.toString()}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={({ item }) => (
+          <View style={styles.itemRow}>
+            <TouchableOpacity
+              style={styles.itemRow}
+              onPress={() => openEditCategoryModal(item)}
+            >
+              <Text
+                style={[styles.wordText, { color: theme.colors.onBackground }]}
+              >
+                {item.icon} {item.name}
+              </Text>
+            </TouchableOpacity>
+            {item.type === EntityType.useradd && (
+              <IconButton
+                size={17}
+                icon="delete"
+                onPress={() => removeCategory(item)}
+              />
+            )}
+          </View>
+        )}
+      />
+    </>
   );
 }
 
