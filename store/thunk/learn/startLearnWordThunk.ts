@@ -1,5 +1,5 @@
 import type { Word } from "@/model/entity/types";
-import { startLearningWord } from "@/model/repository/wordService";
+import { startLearningWord } from "@/model/service/wordService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { type SQLiteDatabase } from "expo-sqlite";
 import { updateStatsAfterLearnThunk } from "../userStats/updateStatsAfterLearnThunk";

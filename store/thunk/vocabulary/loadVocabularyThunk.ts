@@ -1,5 +1,5 @@
-import { getAllCategories } from "@/model/repository/categoryService";
-import { getUserWords } from "@/model/repository/wordService";
+import { getAllCategories } from "@/model/service/categoryService";
+import { getUserWords } from "@/model/service/wordService";
 import { VocabularyState } from "@/store/slice/vocabularySlice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { SQLiteDatabase } from "expo-sqlite";

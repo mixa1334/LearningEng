@@ -1,12 +1,12 @@
 import categoriesSeed from "@/assets/data/categories.json";
 import wordsSeed from "@/assets/data/words.json";
-import { COUNT_CATEGORIES } from "@/constants/sql/categoriesTable";
-import { SCHEMA_CREATION_IF_NOT_EXISTS } from "@/constants/sql/schema";
-import { COUNT_WORDS } from "@/constants/sql/wordsTable";
+import { COUNT_CATEGORIES } from "@/resources/sql/categoriesTable";
+import { SCHEMA_CREATION_IF_NOT_EXISTS } from "@/resources/sql/schema";
+import { COUNT_WORDS } from "@/resources/sql/wordsTable";
 import type { SQLiteDatabase } from "expo-sqlite";
 import { EntityType } from "../entity/types";
-import { addNewCategory } from "../repository/categoryService";
-import { addNewWord } from "../repository/wordService";
+import { addNewCategory } from "../service/categoryService";
+import { addNewWord } from "../service/wordService";
 
 export async function runMigrations(db: SQLiteDatabase) {
   await createSchema(db);

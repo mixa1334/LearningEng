@@ -16,7 +16,6 @@ export const SELECT_CATEGORIES = `
 export const DELETE_CATEGORY = `
     DELETE
     FROM categories
-    WHERE type = 'user_added' AND id = ?
 `;
 
 export const UPDATE_CATEGORY = `

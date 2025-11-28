@@ -1,5 +1,6 @@
+import { NewCategoryDto } from "@/model/dto/NewCategoryDto";
 import { Category } from "@/model/entity/types";
-import { addNewCategory, getAllCategories, NewCategoryDto } from "@/model/repository/categoryService";
+import { addNewCategory, getAllCategories } from "@/model/service/categoryService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { SQLiteDatabase } from "expo-sqlite";
 
@@ -8,5 +9,5 @@ export const addCategoryThunk = createAsyncThunk<
   { db: SQLiteDatabase; newCategory: NewCategoryDto }
 >("vocabulary/addCategoryThunk", async ({db, newCategory}) => {
     await addNewCategory(db, newCategory);
-    return await getAllCategories(db);
+    return getAllCategories(db);
 });

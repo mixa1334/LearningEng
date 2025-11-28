@@ -1,21 +1,14 @@
+import { EntityType, type Word } from "@/model/entity/types";
 import {
   DELETE_WORD,
   INSERT_INTO_WORDS,
   SELECT_WORDS,
-} from "@/constants/sql/wordsTable";
-import { EntityType, type Word } from "@/model/entity/types";
+} from "@/resources/sql/wordsTable";
 import type { SQLiteDatabase } from "expo-sqlite";
+import { NewWordDto } from "../dto/NewWordDto";
 import { rowToWord } from "../mapper/typesMapper";
 
-export type NewWordDto = {
-  word_en: string;
-  word_ru: string;
-  transcription: string;
-  category_id: number;
-  text_example: string;
-};
-
-export async function resetWordLearningProgress(db: SQLiteDatabase){
+export async function resetWordLearningProgress(db: SQLiteDatabase): Promise<void> {
   await db.runAsync('UPDATE words SET learned = 0, priority = 0');
 }
 
@@ -58,7 +51,7 @@ export async function editUserWord(
   await db.runAsync(
     `UPDATE words
     SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
-    WHERE id = ?`,
+    WHERE type = 'user_added' AND id = ?`,
     [
       word.word_en,
       word.word_ru,

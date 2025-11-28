@@ -1,4 +1,4 @@
-import { resetWordLearningProgress } from "@/model/repository/wordService";
+import { resetWordLearningProgress } from "@/model/service/wordService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { SQLiteDatabase } from "expo-sqlite";
 import { loadDailyWordSetThunk } from "./loadDailyWordSetThunk";

@@ -1,5 +1,5 @@
-import { GoalAchieveOverlay } from "@/components/GoalAchieveOverlay";
-import LoadingSpinner from "@/components/LoadingApp";
+import { GoalAchieveOverlay } from "@/components/common/GoalAchieveOverlay";
+import LoadingSpinner from "@/components/common/LoadingApp";
 import { runMigrations } from "@/model/database/migrations";
 import { ThemeProvider } from "@/provider/ThemeProvider";
 import { AppDispatch, store } from "@/store";

@@ -1,4 +1,4 @@
-import WordScreen from "@/components/WordScreen";
+import WordScreen from "@/components/learn/WordScreen";
 import { useLearningDailySet, useLearnUtil } from "@/hooks/useLearn";
 import React, { useState } from "react";
 import {

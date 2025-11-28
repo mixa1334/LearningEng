@@ -1,8 +1,8 @@
 import type { Word } from "@/model/entity/types";
 import {
-  getDailyWordsToLearn,
-  getDailyWordsToReview,
-} from "@/model/repository/wordService";
+    getDailyWordsToLearn,
+    getDailyWordsToReview,
+} from "@/model/service/wordService";
 import { RootState } from "@/store";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { type SQLiteDatabase } from "expo-sqlite";

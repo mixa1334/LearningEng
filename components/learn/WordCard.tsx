@@ -4,19 +4,21 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "react-native-paper";
 
+interface WordCardProps {
+  readonly word: Word;
+  readonly accept: () => void;
+  readonly acceptBtnName: string;
+  readonly reject: () => void;
+  readonly rejectBtnName: string;
+}
+
 export default function WordCard({
   word,
   accept,
   acceptBtnName,
   reject,
   rejectBtnName,
-}: {
-  word: Word;
-  accept: () => void;
-  acceptBtnName: string;
-  reject: () => void;
-  rejectBtnName: string;
-}) {
+}: WordCardProps) {
   const [showTranslation, setShowTranslation] = useState(false);
   const [pending, setPending] = useState(false);
   const [accepted, setAccepted] = useState(false);

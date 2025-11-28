@@ -4,19 +4,21 @@ import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import WordCard from "./WordCard";
 
+interface WordScreenProps {
+  readonly words: Word[];
+  readonly accept: (word: Word) => void;
+  readonly acceptBtnName: string;
+  readonly reject: (word: Word) => void;
+  readonly rejectBtnName: string;
+}
+
 export default function WordScreen({
   words,
   accept,
   acceptBtnName,
   reject,
-  rejectBtnName
-}: {
-  words: Word[];
-  accept: (word: Word) => void;
-  acceptBtnName: string;
-  reject: (word: Word) => void;
-  rejectBtnName: string;
-}) {
+  rejectBtnName,
+}: WordScreenProps) {
   const theme = useTheme();
 
   const handleKnow = () => {
@@ -61,4 +63,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

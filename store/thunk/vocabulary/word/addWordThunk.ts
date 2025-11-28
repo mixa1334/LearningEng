@@ -1,5 +1,6 @@
+import { NewWordDto } from "@/model/dto/NewWordDto";
 import { Word } from "@/model/entity/types";
-import { addNewWord, getUserWords, NewWordDto } from "@/model/repository/wordService";
+import { addNewWord, getUserWords } from "@/model/service/wordService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { SQLiteDatabase } from "expo-sqlite";
 import { loadDailyWordSetThunk } from "../../learn/loadDailyWordSetThunk";
@@ -8,6 +9,6 @@ export const addWordThunk = createAsyncThunk<Word[], {db: SQLiteDatabase, newWor
     "vocabulary/addWordThunk", async ({db, newWord}, {dispatch}) => {
         await addNewWord(db, newWord);
         dispatch(loadDailyWordSetThunk({db}));
-        return await getUserWords(db);
+        return getUserWords(db);
     }
 );

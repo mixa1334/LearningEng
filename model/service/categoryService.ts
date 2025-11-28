@@ -1,17 +1,13 @@
+import { Category, EntityType } from "@/model/entity/types";
 import {
   DELETE_CATEGORY,
   INSERT_INTO_CATEGORIES,
   SELECT_CATEGORIES,
   UPDATE_CATEGORY,
-} from "@/constants/sql/categoriesTable";
-import { Category, EntityType } from "@/model/entity/types";
+} from "@/resources/sql/categoriesTable";
 import type { SQLiteDatabase } from "expo-sqlite";
+import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { rowToCategory } from "../mapper/typesMapper";
-
-export type NewCategoryDto = {
-  name: string;
-  icon: string;
-};
 
 export async function addNewCategory(
   db: SQLiteDatabase,
@@ -33,6 +29,9 @@ export async function deleteUserCategory(
   db: SQLiteDatabase,
   category: Category
 ) {
+  await db.runAsync(`UPDATE words SET category_id = 1 WHERE category_id = ?`, [
+    category.id,
+  ]);
   await db.runAsync(
     `${DELETE_CATEGORY}
     WHERE type = 'user_added' AND id = ?`,
