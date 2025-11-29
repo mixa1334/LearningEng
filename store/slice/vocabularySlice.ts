@@ -11,11 +11,12 @@ import { removeWordThunk } from "../thunk/vocabulary/word/removeWordThunk";
 export type VocabularyState = {
   words: Word[];
   categories: Category[];
+  preloadedWords: Word[];
 };
 
 const vocabularySlice = createSlice({
   name: "vocabulary",
-  initialState: { words: [], categories: [] } as VocabularyState,
+  initialState: { words: [], categories: [], preloadedWords: [] } as VocabularyState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loadVocabularyThunk.fulfilled, (state, action) => {

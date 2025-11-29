@@ -1,12 +1,13 @@
 import CategoriesList from "@/components/category/CategoriesList";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
+import WordsOverview from "@/components/learn/WordsOverview";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Switch, Text, View } from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
 
-type Section = "words" | "categories" | null;
+type Section = "words" | "categories" | "wordsOverview" | null;
 
 export default function VocabularyTab() {
   const theme = useTheme();
@@ -15,6 +16,7 @@ export default function VocabularyTab() {
 
   const [showAddWordModal, setShowAddWordModal] = useState(false);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
+  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
 
   const toggleWordsSection = () => {
     setExpandedSection(expandedSection === "words" ? null : "words");
@@ -22,6 +24,17 @@ export default function VocabularyTab() {
 
   const toggleCategoriesSection = () => {
     setExpandedSection(expandedSection === "categories" ? null : "categories");
+  };
+
+  const switchOnlyUserAddedWords = () => {
+    const newVal = !onlyUserAddedWords;
+    setOnlyUserAddedWords(newVal);
+  };
+
+  const toggleWordsOverviewSection = () => {
+    setExpandedSection(
+      expandedSection === "wordsOverview" ? null : "wordsOverview"
+    );
   };
 
   return (
@@ -89,6 +102,31 @@ export default function VocabularyTab() {
           </View>
         )}
       </View>
+
+      {/* Words overview section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
+        <Button
+          mode="contained-tonal"
+          onPress={toggleWordsOverviewSection}
+          style={styles.sectionHeader}
+        >
+          Words Overview
+        </Button>
+        {expandedSection === "wordsOverview" && (
+          <View style={styles.sectionContent}>
+            <View style={styles.settingRow}>
+              <Text style={{ color: theme.colors.onSurface }}>
+                Only User Added Words
+              </Text>
+              <Switch
+                value={onlyUserAddedWords}
+                onValueChange={switchOnlyUserAddedWords}
+              />
+            </View>
+            <WordsOverview onlyUserAddedWords={onlyUserAddedWords} />
+          </View>
+        )}
+      </View>
     </View>
   );
 }
@@ -113,4 +151,10 @@ const styles = StyleSheet.create({
   },
   sectionContent: { padding: 16 },
   addBtn: { marginBottom: 12 },
+  settingRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 8,
+  },
 });

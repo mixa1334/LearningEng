@@ -88,7 +88,13 @@ export default function WordCard({
             ]}
             onPress={handleContinue}
           >
-            <Text style={styles.btnText}>Continue</Text>
+            <Text
+              style={styles.btnText}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
+              Continue
+            </Text>
           </TouchableOpacity>
         ) : (
           <>
@@ -99,7 +105,13 @@ export default function WordCard({
               ]}
               onPress={handleAccept}
             >
-              <Text style={styles.btnText}>{acceptBtnName}</Text>
+              <Text
+                style={styles.btnText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {acceptBtnName}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -108,7 +120,13 @@ export default function WordCard({
               ]}
               onPress={handleReject}
             >
-              <Text style={styles.btnText}>{rejectBtnName}</Text>
+              <Text
+                style={styles.btnText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {rejectBtnName}
+              </Text>
             </TouchableOpacity>
           </>
         )}
@@ -149,22 +167,28 @@ const styles = StyleSheet.create({
   eyeText: { marginLeft: 6, fontWeight: "600" },
   bottomBar: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
     paddingTop: 10,
   },
   btnAccept: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginHorizontal: 5,
+    marginHorizontal: 4,
     alignItems: "center",
+    maxWidth: "48%",
   },
   btnReject: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginHorizontal: 5,
+    marginHorizontal: 4,
     alignItems: "center",
+    maxWidth: "48%",
   },
-  btnText: { fontWeight: "600", fontSize: 16 },
+  btnText: { fontWeight: "600", fontSize: 13 },
 });

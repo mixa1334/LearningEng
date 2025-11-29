@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 export function useVocabulary() {
   const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
-  const { words, categories } = useAppSelector((s) => s.vocabulary);
+  const { words, categories, preloadedWords } = useAppSelector((s) => s.vocabulary);
 
   useEffect(() => {
     if (db) dispatch(loadVocabularyThunk(db));
@@ -67,6 +67,7 @@ export function useVocabulary() {
   return {
     words,
     categories,
+    preloadedWords,
     addWord,
     addCategory,
     removeWord,

@@ -8,8 +8,10 @@ import type { SQLiteDatabase } from "expo-sqlite";
 import { NewWordDto } from "../dto/NewWordDto";
 import { rowToWord } from "../mapper/typesMapper";
 
-export async function resetWordLearningProgress(db: SQLiteDatabase): Promise<void> {
-  await db.runAsync('UPDATE words SET learned = 0, priority = 0');
+export async function resetWordLearningProgress(
+  db: SQLiteDatabase
+): Promise<void> {
+  await db.runAsync("UPDATE words SET learned = 0, priority = 0");
 }
 
 export async function addNewWord(
@@ -63,10 +65,17 @@ export async function editUserWord(
   );
 }
 
-export async function getUserWords(
-  db: SQLiteDatabase
-): Promise<Word[]>{
-  const rows = await db.getAllAsync<any>(`${SELECT_WORDS} WHERE w.type = 'user_added'`);
+export async function getUserWords(db: SQLiteDatabase): Promise<Word[]> {
+  const rows = await db.getAllAsync<any>(
+    `${SELECT_WORDS} WHERE w.type = 'user_added'`
+  );
+  return rows.map(rowToWord);
+}
+
+export async function getPreloadedWords(db: SQLiteDatabase): Promise<Word[]> {
+  const rows = await db.getAllAsync<any>(
+    `${SELECT_WORDS} WHERE w.type = 'pre_loaded'`
+  );
   return rows.map(rowToWord);
 }
 
