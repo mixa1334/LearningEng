@@ -33,7 +33,7 @@ export default function WordsList() {
 
       <FlatList
         style={{
-          minHeight: MAX_LIST_HEIGHT,
+          height: MAX_LIST_HEIGHT,
         }}
         data={words}
         keyExtractor={(item) => item.id.toString()}

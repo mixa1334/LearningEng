@@ -96,7 +96,7 @@ export default function EditWordDialog({
         </Text>
         <FlatList
           style={{
-            minHeight: MAX_SELECT_CATEGORY_HEIGHT,
+            height: MAX_SELECT_CATEGORY_HEIGHT,
           }}
           data={categories}
           keyExtractor={(item) => item.id.toString()}

@@ -15,8 +15,8 @@ import EditCategoryDialog from "./EditCategoryDialog";
 const ItemSeparator = () => <Divider />;
 
 export default function CategoriesList() {
-  const { categories, removeCategory } = useVocabulary();
   const theme = useTheme();
+  const { categories, removeCategory } = useVocabulary();
 
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
@@ -39,7 +39,7 @@ export default function CategoriesList() {
       </Portal>
       <FlatList
         style={{
-          minHeight: MAX_LIST_HEIGHT,
+          height: MAX_LIST_HEIGHT,
         }}
         data={categories}
         keyExtractor={(item) => item.id.toString()}

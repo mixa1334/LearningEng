@@ -3,7 +3,6 @@ import {
   DELETE_CATEGORY,
   INSERT_INTO_CATEGORIES,
   SELECT_CATEGORIES,
-  UPDATE_CATEGORY,
 } from "@/resources/sql/categoriesTable";
 import type { SQLiteDatabase } from "expo-sqlite";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
@@ -39,10 +38,13 @@ export async function deleteUserCategory(
   );
 }
 
-export async function editUserCategory(db: SQLiteDatabase, category: Category) {
+export async function editUserCategory(
+  db: SQLiteDatabase,
+  category: Category
+): Promise<void> {
   await db.runAsync(
-    `${UPDATE_CATEGORY}
-    WHERE type = 'user_added AND id = ?`,
+    `UPDATE categories SET name = ?, icon = ?
+    WHERE type = 'user_added' AND id = ?`,
     [category.name, category.icon, category.id]
   );
 }
