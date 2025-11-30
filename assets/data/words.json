@@ -1,0 +1,1224 @@
+[
+  {
+    "word_en": "apartment",
+    "word_ru": "квартира",
+    "transcription": "[əˈpɑːrtmənt]",
+    "text_example": "They rented a small apartment in the city.",
+    "category_id": 1
+  },
+  {
+    "word_en": "neighbour",
+    "word_ru": "сосед",
+    "transcription": "[ˈneɪbər]",
+    "text_example": "Our new neighbour is very friendly.",
+    "category_id": 1
+  },
+  {
+    "word_en": "rent",
+    "word_ru": "аренда",
+    "transcription": "[rent]",
+    "text_example": "The rent for this flat is quite high.",
+    "category_id": 1
+  },
+  {
+    "word_en": "furniture",
+    "word_ru": "мебель",
+    "transcription": "[ˈfɜːrnɪtʃər]",
+    "text_example": "We bought new furniture for the living room.",
+    "category_id": 1
+  },
+  {
+    "word_en": "ceiling",
+    "word_ru": "потолок",
+    "transcription": "[ˈsiːlɪŋ]",
+    "text_example": "The ceiling in the kitchen is very low.",
+    "category_id": 1
+  },
+  {
+    "word_en": "blanket",
+    "word_ru": "одеяло",
+    "transcription": "[ˈblæŋkɪt]",
+    "text_example": "She covered the child with a warm blanket.",
+    "category_id": 1
+  },
+  {
+    "word_en": "pillow",
+    "word_ru": "подушка",
+    "transcription": "[ˈpɪloʊ]",
+    "text_example": "He put an extra pillow under his head.",
+    "category_id": 1
+  },
+  {
+    "word_en": "wardrobe",
+    "word_ru": "шкаф",
+    "transcription": "[ˈwɔːrdroʊb]",
+    "text_example": "Her clothes filled the whole wardrobe.",
+    "category_id": 1
+  },
+  {
+    "word_en": "bill",
+    "word_ru": "счёт",
+    "transcription": "[bɪl]",
+    "text_example": "The electricity bill arrived yesterday.",
+    "category_id": 1
+  },
+  {
+    "word_en": "electricity",
+    "word_ru": "электричество",
+    "transcription": "[ɪˌlekˈtrɪsəti]",
+    "text_example": "We had no electricity for two hours.",
+    "category_id": 1
+  },
+  {
+    "word_en": "repair",
+    "word_ru": "ремонт",
+    "transcription": "[rɪˈper]",
+    "text_example": "The car needs serious repair.",
+    "category_id": 1
+  },
+  {
+    "word_en": "laundry",
+    "word_ru": "стирка",
+    "transcription": "[ˈlɔːndri]",
+    "text_example": "She does the laundry every Sunday.",
+    "category_id": 1
+  },
+  {
+    "word_en": "detergent",
+    "word_ru": "моющее средство",
+    "transcription": "[dɪˈtɜːrdʒənt]",
+    "text_example": "Use this detergent for coloured clothes.",
+    "category_id": 1
+  },
+  {
+    "word_en": "schedule",
+    "word_ru": "расписание",
+    "transcription": "[ˈskedʒuːl]",
+    "text_example": "My daily schedule is very busy.",
+    "category_id": 1
+  },
+  {
+    "word_en": "routine",
+    "word_ru": "рутина",
+    "transcription": "[ruːˈtiːn]",
+    "text_example": "He wanted to change his boring routine.",
+    "category_id": 1
+  },
+  {
+    "word_en": "wallet",
+    "word_ru": "кошелёк",
+    "transcription": "[ˈwɑːlɪt]",
+    "text_example": "She forgot her wallet at home.",
+    "category_id": 1
+  },
+  {
+    "word_en": "receipt",
+    "word_ru": "чек",
+    "transcription": "[rɪˈsiːt]",
+    "text_example": "Keep the receipt in case you need to return it.",
+    "category_id": 1
+  },
+  {
+    "word_en": "queue",
+    "word_ru": "очередь",
+    "transcription": "[kjuː]",
+    "text_example": "We waited in a long queue at the supermarket.",
+    "category_id": 1
+  },
+  {
+    "word_en": "entrance",
+    "word_ru": "вход",
+    "transcription": "[ˈentrəns]",
+    "text_example": "The main entrance is around the corner.",
+    "category_id": 1
+  },
+  {
+    "word_en": "exit",
+    "word_ru": "выход",
+    "transcription": "[ˈeɡzɪt]",
+    "text_example": "Please use the nearest emergency exit.",
+    "category_id": 1
+  },
+  {
+    "word_en": "elevator",
+    "word_ru": "лифт",
+    "transcription": "[ˈelɪveɪtər]",
+    "text_example": "The elevator is out of order today.",
+    "category_id": 1
+  },
+  {
+    "word_en": "stairs",
+    "word_ru": "лестница",
+    "transcription": "[sterz]",
+    "text_example": "She ran quickly up the stairs.",
+    "category_id": 1
+  },
+  {
+    "word_en": "corridor",
+    "word_ru": "коридор",
+    "transcription": "[ˈkɔːrɪdɔːr]",
+    "text_example": "The corridor was dark and narrow.",
+    "category_id": 1
+  },
+  {
+    "word_en": "lock",
+    "word_ru": "замок",
+    "transcription": "[lɑːk]",
+    "text_example": "Don't forget to lock the door.",
+    "category_id": 1
+  },
+  {
+    "word_en": "key",
+    "word_ru": "ключ",
+    "transcription": "[kiː]",
+    "text_example": "He lost the key to the front door.",
+    "category_id": 1
+  },
+
+  {
+    "word_en": "relative",
+    "word_ru": "родственник",
+    "transcription": "[ˈrelətɪv]",
+    "text_example": "We visited some relatives at the weekend.",
+    "category_id": 2
+  },
+  {
+    "word_en": "colleague",
+    "word_ru": "коллега",
+    "transcription": "[ˈkɑːliːɡ]",
+    "text_example": "He has lunch with his colleagues every day.",
+    "category_id": 2
+  },
+  {
+    "word_en": "stranger",
+    "word_ru": "незнакомец",
+    "transcription": "[ˈstreɪndʒər]",
+    "text_example": "Never share personal information with a stranger.",
+    "category_id": 2
+  },
+  {
+    "word_en": "couple",
+    "word_ru": "пара",
+    "transcription": "[ˈkʌpəl]",
+    "text_example": "The young couple moved into a new house.",
+    "category_id": 2
+  },
+  {
+    "word_en": "relationship",
+    "word_ru": "отношения",
+    "transcription": "[rɪˈleɪʃənʃɪp]",
+    "text_example": "They have a very close relationship.",
+    "category_id": 2
+  },
+  {
+    "word_en": "argument",
+    "word_ru": "спор",
+    "transcription": "[ˈɑːrɡjumənt]",
+    "text_example": "They had an argument about money.",
+    "category_id": 2
+  },
+  {
+    "word_en": "agreement",
+    "word_ru": "соглашение",
+    "transcription": "[əˈɡriːmənt]",
+    "text_example": "After a long discussion they reached an agreement.",
+    "category_id": 2
+  },
+  {
+    "word_en": "behaviour",
+    "word_ru": "поведение",
+    "transcription": "[bɪˈheɪvjər]",
+    "text_example": "The teacher was pleased with his behaviour.",
+    "category_id": 2
+  },
+  {
+    "word_en": "character",
+    "word_ru": "характер",
+    "transcription": "[ˈkærəktər]",
+    "text_example": "She has a very strong character.",
+    "category_id": 2
+  },
+  {
+    "word_en": "generous",
+    "word_ru": "щедрый",
+    "transcription": "[ˈdʒenərəs]",
+    "text_example": "It was generous of him to help us.",
+    "category_id": 2
+  },
+  {
+    "word_en": "polite",
+    "word_ru": "вежливый",
+    "transcription": "[pəˈlaɪt]",
+    "text_example": "You should be polite to older people.",
+    "category_id": 2
+  },
+  {
+    "word_en": "rude",
+    "word_ru": "грубый",
+    "transcription": "[ruːd]",
+    "text_example": "It is rude to interrupt someone.",
+    "category_id": 2
+  },
+  {
+    "word_en": "patient",
+    "word_ru": "терпеливый",
+    "transcription": "[ˈpeɪʃnt]",
+    "text_example": "Parents must be patient with their children.",
+    "category_id": 2
+  },
+  {
+    "word_en": "responsible",
+    "word_ru": "ответственный",
+    "transcription": "[rɪˈspɑːnsəbl]",
+    "text_example": "She is responsible for the project.",
+    "category_id": 2
+  },
+  {
+    "word_en": "depend",
+    "word_ru": "зависеть",
+    "transcription": "[dɪˈpend]",
+    "text_example": "You can always depend on your family.",
+    "category_id": 2
+  },
+  {
+    "word_en": "trust",
+    "word_ru": "доверять",
+    "transcription": "[trʌst]",
+    "text_example": "I completely trust my best friend.",
+    "category_id": 2
+  },
+  {
+    "word_en": "support",
+    "word_ru": "поддерживать",
+    "transcription": "[səˈpɔːrt]",
+    "text_example": "Her parents always support her decisions.",
+    "category_id": 2
+  },
+  {
+    "word_en": "complain",
+    "word_ru": "жаловаться",
+    "transcription": "[kəmˈpleɪn]",
+    "text_example": "He often complains about the weather.",
+    "category_id": 2
+  },
+  {
+    "word_en": "invite",
+    "word_ru": "приглашать",
+    "transcription": "[ɪnˈvaɪt]",
+    "text_example": "They invited us to their wedding.",
+    "category_id": 2
+  },
+  {
+    "word_en": "apologize",
+    "word_ru": "извиняться",
+    "transcription": "[əˈpɑːlədʒaɪz]",
+    "text_example": "You should apologize for being late.",
+    "category_id": 2
+  },
+  {
+    "word_en": "promise",
+    "word_ru": "обещание",
+    "transcription": "[ˈprɑːmɪs]",
+    "text_example": "He made a promise to call her.",
+    "category_id": 2
+  },
+  {
+    "word_en": "advice",
+    "word_ru": "совет",
+    "transcription": "[ədˈvaɪs]",
+    "text_example": "My father gave me good advice.",
+    "category_id": 2
+  },
+  {
+    "word_en": "friendship",
+    "word_ru": "дружба",
+    "transcription": "[ˈfrendʃɪp]",
+    "text_example": "Their friendship has lasted for many years.",
+    "category_id": 2
+  },
+  {
+    "word_en": "divorced",
+    "word_ru": "разведённый",
+    "transcription": "[dɪˈvɔːrst]",
+    "text_example": "Her parents are divorced but still friendly.",
+    "category_id": 2
+  },
+  {
+    "word_en": "single",
+    "word_ru": "холостой",
+    "transcription": "[ˈsɪŋɡl]",
+    "text_example": "He is single and lives alone.",
+    "category_id": 2
+  },
+  {
+    "word_en": "married",
+    "word_ru": "женатый",
+    "transcription": "[ˈmærid]",
+    "text_example": "They have been married for ten years.",
+    "category_id": 2
+  },
+
+  {
+    "word_en": "ingredient",
+    "word_ru": "ингредиент",
+    "transcription": "[ɪnˈɡriːdiənt]",
+    "text_example": "We need only a few ingredients for this soup.",
+    "category_id": 3
+  },
+  {
+    "word_en": "flavour",
+    "word_ru": "вкус",
+    "transcription": "[ˈfleɪvər]",
+    "text_example": "I like the flavour of fresh strawberries.",
+    "category_id": 3
+  },
+  {
+    "word_en": "boil",
+    "word_ru": "кипятить",
+    "transcription": "[bɔɪl]",
+    "text_example": "Boil the potatoes for twenty minutes.",
+    "category_id": 3
+  },
+  {
+    "word_en": "fry",
+    "word_ru": "жарить",
+    "transcription": "[fraɪ]",
+    "text_example": "She likes to fry eggs for breakfast.",
+    "category_id": 3
+  },
+  {
+    "word_en": "bake",
+    "word_ru": "печь",
+    "transcription": "[beɪk]",
+    "text_example": "We bake fresh bread every weekend.",
+    "category_id": 3
+  },
+  {
+    "word_en": "grill",
+    "word_ru": "готовить на гриле",
+    "transcription": "[ɡrɪl]",
+    "text_example": "They grilled fish on the beach.",
+    "category_id": 3
+  },
+  {
+    "word_en": "spicy",
+    "word_ru": "острый",
+    "transcription": "[ˈspaɪsi]",
+    "text_example": "The sauce was too spicy for me.",
+    "category_id": 3
+  },
+  {
+    "word_en": "delicious",
+    "word_ru": "вкусный",
+    "transcription": "[dɪˈlɪʃəs]",
+    "text_example": "The cake was absolutely delicious.",
+    "category_id": 3
+  },
+  {
+    "word_en": "taste",
+    "word_ru": "вкус",
+    "transcription": "[teɪst]",
+    "text_example": "This soup has a strange taste.",
+    "category_id": 3
+  },
+  {
+    "word_en": "snack",
+    "word_ru": "перекус",
+    "transcription": "[snæk]",
+    "text_example": "I usually have a small snack at work.",
+    "category_id": 3
+  },
+  {
+    "word_en": "breakfast",
+    "word_ru": "завтрак",
+    "transcription": "[ˈbrekfəst]",
+    "text_example": "Breakfast is my favourite meal of the day.",
+    "category_id": 3
+  },
+  {
+    "word_en": "lunch",
+    "word_ru": "обед",
+    "transcription": "[lʌntʃ]",
+    "text_example": "We had lunch at a small café.",
+    "category_id": 3
+  },
+  {
+    "word_en": "dinner",
+    "word_ru": "ужин",
+    "transcription": "[ˈdɪnər]",
+    "text_example": "They invited us for dinner on Friday.",
+    "category_id": 3
+  },
+  {
+    "word_en": "diet",
+    "word_ru": "диета",
+    "transcription": "[ˈdaɪət]",
+    "text_example": "She is on a strict diet now.",
+    "category_id": 3
+  },
+  {
+    "word_en": "healthy",
+    "word_ru": "здоровый",
+    "transcription": "[ˈhelθi]",
+    "text_example": "Try to choose healthy food.",
+    "category_id": 3
+  },
+  {
+    "word_en": "hungry",
+    "word_ru": "голодный",
+    "transcription": "[ˈhʌŋɡri]",
+    "text_example": "After the long walk we were very hungry.",
+    "category_id": 3
+  },
+  {
+    "word_en": "thirsty",
+    "word_ru": "испытывающий жажду",
+    "transcription": "[ˈθɜːrsti]",
+    "text_example": "He felt thirsty and asked for some water.",
+    "category_id": 3
+  },
+  {
+    "word_en": "grocery",
+    "word_ru": "продуктовый магазин",
+    "transcription": "[ˈɡroʊsəri]",
+    "text_example": "I need to go to the grocery after work.",
+    "category_id": 3
+  },
+  {
+    "word_en": "flour",
+    "word_ru": "мука",
+    "transcription": "[ˈflaʊər]",
+    "text_example": "We don't have enough flour to bake bread.",
+    "category_id": 3
+  },
+  {
+    "word_en": "cheese",
+    "word_ru": "сыр",
+    "transcription": "[tʃiːz]",
+    "text_example": "Would you like some cheese on your pasta?",
+    "category_id": 3
+  },
+  {
+    "word_en": "sausage",
+    "word_ru": "колбаса",
+    "transcription": "[ˈsɔːsɪdʒ]",
+    "text_example": "He bought fresh sausage at the market.",
+    "category_id": 3
+  },
+  {
+    "word_en": "vegetable",
+    "word_ru": "овощ",
+    "transcription": "[ˈvedʒtəbl]",
+    "text_example": "You should eat more vegetables.",
+    "category_id": 3
+  },
+  {
+    "word_en": "dessert",
+    "word_ru": "десерт",
+    "transcription": "[dɪˈzɜːrt]",
+    "text_example": "We had ice cream for dessert.",
+    "category_id": 3
+  },
+  {
+    "word_en": "spoon",
+    "word_ru": "ложка",
+    "transcription": "[spuːn]",
+    "text_example": "She stirred the soup with a spoon.",
+    "category_id": 3
+  },
+  {
+    "word_en": "knife",
+    "word_ru": "нож",
+    "transcription": "[naɪf]",
+    "text_example": "Be careful, the knife is very sharp.",
+    "category_id": 3
+  },
+  {
+    "word_en": "fork",
+    "word_ru": "вилка",
+    "transcription": "[fɔːrk]",
+    "text_example": "He ate the salad with a fork.",
+    "category_id": 3
+  },
+
+  {
+    "word_en": "airport",
+    "word_ru": "аэропорт",
+    "transcription": "[ˈerˌpɔːrt]",
+    "text_example": "We arrived at the airport two hours early.",
+    "category_id": 4
+  },
+  {
+    "word_en": "flight",
+    "word_ru": "рейс",
+    "transcription": "[flaɪt]",
+    "text_example": "Our flight was delayed by thirty minutes.",
+    "category_id": 4
+  },
+  {
+    "word_en": "gate",
+    "word_ru": "выход на посадку",
+    "transcription": "[ɡeɪt]",
+    "text_example": "The plane is boarding at gate 12.",
+    "category_id": 4
+  },
+  {
+    "word_en": "departure",
+    "word_ru": "отправление",
+    "transcription": "[dɪˈpɑːrtʃər]",
+    "text_example": "Check the departure board for your train.",
+    "category_id": 4
+  },
+  {
+    "word_en": "arrival",
+    "word_ru": "прибытие",
+    "transcription": "[əˈraɪvəl]",
+    "text_example": "The arrival time has changed.",
+    "category_id": 4
+  },
+  {
+    "word_en": "platform",
+    "word_ru": "платформа",
+    "transcription": "[ˈplætfɔːrm]",
+    "text_example": "The train leaves from platform three.",
+    "category_id": 4
+  },
+  {
+    "word_en": "suitcase",
+    "word_ru": "чемодан",
+    "transcription": "[ˈsuːtkeɪs]",
+    "text_example": "Her suitcase was too heavy.",
+    "category_id": 4
+  },
+  {
+    "word_en": "border",
+    "word_ru": "граница",
+    "transcription": "[ˈbɔːrdər]",
+    "text_example": "We crossed the border at night.",
+    "category_id": 4
+  },
+  {
+    "word_en": "customs",
+    "word_ru": "таможня",
+    "transcription": "[ˈkʌstəmz]",
+    "text_example": "They checked our bags at customs.",
+    "category_id": 4
+  },
+  {
+    "word_en": "tourist",
+    "word_ru": "турист",
+    "transcription": "[ˈtʊrɪst]",
+    "text_example": "Many tourists visit this city in summer.",
+    "category_id": 4
+  },
+  {
+    "word_en": "guide",
+    "word_ru": "гид",
+    "transcription": "[ɡaɪd]",
+    "text_example": "Our guide told us interesting stories.",
+    "category_id": 4
+  },
+  {
+    "word_en": "reservation",
+    "word_ru": "бронирование",
+    "transcription": "[ˌrezərˈveɪʃən]",
+    "text_example": "Do you have a reservation at this hotel?",
+    "category_id": 4
+  },
+  {
+    "word_en": "hostel",
+    "word_ru": "хостел",
+    "transcription": "[ˈhɑːstəl]",
+    "text_example": "We stayed in a cheap hostel.",
+    "category_id": 4
+  },
+  {
+    "word_en": "journey",
+    "word_ru": "путешествие",
+    "transcription": "[ˈdʒɜːrni]",
+    "text_example": "The journey took almost twelve hours.",
+    "category_id": 4
+  },
+  {
+    "word_en": "route",
+    "word_ru": "маршрут",
+    "transcription": "[ruːt]",
+    "text_example": "We chose the fastest route.",
+    "category_id": 4
+  },
+  {
+    "word_en": "traffic",
+    "word_ru": "дорожное движение",
+    "transcription": "[ˈtræfɪk]",
+    "text_example": "The traffic was terrible this morning.",
+    "category_id": 4
+  },
+  {
+    "word_en": "crossing",
+    "word_ru": "пешеходный переход",
+    "transcription": "[ˈkrɔːsɪŋ]",
+    "text_example": "Always use the pedestrian crossing.",
+    "category_id": 4
+  },
+  {
+    "word_en": "crowded",
+    "word_ru": "переполненный",
+    "transcription": "[ˈkraʊdɪd]",
+    "text_example": "The bus was crowded during rush hour.",
+    "category_id": 4
+  },
+  {
+    "word_en": "destination",
+    "word_ru": "пункт назначения",
+    "transcription": "[ˌdestəˈneɪʃən]",
+    "text_example": "Our final destination was a small village.",
+    "category_id": 4
+  },
+  {
+    "word_en": "fee",
+    "word_ru": "плата",
+    "transcription": "[fiː]",
+    "text_example": "There is a small fee for this service.",
+    "category_id": 4
+  },
+  {
+    "word_en": "ticket",
+    "word_ru": "билет",
+    "transcription": "[ˈtɪkɪt]",
+    "text_example": "I bought a return ticket to London.",
+    "category_id": 4
+  },
+  {
+    "word_en": "timetable",
+    "word_ru": "расписание",
+    "transcription": "[ˈtaɪmˌteɪbəl]",
+    "text_example": "Check the bus timetable online.",
+    "category_id": 4
+  },
+  {
+    "word_en": "underground",
+    "word_ru": "метро",
+    "transcription": "[ˈʌndərɡraʊnd]",
+    "text_example": "We travelled by underground across the city.",
+    "category_id": 4
+  },
+  {
+    "word_en": "carriage",
+    "word_ru": "вагон",
+    "transcription": "[ˈkærɪdʒ]",
+    "text_example": "Our seats were in the last carriage.",
+    "category_id": 4
+  },
+
+  {
+    "word_en": "career",
+    "word_ru": "карьера",
+    "transcription": "[kəˈrɪr]",
+    "text_example": "He wants to build a career in finance.",
+    "category_id": 5
+  },
+  {
+    "word_en": "colleague",
+    "word_ru": "коллега",
+    "transcription": "[ˈkɑːliːɡ]",
+    "text_example": "My colleagues are very supportive.",
+    "category_id": 5
+  },
+  {
+    "word_en": "manager",
+    "word_ru": "менеджер",
+    "transcription": "[ˈmænɪdʒər]",
+    "text_example": "The manager organized a team meeting.",
+    "category_id": 5
+  },
+  {
+    "word_en": "employee",
+    "word_ru": "сотрудник",
+    "transcription": "[ˌemplɔɪˈiː]",
+    "text_example": "Each employee has a personal desk.",
+    "category_id": 5
+  },
+  {
+    "word_en": "customer",
+    "word_ru": "клиент",
+    "transcription": "[ˈkʌstəmər]",
+    "text_example": "We must listen carefully to our customers.",
+    "category_id": 5
+  },
+  {
+    "word_en": "deadline",
+    "word_ru": "крайний срок",
+    "transcription": "[ˈdedlaɪn]",
+    "text_example": "The deadline for this report is Friday.",
+    "category_id": 5
+  },
+  {
+    "word_en": "overtime",
+    "word_ru": "сверхурочная работа",
+    "transcription": "[ˈoʊvərtaɪm]",
+    "text_example": "He often works overtime in winter.",
+    "category_id": 5
+  },
+  {
+    "word_en": "salary",
+    "word_ru": "зарплата",
+    "transcription": "[ˈsæləri]",
+    "text_example": "Her salary increased last year.",
+    "category_id": 5
+  },
+  {
+    "word_en": "promotion",
+    "word_ru": "повышение",
+    "transcription": "[prəˈmoʊʃən]",
+    "text_example": "He is hoping for a promotion soon.",
+    "category_id": 5
+  },
+  {
+    "word_en": "interview",
+    "word_ru": "собеседование",
+    "transcription": "[ˈɪntərvjuː]",
+    "text_example": "She has a job interview tomorrow.",
+    "category_id": 5
+  },
+  {
+    "word_en": "application",
+    "word_ru": "заявление",
+    "transcription": "[ˌæpləˈkeɪʃən]",
+    "text_example": "He sent an application for the position.",
+    "category_id": 5
+  },
+  {
+    "word_en": "contract",
+    "word_ru": "контракт",
+    "transcription": "[ˈkɑːntrækt]",
+    "text_example": "They signed a one‑year contract.",
+    "category_id": 5
+  },
+  {
+    "word_en": "meeting",
+    "word_ru": "встреча",
+    "transcription": "[ˈmiːtɪŋ]",
+    "text_example": "The meeting starts at nine o'clock.",
+    "category_id": 5
+  },
+  {
+    "word_en": "task",
+    "word_ru": "задание",
+    "transcription": "[tæsk]",
+    "text_example": "My main task is to answer emails.",
+    "category_id": 5
+  },
+  {
+    "word_en": "responsibility",
+    "word_ru": "ответственность",
+    "transcription": "[rɪˌspɑːnsəˈbɪləti]",
+    "text_example": "He has a lot of responsibility at work.",
+    "category_id": 5
+  },
+  {
+    "word_en": "boss",
+    "word_ru": "начальник",
+    "transcription": "[bɔːs]",
+    "text_example": "My boss is very strict but fair.",
+    "category_id": 5
+  },
+  {
+    "word_en": "profit",
+    "word_ru": "прибыль",
+    "transcription": "[ˈprɑːfɪt]",
+    "text_example": "The company made a big profit this year.",
+    "category_id": 5
+  },
+  {
+    "word_en": "loss",
+    "word_ru": "убыток",
+    "transcription": "[lɔːs]",
+    "text_example": "Last year they had a serious loss.",
+    "category_id": 5
+  },
+  {
+    "word_en": "advertisement",
+    "word_ru": "реклама",
+    "transcription": "[ədˈvɜːrtɪsmənt]",
+    "text_example": "The new advertisement is on TV every day.",
+    "category_id": 5
+  },
+  {
+    "word_en": "experience",
+    "word_ru": "опыт",
+    "transcription": "[ɪkˈspɪriəns]",
+    "text_example": "She has a lot of experience in sales.",
+    "category_id": 5
+  },
+  {
+    "word_en": "hire",
+    "word_ru": "нанимать",
+    "transcription": "[ˈhaɪər]",
+    "text_example": "The company plans to hire more staff.",
+    "category_id": 5
+  },
+  {
+    "word_en": "fire",
+    "word_ru": "увольнять",
+    "transcription": "[ˈfaɪər]",
+    "text_example": "They had to fire several workers.",
+    "category_id": 5
+  },
+  {
+    "word_en": "career path",
+    "word_ru": "карьерный путь",
+    "transcription": "[kəˈrɪr pæθ]",
+    "text_example": "She is thinking about her future career path.",
+    "category_id": 5
+  },
+  {
+    "word_en": "shift",
+    "word_ru": "смена",
+    "transcription": "[ʃɪft]",
+    "text_example": "He works the night shift at the factory.",
+    "category_id": 5
+  },
+  {
+    "word_en": "colleague",
+    "word_ru": "коллега",
+    "transcription": "[ˈkɑːliːɡ]",
+    "text_example": "I share an office with a friendly colleague.",
+    "category_id": 5
+  },
+
+  {
+    "word_en": "subject",
+    "word_ru": "предмет",
+    "transcription": "[ˈsʌbdʒekt]",
+    "text_example": "English is my favourite school subject.",
+    "category_id": 6
+  },
+  {
+    "word_en": "exam",
+    "word_ru": "экзамен",
+    "transcription": "[ɪɡˈzæm]",
+    "text_example": "I have an important exam next week.",
+    "category_id": 6
+  },
+  {
+    "word_en": "result",
+    "word_ru": "результат",
+    "transcription": "[rɪˈzʌlt]",
+    "text_example": "Her exam results were excellent.",
+    "category_id": 6
+  },
+  {
+    "word_en": "grade",
+    "word_ru": "оценка",
+    "transcription": "[ɡreɪd]",
+    "text_example": "He was happy with his final grade.",
+    "category_id": 6
+  },
+  {
+    "word_en": "lecture",
+    "word_ru": "лекция",
+    "transcription": "[ˈlektʃər]",
+    "text_example": "The lecture was long but interesting.",
+    "category_id": 6
+  },
+  {
+    "word_en": "seminar",
+    "word_ru": "семинар",
+    "transcription": "[ˈsemɪnɑːr]",
+    "text_example": "We discussed the topic in a small seminar.",
+    "category_id": 6
+  },
+  {
+    "word_en": "essay",
+    "word_ru": "сочинение",
+    "transcription": "[ˈeseɪ]",
+    "text_example": "Students must write an essay about the book.",
+    "category_id": 6
+  },
+  {
+    "word_en": "research",
+    "word_ru": "исследование",
+    "transcription": "[rɪˈsɜːrtʃ]",
+    "text_example": "She is doing research on climate change.",
+    "category_id": 6
+  },
+  {
+    "word_en": "knowledge",
+    "word_ru": "знания",
+    "transcription": "[ˈnɑːlɪdʒ]",
+    "text_example": "Reading gives you a lot of knowledge.",
+    "category_id": 6
+  },
+  {
+    "word_en": "graduate",
+    "word_ru": "выпускаться",
+    "transcription": "[ˈɡrædʒuət]",
+    "text_example": "He will graduate from university this year.",
+    "category_id": 6
+  },
+  {
+    "word_en": "degree",
+    "word_ru": "степень",
+    "transcription": "[dɪˈɡriː]",
+    "text_example": "She has a degree in economics.",
+    "category_id": 6
+  },
+  {
+    "word_en": "primary school",
+    "word_ru": "начальная школа",
+    "transcription": "[ˈpraɪmeri skuːl]",
+    "text_example": "Their son goes to primary school.",
+    "category_id": 6
+  },
+  {
+    "word_en": "secondary school",
+    "word_ru": "средняя школа",
+    "transcription": "[ˈsekənderi skuːl]",
+    "text_example": "She teaches at a secondary school.",
+    "category_id": 6
+  },
+  {
+    "word_en": "revise",
+    "word_ru": "повторять (учебный материал)",
+    "transcription": "[rɪˈvaɪz]",
+    "text_example": "I need to revise for the test.",
+    "category_id": 6
+  },
+  {
+    "word_en": "memorize",
+    "word_ru": "запоминать",
+    "transcription": "[ˈmeməraɪz]",
+    "text_example": "It is hard to memorize so many new words.",
+    "category_id": 6
+  },
+  {
+    "word_en": "pupil",
+    "word_ru": "ученик",
+    "transcription": "[ˈpjuːpəl]",
+    "text_example": "The teacher asked every pupil a question.",
+    "category_id": 6
+  },
+  {
+    "word_en": "timetable",
+    "word_ru": "расписание занятий",
+    "transcription": "[ˈtaɪmˌteɪbəl]",
+    "text_example": "Our new timetable starts next month.",
+    "category_id": 6
+  },
+  {
+    "word_en": "college",
+    "word_ru": "колледж",
+    "transcription": "[ˈkɑːlɪdʒ]",
+    "text_example": "He wants to go to college abroad.",
+    "category_id": 6
+  },
+  {
+    "word_en": "talent",
+    "word_ru": "талант",
+    "transcription": "[ˈtælənt]",
+    "text_example": "She has a talent for languages.",
+    "category_id": 6
+  },
+  {
+    "word_en": "training",
+    "word_ru": "обучение",
+    "transcription": "[ˈtreɪnɪŋ]",
+    "text_example": "The company provides training for new staff.",
+    "category_id": 6
+  },
+
+  {
+    "word_en": "illness",
+    "word_ru": "болезнь",
+    "transcription": "[ˈɪlnəs]",
+    "text_example": "After a long illness he finally recovered.",
+    "category_id": 7
+  },
+  {
+    "word_en": "injury",
+    "word_ru": "травма",
+    "transcription": "[ˈɪndʒəri]",
+    "text_example": "He had a serious knee injury.",
+    "category_id": 7
+  },
+  {
+    "word_en": "pain",
+    "word_ru": "боль",
+    "transcription": "[peɪn]",
+    "text_example": "She felt a sharp pain in her back.",
+    "category_id": 7
+  },
+  {
+    "word_en": "sore throat",
+    "word_ru": "боль в горле",
+    "transcription": "[sɔːr θroʊt]",
+    "text_example": "He stayed at home with a sore throat.",
+    "category_id": 7
+  },
+  {
+    "word_en": "fever",
+    "word_ru": "жар",
+    "transcription": "[ˈfiːvər]",
+    "text_example": "The child had a high fever.",
+    "category_id": 7
+  },
+  {
+    "word_en": "cough",
+    "word_ru": "кашель",
+    "transcription": "[kɔːf]",
+    "text_example": "Her cough got worse at night.",
+    "category_id": 7
+  },
+  {
+    "word_en": "medicine",
+    "word_ru": "лекарство",
+    "transcription": "[ˈmedɪsən]",
+    "text_example": "Take this medicine twice a day.",
+    "category_id": 7
+  },
+  {
+    "word_en": "pill",
+    "word_ru": "таблетка",
+    "transcription": "[pɪl]",
+    "text_example": "He took a painkiller pill.",
+    "category_id": 7
+  },
+  {
+    "word_en": "treatment",
+    "word_ru": "лечение",
+    "transcription": "[ˈtriːtmənt]",
+    "text_example": "She is receiving treatment in hospital.",
+    "category_id": 7
+  },
+  {
+    "word_en": "recovery",
+    "word_ru": "выздоровление",
+    "transcription": "[rɪˈkʌvəri]",
+    "text_example": "His recovery was surprisingly fast.",
+    "category_id": 7
+  },
+
+  {
+    "word_en": "forest",
+    "word_ru": "лес",
+    "transcription": "[ˈfɔːrɪst]",
+    "text_example": "We walked through a dark forest.",
+    "category_id": 8
+  },
+  {
+    "word_en": "mountain",
+    "word_ru": "гора",
+    "transcription": "[ˈmaʊntn]",
+    "text_example": "They climbed a high mountain.",
+    "category_id": 8
+  },
+  {
+    "word_en": "river",
+    "word_ru": "река",
+    "transcription": "[ˈrɪvər]",
+    "text_example": "The river flows into the sea.",
+    "category_id": 8
+  },
+  {
+    "word_en": "coast",
+    "word_ru": "побережье",
+    "transcription": "[koʊst]",
+    "text_example": "We drove along the coast.",
+    "category_id": 8
+  },
+  {
+    "word_en": "environment",
+    "word_ru": "окружающая среда",
+    "transcription": "[ɪnˈvaɪrənmənt]",
+    "text_example": "We must protect the environment.",
+    "category_id": 8
+  },
+
+  {
+    "word_en": "season",
+    "word_ru": "время года",
+    "transcription": "[ˈsiːzən]",
+    "text_example": "Summer is my favourite season.",
+    "category_id": 9
+  },
+  {
+    "word_en": "forecast",
+    "word_ru": "прогноз",
+    "transcription": "[ˈfɔːrkæst]",
+    "text_example": "The weather forecast says it will rain.",
+    "category_id": 9
+  },
+  {
+    "word_en": "temperature",
+    "word_ru": "температура",
+    "transcription": "[ˈtemprətʃər]",
+    "text_example": "The temperature dropped below zero.",
+    "category_id": 9
+  },
+
+  {
+    "word_en": "hobby",
+    "word_ru": "хобби",
+    "transcription": "[ˈhɑːbi]",
+    "text_example": "Painting is her favourite hobby.",
+    "category_id": 10
+  },
+  {
+    "word_en": "collect",
+    "word_ru": "коллекционировать",
+    "transcription": "[kəˈlekt]",
+    "text_example": "He collects old coins.",
+    "category_id": 10
+  },
+  {
+    "word_en": "exercise",
+    "word_ru": "упражнение",
+    "transcription": "[ˈeksərsaɪz]",
+    "text_example": "Regular exercise is good for your health.",
+    "category_id": 10
+  },
+
+  {
+    "word_en": "keyboard",
+    "word_ru": "клавиатура",
+    "transcription": "[ˈkiːbɔːrd]",
+    "text_example": "My computer keyboard is very quiet.",
+    "category_id": 11
+  },
+  {
+    "word_en": "screen",
+    "word_ru": "экран",
+    "transcription": "[skriːn]",
+    "text_example": "Don't look at the screen too long.",
+    "category_id": 11
+  },
+  {
+    "word_en": "connection",
+    "word_ru": "соединение",
+    "transcription": "[kəˈnekʃən]",
+    "text_example": "The internet connection is slow today.",
+    "category_id": 11
+  },
+
+  {
+    "word_en": "proud",
+    "word_ru": "гордый",
+    "transcription": "[praʊd]",
+    "text_example": "His parents are proud of him.",
+    "category_id": 12
+  },
+  {
+    "word_en": "upset",
+    "word_ru": "расстроенный",
+    "transcription": "[ʌpˈset]",
+    "text_example": "She was upset about the bad news.",
+    "category_id": 12
+  },
+  {
+    "word_en": "disappointed",
+    "word_ru": "разочарованный",
+    "transcription": "[ˌdɪsəˈpɔɪntɪd]",
+    "text_example": "We were disappointed with the result.",
+    "category_id": 12
+  }
+]

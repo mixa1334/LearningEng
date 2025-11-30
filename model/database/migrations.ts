@@ -1,28 +1,26 @@
-import categoriesSeed from "@/assets/categories.json";
-import wordsSeed from "@/assets/words.json";
-import {
-  COUNT_CATEGORIES,
-  INSERT_INTO_CATEGORIES,
-} from "@/constants/sql/categoriesTable";
-import { SCHEMA_CREATION_IF_NOT_EXISTS } from "@/constants/sql/schema";
-import { COUNT_WORDS, INSERT_INTO_WORDS } from "@/constants/sql/wordsTable";
+import categoriesSeed from "@/assets/data/categories.json";
+import wordsSeed from "@/assets/data/words.json";
+import { COUNT_CATEGORIES } from "@/resources/sql/categoriesTable";
+import { SCHEMA_CREATION_IF_NOT_EXISTS } from "@/resources/sql/schema";
+import { COUNT_WORDS } from "@/resources/sql/wordsTable";
 import type { SQLiteDatabase } from "expo-sqlite";
-import { wordToRow } from "../mapper/wordMapper";
+import { EntityType } from "../entity/types";
+import { addNewCategory } from "../service/categoryService";
+import { addNewWord } from "../service/wordService";
 
 export async function runMigrations(db: SQLiteDatabase) {
   await createSchema(db);
 
   if (await needToSeed(db, COUNT_CATEGORIES)) {
-    const categoryRows = categoriesSeed.map((c) => [c.name, c.type, c.icon]);
-    await seedTable(db, INSERT_INTO_CATEGORIES, categoryRows);
+    for (const c of categoriesSeed) {
+      await addNewCategory(db, c, EntityType.preloaded);
+    }
   }
 
   if (await needToSeed(db, COUNT_WORDS)) {
-    const wordRows = wordsSeed.map((w) => {
-      w.next_review = new Date().toISOString();
-      return wordToRow(w);
-    });
-    await seedTable(db, INSERT_INTO_WORDS, wordRows);
+    for (const w of wordsSeed) {
+      await addNewWord(db, w, EntityType.preloaded);
+    }
   }
 }
 
@@ -36,17 +34,4 @@ async function needToSeed(
 ): Promise<boolean> {
   const result = await db.getFirstAsync<{ count: number }>(countQuery);
   return (result?.count ?? 0) === 0;
-}
-
-async function seedTable(db: SQLiteDatabase, insertSQL: string, rows: any[][]) {
-  await db.execAsync("BEGIN TRANSACTION;");
-  try {
-    for (const row of rows) {
-      await db.runAsync(insertSQL, row);
-    }
-    await db.execAsync("COMMIT;");
-  } catch (err) {
-    await db.execAsync("ROLLBACK;");
-    throw err;
-  }
 }

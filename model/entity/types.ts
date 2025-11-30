@@ -6,7 +6,7 @@ export enum EntityType {
 export type Category = {
   id: number;
   name: string;
-  type: EntityType | string;
+  type: EntityType;
   icon: string;
 };
 
@@ -15,7 +15,7 @@ export type Word = {
   word_en: string;
   word_ru: string;
   transcription: string;
-  type: EntityType | string;
+  type: EntityType;
   learned: boolean;
   category: Category;
   next_review: string;
