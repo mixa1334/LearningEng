@@ -3,6 +3,7 @@ import {
   DELETE_WORD,
   INSERT_INTO_WORDS,
   SELECT_WORDS,
+  UPDATE_WORD,
 } from "@/resources/sql/wordsTable";
 import type { SQLiteDatabase } from "expo-sqlite";
 import { NewWordDto } from "../dto/NewWordDto";
@@ -45,24 +46,33 @@ export async function deleteUserWord(
   );
 }
 
-//todo refactor add category check before update and wrap all in a single transaction
 export async function editUserWord(
   db: SQLiteDatabase,
   word: Word
 ): Promise<void> {
-  await db.runAsync(
-    `UPDATE words
-    SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
+  await db.withExclusiveTransactionAsync(async (tx) => {
+    const existingCategory = await tx.getFirstAsync<{ id: number }>(
+      `SELECT id FROM categories WHERE id = ?;`,
+      [word.category.id]
+    );
+
+    if (!existingCategory) {
+      throw new Error(`Category with id ${word.category.id} does not exist`);
+    }
+
+    await tx.runAsync(
+      `${UPDATE_WORD}
     WHERE type = 'user_added' AND id = ?`,
-    [
-      word.word_en,
-      word.word_ru,
-      word.transcription,
-      word.category.id,
-      word.text_example,
-      word.id,
-    ]
-  );
+      [
+        word.word_en,
+        word.word_ru,
+        word.transcription,
+        word.category.id,
+        word.text_example,
+        word.id,
+      ]
+    );
+  });
 }
 
 export async function getUserWords(db: SQLiteDatabase): Promise<Word[]> {

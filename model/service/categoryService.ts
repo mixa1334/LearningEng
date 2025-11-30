@@ -3,6 +3,7 @@ import {
   DELETE_CATEGORY,
   INSERT_INTO_CATEGORIES,
   SELECT_CATEGORIES,
+  UPDATE_CATEGORY,
 } from "@/resources/sql/categoriesTable";
 import type { SQLiteDatabase } from "expo-sqlite";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
@@ -27,15 +28,19 @@ export async function getAllCategories(
 export async function deleteUserCategory(
   db: SQLiteDatabase,
   category: Category
-) {
-  await db.runAsync(`UPDATE words SET category_id = 1 WHERE category_id = ?`, [
-    category.id,
-  ]);
-  await db.runAsync(
-    `${DELETE_CATEGORY}
-    WHERE type = 'user_added' AND id = ?`,
-    [category.id]
-  );
+): Promise<void> {
+  await db.withExclusiveTransactionAsync(async (tx) => {
+    await tx.runAsync(
+      `UPDATE words SET category_id = 1 WHERE category_id = ?`,
+      [category.id]
+    );
+
+    await tx.runAsync(
+      `${DELETE_CATEGORY}
+       WHERE type = 'user_added' AND id = ?`,
+      [category.id]
+    );
+  });
 }
 
 export async function editUserCategory(
@@ -43,7 +48,7 @@ export async function editUserCategory(
   category: Category
 ): Promise<void> {
   await db.runAsync(
-    `UPDATE categories SET name = ?, icon = ?
+    `${UPDATE_CATEGORY}
     WHERE type = 'user_added' AND id = ?`,
     [category.name, category.icon, category.id]
   );

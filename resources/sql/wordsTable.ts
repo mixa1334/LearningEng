@@ -13,9 +13,15 @@ export const SELECT_WORDS = `SELECT
       w.next_review, w.priority, w.text_example, w.category_id,
       c.name AS category_name, c.type AS category_type, c.icon AS category_icon
     FROM words w
-    JOIN categories c ON c.id = w.category_id`;
+    JOIN categories c ON c.id = w.category_id
+`;
 
 export const DELETE_WORD = `
     DELETE
     FROM words
+`;
+
+export const UPDATE_WORD = `
+    UPDATE words
+    SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
 `;
