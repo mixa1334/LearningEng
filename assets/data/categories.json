@@ -1,6 +1,14 @@
 [
-  { "name": "Default", "icon": "" },
-  { "name": "Nature", "icon": "🌿" },
-  { "name": "Food", "icon": "🍎" },
-  { "name": "Travel", "icon": "✈️" }
+  { "name": "Everyday life", "icon": "🏠" },
+  { "name": "People & relationships", "icon": "👨‍👩‍👧" },
+  { "name": "Food & cooking", "icon": "🍽️" },
+  { "name": "Travel & transport", "icon": "✈️" },
+  { "name": "Work & business", "icon": "💼" },
+  { "name": "Study & education", "icon": "📚" },
+  { "name": "Health & body", "icon": "💊" },
+  { "name": "Nature & environment", "icon": "🌿" },
+  { "name": "Time & weather", "icon": "⏰" },
+  { "name": "Hobbies & free time", "icon": "🎯" },
+  { "name": "Technology & communication", "icon": "💻" },
+  { "name": "Feelings & opinions", "icon": "😊" }
 ]
