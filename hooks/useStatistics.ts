@@ -1,34 +1,32 @@
 import { AppDispatch, useAppSelector } from "@/store";
 import { resetWordLearningProgressThunk } from "@/store/thunk/learn/resetLearningStatsThunk";
-import { changeDailyGoalThunk } from "@/store/thunk/userStats/changeDailyGoalThunk";
-import { changeNameThunk } from "@/store/thunk/userStats/changeNameThunk";
-import { resetUserStatsThunk } from "@/store/thunk/userStats/resetUserStatsThunk";
-import { useSQLiteContext } from "expo-sqlite";
+import { changeDailyGoalThunk } from "@/store/thunk/statistics/changeDailyGoalThunk";
+import { changeNameThunk } from "@/store/thunk/statistics/changeNameThunk";
+import { resetUserStatsThunk } from "@/store/thunk/statistics/resetUserStatsThunk";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
 export function useStatistics() {
   const dispatch = useDispatch<AppDispatch>();
-  const db = useSQLiteContext();
-  const name = useAppSelector((s) => s.stats.name);
-  const streak = useAppSelector((s) => s.stats.streak);
-  const lastLearningDate = useAppSelector((s) => s.stats.lastLearningDate);
-  const reviewedToday = useAppSelector((s) => s.stats.reviewedToday);
-  const dailyGoal = useAppSelector((s) => s.stats.dailyGoal);
+  const name = useAppSelector((s) => s.statistics.name);
+  const streak = useAppSelector((s) => s.statistics.streak);
+  const lastLearningDate = useAppSelector((s) => s.statistics.lastLearningDate);
+  const reviewedToday = useAppSelector((s) => s.statistics.reviewedToday);
+  const dailyGoal = useAppSelector((s) => s.statistics.dailyGoal);
 
   // todo refactor
   const changeGoal = useCallback(
     (goal: number) => {
-      if (db) dispatch(changeDailyGoalThunk({ newDailyGoal: goal, db }));
+      dispatch(changeDailyGoalThunk({ newDailyGoal: goal }));
     },
-    [dispatch, db]
+    [dispatch]
   );
 
   const changeName = (name: string) => dispatch(changeNameThunk(name));
   const resetUserStats = () => dispatch(resetUserStatsThunk());
   const resetWordsProgress = useCallback(() => {
-    if (db) dispatch(resetWordLearningProgressThunk(db));
-  }, [db, dispatch]);
+    dispatch(resetWordLearningProgressThunk());
+  }, [dispatch]);
 
   return {
     name,

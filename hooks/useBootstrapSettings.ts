@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "@/store";
-import { loadStatsThunk } from "@/store/thunk/userStats/loadStatsThunk";
+import { loadStatsThunk } from "@/store/thunk/statistics/loadStatsThunk";
 
 type BootstrapStatus = "idle" | "pending" | "success" | "error";
 

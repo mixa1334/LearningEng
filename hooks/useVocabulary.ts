@@ -9,63 +9,63 @@ import { loadVocabularyThunk } from "@/store/thunk/vocabulary/loadVocabularyThun
 import { addWordThunk } from "@/store/thunk/vocabulary/word/addWordThunk";
 import { editWordThunk } from "@/store/thunk/vocabulary/word/editWordThunk";
 import { removeWordThunk } from "@/store/thunk/vocabulary/word/removeWordThunk";
-import { useSQLiteContext } from "expo-sqlite";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export function useVocabulary() {
-  const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
-  const { words, categories, preloadedWords } = useAppSelector((s) => s.vocabulary);
+  const { userWords, categories, preloadedWords } = useAppSelector(
+    (s) => s.vocabulary
+  );
 
   useEffect(() => {
-    if (db) dispatch(loadVocabularyThunk(db));
-  }, [db, dispatch]);
+    dispatch(loadVocabularyThunk());
+  }, [dispatch]);
 
   const addWord = useCallback(
     (newWord: NewWordDto) => {
-      if (db) dispatch(addWordThunk({ db, newWord }));
+      dispatch(addWordThunk({ newWord }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const removeWord = useCallback(
     (wordToDelete: Word) => {
-      if (db) dispatch(removeWordThunk({ db, wordToDelete }));
+      dispatch(removeWordThunk({ wordToDelete }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const editWord = useCallback(
     (wordToEdit: Word) => {
-      if (db) dispatch(editWordThunk({ db, wordToEdit }));
+      dispatch(editWordThunk({ wordToEdit }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const removeCategory = useCallback(
     (categoryToDelete: Category) => {
-      if (db) dispatch(removeCategoryThunk({ db, categoryToDelete }));
+      dispatch(removeCategoryThunk({ categoryToDelete }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const addCategory = useCallback(
     (newCategory: NewCategoryDto) => {
-      if (db) dispatch(addCategoryThunk({ db, newCategory }));
+      dispatch(addCategoryThunk({ newCategory }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const editCategory = useCallback(
     (categoryToEdit: Category) => {
-      if (db) dispatch(editCategoryThunk({ db, categoryToEdit }));
+      dispatch(editCategoryThunk({ categoryToEdit }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   return {
-    words,
+    userWords,
     categories,
     preloadedWords,
     addWord,

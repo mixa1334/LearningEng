@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { SQLiteDatabase } from "expo-sqlite";
 import { RootState } from "../..";
 import { loadDailyWordSetThunk } from "../learn/loadDailyWordSetThunk";
 
@@ -11,10 +10,10 @@ export const changeDailyGoalThunk = createAsyncThunk<
     streak: number;
     dailyGoalAchieve: boolean;
   },
-  { newDailyGoal: number; db: SQLiteDatabase }
+  { newDailyGoal: number }
 >(
   "stats/changeDailyGoalThunk",
-  async ({ newDailyGoal, db }, { getState, dispatch }) => {
+  async ({ newDailyGoal }, { getState, dispatch }) => {
     const state = getState() as RootState;
     newDailyGoal = Math.max(1, newDailyGoal);
     let dailyGoal = state.stats.dailyGoal;
@@ -46,7 +45,7 @@ export const changeDailyGoalThunk = createAsyncThunk<
       ["streak", String(streak)],
       ["dailyGoalAchieve", String(dailyGoalAchieve)],
     ]);
-    dispatch(loadDailyWordSetThunk({ db, dailyGoalOverload: newDailyGoal }));
+    dispatch(loadDailyWordSetThunk({ dailyGoalOverload: newDailyGoal }));
     return { dailyGoal: newDailyGoal, streak, dailyGoalAchieve };
   }
 );

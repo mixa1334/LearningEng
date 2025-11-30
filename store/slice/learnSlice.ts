@@ -1,26 +1,28 @@
 import type { Word } from "@/model/entity/types";
 import { createSlice } from "@reduxjs/toolkit";
+import { StateType } from "../stateType";
 import { loadDailyWordSetThunk } from "../thunk/learn/loadDailyWordSetThunk";
 import { markWordCompletelyLearnedThunk } from "../thunk/learn/markWordCompletelyLearnedThunk";
 import { markWordNotReviewedThunk } from "../thunk/learn/markWordNotReviewedThunk";
 import { markWordReviewedThunk } from "../thunk/learn/markWordReviewedThunk";
 import { startLearnWordThunk } from "../thunk/learn/startLearnWordThunk";
-import { StateType } from "./stateType";
 
-export type WordsState = {
+export type LearnState = {
   wordsToReview: Word[];
   wordsToLearn: Word[];
   status: StateType;
   error?: string;
 };
 
+const initialLearnState: LearnState = {
+  wordsToReview: [],
+  wordsToLearn: [],
+  status: StateType.loading,
+};
+
 const learnSlice = createSlice({
-  name: "words",
-  initialState: {
-    wordsToReview: [],
-    wordsToLearn: [],
-    status: StateType.loading,
-  } as WordsState,
+  name: "learn",
+  initialState: initialLearnState,
   reducers: {},
   extraReducers: (builder) => {
     builder

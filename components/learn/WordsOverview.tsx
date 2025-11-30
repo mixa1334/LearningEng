@@ -14,7 +14,7 @@ export default function WordsOverview({
 }: WordsOverviewProps) {
   const theme = useTheme();
 
-  const { words, preloadedWords } = useVocabulary();
+  const { userWords, preloadedWords } = useVocabulary();
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
   const [index, setIndex] = useState(0);
@@ -23,12 +23,12 @@ export default function WordsOverview({
 
   useEffect(() => {
     if (onlyUserAddedWords) {
-      setWordToReview(words);
+      setWordToReview(userWords);
     } else {
-      setWordToReview([...words, ...preloadedWords]);
+      setWordToReview([...userWords, ...preloadedWords]);
     }
     reset();
-  }, [words, preloadedWords, onlyUserAddedWords]);
+  }, [userWords, preloadedWords, onlyUserAddedWords]);
 
   const reset = () => {
     setAccepted(0);

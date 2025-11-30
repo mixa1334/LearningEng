@@ -1,7 +1,7 @@
 import { DateShifts, getCurrentDate } from "@/util/dateHelper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { StatsState } from "../../slice/userStatsSlice";
+import { StatsState } from "../../slice/statisticsSlice";
 
 /// REFACTOR !!!!!!!!!!!!!!! (set up as lazy init in initial state in slice!!!)
 export const loadStatsThunk = createAsyncThunk<Partial<StatsState>>(

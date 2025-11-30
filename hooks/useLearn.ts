@@ -5,36 +5,33 @@ import { markWordCompletelyLearnedThunk } from "@/store/thunk/learn/markWordComp
 import { markWordNotReviewedThunk } from "@/store/thunk/learn/markWordNotReviewedThunk";
 import { markWordReviewedThunk } from "@/store/thunk/learn/markWordReviewedThunk";
 import { startLearnWordThunk } from "@/store/thunk/learn/startLearnWordThunk";
-import { useSQLiteContext } from "expo-sqlite";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export function useLearningDailySet() {
-  const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
   const { wordsToReview, wordsToLearn, status, error } = useAppSelector(
     (s) => s.learn
   );
 
   useEffect(() => {
-    if (db) dispatch(loadDailyWordSetThunk({ db }));
-  }, [db, dispatch]);
+    dispatch(loadDailyWordSetThunk());
+  }, [dispatch]);
 
   const reloadDailySet = useCallback(() => {
-    if (db) dispatch(loadDailyWordSetThunk({ db }));
-  }, [db, dispatch]);
+    dispatch(loadDailyWordSetThunk());
+  }, [dispatch]);
 
   return { wordsToReview, wordsToLearn, status, error, reloadDailySet };
 }
 
 export function useLearnUtil() {
-  const db = useSQLiteContext();
   const dispatch = useDispatch<AppDispatch>();
   const markWordReviewed = useCallback(
     (word: Word) => {
-      if (db) dispatch(markWordReviewedThunk({ db, word }));
+      dispatch(markWordReviewedThunk({ word }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const markWordNotReviewed = useCallback(
@@ -44,16 +41,16 @@ export function useLearnUtil() {
 
   const startLearnNewWord = useCallback(
     (word: Word) => {
-      if (db) dispatch(startLearnWordThunk({ db, word }));
+      dispatch(startLearnWordThunk({ word }));
     },
-    [db, dispatch]
+    [dispatch]
   );
 
   const markWordCompletelyLearned = useCallback(
     (word: Word) => {
-      if (db) dispatch(markWordCompletelyLearnedThunk({ db, word }));
+      dispatch(markWordCompletelyLearnedThunk({ word }));
     },
-    [db, dispatch]
+    [dispatch]
   );
   return {
     markWordReviewed,

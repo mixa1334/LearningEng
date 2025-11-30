@@ -1,12 +1,11 @@
 import { resetWordLearningProgress } from "@/model/service/wordService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { SQLiteDatabase } from "expo-sqlite";
 import { loadDailyWordSetThunk } from "./loadDailyWordSetThunk";
 
-export const resetWordLearningProgressThunk = createAsyncThunk<
-  void,
-  SQLiteDatabase
->("learn/resetWordLearningProgressThunk", async (db, { dispatch }) => {
-  await resetWordLearningProgress(db);
-  dispatch(loadDailyWordSetThunk({ db }));
-});
+export const resetWordLearningProgressThunk = createAsyncThunk<void, void>(
+  "learn/resetWordLearningProgressThunk",
+  async (_, { dispatch }) => {
+    await resetWordLearningProgress();
+    dispatch(loadDailyWordSetThunk());
+  }
+);

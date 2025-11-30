@@ -1,27 +1,28 @@
 import { EntityType, type Word } from "@/model/entity/types";
-import {
-  DELETE_WORD,
-  INSERT_INTO_WORDS,
-  SELECT_WORDS,
-  UPDATE_WORD,
-} from "@/resources/sql/wordsTable";
-import type { SQLiteDatabase } from "expo-sqlite";
+import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
 import { rowToWord } from "../mapper/typesMapper";
 
-export async function resetWordLearningProgress(
-  db: SQLiteDatabase
-): Promise<void> {
-  await db.runAsync("UPDATE words SET learned = 0, priority = 0");
+const SELECT_WORDS = `SELECT
+      w.id, w.word_en, w.word_ru, w.transcription, w.type, w.learned,
+      w.next_review, w.priority, w.text_example, w.category_id,
+      c.name AS category_name, c.type AS category_type, c.icon AS category_icon
+    FROM words w
+    JOIN categories c ON c.id = w.category_id
+`;
+
+const INSERT_WORD = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+export async function resetWordLearningProgress(): Promise<void> {
+  await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0");
 }
 
 export async function addNewWord(
-  db: SQLiteDatabase,
   newWord: NewWordDto,
   wordType: EntityType = EntityType.useradd
 ): Promise<void> {
   const reviewDate = new Date().toISOString();
-  const insertionRow = [
+  await getDbInstance().runAsync(INSERT_WORD, [
     newWord.word_en,
     newWord.word_ru,
     newWord.transcription,
@@ -31,26 +32,19 @@ export async function addNewWord(
     reviewDate,
     0,
     newWord.text_example,
-  ];
-  await db.runAsync(INSERT_INTO_WORDS, insertionRow);
+  ]);
 }
 
-export async function deleteUserWord(
-  db: SQLiteDatabase,
-  wordToDelete: Word
-): Promise<void> {
-  await db.runAsync(
-    `${DELETE_WORD} 
+export async function deleteUserWord(wordToDelete: Word): Promise<void> {
+  await getDbInstance().runAsync(
+    `DELETE FROM words 
     WHERE type = 'user_added' AND id = ?`,
     [wordToDelete.id]
   );
 }
 
-export async function editUserWord(
-  db: SQLiteDatabase,
-  word: Word
-): Promise<void> {
-  await db.withExclusiveTransactionAsync(async (tx) => {
+export async function editUserWord(word: Word): Promise<void> {
+  await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
     const existingCategory = await tx.getFirstAsync<{ id: number }>(
       `SELECT id FROM categories WHERE id = ?;`,
       [word.category.id]
@@ -61,8 +55,8 @@ export async function editUserWord(
     }
 
     await tx.runAsync(
-      `${UPDATE_WORD}
-    WHERE type = 'user_added' AND id = ?`,
+      `UPDATE words SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
+      WHERE type = 'user_added' AND id = ?`,
       [
         word.word_en,
         word.word_ru,
@@ -75,25 +69,22 @@ export async function editUserWord(
   });
 }
 
-export async function getUserWords(db: SQLiteDatabase): Promise<Word[]> {
-  const rows = await db.getAllAsync<any>(
+export async function getUserWords(): Promise<Word[]> {
+  const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS} WHERE w.type = 'user_added'`
   );
   return rows.map(rowToWord);
 }
 
-export async function getPreloadedWords(db: SQLiteDatabase): Promise<Word[]> {
-  const rows = await db.getAllAsync<any>(
+export async function getPreloadedWords(): Promise<Word[]> {
+  const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS} WHERE w.type = 'pre_loaded'`
   );
   return rows.map(rowToWord);
 }
 
-export async function getDailyWordsToLearn(
-  db: SQLiteDatabase,
-  limit: number = 5
-): Promise<Word[]> {
-  const rows = await db.getAllAsync<any>(
+export async function getDailyWordsToLearn(limit: number = 5): Promise<Word[]> {
+  const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS}
     WHERE w.learned = 0
       AND w.priority = 0
@@ -105,10 +96,8 @@ export async function getDailyWordsToLearn(
   return ws;
 }
 
-export async function getDailyWordsToReview(
-  db: SQLiteDatabase
-): Promise<Word[]> {
-  const rows = await db.getAllAsync<any>(
+export async function getDailyWordsToReview(): Promise<Word[]> {
+  const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS}
     WHERE w.learned = 0
       AND datetime(w.next_review) <= datetime('now')
@@ -118,11 +107,8 @@ export async function getDailyWordsToReview(
   return rows.map(rowToWord);
 }
 
-export async function startLearningWord(
-  db: SQLiteDatabase,
-  word: Word
-): Promise<void> {
-  await db.runAsync(
+export async function startLearningWord(word: Word): Promise<void> {
+  await getDbInstance().runAsync(
     `UPDATE words
      SET priority = ?
      WHERE id = ?;`,
@@ -130,11 +116,8 @@ export async function startLearningWord(
   );
 }
 
-export async function markWordCompletelyLearned(
-  db: SQLiteDatabase,
-  word: Word
-): Promise<void> {
-  await db.runAsync(
+export async function markWordCompletelyLearned(word: Word): Promise<void> {
+  await getDbInstance().runAsync(
     `UPDATE words
      SET learned = ?
      WHERE id = ?;`,
@@ -142,15 +125,12 @@ export async function markWordCompletelyLearned(
   );
 }
 
-export async function reviewWord(
-  db: SQLiteDatabase,
-  word: Word
-): Promise<void> {
+export async function reviewWord(word: Word): Promise<void> {
   const newPriority = word.priority + 1;
   const days = newPriority + (newPriority - 1) * 2;
   let isLearned = +(newPriority > 50);
 
-  await db.runAsync(
+  await getDbInstance().runAsync(
     `UPDATE words
      SET next_review = datetime('now', ?),
          priority = ?,

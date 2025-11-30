@@ -10,7 +10,7 @@ const ItemSeparator = () => <Divider />;
 
 export default function WordsList() {
   const theme = useTheme();
-  const { words } = useVocabulary();
+  const { userWords } = useVocabulary();
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
 
@@ -35,7 +35,7 @@ export default function WordsList() {
         style={{
           height: MAX_LIST_HEIGHT,
         }}
-        data={words}
+        data={userWords}
         keyExtractor={(item) => item.id.toString()}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) => (

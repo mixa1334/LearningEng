@@ -4,12 +4,11 @@ import {
   getAllCategories,
 } from "@/model/service/categoryService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { SQLiteDatabase } from "expo-sqlite";
 
 export const removeCategoryThunk = createAsyncThunk<
   Category[],
-  { db: SQLiteDatabase; categoryToDelete: Category }
->("vocabulary/removeCategoryThunk", async ({ db, categoryToDelete }) => {
-  await deleteUserCategory(db, categoryToDelete);
-  return getAllCategories(db);
+  { categoryToDelete: Category }
+>("vocabulary/removeCategoryThunk", async ({ categoryToDelete }) => {
+  await deleteUserCategory(categoryToDelete);
+  return getAllCategories();
 });

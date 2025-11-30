@@ -9,33 +9,44 @@ import { editWordThunk } from "../thunk/vocabulary/word/editWordThunk";
 import { removeWordThunk } from "../thunk/vocabulary/word/removeWordThunk";
 
 export type VocabularyState = {
-  words: Word[];
-  categories: Category[];
+  userWords: Word[];
   preloadedWords: Word[];
+  categories: Category[];
+};
+
+const initialVocabularyState: VocabularyState = {
+  userWords: [],
+  preloadedWords: [],
+  categories: [],
 };
 
 const vocabularySlice = createSlice({
   name: "vocabulary",
-  initialState: { words: [], categories: [], preloadedWords: [] } as VocabularyState,
+  initialState: initialVocabularyState,
   reducers: {},
   extraReducers: (builder) => {
+    // vocabulary
     builder.addCase(loadVocabularyThunk.fulfilled, (state, action) => {
       return action.payload;
     });
+
+    // user words
     builder.addCase(removeWordThunk.fulfilled, (state, action) => {
-      state.words = action.payload;
+      state.userWords = action.payload;
     });
     builder.addCase(addWordThunk.fulfilled, (state, action) => {
-      state.words = action.payload;
+      state.userWords = action.payload;
     });
+    builder.addCase(editWordThunk.fulfilled, (state, action) => {
+      state.userWords = action.payload;
+    });
+
+    // categories
     builder.addCase(addCategoryThunk.fulfilled, (state, action) => {
       state.categories = action.payload;
     });
     builder.addCase(removeCategoryThunk.fulfilled, (state, action) => {
       state.categories = action.payload;
-    });
-    builder.addCase(editWordThunk.fulfilled, (state, action) => {
-      state.words = action.payload;
     });
     builder.addCase(editCategoryThunk.fulfilled, (state, action) => {
       state.categories = action.payload;
