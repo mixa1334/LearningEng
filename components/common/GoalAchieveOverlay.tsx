@@ -1,3 +1,4 @@
+import { SPACING_LG, SPACING_XL } from "@/resources/constants/layout";
 import { useAppSelector } from "@/store";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
@@ -22,7 +23,9 @@ export function GoalAchieveOverlay() {
   return (
     <View style={styles.overlay}>
       <View style={styles.content}>
-        <Text style={styles.congratsText}>🎉 {name}, you met your daily goal!</Text>
+        <Text style={styles.congratsText}>
+          🎉 {name}, you met your daily goal!
+        </Text>
         <LottieView
           source={require("@/assets/animations/confetti_daily_goal.json")}
           autoPlay
@@ -39,17 +42,23 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: "rgba(0,0,0,0.6)",
     zIndex: 999,
   },
   content: {
     alignItems: "center",
+    paddingHorizontal: SPACING_XL,
+    paddingVertical: SPACING_LG,
   },
   congratsText: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#fff",
-    marginBottom: 16,
+    fontSize: 24,
+    fontWeight: "800",
+    marginBottom: SPACING_LG,
     textAlign: "center",
+    letterSpacing: 0.5,
+    color: "#ffffff",
+    textShadowColor: "rgba(0, 0, 0, 0.4)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

@@ -49,14 +49,16 @@ export default function WordsOverview({
 
   if (total >= wordToReview.length) {
     return (
-      <View
-        style={[styles.center, { backgroundColor: theme.colors.surface }]}
-      >
+      <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
         <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
           Percentage of words you remembered -{" "}
           {Math.round((accepted / total) * 100)}%
         </Text>
-        <Button mode="contained-tonal" onPress={reset}>
+        <Button
+          mode="contained-tonal"
+          onPress={reset}
+          style={styles.reviewButton}
+        >
           Review again
         </Button>
       </View>
@@ -64,21 +66,18 @@ export default function WordsOverview({
   }
 
   return (
-    <View
-      style={[
-        styles.content,
-        { backgroundColor: theme.colors.surface },
-      ]}
-    >
-      <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-        Known: {accepted}
-      </Text>
-      <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-        Not known: {rejected}
-      </Text>
-      <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-        Total: {total}
-      </Text>
+    <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
+      <View style={styles.statsContainer}>
+        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
+          Accepted: {accepted}
+        </Text>
+        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
+          Rejected: {rejected}
+        </Text>
+        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
+          Total: {total}
+        </Text>
+      </View>
       <WordCard
         word={wordToReview[total]}
         accept={accept}
@@ -96,10 +95,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   emptyText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
+  },
+  reviewButton: {
+    marginTop: 16,
   },
   text: {
     fontSize: 16,
@@ -113,6 +120,5 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     paddingHorizontal: 16,
     paddingVertical: 8,
-    // no flex, no centering here so it expands "normally" in the parent section
   },
 });

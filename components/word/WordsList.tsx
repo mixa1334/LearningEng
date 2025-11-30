@@ -47,8 +47,7 @@ export default function WordsList() {
               <Text
                 style={[styles.wordText, { color: theme.colors.onBackground }]}
               >
-                {item.word_en} ({item.word_ru}) — {item.category.icon}{" "}
-                {item.category.name}
+              {item.category.icon} {item.word_en} - {item.word_ru}
               </Text>
             </TouchableOpacity>
           </View>

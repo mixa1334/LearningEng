@@ -1,5 +1,6 @@
 import { useStatistics } from "@/hooks/useStatistics";
 import { useThemeContext } from "@/provider/ThemeProvider";
+import { SPACING_XL } from "@/resources/constants/layout";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -13,6 +14,7 @@ import {
   TextInput,
   useTheme,
 } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProfileTab() {
   const {
@@ -30,6 +32,11 @@ export default function ProfileTab() {
   const [editableName, setEditableName] = useState(false);
   const { isDark, toggleTheme } = useThemeContext();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const pageHorizontalPadding = SPACING_XL;
+  const pageTopPadding = insets.top + SPACING_XL;
+  const pageBottomPadding = insets.bottom + SPACING_XL;
 
   const toggleEditableName = () => setEditableName(!editableName);
   const toggleSettings = () => setSettingsVisible(!settingsVisible);
@@ -42,7 +49,17 @@ export default function ProfileTab() {
   };
 
   return (
-    <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[
+        styles.page,
+        {
+          backgroundColor: theme.colors.background,
+          paddingTop: pageTopPadding,
+          paddingBottom: pageBottomPadding,
+          paddingHorizontal: pageHorizontalPadding,
+        },
+      ]}
+    >
       {editableName ? (
         <View style={styles.nameRow}>
           <TextInput
@@ -170,7 +187,6 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     alignItems: "center",
-    padding: "20%",
   },
   nameRow: {
     flexDirection: "row",
@@ -179,12 +195,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   name: {
-    maxHeight: 50,
-    minWidth: 150,
     fontWeight: "700",
+    marginRight: 4,
   },
   editBtn: {
     borderRadius: 50,
+    margin: 0,
+    marginLeft: 4,
   },
   statsRow: {
     marginBottom: 24,

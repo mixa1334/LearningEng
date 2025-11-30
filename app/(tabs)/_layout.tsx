@@ -1,6 +1,14 @@
+import {
+  SAFE_AREA_MIN_BOTTOM,
+  TAB_BAR_BASE_HEIGHT,
+  TAB_BAR_BOTTOM_INSET_MULTIPLIER,
+  TAB_BAR_HORIZONTAL_MARGIN,
+} from "@/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
+import { useTheme } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface IconProps {
   readonly color: string;
@@ -12,23 +20,33 @@ function TabIcon({ color, iconName }: IconProps) {
 }
 
 export default function TabLayout() {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
+  const tabBarHeight = TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
+  const tabBarRadius = theme.roundness * 2;
+
   return (
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#cdafebff",
-          borderRadius: 16,
+          backgroundColor:
+            // Prefer elevated surface color when available (MD3)
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            (theme.colors as any).elevation?.level2 ?? theme.colors.surface,
+          borderRadius: tabBarRadius,
           position: "absolute",
-          marginHorizontal: 16,
-          marginBottom: 30,
-          height: 70,
-          shadowColor: "#000",
+          marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN,
+          marginBottom: bottomInset,
+          height: tabBarHeight,
+          shadowColor: (theme.colors as any).shadow ?? "#000",
           shadowOpacity: 0.05,
           shadowRadius: 6,
           elevation: 3,
         },
-        tabBarActiveTintColor: "#007AFF",
-        tabBarInactiveTintColor: "#333",
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
         tabBarLabelStyle: {
           fontWeight: "600",
           fontSize: 14,

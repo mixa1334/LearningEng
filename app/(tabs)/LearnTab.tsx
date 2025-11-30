@@ -1,15 +1,17 @@
 import WordScreen from "@/components/learn/WordScreen";
 import { useLearningDailySet, useLearnUtil } from "@/hooks/useLearn";
+import { SPACING_MD, SPACING_XXL } from "@/resources/constants/layout";
 import React, { useState } from "react";
 import {
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { useTheme } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 enum ActiveLearningTab {
   learn = "learn_tab",
@@ -32,6 +34,11 @@ export default function LearnTab() {
 
   const [refreshing, setRefreshing] = useState(false);
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const contentHorizontalPadding = SPACING_MD;
+  const contentTopPadding = insets.top + SPACING_MD;
+  const contentBottomPadding = insets.bottom + SPACING_XXL;
 
   const switchToLearnScreen = () => setActiveTab(ActiveLearningTab.learn);
   const switchToReviewScreen = () => setActiveTab(ActiveLearningTab.review);
@@ -46,7 +53,17 @@ export default function LearnTab() {
 
   if (status === "loading") {
     return (
-      <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
+      <View
+        style={[
+          styles.page,
+          {
+            backgroundColor: theme.colors.background,
+            paddingTop: contentTopPadding,
+            paddingBottom: contentBottomPadding,
+            paddingHorizontal: contentHorizontalPadding,
+          },
+        ]}
+      >
         <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
           <View style={styles.fullCenter}>
             <Text style={{ color: theme.colors.onSurface }}>
@@ -82,7 +99,12 @@ export default function LearnTab() {
       style={{ flex: 1 }}
       contentContainerStyle={[
         styles.page,
-        { backgroundColor: theme.colors.background },
+        {
+          backgroundColor: theme.colors.background,
+          paddingTop: contentTopPadding,
+          paddingBottom: contentBottomPadding,
+          paddingHorizontal: contentHorizontalPadding,
+        },
       ]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -159,10 +181,6 @@ export default function LearnTab() {
 const styles = StyleSheet.create({
   page: {
     flexGrow: 1,
-    paddingHorizontal: "5%",
-    paddingVertical: "5%",
-    paddingBottom: "30%",
-    paddingTop: "20%",
   },
   card: {
     flex: 1,

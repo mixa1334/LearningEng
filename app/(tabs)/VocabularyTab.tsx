@@ -3,14 +3,25 @@ import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import WordsOverview from "@/components/learn/WordsOverview";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
+import {
+    SPACING_LG,
+    SPACING_MD,
+    SPACING_SM,
+} from "@/resources/constants/layout";
 import React, { useState } from "react";
 import { StyleSheet, Switch, Text, View } from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Section = "words" | "categories" | "wordsOverview" | null;
 
 export default function VocabularyTab() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const pageHorizontalPadding = SPACING_LG;
+  const pageTopPadding = insets.top + SPACING_MD;
+  const pageBottomPadding = insets.bottom + SPACING_MD;
 
   const [expandedSection, setExpandedSection] = useState<Section>(null);
 
@@ -38,7 +49,17 @@ export default function VocabularyTab() {
   };
 
   return (
-    <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[
+        styles.page,
+        {
+          backgroundColor: theme.colors.background,
+          paddingTop: pageTopPadding,
+          paddingBottom: pageBottomPadding,
+          paddingHorizontal: pageHorizontalPadding,
+        },
+      ]}
+    >
       <Portal>
         {showAddWordModal && (
           <CreateWordDialog
@@ -134,11 +155,9 @@ export default function VocabularyTab() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    paddingTop: "20%",
-    padding: 20,
   },
   section: {
-    marginBottom: 16,
+    marginBottom: SPACING_MD,
     borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -149,8 +168,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
   },
-  sectionContent: { padding: 16 },
-  addBtn: { marginBottom: 12 },
+  sectionContent: { padding: SPACING_MD },
+  addBtn: { marginBottom: SPACING_SM },
   settingRow: {
     flexDirection: "row",
     justifyContent: "space-between",
