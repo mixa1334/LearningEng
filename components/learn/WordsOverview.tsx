@@ -17,7 +17,8 @@ export default function WordsOverview({
   const { words, preloadedWords } = useVocabulary();
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [index, setIndex] = useState(0);
+  const [ended, setEnded] = useState(false);
   const [wordToReview, setWordToReview] = useState<Word[]>([]);
 
   useEffect(() => {
@@ -32,7 +33,8 @@ export default function WordsOverview({
   const reset = () => {
     setAccepted(0);
     setRejected(0);
-    setTotal(0);
+    setIndex(0);
+    setEnded(false);
   };
 
   const accept = () => {
@@ -45,14 +47,36 @@ export default function WordsOverview({
     updateTotalCounter();
   };
 
-  const updateTotalCounter = () => setTotal(total + 1);
+  const updateTotalCounter = () => {
+    const newIndex = index + 1;
+    setIndex(newIndex);
+    if (newIndex >= wordToReview.length) {
+      end();
+    }
+  };
 
-  if (total >= wordToReview.length) {
+  const end = () => setEnded(true);
+
+  const calculatePercentage = () => {
+    if (index === 0) return 0;
+    return Math.round((accepted / index) * 100);
+  };
+
+  if (wordToReview.length === 0) {
     return (
       <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
         <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-          Percentage of words you remembered -{" "}
-          {Math.round((accepted / total) * 100)}%
+          No words to review
+        </Text>
+      </View>
+    );
+  }
+
+  if (ended) {
+    return (
+      <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
+        <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
+          Percentage of words you remembered - {calculatePercentage()}%
         </Text>
         <Button
           mode="contained-tonal"
@@ -75,11 +99,14 @@ export default function WordsOverview({
           Rejected: {rejected}
         </Text>
         <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Total: {total}
+          Total: {index}
         </Text>
       </View>
+      <Button mode="contained-tonal" onPress={end} style={styles.reviewButton}>
+        End
+      </Button>
       <WordCard
-        word={wordToReview[total]}
+        word={wordToReview[index]}
         accept={accept}
         acceptBtnName="Know"
         reject={reject}

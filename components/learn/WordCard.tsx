@@ -88,11 +88,7 @@ export default function WordCard({
             ]}
             onPress={handleContinue}
           >
-            <Text
-              style={styles.btnText}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-            >
+            <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
               Continue
             </Text>
           </TouchableOpacity>
