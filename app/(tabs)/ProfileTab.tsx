@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   nameRow: {
     flexDirection: "row",

@@ -81,7 +81,6 @@ export default function WordsOverview({
         <Button
           mode="contained-tonal"
           onPress={reset}
-          style={styles.reviewButton}
         >
           Review again
         </Button>
@@ -91,18 +90,7 @@ export default function WordsOverview({
 
   return (
     <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
-      <View style={styles.statsContainer}>
-        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Accepted: {accepted}
-        </Text>
-        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Rejected: {rejected}
-        </Text>
-        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Total: {index}
-        </Text>
-      </View>
-      <Button mode="contained-tonal" onPress={end} style={styles.reviewButton}>
+      <Button mode="contained-tonal" onPress={end}>
         End
       </Button>
       <WordCard
@@ -131,9 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
-  },
-  reviewButton: {
-    marginTop: 16,
   },
   text: {
     fontSize: 16,
