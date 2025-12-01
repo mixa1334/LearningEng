@@ -64,7 +64,7 @@ export default function WordsOverview({
 
   if (wordToReview.length === 0) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
+      <View style={[styles.container, styles.center]}>
         <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
           No words to review
         </Text>
@@ -74,14 +74,16 @@ export default function WordsOverview({
 
   if (ended) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
-        <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-          Percentage of words you remembered - {calculatePercentage()}%
-        </Text>
-        <Button
-          mode="contained-tonal"
-          onPress={reset}
+      <View style={[styles.container, styles.center]}>
+        <Text
+          style={[
+            styles.emptyText,
+            { color: (theme.colors as any).onSecondaryContainer ?? theme.colors.onSurface },
+          ]}
         >
+          You remembered {calculatePercentage()}% of words
+        </Text>
+        <Button mode="contained-tonal" onPress={reset} style={styles.reviewBtn}>
           Review again
         </Button>
       </View>
@@ -89,9 +91,32 @@ export default function WordsOverview({
   }
 
   return (
-    <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
-      <Button mode="contained-tonal" onPress={end}>
-        End
+    <View style={styles.container}>
+      <View style={styles.statsContainer}>
+        <Text
+          style={[
+            styles.text,
+            { color: theme.colors.onSurface },
+          ]}
+        >
+          Reviewed {index} / {wordToReview.length}
+        </Text>
+        <Text
+          style={[
+            styles.text,
+            { color: theme.colors.onSurface },
+          ]}
+        >
+          Known: {accepted}
+        </Text>
+      </View>
+      <Button
+        mode="contained-tonal"
+        onPress={end}
+        style={styles.endBtn}
+        icon="flag-checkered"
+      >
+        End session
       </Button>
       <WordCard
         word={wordToReview[index]}
@@ -105,8 +130,13 @@ export default function WordsOverview({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginTop: 8,
+  },
   center: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -127,10 +157,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
   },
-  content: {
-    width: "100%",
-    alignSelf: "stretch",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  endBtn: {
+    alignSelf: "flex-end",
+    marginBottom: 8,
+  },
+  reviewBtn: {
+    marginTop: 8,
   },
 });

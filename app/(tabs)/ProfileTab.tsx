@@ -1,9 +1,9 @@
 import { useStatistics } from "@/hooks/useStatistics";
 import { useThemeContext } from "@/provider/ThemeProvider";
-import { SPACING_XL } from "@/resources/constants/layout";
+import { SPACING_MD, SPACING_XL } from "@/resources/constants/layout";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import {
   Button,
   Dialog,
@@ -49,95 +49,147 @@ export default function ProfileTab() {
   };
 
   return (
-    <View
-      style={[
-        styles.page,
-        {
-          backgroundColor: theme.colors.background,
-          paddingTop: pageTopPadding,
-          paddingBottom: pageBottomPadding,
-          paddingHorizontal: pageHorizontalPadding,
-        },
-      ]}
+    <ScrollView
+      style={[styles.page, { backgroundColor: theme.colors.background }]}
+      contentContainerStyle={{
+        paddingTop: pageTopPadding,
+        paddingBottom: pageBottomPadding,
+        paddingHorizontal: pageHorizontalPadding,
+      }}
     >
-      {editableName ? (
-        <View style={styles.nameRow}>
-          <TextInput
-            mode="flat"
-            value={name}
-            onChangeText={changeName}
-            onBlur={toggleEditableName}
-            autoFocus
-            style={[styles.name, { color: theme.colors.onBackground }]}
-          />
-          <IconButton
-            icon="check"
-            mode="contained"
-            onPress={toggleEditableName}
-            style={[
-              styles.editBtn,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
-          />
-        </View>
-      ) : (
-        <View style={styles.nameRow}>
+      <View
+        style={[
+          styles.profileCard,
+          {
+            backgroundColor:
+              (theme.colors as any).primaryContainer ?? theme.colors.surface,
+          },
+        ]}
+      >
+        {editableName ? (
+          <View style={styles.nameRow}>
+            <TextInput
+              mode="flat"
+              value={name}
+              onChangeText={changeName}
+              onBlur={toggleEditableName}
+              autoFocus
+              style={styles.nameInput}
+              underlineColor={theme.colors.primary}
+              selectionColor={theme.colors.primary}
+            />
+            <IconButton
+              icon="check"
+              mode="contained"
+              onPress={toggleEditableName}
+              style={[
+                styles.editBtn,
+                { backgroundColor: theme.colors.surfaceVariant },
+              ]}
+            />
+          </View>
+        ) : (
+          <View style={styles.nameRow}>
+            <Text
+              variant="headlineSmall"
+              style={[styles.name, { color: theme.colors.onPrimaryContainer }]}
+            >
+              {name}
+            </Text>
+            <IconButton
+              icon="pencil"
+              mode="contained"
+              onPress={toggleEditableName}
+              style={[
+                styles.editBtn,
+                { backgroundColor: theme.colors.surfaceVariant },
+              ]}
+            />
+          </View>
+        )}
+
+        <View style={styles.streakRow}>
+          <Ionicons name="flame" size={28} color={theme.colors.primary} />
           <Text
-            variant="titleLarge"
-            style={[styles.name, { color: theme.colors.onBackground }]}
+            style={[
+              styles.streakText,
+              { color: theme.colors.onPrimaryContainer },
+            ]}
           >
-            {name}
+            {streak} days in a row
+          </Text>
+        </View>
+      </View>
+
+      <View
+        style={[
+          styles.statsCard,
+          { backgroundColor: theme.colors.surfaceVariant },
+        ]}
+      >
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+          Progress
+        </Text>
+        <View style={styles.statsRow}>
+          <Text
+            style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}
+          >
+            Last learning
+          </Text>
+          <Text
+            style={[styles.statsValue, { color: theme.colors.onSurface }]}
+          >
+            {lastLearningDate || "—"}
+          </Text>
+        </View>
+        <View style={styles.statsRow}>
+          <Text
+            style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}
+          >
+            Learned today
+          </Text>
+          <Text
+            style={[styles.statsValue, { color: theme.colors.onSurface }]}
+          >
+            {reviewedToday}
+          </Text>
+        </View>
+      </View>
+
+      <View
+        style={[
+          styles.goalCard,
+          { backgroundColor: theme.colors.surfaceVariant },
+        ]}
+      >
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+          Daily goal
+        </Text>
+        <View style={styles.goalRow}>
+          <IconButton
+            icon="minus"
+            mode="contained"
+            style={[
+              styles.roundBtn,
+              { backgroundColor: theme.colors.background },
+            ]}
+            onPress={decreaseGoal}
+          />
+          <Text
+            style={[styles.goalText, { color: theme.colors.onSurface }]}
+          >
+            {dailyGoal} words / day
           </Text>
           <IconButton
-            icon="pencil"
+            icon="plus"
             mode="contained"
-            onPress={toggleEditableName}
             style={[
-              styles.editBtn,
-              { backgroundColor: theme.colors.surfaceVariant },
+              styles.roundBtn,
+              { backgroundColor: theme.colors.background },
             ]}
+            onPress={increaseGoal}
           />
         </View>
-      )}
-
-      <View style={styles.statsRow}>
-        <Text style={[styles.statsText, { color: theme.colors.onBackground }]}>
-          Last Learning: {lastLearningDate || "—"}
-        </Text>
-        <Text style={[styles.statsText, { color: theme.colors.onBackground }]}>
-          Learned Today: {reviewedToday}
-        </Text>
-      </View>
-
-      <View style={styles.goalRow}>
-        <IconButton
-          icon="minus"
-          mode="contained"
-          style={[
-            styles.roundBtn,
-            { backgroundColor: theme.colors.surfaceVariant },
-          ]}
-          onPress={decreaseGoal}
-        />
-        <Text style={[styles.goalText, { color: theme.colors.onBackground }]}>
-          Daily Goal: {dailyGoal} words
-        </Text>
-        <IconButton
-          icon="plus"
-          mode="contained"
-          style={[
-            styles.roundBtn,
-            { backgroundColor: theme.colors.surfaceVariant },
-          ]}
-          onPress={increaseGoal}
-        />
-      </View>
-
-      <View style={styles.streakRow}>
-        <Ionicons name="flame" size={28} color={theme.colors.primary} />
-        <Text style={[styles.streakText, { color: theme.colors.onBackground }]}>
-          {streak} days in a row
-        </Text>
       </View>
 
       <Button
@@ -179,25 +231,33 @@ export default function ProfileTab() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  },
+  profileCard: {
+    borderRadius: 24,
+    padding: SPACING_XL,
+    marginBottom: SPACING_XL,
   },
   nameRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     marginBottom: 24,
   },
   name: {
     fontWeight: "700",
     marginRight: 4,
+  },
+  nameInput: {
+    flex: 1,
+    marginRight: SPACING_MD,
+    fontWeight: "700",
   },
   editBtn: {
     borderRadius: 50,
@@ -205,12 +265,18 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   statsRow: {
-    marginBottom: 24,
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 8,
   },
   statsText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
+  },
+  statsValue: {
+    fontSize: 14,
+    fontWeight: "600",
   },
   goalRow: {
     flexDirection: "row",
@@ -225,15 +291,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginBottom: 12,
+  },
   streakRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 24,
+    marginTop: 4,
   },
   streakText: {
     marginLeft: 8,
     fontSize: 16,
     fontWeight: "600",
+  },
+  statsCard: {
+    borderRadius: 20,
+    padding: SPACING_XL,
+    marginBottom: SPACING_XL,
+  },
+  goalCard: {
+    borderRadius: 20,
+    padding: SPACING_XL,
+    marginBottom: SPACING_XL,
   },
   settingsBtn: {
     marginTop: 12,

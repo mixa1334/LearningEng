@@ -20,6 +20,7 @@ export default function CreateWordDialog({ visible, exit }: CreateWordDialogProp
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const handleAddWord = () => {
     if (!newWordEn || !newWordRu || !selectedCategory) return;
@@ -30,6 +31,12 @@ export default function CreateWordDialog({ visible, exit }: CreateWordDialogProp
       category_id: selectedCategory.id,
       text_example: newWordTextExample,
     });
+    setNewWordEn("");
+    setNewWordRu("");
+    setNewWordTranscription("");
+    setNewWordTextExample("");
+    setSelectedCategory(null);
+    setShowCategoryPicker(false);
     exit();
   };
 
@@ -74,28 +81,56 @@ export default function CreateWordDialog({ visible, exit }: CreateWordDialogProp
         <Text
           style={[styles.sectionLabel, { color: theme.colors.onBackground }]}
         >
-          Select Category:
+          Category
         </Text>
-        <FlatList
-          style={{
-            height: MAX_SELECT_CATEGORY_HEIGHT,
-          }}
-          data={categories}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Button
-              mode={selectedCategory?.id === item.id ? "contained" : "outlined"}
-              style={styles.categoryBtn}
-              onPress={() => setSelectedCategory(item)}
-            >
-              {item.icon} {item.name}
-            </Button>
-          )}
-        />
+        <Button
+          mode="outlined"
+          style={styles.categorySelector}
+          onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+        >
+          {selectedCategory
+            ? `${selectedCategory.icon} ${selectedCategory.name}`
+            : "Select category"}
+        </Button>
+        {showCategoryPicker && (
+          <FlatList
+            style={{
+              height: MAX_SELECT_CATEGORY_HEIGHT,
+            }}
+            data={categories}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <Button
+                mode={
+                  selectedCategory?.id === item.id ? "contained" : "outlined"
+                }
+                style={styles.categoryBtn}
+                onPress={() => {
+                  setSelectedCategory(item);
+                  setShowCategoryPicker(false);
+                }}
+              >
+                {item.icon} {item.name}
+              </Button>
+            )}
+          />
+        )}
       </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={exit}>Close</Button>
-        <Button mode="contained" onPress={handleAddWord}>
+      <Dialog.Actions style={styles.actions}>
+        <Button
+          mode="text"
+          icon="close"
+          onPress={exit}
+          style={styles.actionButton}
+        >
+          Close
+        </Button>
+        <Button
+          mode="contained"
+          icon="plus"
+          onPress={handleAddWord}
+          style={styles.actionButton}
+        >
           Add
         </Button>
       </Dialog.Actions>
@@ -115,5 +150,17 @@ const styles = StyleSheet.create({
   sectionLabel: {
     marginVertical: 8,
     fontWeight: "600",
+  },
+  categorySelector: {
+    marginBottom: 4,
+    borderRadius: 8,
+  },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionButton: {
+    marginHorizontal: 4,
   },
 });

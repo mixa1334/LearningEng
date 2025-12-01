@@ -2,8 +2,8 @@ import { useVocabulary } from "@/hooks/useVocabulary";
 import { Category } from "@/model/entity/types";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import EmojiSelector from "react-native-emoji-selector";
 import { Button, Dialog, TextInput, useTheme } from "react-native-paper";
+import SimpleEmojiPicker from "../common/SimpleEmojiPicker";
 
 interface EditCategoryDialogProps {
   readonly visible: boolean;
@@ -59,15 +59,11 @@ export default function EditCategoryDialog({
         )}
         {showEmojiPicker && (
           <View style={styles.emojiPickerContainer}>
-            <EmojiSelector
+            <SimpleEmojiPicker
               onEmojiSelected={(emoji) => {
                 setCategoryEmoji(emoji);
                 setShowEmojiPicker(false);
               }}
-              showSearchBar={true}
-              showTabs={true}
-              showHistory={true}
-              columns={8}
             />
           </View>
         )}

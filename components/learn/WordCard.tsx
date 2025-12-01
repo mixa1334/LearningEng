@@ -1,7 +1,13 @@
 import { Word } from "@/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { useTheme } from "react-native-paper";
 
 interface WordCardProps {
@@ -23,6 +29,19 @@ export default function WordCard({
   const [pending, setPending] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const theme = useTheme();
+  const { width, height } = useWindowDimensions();
+
+  const cardWidth = Math.min(width * 0.9, 420);
+  const cardHeight = Math.min(height * 0.45, 380);
+  const isNarrow = cardWidth < 360;
+  const acceptColor = theme.dark ? "#2E7D32" : "#4CAF50";
+  const cardBackground =
+    (theme.colors as any).primaryContainer ?? theme.colors.surface;
+  const primaryTextColor =
+    (theme.colors as any).onPrimaryContainer ?? theme.colors.onSurface;
+  const secondaryTextColor =
+    (theme.colors as any).onSecondaryContainer ??
+    theme.colors.onSurfaceVariant;
 
   useEffect(() => {
     setShowTranslation(false);
@@ -54,16 +73,28 @@ export default function WordCard({
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-      <Text style={[styles.category, { color: theme.colors.onSurfaceVariant }]}>
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: cardBackground,
+          width: cardWidth,
+          minHeight: cardHeight,
+        },
+      ]}
+    >
+      <Text style={[styles.category, { color: secondaryTextColor }]}>
         {word.category.icon} {word.category.name}
       </Text>
-      <Text style={[styles.word, { color: theme.colors.onSurface }]}>
+      <Text style={[styles.word, { color: primaryTextColor }]}>
         {word.word_en} {word.transcription}
       </Text>
 
       {showTranslation ? (
-        <Text style={[styles.translation, { color: theme.colors.primary }]}>
+        <Text
+          style={[styles.translation, { color: theme.colors.primary }]}
+          numberOfLines={3}
+        >
           {word.word_ru}
         </Text>
       ) : (
@@ -75,16 +106,25 @@ export default function WordCard({
         </TouchableOpacity>
       )}
 
-      <Text style={[styles.example, { color: theme.colors.onSurfaceVariant }]}>
+      <Text
+        style={[styles.example, { color: secondaryTextColor }]}
+        numberOfLines={3}
+      >
         {word.text_example}
       </Text>
 
-      <View style={styles.bottomBar}>
+      <View
+        style={[
+          styles.bottomBar,
+          isNarrow ? styles.bottomBarVertical : undefined,
+        ]}
+      >
         {pending ? (
           <TouchableOpacity
             style={[
               styles.btnAccept,
-              { backgroundColor: theme.colors.primary },
+              isNarrow && styles.btnFullWidth,
+              { backgroundColor: acceptColor },
             ]}
             onPress={handleContinue}
           >
@@ -97,7 +137,8 @@ export default function WordCard({
             <TouchableOpacity
               style={[
                 styles.btnAccept,
-                { backgroundColor: theme.colors.primary },
+                isNarrow && styles.btnFullWidth,
+                { backgroundColor: acceptColor },
               ]}
               onPress={handleAccept}
             >
@@ -112,6 +153,7 @@ export default function WordCard({
             <TouchableOpacity
               style={[
                 styles.btnReject,
+                isNarrow && styles.btnFullWidth,
                 { backgroundColor: theme.colors.error },
               ]}
               onPress={handleReject}
@@ -136,10 +178,10 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12,
-    elevation: 2,
+    borderRadius: 24,
+    borderWidth: 0,
+    borderColor: "transparent",
     alignSelf: "center",
-    maxWidth: "90%",
     marginVertical: 16,
   },
   category: { fontWeight: "600", marginBottom: 6 },
@@ -168,6 +210,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 10,
   },
+  bottomBarVertical: {
+    flexDirection: "column",
+  },
   btnAccept: {
     flex: 1,
     paddingVertical: 10,
@@ -175,7 +220,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginHorizontal: 4,
     alignItems: "center",
-    maxWidth: "48%",
   },
   btnReject: {
     flex: 1,
@@ -184,7 +228,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginHorizontal: 4,
     alignItems: "center",
-    maxWidth: "48%",
+  },
+  btnFullWidth: {
+    maxWidth: "100%",
+    marginHorizontal: 0,
+    marginVertical: 4,
   },
   btnText: { fontWeight: "600", fontSize: 13 },
 });

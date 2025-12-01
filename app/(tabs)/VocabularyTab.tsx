@@ -4,12 +4,19 @@ import WordsOverview from "@/components/learn/WordsOverview";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
 import {
-    SPACING_LG,
-    SPACING_MD,
-    SPACING_SM,
+  SPACING_LG,
+  SPACING_MD,
+  SPACING_SM,
 } from "@/resources/constants/layout";
 import React, { useState } from "react";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -18,6 +25,7 @@ type Section = "words" | "categories" | "wordsOverview" | null;
 export default function VocabularyTab() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { height: screenHeight } = useWindowDimensions();
 
   const pageHorizontalPadding = SPACING_LG;
   const pageTopPadding = insets.top + SPACING_MD;
@@ -28,6 +36,8 @@ export default function VocabularyTab() {
   const [showAddWordModal, setShowAddWordModal] = useState(false);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
+
+  const listMaxHeight = screenHeight * 0.35;
 
   const toggleWordsSection = () => {
     setExpandedSection(expandedSection === "words" ? null : "words");
@@ -49,16 +59,18 @@ export default function VocabularyTab() {
   };
 
   return (
-    <View
+    <ScrollView
       style={[
         styles.page,
         {
           backgroundColor: theme.colors.background,
-          paddingTop: pageTopPadding,
-          paddingBottom: pageBottomPadding,
-          paddingHorizontal: pageHorizontalPadding,
         },
       ]}
+      contentContainerStyle={{
+        paddingTop: pageTopPadding,
+        paddingBottom: pageBottomPadding,
+        paddingHorizontal: pageHorizontalPadding,
+      }}
     >
       <Portal>
         {showAddWordModal && (
@@ -77,11 +89,14 @@ export default function VocabularyTab() {
       </Portal>
 
       {/* Words Section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
+      <View style={styles.section}>
         <Button
           mode="contained-tonal"
           onPress={toggleWordsSection}
           style={styles.sectionHeader}
+          contentStyle={styles.sectionHeaderContent}
+          uppercase={false}
+          icon="book-open-variant"
         >
           Words
         </Button>
@@ -95,17 +110,22 @@ export default function VocabularyTab() {
             >
               Add Word
             </Button>
-            <WordsList />
+            <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
+              <WordsList />
+            </View>
           </View>
         )}
       </View>
 
       {/* Categories Section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
+      <View style={styles.section}>
         <Button
           mode="contained-tonal"
           onPress={toggleCategoriesSection}
           style={styles.sectionHeader}
+          contentStyle={styles.sectionHeaderContent}
+          uppercase={false}
+          icon="shape-outline"
         >
           Categories
         </Button>
@@ -119,17 +139,22 @@ export default function VocabularyTab() {
             >
               Add Category
             </Button>
-            <CategoriesList />
+            <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
+              <CategoriesList />
+            </View>
           </View>
         )}
       </View>
 
       {/* Words overview section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
+      <View style={styles.section}>
         <Button
           mode="contained-tonal"
           onPress={toggleWordsOverviewSection}
           style={styles.sectionHeader}
+          contentStyle={styles.sectionHeaderContent}
+          uppercase={false}
+          icon="chart-bar"
         >
           Words Overview
         </Button>
@@ -148,7 +173,7 @@ export default function VocabularyTab() {
           </View>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -158,18 +183,23 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: SPACING_MD,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
   },
   sectionHeader: {
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    alignSelf: "stretch",
+    marginHorizontal: SPACING_SM,
+    marginTop: SPACING_SM,
+    marginBottom: SPACING_SM,
   },
-  sectionContent: { padding: SPACING_MD },
+  sectionHeaderContent: {
+    justifyContent: "space-between",
+  },
+  sectionContent: { paddingHorizontal: SPACING_MD, paddingBottom: SPACING_MD },
   addBtn: { marginBottom: SPACING_SM },
+  listContainer: {
+    overflow: "hidden",
+  },
   settingRow: {
     flexDirection: "row",
     justifyContent: "space-between",

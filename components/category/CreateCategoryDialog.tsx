@@ -1,8 +1,8 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import EmojiSelector from "react-native-emoji-selector";
 import { Button, Dialog, TextInput, useTheme } from "react-native-paper";
+import SimpleEmojiPicker from "../common/SimpleEmojiPicker";
 
 interface CreateCategoryDialogProps {
   readonly visible: boolean;
@@ -25,6 +25,9 @@ export default function CreateCategoryDialog({
       name: newCategoryName,
       icon: newCategoryEmoji,
     });
+    setNewCategoryName("");
+    setNewCategoryEmoji("");
+    setShowEmojiPicker(false);
     exit();
   };
 
@@ -44,30 +47,48 @@ export default function CreateCategoryDialog({
         />
         {!showEmojiPicker && (
           <Button
+            mode="outlined"
+            icon="emoticon-outline"
             onPress={() => setShowEmojiPicker(true)}
-            style={{ marginTop: 10 }}
+            style={styles.emojiButton}
           >
-            {newCategoryEmoji} Choose emoji
+            {newCategoryEmoji || "Choose emoji"}
           </Button>
         )}
         {showEmojiPicker && (
-          <View style={styles.emojiPickerContainer}>
-            <EmojiSelector
+          <View
+            style={[
+              styles.emojiPickerContainer,
+              {
+                backgroundColor: theme.colors.surfaceVariant,
+                borderRadius: 16,
+              },
+            ]}
+          >
+            <SimpleEmojiPicker
               onEmojiSelected={(emoji) => {
                 setNewCategoryEmoji(emoji);
                 setShowEmojiPicker(false);
               }}
-              showSearchBar={true}
-              showTabs={true}
-              showHistory={true}
-              columns={8}
             />
           </View>
         )}
       </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={exit}>Close</Button>
-        <Button mode="contained" onPress={handleAddCategory}>
+      <Dialog.Actions style={styles.actions}>
+        <Button
+          mode="text"
+          icon="close"
+          onPress={exit}
+          style={styles.actionButton}
+        >
+          Close
+        </Button>
+        <Button
+          mode="contained"
+          icon="plus"
+          onPress={handleAddCategory}
+          style={styles.actionButton}
+        >
           Add
         </Button>
       </Dialog.Actions>
@@ -82,6 +103,18 @@ const styles = StyleSheet.create({
   },
   emojiPickerContainer: {
     height: 250,
-    margin: 10,
+    marginTop: 10,
+  },
+  emojiButton: {
+    marginTop: 10,
+    borderRadius: 12,
+  },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionButton: {
+    marginHorizontal: 4,
   },
 });

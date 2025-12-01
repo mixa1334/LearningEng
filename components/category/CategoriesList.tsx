@@ -1,25 +1,27 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { Category, EntityType } from "@/model/entity/types";
-import { MAX_LIST_HEIGHT } from "@/resources/constants/constants";
 import React, { useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
-  Divider,
-  IconButton,
-  Portal,
-  Text,
-  useTheme,
-} from "react-native-paper";
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { IconButton, Portal, Text, useTheme } from "react-native-paper";
 import EditCategoryDialog from "./EditCategoryDialog";
-
-const ItemSeparator = () => <Divider />;
 
 export default function CategoriesList() {
   const theme = useTheme();
   const { categories, removeCategory } = useVocabulary();
 
-  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
+  const [showEditCategoryModal, setShowEditCategoryModal] =
+    useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(
+    null
+  );
+  const { height: screenHeight } = useWindowDimensions();
+  const maxListHeight = screenHeight * 0.35;
 
   const openEditCategoryModal = (category: Category) => {
     setCategoryToEdit(category);
@@ -37,21 +39,30 @@ export default function CategoriesList() {
           />
         )}
       </Portal>
-      <FlatList
-        style={{
-          height: MAX_LIST_HEIGHT,
-        }}
-        data={categories}
-        keyExtractor={(item) => item.id.toString()}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) => (
-          <View style={styles.itemRow}>
+
+      <ScrollView
+        style={{ maxHeight: maxListHeight, backgroundColor: "transparent" }}
+        nestedScrollEnabled
+        contentContainerStyle={styles.listContent}
+      >
+        {categories.map((item, index) => (
+          <View
+            key={item.id.toString()}
+            style={[
+              styles.itemRow,
+              {
+                backgroundColor:
+                  (theme.colors as any).surfaceVariant ?? theme.colors.surface,
+              },
+            ]}
+          >
             <TouchableOpacity
-              style={styles.itemRow}
+              style={styles.itemMain}
               onPress={() => openEditCategoryModal(item)}
             >
               <Text
-                style={[styles.wordText, { color: theme.colors.onBackground }]}
+                style={[styles.wordText, { color: theme.colors.onSurface }]}
+                numberOfLines={1}
               >
                 {item.icon} {item.name}
               </Text>
@@ -64,18 +75,29 @@ export default function CategoriesList() {
               />
             )}
           </View>
-        )}
-      />
+        ))}
+      </ScrollView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  listContent: {
+    paddingBottom: 4,
+    paddingHorizontal: 4,
+  },
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    marginVertical: 4,
+  },
+  itemMain: {
+    flex: 1,
+    marginRight: 4,
   },
   wordText: {
     fontSize: 16,
