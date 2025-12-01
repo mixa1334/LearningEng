@@ -9,11 +9,11 @@ export const updateStatsAfterLearnThunk = createAsyncThunk(
     const state = getState() as RootState;
     const today = getCurrentDate();
 
-    let reviewedToday = state.stats.reviewedToday;
-    let streak = state.stats.streak;
-    let lastLearningDate = state.stats.lastLearningDate;
-    const dailyGoal = state.stats.dailyGoal;
-    let dailyGoalAchieve = state.stats.dailyGoalAchieve;
+    let reviewedToday = state.statistics.reviewedToday;
+    let streak = state.statistics.streak;
+    let lastLearningDate = state.statistics.lastLearningDate;
+    const dailyGoal = state.statistics.dailyGoal;
+    let dailyGoalAchieve = state.statistics.dailyGoalAchieve;
 
     reviewedToday++;
     if (lastLearningDate !== today) {

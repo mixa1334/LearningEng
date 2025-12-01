@@ -1,13 +1,13 @@
 import { DateShifts, getCurrentDate } from "@/util/dateHelper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { StatsState } from "../../slice/statisticsSlice";
+import { StatisticsState } from "../../slice/statisticsSlice";
 
 /// REFACTOR !!!!!!!!!!!!!!! (set up as lazy init in initial state in slice!!!)
-export const loadStatsThunk = createAsyncThunk<Partial<StatsState>>(
+export const loadStatsThunk = createAsyncThunk<Partial<StatisticsState>>(
   "stats/loadStatsThunk",
   async () => {
-    const keys: (keyof StatsState)[] = [
+    const keys: (keyof StatisticsState)[] = [
       "name",
       "streak",
       "lastLearningDate",
@@ -16,13 +16,13 @@ export const loadStatsThunk = createAsyncThunk<Partial<StatsState>>(
       "dailyGoalAchieve",
     ];
 
-    const result = await AsyncStorage.multiGet(keys);
+    const result = await AsyncStorage.multiGet(keys as string[]);
 
-    const parsed: Partial<StatsState> = {};
+    const parsed: Partial<StatisticsState> = {};
 
     for (const [key, value] of result) {
       const parseValue = (value: any) => {
-        parsed[key as keyof StatsState] = value;
+        parsed[key as keyof StatisticsState] = value;
       };
       if (value !== null) {
         let tempValue: any = value;

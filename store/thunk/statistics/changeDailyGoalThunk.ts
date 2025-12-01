@@ -16,10 +16,10 @@ export const changeDailyGoalThunk = createAsyncThunk<
   async ({ newDailyGoal }, { getState, dispatch }) => {
     const state = getState() as RootState;
     newDailyGoal = Math.max(1, newDailyGoal);
-    let dailyGoal = state.stats.dailyGoal;
-    let reviewedToday = state.stats.reviewedToday;
-    let streak = state.stats.streak;
-    let dailyGoalAchieve = state.stats.dailyGoalAchieve;
+    let dailyGoal = state.statistics.dailyGoal;
+    let reviewedToday = state.statistics.reviewedToday;
+    let streak = state.statistics.streak;
+    let dailyGoalAchieve = state.statistics.dailyGoalAchieve;
     if (
       !dailyGoalAchieve &&
       newDailyGoal < dailyGoal &&
