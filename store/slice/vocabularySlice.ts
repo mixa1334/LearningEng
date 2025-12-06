@@ -4,8 +4,8 @@ import { Category, EntityType, Word } from "@/model/entity/types";
 import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByType } from "@/model/service/categoryService";
 import { addNewWord, deleteUserWord, editUserWord, getWordsByType } from "@/model/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
 import { loadDailyWordSetThunk } from "./learnSlice";
-
 
 export type VocabularyState = {
   userWords: Word[];
@@ -21,56 +21,48 @@ const initialVocabularyState: VocabularyState = {
   allCategories: [],
 };
 
-export const addCategoryThunk = createAsyncThunk<Category[], { newCategory: NewCategoryDto }>(
+export const addCategoryThunk = createAsyncThunk<Category[], NewCategoryDto>(
   "vocabulary/addCategoryThunk",
-  async ({ newCategory }) => {
+  async (newCategory) => {
     await addNewCategory(newCategory);
     return getCategoriesByType(EntityType.useradd);
   }
 );
 
-export const editCategoryThunk = createAsyncThunk<
-  Category[],
-  { categoryToEdit: Category }
->("vocabulary/editCategoryThunk", async ({ categoryToEdit }) => {
-  await editUserCategory(categoryToEdit);
-  return getCategoriesByType(EntityType.useradd);
-});
-
-export const removeCategoryThunk = createAsyncThunk<
-  Category[],
-  { categoryToDelete: Category }
->("vocabulary/removeCategoryThunk", async ({ categoryToDelete }) => {
-  await deleteUserCategory(categoryToDelete);
-  return getCategoriesByType(EntityType.useradd);
-});
-
-export const addWordThunk = createAsyncThunk<Word[], { newWord: NewWordDto }>(
-  "vocabulary/addWordThunk",
-  async ({ newWord }, { dispatch }) => {
-    await addNewWord(newWord);
-    dispatch(loadDailyWordSetThunk());
-    return getWordsByType(EntityType.useradd);
-    }
+export const editCategoryThunk = createAsyncThunk<Category[], Category>(
+  "vocabulary/editCategoryThunk",
+  async (categoryToEdit) => {
+    await editUserCategory(categoryToEdit);
+    return getCategoriesByType(EntityType.useradd);
+  }
 );
 
-export const editWordThunk = createAsyncThunk<
-  Word[],
-  { wordToEdit: Word }
->("vocabulary/editWordThunk", async ({ wordToEdit }) => {
+export const removeCategoryThunk = createAsyncThunk<Category[], Category>(
+  "vocabulary/removeCategoryThunk",
+  async (categoryToDelete) => {
+    await deleteUserCategory(categoryToDelete);
+    return getCategoriesByType(EntityType.useradd);
+  }
+);
+
+export const addWordThunk = createAsyncThunk<Word[], NewWordDto>("vocabulary/addWordThunk", async (newWord, { dispatch }) => {
+  await addNewWord(newWord);
+  dispatch(loadDailyWordSetThunk());
+  return getWordsByType(EntityType.useradd);
+});
+
+export const editWordThunk = createAsyncThunk<Word[], Word>("vocabulary/editWordThunk", async (wordToEdit) => {
   await editUserWord(wordToEdit);
   return getWordsByType(EntityType.useradd);
 });
 
-export const removeWordThunk = createAsyncThunk<
-  Word[],
-  { wordToDelete: Word }
->(
+export const removeWordThunk = createAsyncThunk<Word[], Word>(
   "vocabulary/removeWordThunk",
-  async ({ wordToDelete }) => {
+  async (wordToDelete, { getState }) => {
     await deleteUserWord(wordToDelete);
-    return getWordsByType(EntityType.useradd);
-    }
+    const wordsToLearn = (getState() as RootState).learn.wordsToLearn;
+    return wordsToLearn.filter((w) => w.id !== wordToDelete.id);
+  }
 );
 
 export const loadVocabularyThunk = createAsyncThunk<VocabularyState>("vocabulary/loadVocabularyThunk", async () => {

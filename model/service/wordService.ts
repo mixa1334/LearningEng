@@ -1,6 +1,7 @@
 import { EntityType, type Word } from "@/model/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
+import { UpdateWordDto } from "../dto/UpdateWordDto";
 import { rowToWord } from "../mapper/typesMapper";
 
 const SELECT_WORDS = `SELECT
@@ -17,9 +18,9 @@ export async function resetWordLearningProgress(): Promise<void> {
   await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')");
 }
 
-export async function addNewWord(newWord: NewWordDto, wordType: EntityType = EntityType.useradd): Promise<void> {
+export async function addNewWord(newWord: NewWordDto, wordType: EntityType = EntityType.useradd): Promise<number> {
   const reviewDate = new Date().toISOString();
-  await getDbInstance().runAsync(INSERT_WORD, [
+  const insertedRow = await getDbInstance().runAsync(INSERT_WORD, [
     newWord.word_en,
     newWord.word_ru,
     newWord.transcription,
@@ -30,17 +31,20 @@ export async function addNewWord(newWord: NewWordDto, wordType: EntityType = Ent
     0,
     newWord.text_example,
   ]);
+  return insertedRow.lastInsertRowId;
 }
 
-export async function deleteUserWord(wordToDelete: Word): Promise<void> {
-  await getDbInstance().runAsync(
+export async function deleteUserWord(wordToDelete: Word): Promise<boolean> {
+  const deletedRows = await getDbInstance().runAsync(
     `DELETE FROM words 
     WHERE type = 'user_added' AND id = ?`,
     [wordToDelete.id]
   );
+  return deletedRows.changes > 0;
 }
 
-export async function editUserWord(word: Word): Promise<void> {
+export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
+  let result = false;
   await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
     const existingCategory = await tx.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE id = ?;`, [
       word.category.id,
@@ -50,12 +54,15 @@ export async function editUserWord(word: Word): Promise<void> {
       throw new Error(`Category with id ${word.category.id} does not exist`);
     }
 
-    await tx.runAsync(
+    const updatedRows = await tx.runAsync(
       `UPDATE words SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
       WHERE type = 'user_added' AND id = ?`,
       [word.word_en, word.word_ru, word.transcription, word.category.id, word.text_example, word.id]
     );
+
+    result = updatedRows.changes > 0;
   });
+  return result;
 }
 
 export async function getAllWords(limit: number): Promise<Word[]> {
