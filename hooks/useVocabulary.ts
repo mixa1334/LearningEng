@@ -22,17 +22,17 @@ export function useVocabulary() {
     dispatch(loadVocabularyThunk());
   }, [dispatch]);
 
-  const addWord = (newWord: NewWordDto) => dispatch(addWordThunk({ newWord }));
+  const addWord = (newWord: NewWordDto) => dispatch(addWordThunk(newWord));
 
-  const removeWord = (wordToDelete: Word) => dispatch(removeWordThunk({ wordToDelete }));
+  const removeWord = (wordToDelete: Word) => dispatch(removeWordThunk(wordToDelete));
 
-  const editWord = (wordToEdit: Word) => dispatch(editWordThunk({ wordToEdit }));
+  const editWord = (wordToEdit: Word) => dispatch(editWordThunk(wordToEdit));
 
-  const removeCategory = (categoryToDelete: Category) => dispatch(removeCategoryThunk({ categoryToDelete }));
+  const removeCategory = (categoryToDelete: Category) => dispatch(removeCategoryThunk(categoryToDelete));
 
-  const addCategory = (newCategory: NewCategoryDto) => dispatch(addCategoryThunk({ newCategory }));
+  const addCategory = (newCategory: NewCategoryDto) => dispatch(addCategoryThunk(newCategory));
 
-  const editCategory = (categoryToEdit: Category) => dispatch(editCategoryThunk({ categoryToEdit }));
+  const editCategory = (categoryToEdit: Category) => dispatch(editCategoryThunk(categoryToEdit));
 
   return {
     userWords,

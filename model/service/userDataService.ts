@@ -108,7 +108,7 @@ export async function loadUserData(): Promise<UserData> {
   const yesterday = getCurrentDate(DateShifts.yesterday);
   if (userData.lastLearningDate !== today) {
     resetUserDailyProgress(userData);
-    if (userData.lastLearningDate !== yesterday) {
+    if (userData.lastLearningDate !== yesterday && userData.lastLearningDate !== today) {
       resetUserStreak(userData);
     }
   }
@@ -116,13 +116,15 @@ export async function loadUserData(): Promise<UserData> {
 }
 
 function resetUserDailyProgress(userData: UserData) {
-  userData.dailyGoalAchieve = DEFAULT_USER_DATA.dailyGoalAchieve;
-  setUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, DEFAULT_USER_DATA.dailyGoalAchieve);
-  userData.learnedToday = DEFAULT_USER_DATA.learnedToday;
-  setUserField(USER_DATA_KEYS.LEARNED_TODAY, DEFAULT_USER_DATA.learnedToday);
+  userData.dailyGoalAchieve = false;
+  setUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, userData.dailyGoalAchieve);
+  userData.learnedToday = 0;
+  setUserField(USER_DATA_KEYS.LEARNED_TODAY, userData.learnedToday);
+  userData.reviewedToday = 0;
+  setUserField(USER_DATA_KEYS.REVIEWED_TODAY, userData.reviewedToday);
 }
 
 function resetUserStreak(userData: UserData) {
-  userData.streak = DEFAULT_USER_DATA.streak;
-  setUserField(USER_DATA_KEYS.STREAK, DEFAULT_USER_DATA.streak);
+  userData.streak = 0;
+  setUserField(USER_DATA_KEYS.STREAK, userData.streak);
 }
