@@ -12,7 +12,7 @@ interface CreateWordDialogProps {
 
 export default function CreateWordDialog({ visible, exit }: CreateWordDialogProps) {
   const theme = useTheme();
-  const { categories, addWord } = useVocabulary();
+  const { allCategories, addWord } = useVocabulary();
   const [newWordEn, setNewWordEn] = useState("");
   const [newWordRu, setNewWordRu] = useState("");
   const [newWordTranscription, setNewWordTranscription] = useState("");
@@ -97,7 +97,7 @@ export default function CreateWordDialog({ visible, exit }: CreateWordDialogProp
             style={{
               height: MAX_SELECT_CATEGORY_HEIGHT,
             }}
-            data={categories}
+            data={allCategories}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <Button

@@ -17,7 +17,7 @@ export default function EditWordDialog({
   word,
 }: EditWordDialogProps) {
   const theme = useTheme();
-  const { categories, editWord, removeWord } = useVocabulary();
+  const { allCategories, editWord, removeWord } = useVocabulary();
   const [wordToEdit, setWordToEdit] = useState(word);
   const [editingField, setEditingField] = useState<
     "en" | "ru" | "transcription" | "example" | null
@@ -245,7 +245,7 @@ export default function EditWordDialog({
             style={{
               height: MAX_SELECT_CATEGORY_HEIGHT,
             }}
-            data={categories}
+            data={allCategories}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <Button

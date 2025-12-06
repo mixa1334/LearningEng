@@ -1,73 +1,44 @@
 import { NewCategoryDto } from "@/model/dto/NewCategoryDto";
 import { NewWordDto } from "@/model/dto/NewWordDto";
 import { Category, Word } from "@/model/entity/types";
-import { AppDispatch, useAppSelector } from "@/store";
-import { addCategoryThunk } from "@/store/thunk/vocabulary/category/addCategoryThunk";
-import { editCategoryThunk } from "@/store/thunk/vocabulary/category/editCategoryThunk";
-import { removeCategoryThunk } from "@/store/thunk/vocabulary/category/removeCategoryThunk";
-import { loadVocabularyThunk } from "@/store/thunk/vocabulary/loadVocabularyThunk";
-import { addWordThunk } from "@/store/thunk/vocabulary/word/addWordThunk";
-import { editWordThunk } from "@/store/thunk/vocabulary/word/editWordThunk";
-import { removeWordThunk } from "@/store/thunk/vocabulary/word/removeWordThunk";
-import { useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  addCategoryThunk,
+  addWordThunk,
+  editCategoryThunk,
+  editWordThunk,
+  loadVocabularyThunk,
+  removeCategoryThunk,
+  removeWordThunk,
+} from "@/store/slice/vocabularySlice";
+
+import { useEffect } from "react";
 
 export function useVocabulary() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { userWords, categories, preloadedWords } = useAppSelector(
-    (s) => s.vocabulary
-  );
+  const dispatch = useAppDispatch();
+  const { userWords, preloadedWords, userCategories, allCategories } = useAppSelector((s) => s.vocabulary);
 
   useEffect(() => {
     dispatch(loadVocabularyThunk());
   }, [dispatch]);
 
-  const addWord = useCallback(
-    (newWord: NewWordDto) => {
-      dispatch(addWordThunk({ newWord }));
-    },
-    [dispatch]
-  );
+  const addWord = (newWord: NewWordDto) => dispatch(addWordThunk({ newWord }));
 
-  const removeWord = useCallback(
-    (wordToDelete: Word) => {
-      dispatch(removeWordThunk({ wordToDelete }));
-    },
-    [dispatch]
-  );
+  const removeWord = (wordToDelete: Word) => dispatch(removeWordThunk({ wordToDelete }));
 
-  const editWord = useCallback(
-    (wordToEdit: Word) => {
-      dispatch(editWordThunk({ wordToEdit }));
-    },
-    [dispatch]
-  );
+  const editWord = (wordToEdit: Word) => dispatch(editWordThunk({ wordToEdit }));
 
-  const removeCategory = useCallback(
-    (categoryToDelete: Category) => {
-      dispatch(removeCategoryThunk({ categoryToDelete }));
-    },
-    [dispatch]
-  );
+  const removeCategory = (categoryToDelete: Category) => dispatch(removeCategoryThunk({ categoryToDelete }));
 
-  const addCategory = useCallback(
-    (newCategory: NewCategoryDto) => {
-      dispatch(addCategoryThunk({ newCategory }));
-    },
-    [dispatch]
-  );
+  const addCategory = (newCategory: NewCategoryDto) => dispatch(addCategoryThunk({ newCategory }));
 
-  const editCategory = useCallback(
-    (categoryToEdit: Category) => {
-      dispatch(editCategoryThunk({ categoryToEdit }));
-    },
-    [dispatch]
-  );
+  const editCategory = (categoryToEdit: Category) => dispatch(editCategoryThunk({ categoryToEdit }));
 
   return {
     userWords,
-    categories,
     preloadedWords,
+    userCategories,
+    allCategories,
     addWord,
     addCategory,
     removeWord,

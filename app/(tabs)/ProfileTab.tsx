@@ -1,19 +1,10 @@
-import { useStatistics } from "@/hooks/useStatistics";
-import { useThemeContext } from "@/provider/ThemeProvider";
+import { useThemeContext } from "@/components/common/ThemeProvider";
+import { useUserData } from "@/hooks/useUserData";
 import { SPACING_MD, SPACING_XL } from "@/resources/constants/layout";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import {
-  Button,
-  Dialog,
-  IconButton,
-  Portal,
-  Switch,
-  Text,
-  TextInput,
-  useTheme,
-} from "react-native-paper";
+import { Button, Dialog, IconButton, Portal, Switch, Text, TextInput, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProfileTab() {
@@ -21,13 +12,14 @@ export default function ProfileTab() {
     name,
     streak,
     lastLearningDate,
+    learnedToday,
     reviewedToday,
     dailyGoal,
     changeGoal,
     changeName,
     resetUserStats,
-    resetWordsProgress
-  } = useStatistics();
+    resetWordsProgress,
+  } = useUserData();
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [editableName, setEditableName] = useState(false);
   const { isDark, toggleTheme } = useThemeContext();
@@ -61,8 +53,7 @@ export default function ProfileTab() {
         style={[
           styles.profileCard,
           {
-            backgroundColor:
-              (theme.colors as any).primaryContainer ?? theme.colors.surface,
+            backgroundColor: (theme.colors as any).primaryContainer ?? theme.colors.surface,
           },
         ]}
       >
@@ -82,122 +73,65 @@ export default function ProfileTab() {
               icon="check"
               mode="contained"
               onPress={toggleEditableName}
-              style={[
-                styles.editBtn,
-                { backgroundColor: theme.colors.surfaceVariant },
-              ]}
+              style={[styles.editBtn, { backgroundColor: theme.colors.surfaceVariant }]}
             />
           </View>
         ) : (
           <View style={styles.nameRow}>
-            <Text
-              variant="headlineSmall"
-              style={[styles.name, { color: theme.colors.onPrimaryContainer }]}
-            >
+            <Text variant="headlineSmall" style={[styles.name, { color: theme.colors.onPrimaryContainer }]}>
               {name}
             </Text>
             <IconButton
               icon="pencil"
               mode="contained"
               onPress={toggleEditableName}
-              style={[
-                styles.editBtn,
-                { backgroundColor: theme.colors.surfaceVariant },
-              ]}
+              style={[styles.editBtn, { backgroundColor: theme.colors.surfaceVariant }]}
             />
           </View>
         )}
 
         <View style={styles.streakRow}>
           <Ionicons name="flame" size={28} color={theme.colors.primary} />
-          <Text
-            style={[
-              styles.streakText,
-              { color: theme.colors.onPrimaryContainer },
-            ]}
-          >
-            {streak} days in a row
-          </Text>
+          <Text style={[styles.streakText, { color: theme.colors.onPrimaryContainer }]}>{streak} days in a row</Text>
         </View>
       </View>
 
-      <View
-        style={[
-          styles.statsCard,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
-        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
-          Progress
-        </Text>
+      <View style={[styles.statsCard, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Progress</Text>
         <View style={styles.statsRow}>
-          <Text
-            style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Last learning
-          </Text>
-          <Text
-            style={[styles.statsValue, { color: theme.colors.onSurface }]}
-          >
-            {lastLearningDate || "—"}
-          </Text>
+          <Text style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}>Last learning</Text>
+          <Text style={[styles.statsValue, { color: theme.colors.onSurface }]}>{lastLearningDate || "—"}</Text>
         </View>
         <View style={styles.statsRow}>
-          <Text
-            style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Learned today
-          </Text>
-          <Text
-            style={[styles.statsValue, { color: theme.colors.onSurface }]}
-          >
-            {reviewedToday}
-          </Text>
+          <Text style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}>Learned today</Text>
+          <Text style={[styles.statsValue, { color: theme.colors.onSurface }]}>{learnedToday}</Text>
+        </View>
+        <View style={styles.statsRow}>
+          <Text style={[styles.statsText, { color: theme.colors.onSurfaceVariant }]}>Reviewed today</Text>
+          <Text style={[styles.statsValue, { color: theme.colors.onSurface }]}>{reviewedToday}</Text>
         </View>
       </View>
 
-      <View
-        style={[
-          styles.goalCard,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
-        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
-          Daily goal
-        </Text>
+      <View style={[styles.goalCard, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Daily goal</Text>
         <View style={styles.goalRow}>
           <IconButton
             icon="minus"
             mode="contained"
-            style={[
-              styles.roundBtn,
-              { backgroundColor: theme.colors.background },
-            ]}
+            style={[styles.roundBtn, { backgroundColor: theme.colors.background }]}
             onPress={decreaseGoal}
           />
-          <Text
-            style={[styles.goalText, { color: theme.colors.onSurface }]}
-          >
-            {dailyGoal} words / day
-          </Text>
+          <Text style={[styles.goalText, { color: theme.colors.onSurface }]}>{dailyGoal} words / day</Text>
           <IconButton
             icon="plus"
             mode="contained"
-            style={[
-              styles.roundBtn,
-              { backgroundColor: theme.colors.background },
-            ]}
+            style={[styles.roundBtn, { backgroundColor: theme.colors.background }]}
             onPress={increaseGoal}
           />
         </View>
       </View>
 
-      <Button
-        mode="contained-tonal"
-        icon="cog"
-        onPress={toggleSettings}
-        style={styles.settingsBtn}
-      >
+      <Button mode="contained-tonal" icon="cog" onPress={toggleSettings} style={styles.settingsBtn}>
         Settings
       </Button>
 
@@ -209,11 +143,7 @@ export default function ProfileTab() {
               <Text>Dark Theme</Text>
               <Switch value={isDark} onValueChange={toggleTheme} />
             </View>
-            <Button
-              mode="outlined"
-              style={styles.settingBtn}
-              onPress={resetUserStats}
-            >
+            <Button mode="outlined" style={styles.settingBtn} onPress={resetUserStats}>
               Reset Statistics
             </Button>
             <Button mode="outlined" style={styles.settingBtn} onPress={resetWordsProgress}>

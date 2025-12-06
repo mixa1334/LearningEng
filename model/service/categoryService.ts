@@ -3,29 +3,36 @@ import { getDbInstance } from "../database/db";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { rowToCategory } from "../mapper/typesMapper";
 
-export async function addNewCategory(
-  newCategory: NewCategoryDto,
-  categoryType: EntityType = EntityType.useradd
-) {
-  await getDbInstance().runAsync(
-    `INSERT INTO categories (name, type, icon) VALUES (?, ?, ?)`,
-    [newCategory.name, categoryType, newCategory.icon]
-  );
+export async function addNewCategory(newCategory: NewCategoryDto, categoryType: EntityType = EntityType.useradd) {
+  await getDbInstance().runAsync(`INSERT INTO categories (name, type, icon) VALUES (?, ?, ?)`, [
+    newCategory.name,
+    categoryType,
+    newCategory.icon,
+  ]);
 }
 
-export async function getAllCategories(): Promise<Category[]> {
+export async function getAllCategories(limit: number): Promise<Category[]> {
   const rows = await getDbInstance().getAllAsync<any>(
-    `SELECT id, name, type, icon FROM categories`
+    `SELECT id, name, type, icon
+    FROM categories LIMIT ?`,
+    [limit]
+  );
+  return rows.map(rowToCategory);
+}
+
+export async function getCategoriesByType(categoryType: EntityType): Promise<Category[]> {
+  const rows = await getDbInstance().getAllAsync<any>(
+    `SELECT id, name, type, icon
+    FROM categories
+    WHERE type = ?`,
+    [categoryType]
   );
   return rows.map(rowToCategory);
 }
 
 export async function deleteUserCategory(category: Category): Promise<void> {
   await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
-    await tx.runAsync(
-      `UPDATE words SET category_id = 1 WHERE category_id = ?`,
-      [category.id]
-    );
+    await tx.runAsync(`UPDATE words SET category_id = 1 WHERE category_id = ?`, [category.id]);
 
     await tx.runAsync(
       `DELETE FROM categories

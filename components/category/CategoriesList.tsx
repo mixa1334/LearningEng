@@ -13,7 +13,7 @@ import EditCategoryDialog from "./EditCategoryDialog";
 
 export default function CategoriesList() {
   const theme = useTheme();
-  const { categories, removeCategory } = useVocabulary();
+  const { userCategories, removeCategory } = useVocabulary();
 
   const [showEditCategoryModal, setShowEditCategoryModal] =
     useState(false);
@@ -45,7 +45,7 @@ export default function CategoriesList() {
         nestedScrollEnabled
         contentContainerStyle={styles.listContent}
       >
-        {categories.map((item, index) => (
+        {userCategories.map((item) => (
           <View
             key={item.id.toString()}
             style={[

@@ -1,24 +1,90 @@
-import { Category, Word } from "@/model/entity/types";
-import { createSlice } from "@reduxjs/toolkit";
-import { addCategoryThunk } from "../thunk/vocabulary/category/addCategoryThunk";
-import { editCategoryThunk } from "../thunk/vocabulary/category/editCategoryThunk";
-import { removeCategoryThunk } from "../thunk/vocabulary/category/removeCategoryThunk";
-import { loadVocabularyThunk } from "../thunk/vocabulary/loadVocabularyThunk";
-import { addWordThunk } from "../thunk/vocabulary/word/addWordThunk";
-import { editWordThunk } from "../thunk/vocabulary/word/editWordThunk";
-import { removeWordThunk } from "../thunk/vocabulary/word/removeWordThunk";
+import { NewCategoryDto } from "@/model/dto/NewCategoryDto";
+import { NewWordDto } from "@/model/dto/NewWordDto";
+import { Category, EntityType, Word } from "@/model/entity/types";
+import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByType } from "@/model/service/categoryService";
+import { addNewWord, deleteUserWord, editUserWord, getWordsByType } from "@/model/service/wordService";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { loadDailyWordSetThunk } from "./learnSlice";
+
 
 export type VocabularyState = {
   userWords: Word[];
   preloadedWords: Word[];
-  categories: Category[];
+  userCategories: Category[];
+  allCategories: Category[];
 };
 
 const initialVocabularyState: VocabularyState = {
   userWords: [],
   preloadedWords: [],
-  categories: [],
+  userCategories: [],
+  allCategories: [],
 };
+
+export const addCategoryThunk = createAsyncThunk<Category[], { newCategory: NewCategoryDto }>(
+  "vocabulary/addCategoryThunk",
+  async ({ newCategory }) => {
+    await addNewCategory(newCategory);
+    return getCategoriesByType(EntityType.useradd);
+  }
+);
+
+export const editCategoryThunk = createAsyncThunk<
+  Category[],
+  { categoryToEdit: Category }
+>("vocabulary/editCategoryThunk", async ({ categoryToEdit }) => {
+  await editUserCategory(categoryToEdit);
+  return getCategoriesByType(EntityType.useradd);
+});
+
+export const removeCategoryThunk = createAsyncThunk<
+  Category[],
+  { categoryToDelete: Category }
+>("vocabulary/removeCategoryThunk", async ({ categoryToDelete }) => {
+  await deleteUserCategory(categoryToDelete);
+  return getCategoriesByType(EntityType.useradd);
+});
+
+export const addWordThunk = createAsyncThunk<Word[], { newWord: NewWordDto }>(
+  "vocabulary/addWordThunk",
+  async ({ newWord }, { dispatch }) => {
+    await addNewWord(newWord);
+    dispatch(loadDailyWordSetThunk());
+    return getWordsByType(EntityType.useradd);
+    }
+);
+
+export const editWordThunk = createAsyncThunk<
+  Word[],
+  { wordToEdit: Word }
+>("vocabulary/editWordThunk", async ({ wordToEdit }) => {
+  await editUserWord(wordToEdit);
+  return getWordsByType(EntityType.useradd);
+});
+
+export const removeWordThunk = createAsyncThunk<
+  Word[],
+  { wordToDelete: Word }
+>(
+  "vocabulary/removeWordThunk",
+  async ({ wordToDelete }) => {
+    await deleteUserWord(wordToDelete);
+    return getWordsByType(EntityType.useradd);
+    }
+);
+
+export const loadVocabularyThunk = createAsyncThunk<VocabularyState>("vocabulary/loadVocabularyThunk", async () => {
+  const userWords = await getWordsByType(EntityType.useradd);
+  const preloadedWords = await getWordsByType(EntityType.preloaded);
+  const userCategories = await getCategoriesByType(EntityType.useradd);
+  const preloadedCategories = await getCategoriesByType(EntityType.preloaded);
+  return {
+    userWords,
+    preloadedWords,
+    userCategories,
+    allCategories: [...userCategories, ...preloadedCategories],
+  };
+});
 
 const vocabularySlice = createSlice({
   name: "vocabulary",
@@ -43,13 +109,13 @@ const vocabularySlice = createSlice({
 
     // categories
     builder.addCase(addCategoryThunk.fulfilled, (state, action) => {
-      state.categories = action.payload;
+      state.userCategories = action.payload;
     });
     builder.addCase(removeCategoryThunk.fulfilled, (state, action) => {
-      state.categories = action.payload;
+      state.userCategories = action.payload;
     });
     builder.addCase(editCategoryThunk.fulfilled, (state, action) => {
-      state.categories = action.payload;
+      state.userCategories = action.payload;
     });
   },
 });

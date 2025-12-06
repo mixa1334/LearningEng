@@ -1,6 +1,6 @@
 import { Word } from "@/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -43,16 +43,19 @@ export default function WordCard({
     (theme.colors as any).onSecondaryContainer ??
     theme.colors.onSurfaceVariant;
 
-  useEffect(() => {
-    setShowTranslation(false);
-    setPending(false);
-    setAccepted(false);
-  }, [word]);
+  // useEffect(() => {
+  //   setShowTranslation(false);
+  //   setPending(false);
+  //   setAccepted(false);
+  // }, [word]);
 
   const handleShowTranslation = () => setShowTranslation(true);
 
   const handleUserInput = (action: () => void) => {
     if (pending) {
+      setShowTranslation(false);
+      setPending(false);
+      setAccepted(false);
       action();
     } else {
       setShowTranslation(true);

@@ -3,20 +3,9 @@ import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import WordsOverview from "@/components/learn/WordsOverview";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
-import {
-  SPACING_LG,
-  SPACING_MD,
-  SPACING_SM,
-} from "@/resources/constants/layout";
+import { SPACING_LG, SPACING_MD, SPACING_SM } from "@/resources/constants/layout";
 import React, { useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { ScrollView, StyleSheet, Switch, Text, View, useWindowDimensions } from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -53,9 +42,7 @@ export default function VocabularyTab() {
   };
 
   const toggleWordsOverviewSection = () => {
-    setExpandedSection(
-      expandedSection === "wordsOverview" ? null : "wordsOverview"
-    );
+    setExpandedSection(expandedSection === "wordsOverview" ? null : "wordsOverview");
   };
 
   return (
@@ -73,18 +60,10 @@ export default function VocabularyTab() {
       }}
     >
       <Portal>
-        {showAddWordModal && (
-          <CreateWordDialog
-            visible={showAddWordModal}
-            exit={() => setShowAddWordModal(false)}
-          />
-        )}
+        {showAddWordModal && <CreateWordDialog visible={showAddWordModal} exit={() => setShowAddWordModal(false)} />}
 
         {showAddCategoryModal && (
-          <CreateCategoryDialog
-            visible={showAddCategoryModal}
-            exit={() => setShowAddCategoryModal(false)}
-          />
+          <CreateCategoryDialog visible={showAddCategoryModal} exit={() => setShowAddCategoryModal(false)} />
         )}
       </Portal>
 
@@ -102,12 +81,7 @@ export default function VocabularyTab() {
         </Button>
         {expandedSection === "words" && (
           <View style={styles.sectionContent}>
-            <Button
-              icon="plus"
-              mode="outlined"
-              onPress={() => setShowAddWordModal(true)}
-              style={styles.addBtn}
-            >
+            <Button icon="plus" mode="outlined" onPress={() => setShowAddWordModal(true)} style={styles.addBtn}>
               Add Word
             </Button>
             <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
@@ -131,12 +105,7 @@ export default function VocabularyTab() {
         </Button>
         {expandedSection === "categories" && (
           <View style={styles.sectionContent}>
-            <Button
-              icon="plus"
-              mode="outlined"
-              onPress={() => setShowAddCategoryModal(true)}
-              style={styles.addBtn}
-            >
+            <Button icon="plus" mode="outlined" onPress={() => setShowAddCategoryModal(true)} style={styles.addBtn}>
               Add Category
             </Button>
             <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
@@ -161,13 +130,8 @@ export default function VocabularyTab() {
         {expandedSection === "wordsOverview" && (
           <View style={styles.sectionContent}>
             <View style={styles.settingRow}>
-              <Text style={{ color: theme.colors.onSurface }}>
-                Only User Added Words
-              </Text>
-              <Switch
-                value={onlyUserAddedWords}
-                onValueChange={switchOnlyUserAddedWords}
-              />
+              <Text style={{ color: theme.colors.onSurface }}>Only User Added Words</Text>
+              <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
             </View>
             <WordsOverview onlyUserAddedWords={onlyUserAddedWords} />
           </View>

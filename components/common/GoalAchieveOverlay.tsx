@@ -6,8 +6,8 @@ import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export function GoalAchieveOverlay() {
   const { width, height } = useWindowDimensions();
-  const dailyGoalAchieve = useAppSelector((s) => s.statistics.dailyGoalAchieve);
-  const name = useAppSelector((s) => s.statistics.name);
+  const dailyGoalAchieve = useAppSelector((s) => s.userData.dailyGoalAchieve);
+  const name = useAppSelector((s) => s.userData.name);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

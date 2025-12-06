@@ -14,13 +14,10 @@ const SELECT_WORDS = `SELECT
 const INSERT_WORD = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 export async function resetWordLearningProgress(): Promise<void> {
-  await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0");
+  await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')");
 }
 
-export async function addNewWord(
-  newWord: NewWordDto,
-  wordType: EntityType = EntityType.useradd
-): Promise<void> {
+export async function addNewWord(newWord: NewWordDto, wordType: EntityType = EntityType.useradd): Promise<void> {
   const reviewDate = new Date().toISOString();
   await getDbInstance().runAsync(INSERT_WORD, [
     newWord.word_en,
@@ -45,10 +42,9 @@ export async function deleteUserWord(wordToDelete: Word): Promise<void> {
 
 export async function editUserWord(word: Word): Promise<void> {
   await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
-    const existingCategory = await tx.getFirstAsync<{ id: number }>(
-      `SELECT id FROM categories WHERE id = ?;`,
-      [word.category.id]
-    );
+    const existingCategory = await tx.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE id = ?;`, [
+      word.category.id,
+    ]);
 
     if (!existingCategory) {
       throw new Error(`Category with id ${word.category.id} does not exist`);
@@ -57,29 +53,22 @@ export async function editUserWord(word: Word): Promise<void> {
     await tx.runAsync(
       `UPDATE words SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
       WHERE type = 'user_added' AND id = ?`,
-      [
-        word.word_en,
-        word.word_ru,
-        word.transcription,
-        word.category.id,
-        word.text_example,
-        word.id,
-      ]
+      [word.word_en, word.word_ru, word.transcription, word.category.id, word.text_example, word.id]
     );
   });
 }
 
-export async function getUserWords(): Promise<Word[]> {
+export async function getAllWords(limit: number): Promise<Word[]> {
   const rows = await getDbInstance().getAllAsync<any>(
-    `${SELECT_WORDS} WHERE w.type = 'user_added'`
+    `${SELECT_WORDS}
+    LIMIT ?`,
+    [limit]
   );
   return rows.map(rowToWord);
 }
 
-export async function getPreloadedWords(): Promise<Word[]> {
-  const rows = await getDbInstance().getAllAsync<any>(
-    `${SELECT_WORDS} WHERE w.type = 'pre_loaded'`
-  );
+export async function getWordsByType(wordType: EntityType): Promise<Word[]> {
+  const rows = await getDbInstance().getAllAsync<any>(`${SELECT_WORDS} WHERE w.type = ?`, [wordType]);
   return rows.map(rowToWord);
 }
 

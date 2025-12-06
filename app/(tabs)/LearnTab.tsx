@@ -3,12 +3,12 @@ import { useLearningDailySet, useLearnUtil } from "@/hooks/useLearn";
 import { SPACING_MD, SPACING_XXL } from "@/resources/constants/layout";
 import React, { useState } from "react";
 import {
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,7 +22,7 @@ export default function LearnTab() {
   const [activeTab, setActiveTab] = useState<ActiveLearningTab>(
     ActiveLearningTab.learn
   );
-  const { wordsToReview, wordsToLearn, status, error, reloadDailySet } =
+  const { wordsToReview, wordsToLearn, error, reloadDailySet } =
     useLearningDailySet();
 
   const {
@@ -50,30 +50,6 @@ export default function LearnTab() {
       setRefreshing(false);
     }, 200);
   };
-
-  if (status === "loading") {
-    return (
-      <View
-        style={[
-          styles.page,
-          {
-            backgroundColor: theme.colors.background,
-            paddingTop: contentTopPadding,
-            paddingBottom: contentBottomPadding,
-            paddingHorizontal: contentHorizontalPadding,
-          },
-        ]}
-      >
-        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-          <View style={styles.fullCenter}>
-            <Text style={{ color: theme.colors.onSurface }}>
-              Loading words...
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
 
   if (error) {
     return (

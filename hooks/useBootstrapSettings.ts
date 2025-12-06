@@ -1,7 +1,5 @@
-import { useDispatch } from "react-redux";
-
-import { AppDispatch } from "@/store";
-import { loadStatsThunk } from "@/store/thunk/statistics/loadStatsThunk";
+import { AppDispatch, useAppDispatch } from "@/store";
+import { loadUserDataThunk } from "@/store/slice/userDataSlice";
 
 type BootstrapStatus = "idle" | "pending" | "success" | "error";
 
@@ -12,7 +10,7 @@ let settingsError: unknown;
 function loadSettingsOnce(dispatch: AppDispatch) {
   if (!settingsPromise) {
     settingsStatus = "pending";
-    settingsPromise = dispatch(loadStatsThunk())
+    settingsPromise = dispatch(loadUserDataThunk())
       .unwrap()
       .then(
         () => {
@@ -29,7 +27,7 @@ function loadSettingsOnce(dispatch: AppDispatch) {
 }
 
 export function useBootstrapSettings() {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   if (settingsStatus === "success") return;
 
