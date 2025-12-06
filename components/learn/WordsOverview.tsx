@@ -37,22 +37,24 @@ export default function WordsOverview({
     setEnded(false);
   };
 
+  const updateTotalCounter = () => {
+    setIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      if (newIndex >= wordToReview.length) {
+        setEnded(true);
+      }
+      return newIndex;
+    });
+  };
+
   const accept = () => {
-    setAccepted(accepted + 1);
+    setAccepted((prev) => prev + 1);
     updateTotalCounter();
   };
 
   const reject = () => {
-    setRejected(rejected + 1);
+    setRejected((prev) => prev + 1);
     updateTotalCounter();
-  };
-
-  const updateTotalCounter = () => {
-    const newIndex = index + 1;
-    setIndex(newIndex);
-    if (newIndex >= wordToReview.length) {
-      end();
-    }
   };
 
   const end = () => setEnded(true);

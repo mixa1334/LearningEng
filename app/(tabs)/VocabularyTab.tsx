@@ -4,12 +4,39 @@ import WordsOverview from "@/components/learn/WordsOverview";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
 import { SPACING_LG, SPACING_MD, SPACING_SM } from "@/resources/constants/layout";
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { ScrollView, StyleSheet, Switch, Text, View, useWindowDimensions } from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Section = "words" | "categories" | "wordsOverview" | null;
+
+interface SectionCardProps extends PropsWithChildren {
+  readonly title: string;
+  readonly icon: string;
+  readonly isExpanded: boolean;
+  readonly onToggle: () => void;
+}
+
+function SectionCard({ title, icon, isExpanded, onToggle, children }: SectionCardProps) {
+  const theme = useTheme();
+
+  return (
+    <View style={styles.section}>
+      <Button
+        mode="contained-tonal"
+        onPress={onToggle}
+        style={styles.sectionHeader}
+        contentStyle={styles.sectionHeaderContent}
+        uppercase={false}
+        icon={icon}
+      >
+        {title}
+      </Button>
+      {isExpanded && <View style={styles.sectionContent}>{children}</View>}
+    </View>
+  );
+}
 
 export default function VocabularyTab() {
   const theme = useTheme();
@@ -68,75 +95,48 @@ export default function VocabularyTab() {
       </Portal>
 
       {/* Words Section */}
-      <View style={styles.section}>
-        <Button
-          mode="contained-tonal"
-          onPress={toggleWordsSection}
-          style={styles.sectionHeader}
-          contentStyle={styles.sectionHeaderContent}
-          uppercase={false}
-          icon="book-open-variant"
-        >
-          Words
+      <SectionCard
+        title="Words"
+        icon="book-open-variant"
+        isExpanded={expandedSection === "words"}
+        onToggle={toggleWordsSection}
+      >
+        <Button icon="plus" mode="outlined" onPress={() => setShowAddWordModal(true)} style={styles.addBtn}>
+          Add Word
         </Button>
-        {expandedSection === "words" && (
-          <View style={styles.sectionContent}>
-            <Button icon="plus" mode="outlined" onPress={() => setShowAddWordModal(true)} style={styles.addBtn}>
-              Add Word
-            </Button>
-            <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
-              <WordsList />
-            </View>
-          </View>
-        )}
-      </View>
+        <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
+          <WordsList />
+        </View>
+      </SectionCard>
 
       {/* Categories Section */}
-      <View style={styles.section}>
-        <Button
-          mode="contained-tonal"
-          onPress={toggleCategoriesSection}
-          style={styles.sectionHeader}
-          contentStyle={styles.sectionHeaderContent}
-          uppercase={false}
-          icon="shape-outline"
-        >
-          Categories
+      <SectionCard
+        title="Categories"
+        icon="shape-outline"
+        isExpanded={expandedSection === "categories"}
+        onToggle={toggleCategoriesSection}
+      >
+        <Button icon="plus" mode="outlined" onPress={() => setShowAddCategoryModal(true)} style={styles.addBtn}>
+          Add Category
         </Button>
-        {expandedSection === "categories" && (
-          <View style={styles.sectionContent}>
-            <Button icon="plus" mode="outlined" onPress={() => setShowAddCategoryModal(true)} style={styles.addBtn}>
-              Add Category
-            </Button>
-            <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
-              <CategoriesList />
-            </View>
-          </View>
-        )}
-      </View>
+        <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
+          <CategoriesList />
+        </View>
+      </SectionCard>
 
       {/* Words overview section */}
-      <View style={styles.section}>
-        <Button
-          mode="contained-tonal"
-          onPress={toggleWordsOverviewSection}
-          style={styles.sectionHeader}
-          contentStyle={styles.sectionHeaderContent}
-          uppercase={false}
-          icon="chart-bar"
-        >
-          Words Overview
-        </Button>
-        {expandedSection === "wordsOverview" && (
-          <View style={styles.sectionContent}>
-            <View style={styles.settingRow}>
-              <Text style={{ color: theme.colors.onSurface }}>Only User Added Words</Text>
-              <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
-            </View>
-            <WordsOverview onlyUserAddedWords={onlyUserAddedWords} />
-          </View>
-        )}
-      </View>
+      <SectionCard
+        title="Words Overview"
+        icon="chart-bar"
+        isExpanded={expandedSection === "wordsOverview"}
+        onToggle={toggleWordsOverviewSection}
+      >
+        <View style={styles.settingRow}>
+          <Text style={{ color: theme.colors.onSurface }}>Only User Added Words</Text>
+          <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
+        </View>
+        <WordsOverview onlyUserAddedWords={onlyUserAddedWords} />
+      </SectionCard>
     </ScrollView>
   );
 }

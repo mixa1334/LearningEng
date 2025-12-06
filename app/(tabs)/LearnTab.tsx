@@ -1,15 +1,10 @@
-import WordScreen from "@/components/learn/WordScreen";
-import { useLearningDailySet, useLearnUtil } from "@/hooks/useLearn";
+import LearningContent from "@/components/learn/LearningContent";
+import LearningErrorState from "@/components/learn/LearningErrorState";
+import LearningTabHeader from "@/components/learn/LearningTabHeader";
+import { useLearningDailySet } from "@/hooks/useLearn";
 import { SPACING_MD, SPACING_XXL } from "@/resources/constants/layout";
 import React, { useState } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -25,13 +20,6 @@ export default function LearnTab() {
   const { wordsToReview, wordsToLearn, error, reloadDailySet } =
     useLearningDailySet();
 
-  const {
-    markWordReviewed,
-    markWordNotReviewed,
-    startLearnNewWord,
-    markWordCompletelyLearned,
-  } = useLearnUtil();
-
   const [refreshing, setRefreshing] = useState(false);
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -42,6 +30,7 @@ export default function LearnTab() {
 
   const switchToLearnScreen = () => setActiveTab(ActiveLearningTab.learn);
   const switchToReviewScreen = () => setActiveTab(ActiveLearningTab.review);
+  const isLearnTab = activeTab === ActiveLearningTab.learn;
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -52,22 +41,7 @@ export default function LearnTab() {
   };
 
   if (error) {
-    return (
-      <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
-        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-          <View style={styles.fullCenter}>
-            <Text style={{ color: theme.colors.error, marginBottom: 12 }}>
-              Error: {error}
-            </Text>
-            <TouchableOpacity onPress={reloadDailySet}>
-              <Text style={{ color: theme.colors.primary, fontWeight: "600" }}>
-                Retry
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
+    return <LearningErrorState error={error} onRetry={reloadDailySet} />;
   }
 
   return (
@@ -87,67 +61,18 @@ export default function LearnTab() {
       }
     >
       <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-        <View
-          style={[
-            styles.tabButtons,
-            {
-              borderBottomColor: theme.colors.outline,
-              backgroundColor: theme.colors.surfaceVariant,
-            },
-          ]}
-        >
-          <TouchableOpacity
-            style={[
-              styles.topBtn,
-              activeTab === ActiveLearningTab.learn && {
-                borderBottomColor: theme.colors.primary,
-                backgroundColor: theme.colors.surface,
-              },
-            ]}
-            onPress={switchToLearnScreen}
-          >
-            <Text
-              style={[styles.topBtnText, { color: theme.colors.onSurface }]}
-            >
-              Learn
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.topBtn,
-              activeTab === ActiveLearningTab.review && {
-                borderBottomColor: theme.colors.primary,
-                backgroundColor: theme.colors.surface,
-              },
-            ]}
-            onPress={switchToReviewScreen}
-          >
-            <Text
-              style={[styles.topBtnText, { color: theme.colors.onSurface }]}
-            >
-              Review
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <LearningTabHeader
+          isLearnTab={isLearnTab}
+          onSelectLearn={switchToLearnScreen}
+          onSelectReview={switchToReviewScreen}
+        />
 
         <View style={styles.content}>
-          {activeTab === ActiveLearningTab.learn ? (
-            <WordScreen
-              words={wordsToLearn}
-              accept={markWordCompletelyLearned}
-              acceptBtnName="I know"
-              reject={startLearnNewWord}
-              rejectBtnName="Start learn"
-            />
-          ) : (
-            <WordScreen
-              words={wordsToReview}
-              accept={markWordReviewed}
-              acceptBtnName="I remember"
-              reject={markWordNotReviewed}
-              rejectBtnName="Show late"
-            />
-          )}
+          <LearningContent
+            isLearnTab={isLearnTab}
+            wordsToLearn={wordsToLearn}
+            wordsToReview={wordsToReview}
+          />
         </View>
       </View>
     </ScrollView>
