@@ -2,11 +2,11 @@ import { Word } from "@/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    useWindowDimensions,
 } from "react-native";
 import { useTheme } from "react-native-paper";
 
