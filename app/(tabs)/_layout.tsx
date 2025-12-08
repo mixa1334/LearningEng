@@ -25,25 +25,34 @@ function TabIcon({ color, iconName, focused }: IconProps) {
     (theme.colors as any).secondaryContainer ??
     (theme.colors as any).elevation?.level2 ??
     theme.colors.surface;
+  const inactiveBackgroundColor =
+    theme.dark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255, 0.5)";
+
   const activeIconColor =
     (theme.colors as any).onSecondaryContainer ?? theme.colors.primary;
+  const inactiveIconColor = color;
 
-  const size = 30;
+  const iconSize = 24;
+  const containerSize = 40; // fixed circle size
 
-  if (focused) {
-    return (
-      <View
-        style={{
-          borderRadius: 999,
-          backgroundColor: activeBackgroundColor,
-        }}
-      >
-        <MaterialIcons name={iconName} size={size} color={activeIconColor} />
-      </View>
-    );
-  }
-
-  return <MaterialIcons name={iconName} size={30} color={color} />;
+  return (
+    <View
+      style={{
+        width: containerSize,
+        height: containerSize,
+        borderRadius: containerSize / 2,
+        backgroundColor: focused ? activeBackgroundColor : inactiveBackgroundColor,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <MaterialIcons
+        name={iconName}
+        size={iconSize}
+        color={focused ? activeIconColor : inactiveIconColor}
+      />
+    </View>
+  );
 }
 
 export default function TabLayout() {
@@ -59,22 +68,38 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          alignContent: "center",
           backgroundColor: "transparent",
           borderRadius: tabBarRadius,
+          borderTopWidth: 0,
           position: "absolute",
           marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 1.5,
           marginBottom: bottomInset,
           height: tabBarHeight,
           shadowColor: (theme.colors as any).shadow ?? "#000",
-          shadowOpacity: 0.05,
-          shadowRadius: 6,
-          elevation: 3,
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
+          elevation: 4,
+        },
+        tabBarItemStyle: {
+          justifyContent: "center",
+          alignItems: "center", // ensures icons are centered vertically
         },
         tabBarBackground: () => (
           <BlurView
             intensity={50}
-            tint={theme.dark ? "dark" : "light"}
-            style={{ flex: 1, borderRadius: tabBarRadius, overflow: "hidden" }}
+            tint={theme.dark ? "light" : "dark"} // invert tint for contrast
+            style={{
+              flex: 1,
+              borderRadius: tabBarRadius,
+              overflow: "hidden",
+              backgroundColor: theme.dark
+                ? "rgba(255,255,255, 0.08)" // lighter overlay in dark mode
+                : "rgba(255,255,255, 0.08)",     // darker overlay in light mode
+            }}
           />
         ),
         tabBarActiveTintColor: theme.colors.primary,
@@ -110,3 +135,5 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+
