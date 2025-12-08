@@ -31,22 +31,15 @@ export default function WordCard({
   const theme = useTheme();
   const { width, height } = useWindowDimensions();
 
-  const cardWidth = Math.min(width * 0.9, 420);
-  const cardHeight = Math.min(height * 0.45, 380);
-  const isNarrow = cardWidth < 360;
+  const cardWidth = width * 0.8;
+  const cardHeight = height * 0.4;
   const acceptColor = theme.dark ? "#2E7D32" : "#4CAF50";
-  const cardBackground =
-    (theme.colors as any).primaryContainer ?? theme.colors.surface;
-  const primaryTextColor =
-    (theme.colors as any).onPrimaryContainer ?? theme.colors.onSurface;
-  const secondaryTextColor =
-    (theme.colors as any).onSecondaryContainer ??
-    theme.colors.onSurfaceVariant;
+  const rejectColor = theme.dark ? "#B00020" : "#D32F2F";
 
   const handleShowTranslation = () => setShowTranslation(true);
 
   const handleUserInput = (action: () => void) => {
-    if (pending) {
+    if (showTranslation) {
       setShowTranslation(false);
       setPending(false);
       setAccepted(false);
@@ -74,16 +67,16 @@ export default function WordCard({
       style={[
         styles.card,
         {
-          backgroundColor: cardBackground,
-          width: cardWidth,
+          backgroundColor: theme.colors.surfaceVariant,
+          minWidth: cardWidth,
           minHeight: cardHeight,
         },
       ]}
     >
-      <Text style={[styles.category, { color: secondaryTextColor }]}>
+      <Text style={[styles.category, { color: theme.colors.onSecondaryContainer }]}>
         {word.category.icon} {word.category.name}
       </Text>
-      <Text style={[styles.word, { color: primaryTextColor }]}>
+      <Text style={[styles.word, { color: theme.colors.onPrimaryContainer }]}>
         {word.word_en} {word.transcription}
       </Text>
 
@@ -104,23 +97,21 @@ export default function WordCard({
       )}
 
       <Text
-        style={[styles.example, { color: secondaryTextColor }]}
+        style={[styles.example, { color: theme.colors.onSecondaryContainer }]}
         numberOfLines={3}
       >
         {word.text_example}
       </Text>
 
       <View
-        style={[
-          styles.bottomBar,
-          isNarrow ? styles.bottomBarVertical : undefined,
-        ]}
+        style={
+          styles.bottomBar
+        }
       >
         {pending ? (
           <TouchableOpacity
             style={[
               styles.btnBase,
-              isNarrow && styles.btnFullWidth,
               { backgroundColor: acceptColor },
             ]}
             onPress={handleContinue}
@@ -134,7 +125,6 @@ export default function WordCard({
             <TouchableOpacity
               style={[
                 styles.btnBase,
-                isNarrow && styles.btnFullWidth,
                 { backgroundColor: acceptColor },
               ]}
               onPress={handleAccept}
@@ -146,8 +136,7 @@ export default function WordCard({
             <TouchableOpacity
               style={[
                 styles.btnBase,
-                isNarrow && styles.btnFullWidth,
-                { backgroundColor: theme.colors.error },
+                { backgroundColor: rejectColor },
               ]}
               onPress={handleReject}
             >
@@ -165,7 +154,7 @@ export default function WordCard({
 const styles = StyleSheet.create({
   card: {
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "flex-end",
     borderRadius: 20,
     alignSelf: "center",
     marginVertical: 16,
@@ -223,9 +212,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingTop: 12,
-  },
-  bottomBarVertical: {
-    flexDirection: "column",
   },
   btnBase: {
     flex: 1,
