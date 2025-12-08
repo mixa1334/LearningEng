@@ -243,7 +243,7 @@ export default function EditWordDialog({
         {showCategoryPicker && (
           <FlatList
             style={{
-              height: MAX_SELECT_CATEGORY_HEIGHT,
+              maxHeight: MAX_SELECT_CATEGORY_HEIGHT,
             }}
             data={allCategories}
             keyExtractor={(item) => item.id.toString()}

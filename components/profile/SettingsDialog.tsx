@@ -2,7 +2,7 @@ import { useThemeContext } from "@/components/common/ThemeProvider";
 import { useUserData } from "@/hooks/useUserData";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Dialog, Portal, Switch, Text } from "react-native-paper";
+import { Button, Dialog, Portal, Switch, Text, useTheme } from "react-native-paper";
 
 interface SettingsDialogProps {
   readonly visible: boolean;

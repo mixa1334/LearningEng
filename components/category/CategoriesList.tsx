@@ -1,8 +1,7 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
-import { Category, EntityType } from "@/model/entity/types";
+import { Category } from "@/model/entity/types";
 import React, { useState } from "react";
 import {
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
@@ -15,11 +14,8 @@ export default function CategoriesList() {
   const theme = useTheme();
   const { userCategories, removeCategory } = useVocabulary();
 
-  const [showEditCategoryModal, setShowEditCategoryModal] =
-    useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(
-    null
-  );
+  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
   const { height: screenHeight } = useWindowDimensions();
   const maxListHeight = screenHeight * 0.35;
 
@@ -40,49 +36,39 @@ export default function CategoriesList() {
         )}
       </Portal>
 
-      <ScrollView
-        style={{ maxHeight: maxListHeight, backgroundColor: "transparent" }}
-        nestedScrollEnabled
-        contentContainerStyle={styles.listContent}
-      >
+      <View style={styles.listContent}>
         {userCategories.map((item) => (
-          <View
+          <TouchableOpacity
             key={item.id.toString()}
             style={[
               styles.itemRow,
               {
-                backgroundColor:
-                  (theme.colors as any).surfaceVariant ?? theme.colors.surface,
+                backgroundColor: theme.colors.surfaceVariant,
               },
             ]}
+            onPress={() => openEditCategoryModal(item)}
           >
-            <TouchableOpacity
-              style={styles.itemMain}
-              onPress={() => openEditCategoryModal(item)}
+            <Text
+              style={[styles.wordText, { color: theme.colors.onSurface }]}
+              numberOfLines={1}
             >
-              <Text
-                style={[styles.wordText, { color: theme.colors.onSurface }]}
-                numberOfLines={1}
-              >
-                {item.icon} {item.name}
-              </Text>
-            </TouchableOpacity>
-            {item.type === EntityType.useradd && (
-              <IconButton
-                size={17}
-                icon="delete"
-                onPress={() => removeCategory(item)}
-              />
-            )}
-          </View>
+              {item.icon} {item.name}
+            </Text>
+            <IconButton
+              size={17}
+              icon="delete"
+              onPress={() => removeCategory(item)}
+            />
+          </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   listContent: {
+    backgroundColor: "transparent",
     paddingBottom: 4,
     paddingHorizontal: 4,
   },

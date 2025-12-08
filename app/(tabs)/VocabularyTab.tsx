@@ -119,9 +119,7 @@ export default function VocabularyTab() {
         <Button icon="plus" mode="outlined" onPress={() => setShowAddCategoryModal(true)} style={styles.addBtn}>
           Add Category
         </Button>
-        <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
           <CategoriesList />
-        </View>
       </SectionCard>
 
       {/* Words overview section */}

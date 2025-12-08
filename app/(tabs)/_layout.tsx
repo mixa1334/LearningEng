@@ -22,14 +22,12 @@ function TabIcon({ color, iconName, focused }: IconProps) {
   const theme = useTheme();
 
   const activeBackgroundColor =
-    (theme.colors as any).secondaryContainer ??
-    (theme.colors as any).elevation?.level2 ??
+  theme.colors.secondaryContainer ??theme.colors.elevation?.level2 ??
     theme.colors.surface;
   const inactiveBackgroundColor =
     theme.dark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255, 0.5)";
-
   const activeIconColor =
-    (theme.colors as any).onSecondaryContainer ?? theme.colors.primary;
+  theme.colors.onSecondaryContainer ?? theme.colors.primary;
   const inactiveIconColor = color;
 
   const iconSize = 24;
@@ -76,7 +74,7 @@ export default function TabLayout() {
           borderRadius: tabBarRadius,
           borderTopWidth: 0,
           position: "absolute",
-          marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 1.5,
+          marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
           marginBottom: bottomInset,
           height: tabBarHeight,
           shadowColor: (theme.colors as any).shadow ?? "#000",
@@ -96,9 +94,7 @@ export default function TabLayout() {
               flex: 1,
               borderRadius: tabBarRadius,
               overflow: "hidden",
-              backgroundColor: theme.dark
-                ? "rgba(255,255,255, 0.08)" // lighter overlay in dark mode
-                : "rgba(255,255,255, 0.08)",     // darker overlay in light mode
+              backgroundColor:"rgba(0, 0, 0, 0)",
             }}
           />
         ),

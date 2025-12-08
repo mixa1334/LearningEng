@@ -2,10 +2,10 @@ import { useVocabulary } from "@/hooks/useVocabulary";
 import { Word } from "@/model/entity/types";
 import React, { useState } from "react";
 import {
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  View
 } from "react-native";
 import { Portal, Text, useTheme } from "react-native-paper";
 import EditWordDialog from "./EditWordDialog";
@@ -35,19 +35,16 @@ export default function WordsList() {
         )}
       </Portal>
 
-      <ScrollView
-        style={{ maxHeight: maxListHeight, backgroundColor: "transparent" }}
-        nestedScrollEnabled
-        contentContainerStyle={styles.listContent}
+      <View
+        style={styles.listContent}
       >
-        {userWords.map((item, index) => (
+        {userWords.map((item) => (
           <TouchableOpacity
             key={item.id.toString()}
             style={[
               styles.itemRow,
               {
-                backgroundColor:
-                  (theme.colors as any).surfaceVariant ?? theme.colors.surface,
+                backgroundColor:theme.colors.surfaceVariant,
               },
             ]}
             onPress={() => openEditWordModal(item)}
@@ -60,13 +57,14 @@ export default function WordsList() {
             </Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   listContent: {
+    backgroundColor: "transparent",
     paddingBottom: 4,
     paddingHorizontal: 4,
   },

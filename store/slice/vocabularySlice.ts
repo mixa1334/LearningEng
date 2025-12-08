@@ -4,7 +4,6 @@ import { Category, EntityType, Word } from "@/model/entity/types";
 import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByType } from "@/model/service/categoryService";
 import { addNewWord, deleteUserWord, editUserWord, getWordsByType } from "@/model/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "..";
 import { loadDailyWordSetThunk } from "./learnSlice";
 
 export type VocabularyState = {
@@ -58,10 +57,9 @@ export const editWordThunk = createAsyncThunk<Word[], Word>("vocabulary/editWord
 
 export const removeWordThunk = createAsyncThunk<Word[], Word>(
   "vocabulary/removeWordThunk",
-  async (wordToDelete, { getState }) => {
+  async (wordToDelete) => {
     await deleteUserWord(wordToDelete);
-    const wordsToLearn = (getState() as RootState).learn.wordsToLearn;
-    return wordsToLearn.filter((w) => w.id !== wordToDelete.id);
+    return getWordsByType(EntityType.useradd);
   }
 );
 

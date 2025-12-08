@@ -17,8 +17,7 @@ export default function ProfileHeaderCard() {
       style={[
         styles.profileCard,
         {
-          backgroundColor:
-            (theme.colors as any).primaryContainer ?? theme.colors.surface,
+          backgroundColor: theme.colors.primaryContainer,
         },
       ]}
     >
