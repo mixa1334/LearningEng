@@ -29,8 +29,8 @@ export default function LearningTabHeader({
         style={[
           styles.tabButton,
           isLearnTab && {
-            borderBottomColor: theme.colors.primary,
-            backgroundColor: theme.colors.surface,
+            borderBottomColor: theme.colors.surface,
+            backgroundColor: theme.colors.outline,
           },
         ]}
         onPress={onSelectLearn}
@@ -43,8 +43,8 @@ export default function LearningTabHeader({
         style={[
           styles.tabButton,
           !isLearnTab && {
-            borderBottomColor: theme.colors.primary,
-            backgroundColor: theme.colors.surface,
+            borderBottomColor: theme.colors.surface,
+            backgroundColor: theme.colors.outline,
           },
         ]}
         onPress={onSelectReview}

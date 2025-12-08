@@ -2,7 +2,7 @@ import DailyGoalCard from "@/components/profile/DailyGoalCard";
 import ProfileHeaderCard from "@/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/components/profile/ProgressCard";
 import SettingsDialog from "@/components/profile/SettingsDialog";
-import { SPACING_XL } from "@/resources/constants/layout";
+import { SPACING_XL, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button, useTheme } from "react-native-paper";
@@ -15,7 +15,7 @@ export default function ProfileTab() {
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = insets.top + SPACING_XL;
-  const pageBottomPadding = insets.bottom + SPACING_XL;
+  const pageBottomPadding = insets.bottom + SPACING_XL + TAB_BAR_BASE_HEIGHT;
 
   const toggleSettings = () => setSettingsVisible((prev) => !prev);
 

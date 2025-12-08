@@ -58,8 +58,7 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
   const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
-  const tabBarHeight =
-    TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
+  const tabBarHeight = TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
   const tabBarRadius = tabBarHeight / 2;
 
   return (
@@ -77,24 +76,24 @@ export default function TabLayout() {
           marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
           marginBottom: bottomInset,
           height: tabBarHeight,
-          shadowColor: (theme.colors as any).shadow ?? "#000",
+          shadowColor: theme.colors.shadow,
           shadowOpacity: 0.08,
           shadowRadius: 8,
           elevation: 4,
         },
         tabBarItemStyle: {
           justifyContent: "center",
-          alignItems: "center", // ensures icons are centered vertically
+          alignItems: "center",
         },
         tabBarBackground: () => (
           <BlurView
             intensity={50}
-            tint={theme.dark ? "light" : "dark"} // invert tint for contrast
+            tint={theme.dark ? "light" : "dark"}
             style={{
               flex: 1,
               borderRadius: tabBarRadius,
               overflow: "hidden",
-              backgroundColor:"rgba(0, 0, 0, 0)",
+              backgroundColor:"rgba(0, 0, 0, 0.25)",
             }}
           />
         ),

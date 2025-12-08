@@ -1,11 +1,10 @@
 import CategoriesList from "@/components/category/CategoriesList";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
-import WordsOverview from "@/components/learn/WordsOverview";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
-import { SPACING_LG, SPACING_MD, SPACING_SM } from "@/resources/constants/layout";
+import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
 import React, { PropsWithChildren, useState } from "react";
-import { ScrollView, StyleSheet, Switch, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -26,7 +25,7 @@ function SectionCard({ title, icon, isExpanded, onToggle, children }: SectionCar
       <Button
         mode="contained-tonal"
         onPress={onToggle}
-        style={styles.sectionHeader}
+        style={[styles.sectionHeader, { backgroundColor: theme.colors.primaryContainer }]}
         contentStyle={styles.sectionHeaderContent}
         uppercase={false}
         icon={icon}
@@ -45,13 +44,12 @@ export default function VocabularyTab() {
 
   const pageHorizontalPadding = SPACING_LG;
   const pageTopPadding = insets.top + SPACING_MD;
-  const pageBottomPadding = insets.bottom + SPACING_MD;
+  const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
 
   const [expandedSection, setExpandedSection] = useState<Section>(null);
 
   const [showAddWordModal, setShowAddWordModal] = useState(false);
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
-  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
 
   const listMaxHeight = screenHeight * 0.35;
 
@@ -61,15 +59,6 @@ export default function VocabularyTab() {
 
   const toggleCategoriesSection = () => {
     setExpandedSection(expandedSection === "categories" ? null : "categories");
-  };
-
-  const switchOnlyUserAddedWords = () => {
-    const newVal = !onlyUserAddedWords;
-    setOnlyUserAddedWords(newVal);
-  };
-
-  const toggleWordsOverviewSection = () => {
-    setExpandedSection(expandedSection === "wordsOverview" ? null : "wordsOverview");
   };
 
   return (
@@ -122,19 +111,6 @@ export default function VocabularyTab() {
           <CategoriesList />
       </SectionCard>
 
-      {/* Words overview section */}
-      <SectionCard
-        title="Words Overview"
-        icon="chart-bar"
-        isExpanded={expandedSection === "wordsOverview"}
-        onToggle={toggleWordsOverviewSection}
-      >
-        <View style={styles.settingRow}>
-          <Text style={{ color: theme.colors.onSurface }}>Only User Added Words</Text>
-          <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
-        </View>
-        <WordsOverview onlyUserAddedWords={onlyUserAddedWords} />
-      </SectionCard>
     </ScrollView>
   );
 }
@@ -144,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   section: {
-    marginBottom: SPACING_MD,
+    marginTop: SPACING_MD,
   },
   sectionHeader: {
     borderTopLeftRadius: 24,

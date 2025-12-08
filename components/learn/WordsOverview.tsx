@@ -2,18 +2,13 @@ import { useVocabulary } from "@/hooks/useVocabulary";
 import { Word } from "@/model/entity/types";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, Switch, useTheme } from "react-native-paper";
 import WordCard from "./WordCard";
 
-interface WordsOverviewProps {
-  readonly onlyUserAddedWords: boolean;
-}
-
-export default function WordsOverview({
-  onlyUserAddedWords,
-}: WordsOverviewProps) {
+export default function WordsOverview() {
   const theme = useTheme();
 
+  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
   const { userWords, preloadedWords } = useVocabulary();
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
@@ -29,6 +24,10 @@ export default function WordsOverview({
     }
     reset();
   }, [userWords, preloadedWords, onlyUserAddedWords]);
+
+  const switchOnlyUserAddedWords = () => {
+    setOnlyUserAddedWords(!onlyUserAddedWords);
+  };
 
   const reset = () => {
     setAccepted(0);
@@ -66,25 +65,26 @@ export default function WordsOverview({
 
   if (wordToReview.length === 0) {
     return (
-      <View style={[styles.container, styles.center]}>
-        <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-          No words to review
+      <View style={styles.centered}>
+        <Text style={[styles.infoText, { color: theme.colors.onSurfaceVariant }]}>
+          No words to review, try to add some words to your vocabulary!
         </Text>
+        <Button
+          mode="contained-tonal"
+          onPress={switchOnlyUserAddedWords}
+          style={[styles.endBtn, { backgroundColor: theme.colors.secondaryContainer }]}
+          icon="play"
+        >
+          Start prebuild words
+        </Button>
       </View>
     );
   }
 
   if (ended) {
     return (
-      <View style={[styles.container, styles.center]}>
-        <Text
-          style={[
-            styles.emptyText,
-            { color: (theme.colors as any).onSecondaryContainer ?? theme.colors.onSurface },
-          ]}
-        >
-          You remembered {calculatePercentage()}% of words
-        </Text>
+      <View style={styles.centered}>
+        <Text style={[styles.resultText, { color: theme.colors.primary }]}>You remembered {calculatePercentage()}% of words</Text>
         <Button mode="contained-tonal" onPress={reset} style={styles.reviewBtn}>
           Review again
         </Button>
@@ -94,76 +94,77 @@ export default function WordsOverview({
 
   return (
     <View style={styles.container}>
-      <View style={styles.statsContainer}>
-        <Text
-          style={[
-            styles.text,
-            { color: theme.colors.onSurface },
-          ]}
-        >
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Only User Added Words</Text>
+        <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
+      </View>
+      <View style={styles.section}>
+        <Text style={[styles.progressText, { color: theme.colors.onSurface }]}>
           Reviewed {index} / {wordToReview.length}
         </Text>
-        <Text
-          style={[
-            styles.text,
-            { color: theme.colors.onSurface },
-          ]}
-        >
-          Known: {accepted}
-        </Text>
+        <Text style={[styles.progressText, { color: theme.colors.onSurfaceVariant }]}>Known: {accepted}</Text>
       </View>
+      <WordCard word={wordToReview[index]} accept={accept} acceptBtnName="Know" reject={reject} rejectBtnName="Don't know" />
       <Button
         mode="contained-tonal"
         onPress={end}
-        style={styles.endBtn}
+        style={[styles.endBtn, { backgroundColor: theme.colors.errorContainer }]}
         icon="flag-checkered"
       >
         End session
       </Button>
-      <WordCard
-        word={wordToReview[index]}
-        accept={accept}
-        acceptBtnName="Know"
-        reject={reject}
-        rejectBtnName="Don't know"
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginTop: 8,
+    flex: 1,
+    padding: 20,
   },
-  center: {
+  centered: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
-  statsContainer: {
+  infoText: {
+    fontSize: 16,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  resultText: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  section: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: "rgba(0,0,0,0.04)",
   },
-  emptyText: {
-    fontSize: 20,
+  sectionTitle: {
+    fontSize: 15,
     fontWeight: "600",
-    textAlign: "center",
   },
-  text: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  endBtn: {
-    alignSelf: "flex-end",
-    marginBottom: 8,
+  progressText: {
+    fontSize: 14,
+    fontWeight: "500",
   },
   reviewBtn: {
-    marginTop: 8,
+    marginTop: 12,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+  },
+  endBtn: {
+    marginVertical: 16,
+    borderRadius: 8,
+    paddingHorizontal: 16,
   },
 });

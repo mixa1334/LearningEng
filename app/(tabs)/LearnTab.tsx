@@ -1,8 +1,10 @@
+import ContentDivider from "@/components/common/ContentDivider";
 import LearningContent from "@/components/learn/LearningContent";
 import LearningErrorState from "@/components/learn/LearningErrorState";
 import LearningTabHeader from "@/components/learn/LearningTabHeader";
+import WordsOverview from "@/components/learn/WordsOverview";
 import { useLearningDailySet } from "@/hooks/useLearn";
-import { SPACING_MD, SPACING_XXL } from "@/resources/constants/layout";
+import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
 import React, { useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
@@ -25,8 +27,8 @@ export default function LearnTab() {
   const insets = useSafeAreaInsets();
 
   const contentHorizontalPadding = SPACING_MD;
-  const contentTopPadding = insets.top + SPACING_MD;
-  const contentBottomPadding = insets.bottom + SPACING_XXL;
+  const contentTopPadding = insets.top + SPACING_XXL;
+  const contentBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
 
   const switchToLearnScreen = () => setActiveTab(ActiveLearningTab.learn);
   const switchToReviewScreen = () => setActiveTab(ActiveLearningTab.review);
@@ -60,7 +62,9 @@ export default function LearnTab() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+      
+      <ContentDivider name="Learning" />
+      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
         <LearningTabHeader
           isLearnTab={isLearnTab}
           onSelectLearn={switchToLearnScreen}
@@ -75,6 +79,13 @@ export default function LearnTab() {
           />
         </View>
       </View>
+
+      <View style={{marginTop: SPACING_XXL * 2}}>
+        <ContentDivider name="Quick review" />
+      </View>
+      
+      <WordsOverview />
+
     </ScrollView>
   );
 }
