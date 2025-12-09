@@ -16,15 +16,7 @@ export default function LearningTabHeader({
   const theme = useTheme();
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          borderBottomColor: theme.colors.outline,
-          backgroundColor: theme.colors.surfaceVariant,
-        },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.secondary }]}>
       <TouchableOpacity
         style={[
           styles.tabButton,
@@ -35,7 +27,7 @@ export default function LearningTabHeader({
         ]}
         onPress={onSelectLearn}
       >
-        <Text style={[styles.tabLabel, { color: theme.colors.onSurface }]}>
+        <Text style={[styles.tabLabel, { color: theme.colors.onPrimary }]}>
           Learn
         </Text>
       </TouchableOpacity>
@@ -49,7 +41,7 @@ export default function LearningTabHeader({
         ]}
         onPress={onSelectReview}
       >
-        <Text style={[styles.tabLabel, { color: theme.colors.onSurface }]}>
+        <Text style={[styles.tabLabel, { color: theme.colors.onPrimary }]}>
           Review
         </Text>
       </TouchableOpacity>
@@ -75,5 +67,3 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
-
-

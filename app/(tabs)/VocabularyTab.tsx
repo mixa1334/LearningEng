@@ -2,9 +2,19 @@ import CategoriesList from "@/components/category/CategoriesList";
 import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
-import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
+import {
+  SPACING_LG,
+  SPACING_MD,
+  SPACING_SM,
+  TAB_BAR_BASE_HEIGHT,
+} from "@/resources/constants/layout";
 import React, { PropsWithChildren, useState } from "react";
-import { ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { Button, Portal, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -17,7 +27,13 @@ interface SectionCardProps extends PropsWithChildren {
   readonly onToggle: () => void;
 }
 
-function SectionCard({ title, icon, isExpanded, onToggle, children }: SectionCardProps) {
+function SectionCard({
+  title,
+  icon,
+  isExpanded,
+  onToggle,
+  children,
+}: SectionCardProps) {
   const theme = useTheme();
 
   return (
@@ -25,7 +41,10 @@ function SectionCard({ title, icon, isExpanded, onToggle, children }: SectionCar
       <Button
         mode="contained-tonal"
         onPress={onToggle}
-        style={[styles.sectionHeader, { backgroundColor: theme.colors.primaryContainer }]}
+        style={[
+          styles.sectionHeader,
+          { backgroundColor: theme.colors.primaryContainer },
+        ]}
         contentStyle={styles.sectionHeaderContent}
         uppercase={false}
         icon={icon}
@@ -76,11 +95,15 @@ export default function VocabularyTab() {
       }}
     >
       <Portal>
-        {showAddWordModal && <CreateWordDialog visible={showAddWordModal} exit={() => setShowAddWordModal(false)} />}
+        <CreateWordDialog
+          visible={showAddWordModal}
+          exit={() => setShowAddWordModal(false)}
+        />
 
-        {showAddCategoryModal && (
-          <CreateCategoryDialog visible={showAddCategoryModal} exit={() => setShowAddCategoryModal(false)} />
-        )}
+        <CreateCategoryDialog
+          visible={showAddCategoryModal}
+          exit={() => setShowAddCategoryModal(false)}
+        />
       </Portal>
 
       {/* Words Section */}
@@ -90,7 +113,12 @@ export default function VocabularyTab() {
         isExpanded={expandedSection === "words"}
         onToggle={toggleWordsSection}
       >
-        <Button icon="plus" mode="outlined" onPress={() => setShowAddWordModal(true)} style={styles.addBtn}>
+        <Button
+          icon="plus"
+          mode="outlined"
+          onPress={() => setShowAddWordModal(true)}
+          style={styles.addBtn}
+        >
           Add Word
         </Button>
         <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
@@ -105,12 +133,16 @@ export default function VocabularyTab() {
         isExpanded={expandedSection === "categories"}
         onToggle={toggleCategoriesSection}
       >
-        <Button icon="plus" mode="outlined" onPress={() => setShowAddCategoryModal(true)} style={styles.addBtn}>
+        <Button
+          icon="plus"
+          mode="outlined"
+          onPress={() => setShowAddCategoryModal(true)}
+          style={styles.addBtn}
+        >
           Add Category
         </Button>
-          <CategoriesList />
+        <CategoriesList />
       </SectionCard>
-
     </ScrollView>
   );
 }

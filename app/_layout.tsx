@@ -8,16 +8,19 @@ import { Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
 import React, { Suspense } from "react";
 import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
 function AppInitializer() {
   useBootstrapSettings();
 
   return (
-    <ThemeProvider>
-      <GoalAchieveOverlay />
-      <Stack screenOptions={{ headerShown: false }} />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <GoalAchieveOverlay />
+        <Stack screenOptions={{ headerShown: false }} />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
@@ -27,7 +30,7 @@ export default function RootLayout() {
       <SQLiteProvider
         databaseName="EnglishLearningApp.db"
         onInit={runMigrations}
-        useSuspense
+        useSuspense={true}
       >
         <ReduxProvider store={store}>
           <AppInitializer />

@@ -22,12 +22,14 @@ function TabIcon({ color, iconName, focused }: IconProps) {
   const theme = useTheme();
 
   const activeBackgroundColor =
-  theme.colors.secondaryContainer ??theme.colors.elevation?.level2 ??
+    theme.colors.secondaryContainer ??
+    theme.colors.elevation?.level2 ??
     theme.colors.surface;
-  const inactiveBackgroundColor =
-    theme.dark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255, 0.5)";
+  const inactiveBackgroundColor = theme.dark
+    ? "rgba(255,255,255,0.12)"
+    : "rgba(255,255,255, 0.5)";
   const activeIconColor =
-  theme.colors.onSecondaryContainer ?? theme.colors.primary;
+    theme.colors.onSecondaryContainer ?? theme.colors.primary;
   const inactiveIconColor = color;
 
   const iconSize = 24;
@@ -39,7 +41,9 @@ function TabIcon({ color, iconName, focused }: IconProps) {
         width: containerSize,
         height: containerSize,
         borderRadius: containerSize / 2,
-        backgroundColor: focused ? activeBackgroundColor : inactiveBackgroundColor,
+        backgroundColor: focused
+          ? activeBackgroundColor
+          : inactiveBackgroundColor,
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -58,7 +62,8 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
   const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
-  const tabBarHeight = TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
+  const tabBarHeight =
+    TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
   const tabBarRadius = tabBarHeight / 2;
 
   return (
@@ -93,19 +98,24 @@ export default function TabLayout() {
               flex: 1,
               borderRadius: tabBarRadius,
               overflow: "hidden",
-              backgroundColor:"rgba(0, 0, 0, 0.25)",
+              backgroundColor: "rgba(0, 0, 0, 0.25)",
             }}
           />
         ),
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
         tabBarShowLabel: false,
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: theme.colors.primary,
+        },
+        headerTintColor: theme.colors.onPrimary,
       }}
     >
       <Tabs.Screen
         name="VocabularyTab"
         options={{
+          title: "Vocabulary",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon color={color} iconName="book" focused={focused} />
           ),
@@ -114,6 +124,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="LearnTab"
         options={{
+          title: "Learn & Review Words",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon color={color} iconName="school" focused={focused} />
           ),
@@ -122,6 +133,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="ProfileTab"
         options={{
+          title: "Profile",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon color={color} iconName="person" focused={focused} />
           ),
@@ -130,5 +142,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-

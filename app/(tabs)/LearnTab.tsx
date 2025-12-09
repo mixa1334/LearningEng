@@ -8,7 +8,9 @@ import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/resources/consta
 import React, { useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  useSafeAreaInsets
+} from "react-native-safe-area-context";
 
 enum ActiveLearningTab {
   learn = "learn_tab",
@@ -27,7 +29,7 @@ export default function LearnTab() {
   const insets = useSafeAreaInsets();
 
   const contentHorizontalPadding = SPACING_MD;
-  const contentTopPadding = insets.top + SPACING_XXL;
+  const contentTopPadding = SPACING_XXL;
   const contentBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
 
   const switchToLearnScreen = () => setActiveTab(ActiveLearningTab.learn);
@@ -47,46 +49,45 @@ export default function LearnTab() {
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={[
-        styles.page,
-        {
-          backgroundColor: theme.colors.background,
-          paddingTop: contentTopPadding,
-          paddingBottom: contentBottomPadding,
-          paddingHorizontal: contentHorizontalPadding,
-        },
-      ]}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      
-      <ContentDivider name="Learning" />
-      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-        <LearningTabHeader
-          isLearnTab={isLearnTab}
-          onSelectLearn={switchToLearnScreen}
-          onSelectReview={switchToReviewScreen}
-        />
-
-        <View style={styles.content}>
-          <LearningContent
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.colors.background }}
+        contentContainerStyle={[
+          styles.page,
+          {
+            backgroundColor: theme.colors.background,
+            paddingTop: contentTopPadding,
+            paddingBottom: contentBottomPadding,
+            paddingHorizontal: contentHorizontalPadding,
+          },
+        ]}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        <ContentDivider name="Learning" />
+        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+          <LearningTabHeader
             isLearnTab={isLearnTab}
-            wordsToLearn={wordsToLearn}
-            wordsToReview={wordsToReview}
+            onSelectLearn={switchToLearnScreen}
+            onSelectReview={switchToReviewScreen}
           />
+
+          <View style={styles.content}>
+            <LearningContent
+              isLearnTab={isLearnTab}
+              wordsToLearn={wordsToLearn}
+              wordsToReview={wordsToReview}
+            />
+          </View>
         </View>
-      </View>
 
-      <View style={{marginTop: SPACING_XXL * 2}}>
-        <ContentDivider name="Quick review" />
-      </View>
-      
-      <WordsOverview />
+        <View style={{ marginTop: SPACING_XXL * 2 }}>
+          <ContentDivider name="Quick review" />
+        </View>
 
-    </ScrollView>
+        <WordsOverview />
+      </ScrollView>
   );
 }
 

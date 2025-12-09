@@ -14,8 +14,8 @@ export default function ProfileTab() {
   const insets = useSafeAreaInsets();
 
   const pageHorizontalPadding = SPACING_XL;
-  const pageTopPadding = insets.top + SPACING_XL;
-  const pageBottomPadding = insets.bottom + SPACING_XL + TAB_BAR_BASE_HEIGHT;
+  const pageTopPadding = insets.top;
+  const pageBottomPadding = insets.bottom + SPACING_XL + TAB_BAR_BASE_HEIGHT * 2;
 
   const toggleSettings = () => setSettingsVisible((prev) => !prev);
 
@@ -27,6 +27,7 @@ export default function ProfileTab() {
         paddingBottom: pageBottomPadding,
         paddingHorizontal: pageHorizontalPadding,
       }}
+      showsVerticalScrollIndicator={false}
     >
       <ProfileHeaderCard />
 
