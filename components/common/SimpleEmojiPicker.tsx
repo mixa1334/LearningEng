@@ -13,8 +13,6 @@ interface SimpleEmojiPickerProps {
   readonly onEmojiSelected: (emoji: string) => void;
 }
 
-// A lightweight, fully local emoji list that works reliably on Android.
-// You can expand this list over time if you want more variety.
 const EMOJIS: string[] = [
   "😀",
   "😁",

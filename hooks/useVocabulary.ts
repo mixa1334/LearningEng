@@ -7,20 +7,14 @@ import {
   addWordThunk,
   editCategoryThunk,
   editWordThunk,
-  loadVocabularyThunk,
   removeCategoryThunk,
-  removeWordThunk,
+  removeWordThunk
 } from "@/store/slice/vocabularySlice";
 
-import { useEffect } from "react";
 
 export function useVocabulary() {
   const dispatch = useAppDispatch();
   const { userWords, preloadedWords, userCategories, allCategories } = useAppSelector((s) => s.vocabulary);
-
-  useEffect(() => {
-    dispatch(loadVocabularyThunk());
-  }, [dispatch]);
 
   const addWord = (newWord: NewWordDto) => dispatch(addWordThunk(newWord));
 

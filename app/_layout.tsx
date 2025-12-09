@@ -1,5 +1,5 @@
 import { GoalAchieveOverlay } from "@/components/common/GoalAchieveOverlay";
-import LoadingSpinner from "@/components/common/LoadingApp";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { useBootstrapSettings } from "@/hooks/useBootstrapSettings";
 import { runMigrations } from "@/model/database/migrations";
@@ -11,6 +11,8 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
+
+// todo: extract routes to separate file
 function AppInitializer() {
   useBootstrapSettings();
 
@@ -18,7 +20,15 @@ function AppInitializer() {
     <SafeAreaProvider>
       <ThemeProvider>
         <GoalAchieveOverlay />
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="TranslationPage" 
+          options={{ headerShown: false}} />
+          <Stack.Screen name="WordVocabularyPage" 
+          options={{ headerShown: false}} />
+          <Stack.Screen name="CategoryVocabularyPage" 
+          options={{ headerShown: false}} />
+        </Stack>
       </ThemeProvider>
     </SafeAreaProvider>
   );

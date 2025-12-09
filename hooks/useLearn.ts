@@ -8,15 +8,9 @@ import {
   startLearnWordThunk,
 } from "@/store/slice/learnSlice";
 
-import { useEffect } from "react";
-
 export function useLearningDailySet() {
   const dispatch = useAppDispatch();
   const { wordsToReview, wordsToLearn, error } = useAppSelector((s) => s.learn);
-
-  useEffect(() => {
-    dispatch(loadDailyWordSetThunk());
-  }, [dispatch]);
 
   const reloadDailySet = () => dispatch(loadDailyWordSetThunk());
 

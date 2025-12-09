@@ -39,3 +39,15 @@ export type UserData = {
   dailyGoalAchieve: boolean;
   theme: THEMES;
 };
+
+export enum Language {
+  ENGLISH = "en",
+  RUSSIAN = "ru",
+}
+
+export type Translation = {
+  id: number;
+  word_en: string;
+  word_ru: string;
+  translation_date: string;
+};

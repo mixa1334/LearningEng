@@ -1,5 +1,8 @@
 import { AppDispatch, useAppDispatch } from "@/store";
+import { loadDailyWordSetThunk } from "@/store/slice/learnSlice";
+import { loadTranslationsThunk } from "@/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/store/slice/userDataSlice";
+import { loadVocabularyThunk } from "@/store/slice/vocabularySlice";
 
 type BootstrapStatus = "idle" | "pending" | "success" | "error";
 
@@ -10,17 +13,21 @@ let settingsError: unknown;
 function loadSettingsOnce(dispatch: AppDispatch) {
   if (!settingsPromise) {
     settingsStatus = "pending";
-    settingsPromise = dispatch(loadUserDataThunk())
-      .unwrap()
-      .then(
-        () => {
-          settingsStatus = "success";
-        },
-        (error) => {
-          settingsStatus = "error";
-          settingsError = error;
-        }
-      );
+
+    settingsPromise = Promise.all([
+      dispatch(loadUserDataThunk()).unwrap(),
+      dispatch(loadDailyWordSetThunk()).unwrap(),
+      dispatch(loadTranslationsThunk()).unwrap(),
+      dispatch(loadVocabularyThunk()).unwrap(),
+    ])
+      .then(() => {
+        settingsStatus = "success";
+      })
+      .catch((error) => {
+        settingsStatus = "error";
+        settingsError = error;
+        throw error;
+      });
   }
 
   return settingsPromise;
