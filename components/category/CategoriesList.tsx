@@ -1,12 +1,7 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { Category } from "@/model/entity/types";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { IconButton, Portal, Text, useTheme } from "react-native-paper";
 import EditCategoryDialog from "./EditCategoryDialog";
 
@@ -26,16 +21,13 @@ export default function CategoriesList() {
 
   return (
     <>
-      <Portal>
-        {showEditCategoryModal && categoryToEdit && (
-          <EditCategoryDialog
-            visible={showEditCategoryModal}
-            exit={() => setShowEditCategoryModal(false)}
-            category={categoryToEdit}
-          />
-        )}
-      </Portal>
-
+      {showEditCategoryModal && categoryToEdit && (
+        <EditCategoryDialog
+          visible={showEditCategoryModal}
+          exit={() => setShowEditCategoryModal(false)}
+          category={categoryToEdit}
+        />
+      )}
       <View style={styles.listContent}>
         {userCategories.map((item) => (
           <TouchableOpacity
@@ -48,17 +40,10 @@ export default function CategoriesList() {
             ]}
             onPress={() => openEditCategoryModal(item)}
           >
-            <Text
-              style={[styles.wordText, { color: theme.colors.onSurface }]}
-              numberOfLines={1}
-            >
+            <Text style={[styles.wordText, { color: theme.colors.onSurface }]} numberOfLines={1}>
               {item.icon} {item.name}
             </Text>
-            <IconButton
-              size={17}
-              icon="delete"
-              onPress={() => removeCategory(item)}
-            />
+            <IconButton size={17} icon="delete" onPress={() => removeCategory(item)} />
           </TouchableOpacity>
         ))}
       </View>

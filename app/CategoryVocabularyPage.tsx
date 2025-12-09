@@ -3,7 +3,7 @@ import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
 import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { Button, Portal, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function CategoryVocabularyPage() {
@@ -29,12 +29,16 @@ export default function CategoryVocabularyPage() {
         paddingHorizontal: pageHorizontalPadding,
       }}
     >
-      <Portal>
-        <CreateCategoryDialog visible={showAddCategoryModal} exit={() => setShowAddCategoryModal(false)} />
-      </Portal>
+      <CreateCategoryDialog visible={showAddCategoryModal} exit={() => setShowAddCategoryModal(false)} />
 
-      <Button icon="plus" mode="outlined" onPress={() => setShowAddCategoryModal(true)} style={styles.addBtn}>
-        Add Category
+      <Button
+        icon="plus"
+        mode="outlined"
+        onPress={() => setShowAddCategoryModal(true)}
+        style={[styles.addBtn, { backgroundColor: theme.colors.primary }]}
+        textColor={theme.colors.onPrimary}
+      >
+        add new category
       </Button>
       <CategoriesList />
     </ScrollView>

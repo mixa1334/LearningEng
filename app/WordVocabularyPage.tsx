@@ -3,7 +3,7 @@ import WordsList from "@/components/word/WordsList";
 import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
-import { Button, Portal, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function WordVocabularyPage() {
@@ -33,12 +33,16 @@ export default function WordVocabularyPage() {
         paddingHorizontal: pageHorizontalPadding,
       }}
     >
-      <Portal>
-        <CreateWordDialog visible={showAddWordModal} exit={() => setShowAddWordModal(false)} />
-      </Portal>
+      <CreateWordDialog visible={showAddWordModal} exit={() => setShowAddWordModal(false)} />
 
-      <Button icon="plus" mode="outlined" onPress={() => setShowAddWordModal(true)} style={styles.addBtn}>
-        Add Word
+      <Button
+        icon="plus"
+        mode="outlined"
+        onPress={() => setShowAddWordModal(true)}
+        style={[styles.addBtn, { backgroundColor: theme.colors.primary }]}
+        textColor={theme.colors.onPrimary}
+      >
+        add new word
       </Button>
       <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
         <WordsList />

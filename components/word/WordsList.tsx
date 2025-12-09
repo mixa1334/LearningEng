@@ -1,12 +1,7 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { Word } from "@/model/entity/types";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View
-} from "react-native";
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { Portal, Text, useTheme } from "react-native-paper";
 import EditWordDialog from "./EditWordDialog";
 
@@ -25,34 +20,23 @@ export default function WordsList() {
 
   return (
     <>
-      <Portal>
-        {showEditWordModal && wordToEdit && (
-          <EditWordDialog
-            visible={showEditWordModal}
-            exit={() => setShowEditWordModal(false)}
-            word={wordToEdit}
-          />
-        )}
-      </Portal>
+      {showEditWordModal && wordToEdit && (
+        <EditWordDialog visible={showEditWordModal} exit={() => setShowEditWordModal(false)} word={wordToEdit} />
+      )}
 
-      <View
-        style={styles.listContent}
-      >
+      <View style={styles.listContent}>
         {userWords.map((item) => (
           <TouchableOpacity
             key={item.id.toString()}
             style={[
               styles.itemRow,
               {
-                backgroundColor:theme.colors.surfaceVariant,
+                backgroundColor: theme.colors.surfaceVariant,
               },
             ]}
             onPress={() => openEditWordModal(item)}
           >
-            <Text
-              style={[styles.wordText, { color: theme.colors.onSurface }]}
-              numberOfLines={1}
-            >
+            <Text style={[styles.wordText, { color: theme.colors.onSurface }]} numberOfLines={1}>
               {item.category.icon} {item.word_en} - {item.word_ru}
             </Text>
           </TouchableOpacity>

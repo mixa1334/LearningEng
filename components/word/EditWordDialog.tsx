@@ -1,9 +1,11 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { Category, Word } from "@/model/entity/types";
-import { MAX_SELECT_CATEGORY_HEIGHT } from "@/resources/constants/constants";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Dialog, Text, TextInput, useTheme } from "react-native-paper";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Button, Dialog, IconButton, Portal, Text, TextInput, useTheme } from "react-native-paper";
+import { CategoryPicker } from "../category/CategoryPicker";
+
+type EditableField = "en" | "ru" | "transcription" | "example" | null;
 
 interface EditWordDialogProps {
   readonly visible: boolean;
@@ -11,19 +13,51 @@ interface EditWordDialogProps {
   readonly word: Word;
 }
 
-export default function EditWordDialog({
-  visible,
-  exit,
-  word,
-}: EditWordDialogProps) {
+interface EditableFieldProps {
+  readonly editingField: EditableField;
+  readonly targetField: EditableField;
+  readonly label: string;
+  readonly value: any;
+  readonly onChange: (text: string) => void;
+  readonly onBlur: () => void;
+  readonly onPress: () => void;
+}
+
+function EditableField({ editingField, targetField, label, value, onChange, onBlur, onPress }: EditableFieldProps) {
   const theme = useTheme();
-  const { allCategories, editWord, removeWord } = useVocabulary();
-  const [wordToEdit, setWordToEdit] = useState(word);
-  const [editingField, setEditingField] = useState<
-    "en" | "ru" | "transcription" | "example" | null
-  >(null);
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+
+  if (editingField === targetField) {
+    return (
+      <TextInput
+        label={label}
+        value={value}
+        onChangeText={onChange}
+        style={styles.input}
+        mode="outlined"
+        theme={{ colors: { background: theme.colors.surface } }}
+        onBlur={onBlur}
+        autoFocus
+      />
+    );
+  }
+
+  return (
+    <TouchableOpacity style={[styles.editableField, { backgroundColor: theme.colors.tertiary }]} onPress={onPress}>
+      <Text style={[styles.editableLabel, { color: theme.colors.onTertiary }]}>{label}</Text>
+      <Text style={[styles.editableValue, { color: theme.colors.onTertiary }]} numberOfLines={1}>
+        {value || "Tap to enter"}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
+export default function EditWordDialog({ visible, exit, word }: EditWordDialogProps) {
+  const theme = useTheme();
   useEffect(() => setWordToEdit(word), [word]);
+  const { editWord, removeWord } = useVocabulary();
+  const [wordToEdit, setWordToEdit] = useState(word);
+  const [editingField, setEditingField] = useState<EditableField>(null);
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const setWordEn = (text: string) => {
     setWordToEdit({ ...wordToEdit, word_en: text });
@@ -39,10 +73,6 @@ export default function EditWordDialog({
 
   const setWordTextExample = (text: string) => {
     setWordToEdit({ ...wordToEdit, text_example: text });
-  };
-
-  const setCategory = (category: Category) => {
-    setWordToEdit({ ...wordToEdit, category: category });
   };
 
   const startEditing = (field: "en" | "ru" | "transcription" | "example") => {
@@ -63,235 +93,91 @@ export default function EditWordDialog({
     exit();
   };
 
+  const selectCategory = (category: Category) => {
+    setWordToEdit({ ...wordToEdit, category: category });
+    setShowCategoryPicker(false);
+  };
+
   return (
-    <Dialog visible={visible} onDismiss={exit}>
-      <Dialog.Title style={{ color: theme.colors.onBackground }}>
-        Edit Word
-      </Dialog.Title>
-      <Dialog.Content>
-        {editingField === "en" ? (
-          <TextInput
+    <Portal>
+      <Dialog visible={visible} onDismiss={exit} style={{ backgroundColor: theme.colors.secondaryContainer }}>
+        <View style={styles.headerContainer}>
+          <Dialog.Title style={{ color: theme.colors.onBackground }}>
+            <Text>Edit Word</Text>
+          </Dialog.Title>
+          <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
+        </View>
+
+        <Dialog.Content>
+          <EditableField
+            editingField={editingField}
+            targetField="en"
             label="English word"
             value={wordToEdit.word_en}
-            onChangeText={setWordEn}
-            style={styles.input}
-            mode="outlined"
-            theme={{ colors: { background: theme.colors.surface } }}
+            onChange={setWordEn}
             onBlur={stopEditing}
-            autoFocus
-          />
-        ) : (
-          <TouchableOpacity
-            style={[
-              styles.editableField,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
             onPress={() => startEditing("en")}
-          >
-            <Text
-              style={[
-                styles.editableLabel,
-                { color: theme.colors.onSurfaceVariant },
-              ]}
-            >
-              English word
-            </Text>
-            <Text
-              style={[
-                styles.editableValue,
-                { color: theme.colors.onSurface },
-              ]}
-              numberOfLines={1}
-            >
-              {wordToEdit.word_en || "Tap to enter"}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {editingField === "ru" ? (
-          <TextInput
+          />
+          <EditableField
+            editingField={editingField}
+            targetField="ru"
             label="Russian word"
             value={wordToEdit.word_ru}
-            onChangeText={setWordRu}
-            style={styles.input}
-            mode="outlined"
-            theme={{ colors: { background: theme.colors.surface } }}
+            onChange={setWordRu}
             onBlur={stopEditing}
-            autoFocus
-          />
-        ) : (
-          <TouchableOpacity
-            style={[
-              styles.editableField,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
             onPress={() => startEditing("ru")}
-          >
-            <Text
-              style={[
-                styles.editableLabel,
-                { color: theme.colors.onSurfaceVariant },
-              ]}
-            >
-              Russian word
-            </Text>
-            <Text
-              style={[
-                styles.editableValue,
-                { color: theme.colors.onSurface },
-              ]}
-              numberOfLines={1}
-            >
-              {wordToEdit.word_ru || "Tap to enter"}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {editingField === "transcription" ? (
-          <TextInput
+          />
+          <EditableField
+            editingField={editingField}
+            targetField="transcription"
             label="Transcription (optional)"
             value={wordToEdit.transcription}
-            onChangeText={setWordTranscription}
-            style={styles.input}
-            mode="outlined"
-            theme={{ colors: { background: theme.colors.surface } }}
+            onChange={setWordTranscription}
             onBlur={stopEditing}
-            autoFocus
-          />
-        ) : (
-          <TouchableOpacity
-            style={[
-              styles.editableField,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
             onPress={() => startEditing("transcription")}
-          >
-            <Text
-              style={[
-                styles.editableLabel,
-                { color: theme.colors.onSurfaceVariant },
-              ]}
-            >
-              Transcription (optional)
-            </Text>
-            <Text
-              style={[
-                styles.editableValue,
-                { color: theme.colors.onSurface },
-              ]}
-              numberOfLines={1}
-            >
-              {wordToEdit.transcription || "Tap to enter"}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {editingField === "example" ? (
-          <TextInput
+          />
+          <EditableField
+            editingField={editingField}
+            targetField="example"
             label="Text example (optional)"
             value={wordToEdit.text_example}
-            onChangeText={setWordTextExample}
-            style={styles.input}
-            mode="outlined"
-            multiline
-            theme={{ colors: { background: theme.colors.surface } }}
+            onChange={setWordTextExample}
             onBlur={stopEditing}
-            autoFocus
-          />
-        ) : (
-          <TouchableOpacity
-            style={[
-              styles.editableField,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
             onPress={() => startEditing("example")}
-          >
-            <Text
-              style={[
-                styles.editableLabel,
-                { color: theme.colors.onSurfaceVariant },
-              ]}
-            >
-              Text example (optional)
-            </Text>
-            <Text
-              style={[
-                styles.editableValue,
-                { color: theme.colors.onSurface },
-              ]}
-              numberOfLines={2}
-            >
-              {wordToEdit.text_example || "Tap to enter"}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        <Text
-          style={[styles.sectionLabel, { color: theme.colors.onBackground }]}
-        >
-          Category
-        </Text>
-        <Button
-          mode="outlined"
-          style={styles.categorySelector}
-          onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-        >
-          {wordToEdit.category
-            ? `${wordToEdit.category.icon} ${wordToEdit.category.name}`
-            : "Select category"}
-        </Button>
-        {showCategoryPicker && (
-          <FlatList
-            style={{
-              maxHeight: MAX_SELECT_CATEGORY_HEIGHT,
-            }}
-            data={allCategories}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <Button
-                mode={
-                  wordToEdit.category.id === item.id ? "contained" : "outlined"
-                }
-                style={styles.categoryBtn}
-                onPress={() => {
-                  setCategory(item);
-                  setShowCategoryPicker(false);
-                }}
-              >
-                {item.icon} {item.name}
-              </Button>
-            )}
           />
-        )}
-      </Dialog.Content>
-      <Dialog.Actions style={styles.actions}>
-        <Button
-          mode="outlined"
-          icon="delete"
-          textColor={theme.colors.error}
-          style={styles.actionButton}
-          onPress={handleDeleteWord}
-        >
-          Delete
-        </Button>
-        <Button
-          mode="contained"
-          icon="content-save"
-          style={styles.actionButton}
-          onPress={handleEditWord}
-        >
-          Save
-        </Button>
-        <Button
-          mode="text"
-          icon="close"
-          onPress={exit}
-          style={styles.actionButton}
-        >
-          Close
-        </Button>
-      </Dialog.Actions>
-    </Dialog>
+
+          <Text style={[styles.sectionLabel, { color: theme.colors.onBackground }]}>Category</Text>
+          <Button mode="outlined" style={styles.categorySelector} onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
+            {wordToEdit.category ? `${wordToEdit.category.icon} ${wordToEdit.category.name}` : "Select category"}
+          </Button>
+          <CategoryPicker
+            visible={showCategoryPicker}
+            onClose={() => setShowCategoryPicker(false)}
+            onSelectCategory={selectCategory}
+          />
+        </Dialog.Content>
+        <Dialog.Actions style={styles.actions}>
+          <Button
+            mode="contained"
+            icon="delete"
+            textColor={theme.colors.onError}
+            style={{ backgroundColor: theme.colors.error }}
+            onPress={handleDeleteWord}
+          >
+            Delete
+          </Button>
+          <Button
+            mode="contained"
+            icon="content-save"
+            style={{ backgroundColor: theme.colors.primary }}
+            textColor={theme.colors.onPrimary}
+            onPress={handleEditWord}
+          >
+            Save
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
   );
 }
 
@@ -332,7 +218,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  actionButton: {
-    marginHorizontal: 8,
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
