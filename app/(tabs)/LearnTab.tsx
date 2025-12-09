@@ -85,8 +85,9 @@ export default function LearnTab() {
         <View style={{ marginTop: SPACING_XXL * 2 }}>
           <ContentDivider name="Quick review" />
         </View>
-
-        <WordsOverview />
+        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+          <WordsOverview />
+        </View>
       </ScrollView>
   );
 }

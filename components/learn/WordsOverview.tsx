@@ -13,7 +13,7 @@ export default function WordsOverview() {
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
   const [index, setIndex] = useState(0);
-  const [ended, setEnded] = useState(false);
+  const [ended, setEnded] = useState(true);
   const [wordToReview, setWordToReview] = useState<Word[]>([]);
 
   useEffect(() => {
@@ -33,6 +33,15 @@ export default function WordsOverview() {
     setAccepted(0);
     setRejected(0);
     setIndex(0);
+  };
+
+  const restartWithPrebuildWords = () => {
+    setOnlyUserAddedWords(false);
+    restart();
+  };
+
+  const restart = () => {
+    reset();
     setEnded(false);
   };
 
@@ -66,12 +75,12 @@ export default function WordsOverview() {
   if (wordToReview.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onSurfaceVariant }]}>
+        <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
           No words to review, try to add some words to your vocabulary!
         </Text>
         <Button
           mode="contained-tonal"
-          onPress={switchOnlyUserAddedWords}
+          onPress={restartWithPrebuildWords}
           style={[styles.endBtn, { backgroundColor: theme.colors.secondaryContainer }]}
           icon="play"
         >
@@ -84,9 +93,9 @@ export default function WordsOverview() {
   if (ended) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.primary }]}>You remembered {calculatePercentage()}% of words</Text>
-        <Button mode="contained-tonal" onPress={reset} style={styles.reviewBtn}>
-          Review again
+        <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>You remembered {calculatePercentage()}% of words</Text>
+        <Button mode="contained-tonal" onPress={restart} style={styles.reviewBtn}>
+          Review words
         </Button>
       </View>
     );
@@ -94,11 +103,11 @@ export default function WordsOverview() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.section}>
+      <View style={[styles.section, { backgroundColor: theme.colors.surfaceVariant }]}>
         <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Only User Added Words</Text>
         <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
       </View>
-      <View style={styles.section}>
+      <View style={[styles.section, { backgroundColor: theme.colors.surfaceVariant }]}>
         <Text style={[styles.progressText, { color: theme.colors.onSurface }]}>
           Reviewed {index} / {wordToReview.length}
         </Text>
@@ -147,7 +156,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
-    backgroundColor: "rgba(0,0,0,0.04)",
   },
   sectionTitle: {
     fontSize: 15,
