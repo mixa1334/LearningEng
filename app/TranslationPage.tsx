@@ -6,14 +6,13 @@ import { StateType } from "@/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Button, Card, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Card, IconButton, Text, TextInput, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TranslationPage() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { currentTranslation, translations, status, removeTranslation, translateWord, clearTranslations } =
-    useTranslation();
+  const { currentTranslation, translations, status, removeTranslation, translateWord, clearTranslations } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
 
@@ -64,26 +63,25 @@ export default function TranslationPage() {
           </Text>
         </Card.Content>
         <Card.Actions style={styles.actions}>
-          <Button
-            mode="contained-tonal"
+          <IconButton
             icon="swap-horizontal"
             onPress={switchLanguages}
-            buttonColor={theme.colors.onSecondaryContainer}
-            textColor={theme.colors.secondaryContainer}
-          >sw
-          </Button>
+            containerColor={theme.colors.onSecondaryContainer}
+            iconColor={theme.colors.secondaryContainer}
+            size={24}
+            accessibilityLabel="Switch Languages"
+          />
           <Button mode="contained" icon="translate" onPress={translate} buttonColor="#81c784" textColor="#1b5e20">
             Translate
           </Button>
-          <Button
-            mode="contained"
+          <IconButton
             icon="delete"
             onPress={clearTranslations}
-            buttonColor={theme.colors.error}
-            textColor={theme.colors.onError}
-          >
-            CLS
-          </Button>
+            containerColor={theme.colors.error}
+            iconColor={theme.colors.onError}
+            size={24}
+            accessibilityLabel="Clear history"
+          />
         </Card.Actions>
       </Card>
 
@@ -102,7 +100,7 @@ export default function TranslationPage() {
             </Card.Content>
           </Card>
         )}
-        contentContainerStyle={{ marginTop: 24}}
+        contentContainerStyle={{ marginTop: 24 }}
         showsVerticalScrollIndicator={false}
       />
     </View>

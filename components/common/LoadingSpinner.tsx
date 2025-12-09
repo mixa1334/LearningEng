@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   appName: {
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: "900",
     letterSpacing: 1.5,
     textTransform: "uppercase",
