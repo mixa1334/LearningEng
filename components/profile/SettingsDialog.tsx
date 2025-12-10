@@ -32,12 +32,12 @@ export default function SettingsDialog({ visible, onDismiss }: SettingsDialogPro
           >
             Reset Vocabulary Progress
           </Button>
-          <Button mode="outlined" style={styles.settingBtn}>
+          {/* <Button mode="outlined" style={styles.settingBtn}>
             Backup to File
           </Button>
           <Button mode="outlined" style={styles.settingBtn}>
             Restore from File
-          </Button>
+          </Button> */}
         </Dialog.Content>
         <Dialog.Actions>
           <Button onPress={onDismiss}>Close</Button>
