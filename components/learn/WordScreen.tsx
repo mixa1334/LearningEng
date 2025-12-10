@@ -32,7 +32,7 @@ export default function WordScreen({
   if (words.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={[styles.emptyText, { color: theme.colors.onBackground }]}>
+        <Text style={[styles.emptyText, { color: theme.colors.onPrimary }]}>
           You completed tasks, come back later!
         </Text>
       </View>

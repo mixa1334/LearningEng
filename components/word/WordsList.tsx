@@ -1,18 +1,17 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { Word } from "@/model/entity/types";
-import { MAX_LIST_HEIGHT } from "@/resources/constants/constants";
 import React, { useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Divider, Portal, Text, useTheme } from "react-native-paper";
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { Portal, Text, useTheme } from "react-native-paper";
 import EditWordDialog from "./EditWordDialog";
-
-const ItemSeparator = () => <Divider />;
 
 export default function WordsList() {
   const theme = useTheme();
-  const { words } = useVocabulary();
+  const { userWords } = useVocabulary();
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
+  const { height: screenHeight } = useWindowDimensions();
+  const maxListHeight = screenHeight * 0.35;
 
   const openEditWordModal = (word: Word) => {
     setWordToEdit(word);
@@ -21,48 +20,46 @@ export default function WordsList() {
 
   return (
     <>
-      <Portal>
-        {showEditWordModal && wordToEdit && (
-          <EditWordDialog
-            visible={showEditWordModal}
-            exit={() => setShowEditWordModal(false)}
-            word={wordToEdit}
-          />
-        )}
-      </Portal>
+      {showEditWordModal && wordToEdit && (
+        <EditWordDialog visible={showEditWordModal} exit={() => setShowEditWordModal(false)} word={wordToEdit} />
+      )}
 
-      <FlatList
-        style={{
-          height: MAX_LIST_HEIGHT,
-        }}
-        data={words}
-        keyExtractor={(item) => item.id.toString()}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={({ item }) => (
-          <View style={styles.itemRow}>
-            <TouchableOpacity
-              style={styles.itemRow}
-              onPress={() => openEditWordModal(item)}
-            >
-              <Text
-                style={[styles.wordText, { color: theme.colors.onBackground }]}
-              >
+      <View style={styles.listContent}>
+        {userWords.map((item) => (
+          <TouchableOpacity
+            key={item.id.toString()}
+            style={[
+              styles.itemRow,
+              {
+                backgroundColor: theme.colors.surfaceVariant,
+              },
+            ]}
+            onPress={() => openEditWordModal(item)}
+          >
+            <Text style={[styles.wordText, { color: theme.colors.onSurface }]} numberOfLines={1}>
               {item.category.icon} {item.word_en} - {item.word_ru}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  listContent: {
+    backgroundColor: "transparent",
+    paddingBottom: 4,
+    paddingHorizontal: 4,
+  },
   itemRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
     paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    marginVertical: 4,
   },
   wordText: {
     fontSize: 16,

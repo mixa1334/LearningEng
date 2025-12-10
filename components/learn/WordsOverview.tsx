@@ -2,57 +2,67 @@ import { useVocabulary } from "@/hooks/useVocabulary";
 import { Word } from "@/model/entity/types";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, Switch, useTheme } from "react-native-paper";
 import WordCard from "./WordCard";
 
-interface WordsOverviewProps {
-  readonly onlyUserAddedWords: boolean;
-}
-
-export default function WordsOverview({
-  onlyUserAddedWords,
-}: WordsOverviewProps) {
+export default function WordsOverview() {
   const theme = useTheme();
 
-  const { words, preloadedWords } = useVocabulary();
+  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
+  const { userWords, preloadedWords } = useVocabulary();
   const [accepted, setAccepted] = useState(0);
   const [rejected, setRejected] = useState(0);
   const [index, setIndex] = useState(0);
-  const [ended, setEnded] = useState(false);
+  const [ended, setEnded] = useState(true);
   const [wordToReview, setWordToReview] = useState<Word[]>([]);
 
   useEffect(() => {
     if (onlyUserAddedWords) {
-      setWordToReview(words);
+      setWordToReview(userWords);
     } else {
-      setWordToReview([...words, ...preloadedWords]);
+      setWordToReview([...userWords, ...preloadedWords]);
     }
     reset();
-  }, [words, preloadedWords, onlyUserAddedWords]);
+  }, [userWords, preloadedWords, onlyUserAddedWords]);
+
+  const switchOnlyUserAddedWords = () => {
+    setOnlyUserAddedWords(!onlyUserAddedWords);
+  };
 
   const reset = () => {
     setAccepted(0);
     setRejected(0);
     setIndex(0);
+  };
+
+  const restartWithPrebuildWords = () => {
+    setOnlyUserAddedWords(false);
+    restart();
+  };
+
+  const restart = () => {
+    reset();
     setEnded(false);
   };
 
+  const updateTotalCounter = () => {
+    setIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      if (newIndex >= wordToReview.length) {
+        setEnded(true);
+      }
+      return newIndex;
+    });
+  };
+
   const accept = () => {
-    setAccepted(accepted + 1);
+    setAccepted((prev) => prev + 1);
     updateTotalCounter();
   };
 
   const reject = () => {
-    setRejected(rejected + 1);
+    setRejected((prev) => prev + 1);
     updateTotalCounter();
-  };
-
-  const updateTotalCounter = () => {
-    const newIndex = index + 1;
-    setIndex(newIndex);
-    if (newIndex >= wordToReview.length) {
-      end();
-    }
   };
 
   const end = () => setEnded(true);
@@ -64,88 +74,105 @@ export default function WordsOverview({
 
   if (wordToReview.length === 0) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
-        <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-          No words to review
+      <View style={styles.centered}>
+        <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
+          No words to review, try to add some words to your vocabulary!
         </Text>
+        <Button
+          mode="contained-tonal"
+          onPress={restartWithPrebuildWords}
+          style={[styles.endBtn, { backgroundColor: theme.colors.secondaryContainer }]}
+          icon="play"
+        >
+          Start prebuild words
+        </Button>
       </View>
     );
   }
 
   if (ended) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.colors.surface }]}>
-        <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-          Percentage of words you remembered - {calculatePercentage()}%
-        </Text>
-        <Button
-          mode="contained-tonal"
-          onPress={reset}
-          style={styles.reviewButton}
-        >
-          Review again
+      <View style={styles.centered}>
+        <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>You remembered {calculatePercentage()}% of words</Text>
+        <Button mode="contained-tonal" onPress={restart} style={styles.reviewBtn}>
+          Review words
         </Button>
       </View>
     );
   }
 
   return (
-    <View style={[styles.content, { backgroundColor: theme.colors.surface }]}>
-      <View style={styles.statsContainer}>
-        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Accepted: {accepted}
-        </Text>
-        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Rejected: {rejected}
-        </Text>
-        <Text style={[styles.text, { color: theme.colors.onSurface }]}>
-          Total: {index}
-        </Text>
+    <View style={styles.container}>
+      <View style={[styles.section, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Only User Added Words</Text>
+        <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
       </View>
-      <Button mode="contained-tonal" onPress={end} style={styles.reviewButton}>
-        End
+      <View style={[styles.section, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <Text style={[styles.progressText, { color: theme.colors.onSurface }]}>
+          Reviewed {index} / {wordToReview.length}
+        </Text>
+        <Text style={[styles.progressText, { color: theme.colors.onSurfaceVariant }]}>Known: {accepted}</Text>
+      </View>
+      <WordCard word={wordToReview[index]} accept={accept} acceptBtnName="Know" reject={reject} rejectBtnName="Don't know" />
+      <Button
+        mode="contained-tonal"
+        onPress={end}
+        style={[styles.endBtn, { backgroundColor: theme.colors.errorContainer }]}
+        icon="flag-checkered"
+      >
+        End session
       </Button>
-      <WordCard
-        word={wordToReview[index]}
-        accept={accept}
-        acceptBtnName="Know"
-        reject={reject}
-        rejectBtnName="Don't know"
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  center: {
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
-  statsContainer: {
+  infoText: {
+    fontSize: 16,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  resultText: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  section: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  emptyText: {
-    fontSize: 20,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  reviewButton: {
-    marginTop: 16,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  content: {
-    width: "100%",
-    alignSelf: "stretch",
+    marginBottom: 16,
+    paddingVertical: 12,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    borderRadius: 12,
+  },
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  progressText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  reviewBtn: {
+    marginTop: 12,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+  },
+  endBtn: {
+    marginVertical: 16,
+    borderRadius: 8,
+    paddingHorizontal: 16,
   },
 });

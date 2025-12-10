@@ -1,9 +1,9 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import { Category } from "@/model/entity/types";
-import { MAX_SELECT_CATEGORY_HEIGHT } from "@/resources/constants/constants";
 import { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
-import { Button, Dialog, Text, TextInput, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Button, Dialog, Portal, Text, TextInput, useTheme } from "react-native-paper";
+import { CategoryPicker } from "../category/CategoryPicker";
 
 interface CreateWordDialogProps {
   readonly visible: boolean;
@@ -12,14 +12,13 @@ interface CreateWordDialogProps {
 
 export default function CreateWordDialog({ visible, exit }: CreateWordDialogProps) {
   const theme = useTheme();
-  const { categories, addWord } = useVocabulary();
+  const { addWord } = useVocabulary();
   const [newWordEn, setNewWordEn] = useState("");
   const [newWordRu, setNewWordRu] = useState("");
   const [newWordTranscription, setNewWordTranscription] = useState("");
   const [newWordTextExample, setNewWordTextExample] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const handleAddWord = () => {
     if (!newWordEn || !newWordRu || !selectedCategory) return;
@@ -30,76 +29,78 @@ export default function CreateWordDialog({ visible, exit }: CreateWordDialogProp
       category_id: selectedCategory.id,
       text_example: newWordTextExample,
     });
+    setNewWordEn("");
+    setNewWordRu("");
+    setNewWordTranscription("");
+    setNewWordTextExample("");
+    setSelectedCategory(null);
+    setShowCategoryPicker(false);
     exit();
   };
 
+  const selectCategory = (category: Category) => {
+    setSelectedCategory(category);
+    setShowCategoryPicker(false);
+  };
+
   return (
-    <Dialog visible={visible} onDismiss={exit}>
-      <Dialog.Title style={{ color: theme.colors.onBackground }}>
-        Add New Word
-      </Dialog.Title>
-      <Dialog.Content>
-        <TextInput
-          label="English word"
-          value={newWordEn}
-          onChangeText={setNewWordEn}
-          style={styles.input}
-          mode="outlined"
-          theme={{ colors: { background: theme.colors.surface } }}
-        />
-        <TextInput
-          label="Russian word"
-          value={newWordRu}
-          onChangeText={setNewWordRu}
-          style={styles.input}
-          mode="outlined"
-          theme={{ colors: { background: theme.colors.surface } }}
-        />
-        <TextInput
-          label="Transcription (optional)"
-          value={newWordTranscription}
-          onChangeText={setNewWordTranscription}
-          style={styles.input}
-          mode="outlined"
-          theme={{ colors: { background: theme.colors.surface } }}
-        />
-        <TextInput
-          label="Text example (optional)"
-          value={newWordTextExample}
-          onChangeText={setNewWordTextExample}
-          style={styles.input}
-          mode="outlined"
-          theme={{ colors: { background: theme.colors.surface } }}
-        />
-        <Text
-          style={[styles.sectionLabel, { color: theme.colors.onBackground }]}
-        >
-          Select Category:
-        </Text>
-        <FlatList
-          style={{
-            height: MAX_SELECT_CATEGORY_HEIGHT,
-          }}
-          data={categories}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Button
-              mode={selectedCategory?.id === item.id ? "contained" : "outlined"}
-              style={styles.categoryBtn}
-              onPress={() => setSelectedCategory(item)}
-            >
-              {item.icon} {item.name}
-            </Button>
-          )}
-        />
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={exit}>Close</Button>
-        <Button mode="contained" onPress={handleAddWord}>
-          Add
-        </Button>
-      </Dialog.Actions>
-    </Dialog>
+    <Portal>
+      <Dialog visible={visible} onDismiss={exit} style={{backgroundColor: theme.colors.secondaryContainer}}>
+        <Dialog.Title style={{ color: theme.colors.onBackground }}>Add new word</Dialog.Title>
+        <Dialog.Content>
+          <TextInput
+            label="English word"
+            value={newWordEn}
+            onChangeText={setNewWordEn}
+            style={styles.input}
+            mode="outlined"
+            theme={{ colors: { background: theme.colors.surface } }}
+          />
+          <TextInput
+            label="Russian word"
+            value={newWordRu}
+            onChangeText={setNewWordRu}
+            style={styles.input}
+            mode="outlined"
+            theme={{ colors: { background: theme.colors.surface } }}
+          />
+          <TextInput
+            label="Transcription (optional)"
+            value={newWordTranscription}
+            onChangeText={setNewWordTranscription}
+            style={styles.input}
+            mode="outlined"
+            theme={{ colors: { background: theme.colors.surface } }}
+          />
+          <TextInput
+            label="Text example (optional)"
+            value={newWordTextExample}
+            onChangeText={setNewWordTextExample}
+            style={styles.input}
+            mode="outlined"
+            theme={{ colors: { background: theme.colors.surface } }}
+          />
+          <Text style={[styles.sectionLabel, { color: theme.colors.onBackground }]}>Category</Text>
+          <Button mode="outlined" style={styles.categorySelector} onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
+            {selectedCategory ? `${selectedCategory.icon} ${selectedCategory.name}` : "Select category"}
+          </Button>
+
+          <CategoryPicker
+            visible={showCategoryPicker}
+            onClose={() => setShowCategoryPicker(false)}
+            onSelectCategory={selectCategory}
+          />
+        </Dialog.Content>
+        <Dialog.Actions style={styles.actions}>
+          <Button mode="text" icon="close" onPress={exit} style={styles.actionButton}>
+            Close
+          </Button>
+          <Button mode="contained" icon="plus" onPress={handleAddWord} style={styles.actionButton}>
+            Add
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
   );
 }
 
@@ -115,5 +116,17 @@ const styles = StyleSheet.create({
   sectionLabel: {
     marginVertical: 8,
     fontWeight: "600",
+  },
+  categorySelector: {
+    marginBottom: 4,
+    borderRadius: 8,
+  },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionButton: {
+    marginHorizontal: 4,
   },
 });

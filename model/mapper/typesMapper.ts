@@ -1,4 +1,4 @@
-import { Category, Word } from "../entity/types";
+import { Category, Translation, Word } from "../entity/types";
 
 export function rowToWord(row: any): Word {
   return {
@@ -26,5 +26,14 @@ export function rowToCategory(row: any): Category {
     name: row.name,
     type: row.type,
     icon: row.icon,
+  };
+}
+
+export function rowToTranslation(row: any): Translation {
+  return {
+    id: row.id,
+    word_en: row.word_en,
+    word_ru: row.word_ru,
+    translation_date: row.translation_date,
   };
 }

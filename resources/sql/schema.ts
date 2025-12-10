@@ -4,6 +4,13 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
 
     PRAGMA foreign_keys = ON;
 
+    CREATE TABLE IF NOT EXISTS translations (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      word_en TEXT NOT NULL,
+      word_ru TEXT NOT NULL,
+      translation_date TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS categories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,

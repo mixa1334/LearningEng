@@ -1,7 +1,7 @@
 import { Word } from "@/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { useTheme } from "react-native-paper";
 
 interface WordCardProps {
@@ -12,28 +12,31 @@ interface WordCardProps {
   readonly rejectBtnName: string;
 }
 
-export default function WordCard({
-  word,
-  accept,
-  acceptBtnName,
-  reject,
-  rejectBtnName,
-}: WordCardProps) {
+export default function WordCard({ word, accept, acceptBtnName, reject, rejectBtnName }: WordCardProps) {
   const [showTranslation, setShowTranslation] = useState(false);
   const [pending, setPending] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const theme = useTheme();
+  const { width, height } = useWindowDimensions();
 
   useEffect(() => {
     setShowTranslation(false);
     setPending(false);
     setAccepted(false);
-  }, [word]);
+  }, [word.id]);
+
+  const cardWidth = width * 0.8;
+  const cardHeight = height * 0.4;
+  const acceptColor = theme.dark ? "#2E7D32" : "#4CAF50";
+  const rejectColor = theme.dark ? "#B00020" : "#D32F2F";
 
   const handleShowTranslation = () => setShowTranslation(true);
 
   const handleUserInput = (action: () => void) => {
-    if (pending) {
+    if (showTranslation) {
+      setShowTranslation(false);
+      setPending(false);
+      setAccepted(false);
       action();
     } else {
       setShowTranslation(true);
@@ -54,73 +57,56 @@ export default function WordCard({
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-      <Text style={[styles.category, { color: theme.colors.onSurfaceVariant }]}>
-        {word.category.icon} {word.category.name}
-      </Text>
-      <Text style={[styles.word, { color: theme.colors.onSurface }]}>
-        {word.word_en} {word.transcription}
-      </Text>
-
-      {showTranslation ? (
-        <Text style={[styles.translation, { color: theme.colors.primary }]}>
-          {word.word_ru}
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: theme.colors.primaryContainer,
+          minWidth: cardWidth,
+          minHeight: cardHeight,
+        },
+      ]}
+    >
+      <View style={styles.content}>
+        <Text style={[styles.category, { color: theme.colors.onSecondaryContainer }]}>
+          {word.category.icon} {word.category.name}
         </Text>
-      ) : (
-        <TouchableOpacity style={styles.eyeBtn} onPress={handleShowTranslation}>
-          <Ionicons name="eye-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.eyeText, { color: theme.colors.primary }]}>
-            Show translation
-          </Text>
-        </TouchableOpacity>
-      )}
+        <Text style={[styles.word, { color: theme.colors.onPrimaryContainer }]}>
+          {word.word_en} {word.transcription}
+        </Text>
 
-      <Text style={[styles.example, { color: theme.colors.onSurfaceVariant }]}>
-        {word.text_example}
-      </Text>
+        {showTranslation ? (
+          <Text style={[styles.translation, { color: theme.colors.primary }]} numberOfLines={3}>
+            {word.word_ru}
+          </Text>
+        ) : (
+          <TouchableOpacity style={styles.eyeBtn} onPress={handleShowTranslation}>
+            <Ionicons name="eye-outline" size={22} color={theme.colors.primary} />
+            <Text style={[styles.eyeText, { color: theme.colors.primary }]}>Show translation</Text>
+          </TouchableOpacity>
+        )}
+
+        <Text style={[styles.example, { color: theme.colors.onSecondaryContainer }]} numberOfLines={3}>
+          {word.text_example}
+        </Text>
+      </View>
 
       <View style={styles.bottomBar}>
         {pending ? (
-          <TouchableOpacity
-            style={[
-              styles.btnAccept,
-              { backgroundColor: theme.colors.primary },
-            ]}
-            onPress={handleContinue}
-          >
+          <TouchableOpacity style={[styles.btnBase, { backgroundColor: acceptColor }]} onPress={handleContinue}>
             <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
               Continue
             </Text>
           </TouchableOpacity>
         ) : (
           <>
-            <TouchableOpacity
-              style={[
-                styles.btnAccept,
-                { backgroundColor: theme.colors.primary },
-              ]}
-              onPress={handleAccept}
-            >
-              <Text
-                style={styles.btnText}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-              >
+            <TouchableOpacity style={[styles.btnBase, { backgroundColor: acceptColor }]} onPress={handleAccept}>
+              <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
                 {acceptBtnName}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.btnReject,
-                { backgroundColor: theme.colors.error },
-              ]}
-              onPress={handleReject}
-            >
-              <Text
-                style={styles.btnText}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-              >
+            <TouchableOpacity style={[styles.btnBase, { backgroundColor: rejectColor }]} onPress={handleReject}>
+              <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
                 {rejectBtnName}
               </Text>
             </TouchableOpacity>
@@ -133,58 +119,92 @@ export default function WordCard({
 
 const styles = StyleSheet.create({
   card: {
-    padding: 20,
     alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 12,
-    elevation: 2,
+    justifyContent: "flex-end",
+    borderRadius: 20,
     alignSelf: "center",
-    maxWidth: "90%",
     marginVertical: 16,
+    padding: 20,
+    // depth
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
   },
-  category: { fontWeight: "600", marginBottom: 6 },
+  content:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  category: {
+    fontWeight: "600",
+    marginBottom: 8,
+    fontSize: 14,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
   word: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: "700",
-    marginBottom: 6,
+    marginBottom: 8,
     textAlign: "center",
   },
   translation: {
     fontSize: 20,
-    marginBottom: 10,
+    marginBottom: 12,
     textAlign: "center",
+    fontWeight: "600",
   },
   example: {
-    fontSize: 14,
+    fontSize: 15,
     marginBottom: 20,
     textAlign: "center",
+    fontStyle: "italic",
+    lineHeight: 20,
   },
-  eyeBtn: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
-  eyeText: { marginLeft: 6, fontWeight: "600" },
+  eyeBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: "rgba(0,0,0,0.05)",
+  },
+  eyeText: {
+    marginLeft: 6,
+    fontWeight: "600",
+    fontSize: 14,
+  },
   bottomBar: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    paddingTop: 10,
+    paddingTop: 12,
   },
-  btnAccept: {
+  btnBase: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginHorizontal: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    marginHorizontal: 6,
     alignItems: "center",
-    maxWidth: "48%",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
-  btnReject: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginHorizontal: 4,
-    alignItems: "center",
-    maxWidth: "48%",
+  btnFullWidth: {
+    maxWidth: "100%",
+    marginHorizontal: 0,
+    marginVertical: 6,
   },
-  btnText: { fontWeight: "600", fontSize: 13 },
+  btnText: {
+    fontWeight: "600",
+    fontSize: 15,
+    color: "#fff",
+  },
 });

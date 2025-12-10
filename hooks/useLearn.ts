@@ -1,60 +1,30 @@
 import { Word } from "@/model/entity/types";
-import { useAppSelector, type AppDispatch } from "@/store";
-import { loadDailyWordSetThunk } from "@/store/thunk/learn/loadDailyWordSetThunk";
-import { markWordCompletelyLearnedThunk } from "@/store/thunk/learn/markWordCompletelyLearnedThunk";
-import { markWordNotReviewedThunk } from "@/store/thunk/learn/markWordNotReviewedThunk";
-import { markWordReviewedThunk } from "@/store/thunk/learn/markWordReviewedThunk";
-import { startLearnWordThunk } from "@/store/thunk/learn/startLearnWordThunk";
-import { useSQLiteContext } from "expo-sqlite";
-import { useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  loadDailyWordSetThunk,
+  markWordCompletelyLearnedThunk,
+  markWordNotReviewedThunk,
+  markWordReviewedThunk,
+  startLearnWordThunk,
+} from "@/store/slice/learnSlice";
 
 export function useLearningDailySet() {
-  const db = useSQLiteContext();
-  const dispatch = useDispatch<AppDispatch>();
-  const { wordsToReview, wordsToLearn, status, error } = useAppSelector(
-    (s) => s.learn
-  );
+  const dispatch = useAppDispatch();
+  const { wordsToReview, wordsToLearn, error } = useAppSelector((s) => s.learn);
 
-  useEffect(() => {
-    if (db) dispatch(loadDailyWordSetThunk({ db }));
-  }, [db, dispatch]);
+  const reloadDailySet = () => dispatch(loadDailyWordSetThunk());
 
-  const reloadDailySet = useCallback(() => {
-    if (db) dispatch(loadDailyWordSetThunk({ db }));
-  }, [db, dispatch]);
-
-  return { wordsToReview, wordsToLearn, status, error, reloadDailySet };
+  return { wordsToReview, wordsToLearn, error, reloadDailySet };
 }
 
 export function useLearnUtil() {
-  const db = useSQLiteContext();
-  const dispatch = useDispatch<AppDispatch>();
-  const markWordReviewed = useCallback(
-    (word: Word) => {
-      if (db) dispatch(markWordReviewedThunk({ db, word }));
-    },
-    [db, dispatch]
-  );
+  const dispatch = useAppDispatch();
 
-  const markWordNotReviewed = useCallback(
-    () => dispatch(markWordNotReviewedThunk()),
-    [dispatch]
-  );
+  const markWordReviewed = (word: Word) => dispatch(markWordReviewedThunk(word));
+  const markWordNotReviewed = () => dispatch(markWordNotReviewedThunk());
+  const startLearnNewWord = (word: Word) => dispatch(startLearnWordThunk(word));
+  const markWordCompletelyLearned = (word: Word) => dispatch(markWordCompletelyLearnedThunk(word));
 
-  const startLearnNewWord = useCallback(
-    (word: Word) => {
-      if (db) dispatch(startLearnWordThunk({ db, word }));
-    },
-    [db, dispatch]
-  );
-
-  const markWordCompletelyLearned = useCallback(
-    (word: Word) => {
-      if (db) dispatch(markWordCompletelyLearnedThunk({ db, word }));
-    },
-    [db, dispatch]
-  );
   return {
     markWordReviewed,
     markWordNotReviewed,

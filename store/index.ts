@@ -1,17 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { learnReducer } from "./slice/learnSlice";
-import { userStatsReducer } from "./slice/userStatsSlice";
+import { translationReducer } from "./slice/translationSlice";
+import { userDataReducer } from "./slice/userDataSlice";
 import { vocabularyReducer } from "./slice/vocabularySlice";
 
 export const store = configureStore({
   reducer: {
     learn: learnReducer,
-    stats: userStatsReducer,
+    userData: userDataReducer,
     vocabulary: vocabularyReducer,
+    translation: translationReducer,
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();

@@ -1,18 +1,15 @@
 import { useVocabulary } from "@/hooks/useVocabulary";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import EmojiSelector from "react-native-emoji-selector";
-import { Button, Dialog, TextInput, useTheme } from "react-native-paper";
+import { Button, Dialog, Portal, TextInput, useTheme } from "react-native-paper";
+import SimpleEmojiPicker from "../common/SimpleEmojiPicker";
 
 interface CreateCategoryDialogProps {
   readonly visible: boolean;
   readonly exit: () => void;
 }
 
-export default function CreateCategoryDialog({
-  visible,
-  exit,
-}: CreateCategoryDialogProps) {
+export default function CreateCategoryDialog({ visible, exit }: CreateCategoryDialogProps) {
   const theme = useTheme();
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -25,53 +22,51 @@ export default function CreateCategoryDialog({
       name: newCategoryName,
       icon: newCategoryEmoji,
     });
+    setNewCategoryName("");
+    setNewCategoryEmoji("");
+    setShowEmojiPicker(false);
     exit();
   };
 
   return (
-    <Dialog visible={visible} onDismiss={exit}>
-      <Dialog.Title style={{ color: theme.colors.onBackground }}>
-        Add New Category
-      </Dialog.Title>
-      <Dialog.Content>
-        <TextInput
-          label="Category name"
-          value={newCategoryName}
-          onChangeText={setNewCategoryName}
-          style={styles.input}
-          mode="outlined"
-          theme={{ colors: { background: theme.colors.surface } }}
-        />
-        {!showEmojiPicker && (
-          <Button
-            onPress={() => setShowEmojiPicker(true)}
-            style={{ marginTop: 10 }}
-          >
-            {newCategoryEmoji} Choose emoji
+    <Portal>
+      <Dialog visible={visible} onDismiss={exit} style={{ backgroundColor: theme.colors.secondaryContainer }}>
+        <Dialog.Title style={{ color: theme.colors.onBackground }}>Add new category</Dialog.Title>
+        <Dialog.Content>
+          <TextInput
+            label="Category name"
+            value={newCategoryName}
+            onChangeText={setNewCategoryName}
+            style={styles.input}
+            mode="outlined"
+            theme={{ colors: { background: theme.colors.surface } }}
+          />
+          {!showEmojiPicker && (
+            <Button mode="outlined" icon="emoticon-outline" onPress={() => setShowEmojiPicker(true)} style={styles.emojiButton}>
+              {newCategoryEmoji || "Choose emoji"}
+            </Button>
+          )}
+          {showEmojiPicker && (
+            <View style={styles.emojiPickerContainer}>
+              <SimpleEmojiPicker
+                onEmojiSelected={(emoji) => {
+                  setNewCategoryEmoji(emoji);
+                  setShowEmojiPicker(false);
+                }}
+              />
+            </View>
+          )}
+        </Dialog.Content>
+        <Dialog.Actions style={styles.actions}>
+          <Button mode="text" icon="close" onPress={exit} style={styles.actionButton}>
+            Close
           </Button>
-        )}
-        {showEmojiPicker && (
-          <View style={styles.emojiPickerContainer}>
-            <EmojiSelector
-              onEmojiSelected={(emoji) => {
-                setNewCategoryEmoji(emoji);
-                setShowEmojiPicker(false);
-              }}
-              showSearchBar={true}
-              showTabs={true}
-              showHistory={true}
-              columns={8}
-            />
-          </View>
-        )}
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={exit}>Close</Button>
-        <Button mode="contained" onPress={handleAddCategory}>
-          Add
-        </Button>
-      </Dialog.Actions>
-    </Dialog>
+          <Button mode="contained" icon="plus" onPress={handleAddCategory} style={styles.actionButton}>
+            Add
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
   );
 }
 
@@ -82,6 +77,17 @@ const styles = StyleSheet.create({
   },
   emojiPickerContainer: {
     height: 250,
-    margin: 10,
+    marginTop: 10,
+  },
+  emojiButton: {
+    marginTop: 10,
+  },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionButton: {
+    marginHorizontal: 4,
   },
 });
