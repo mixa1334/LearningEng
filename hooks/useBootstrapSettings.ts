@@ -14,12 +14,16 @@ function loadSettingsOnce(dispatch: AppDispatch) {
   if (!settingsPromise) {
     settingsStatus = "pending";
 
-    settingsPromise = Promise.all([
-      dispatch(loadUserDataThunk()).unwrap(),
-      dispatch(loadDailyWordSetThunk()).unwrap(),
-      dispatch(loadTranslationsThunk()).unwrap(),
-      dispatch(loadVocabularyThunk()).unwrap(),
-    ])
+
+    settingsPromise = dispatch(loadUserDataThunk())
+      .unwrap()
+      .then(() =>
+        Promise.all([
+          dispatch(loadDailyWordSetThunk()).unwrap(),
+          dispatch(loadTranslationsThunk()).unwrap(),
+          dispatch(loadVocabularyThunk()).unwrap(),
+        ])
+      )
       .then(() => {
         settingsStatus = "success";
       })

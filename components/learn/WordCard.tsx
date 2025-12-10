@@ -1,6 +1,6 @@
 import { Word } from "@/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { useTheme } from "react-native-paper";
 
@@ -18,6 +18,12 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
   const [accepted, setAccepted] = useState(false);
   const theme = useTheme();
   const { width, height } = useWindowDimensions();
+
+  useEffect(() => {
+    setShowTranslation(false);
+    setPending(false);
+    setAccepted(false);
+  }, [word.id]);
 
   const cardWidth = width * 0.8;
   const cardHeight = height * 0.4;

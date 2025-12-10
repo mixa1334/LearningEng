@@ -40,7 +40,7 @@ export const removeTranslationThunk = createAsyncThunk<Translation[], Translatio
 );
 
 export const clearTranslationsThunk = createAsyncThunk<TranslationState>("translation/clearTranslations", async () => {
-  clearTranslations();
+  await clearTranslations();
   return initialTranslationState;
 });
 

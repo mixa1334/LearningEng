@@ -98,14 +98,22 @@ const vocabularySlice = createSlice({
     });
 
     // categories
+    const syncCategories = (state: VocabularyState, userCategories: Category[]) => {
+      state.userCategories = userCategories;
+      const preloadedCategories = state.allCategories.filter(
+        (category) => category.type === EntityType.preloaded
+      );
+      state.allCategories = [...userCategories, ...preloadedCategories];
+    };
+
     builder.addCase(addCategoryThunk.fulfilled, (state, action) => {
-      state.userCategories = action.payload;
+      syncCategories(state, action.payload);
     });
     builder.addCase(removeCategoryThunk.fulfilled, (state, action) => {
-      state.userCategories = action.payload;
+      syncCategories(state, action.payload);
     });
     builder.addCase(editCategoryThunk.fulfilled, (state, action) => {
-      state.userCategories = action.payload;
+      syncCategories(state, action.payload);
     });
   },
 });
