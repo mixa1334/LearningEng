@@ -2,8 +2,6 @@
 
 Use this document to showcase the most important screens of **LearningEng**.
 
-> Tip: store your screenshots under `docs/images/` and reference them below.
-
 ### Suggested screenshots
 
 - **Dashboard / Profile**
@@ -20,13 +18,9 @@ Use this document to showcase the most important screens of **LearningEng**.
 
 ### Example
 
-```markdown
 ![Main loading screen](./images/loading.jpg)
 ![Profile screen](./images/profile_b.jpg)
 ![Learn screen](./images/learning_w.png)
 ![Review screen](./images/review_w.jpg)
 ![Vocabulary categories](./images/vocabulary_b.jpg)
 ![Translation helper](./images/translate_w.jpg)
-```
-
-
