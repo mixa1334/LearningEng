@@ -18,13 +18,15 @@ Use this document to showcase the most important screens of **LearningEng**.
 - **Translation helper**
   - Input fields, direction toggle, and history of translations.
 
-### Example (once you add images)
+### Example
 
 ```markdown
-![Profile screen](./images/profile.png)
-![Learn screen](./images/learn.png)
-![Vocabulary categories](./images/categories.png)
-![Translation helper](./images/translation.png)
+![Main loading screen](./images/loading.jpg)
+![Profile screen](./images/profile_b.jpg)
+![Learn screen](./images/learning_w.png)
+![Review screen](./images/review_w.jpg)
+![Vocabulary categories](./images/vocabulary_b.jpg)
+![Translation helper](./images/translate_w.jpg)
 ```
 
 
