@@ -1,8 +1,13 @@
 import CreateWordDialog from "@/components/word/CreateWordDialog";
 import WordsList from "@/components/word/WordsList";
-import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
+import {
+  SPACING_LG,
+  SPACING_MD,
+  SPACING_SM,
+  TAB_BAR_BASE_HEIGHT,
+} from "@/resources/constants/layout";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
+import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
 import { Button, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -33,7 +38,10 @@ export default function WordVocabularyPage() {
         paddingHorizontal: pageHorizontalPadding,
       }}
     >
-      <CreateWordDialog visible={showAddWordModal} exit={() => setShowAddWordModal(false)} />
+      <CreateWordDialog
+        visible={showAddWordModal}
+        exit={() => setShowAddWordModal(false)}
+      />
 
       <Button
         icon="plus"
@@ -44,9 +52,7 @@ export default function WordVocabularyPage() {
       >
         add new word
       </Button>
-      <View style={[styles.listContainer, { maxHeight: listMaxHeight }]}>
-        <WordsList />
-      </View>
+      <WordsList />
     </ScrollView>
   );
 }
@@ -56,7 +62,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addBtn: { marginBottom: SPACING_SM },
-  listContainer: {
-    overflow: "hidden",
-  },
 });
