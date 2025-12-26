@@ -121,10 +121,30 @@ export async function markWordCompletelyLearned(word: Word): Promise<void> {
   );
 }
 
+function getNextReviewSchedule(priority: number): { offsetExpr: string; isLearned: number } {
+  const minuteSchedule = [5, 10, 30, 60, 120, 240];
+
+  if (priority <= minuteSchedule.length) {
+    const minutes = minuteSchedule[priority - 1];
+    return {
+      offsetExpr: `+${minutes} minutes`,
+      isLearned: 0,
+    };
+  }
+
+  const daySchedule = [1, 2, 4, 7, 14, 30, 50];
+  const dayIndex = priority - minuteSchedule.length - 1;
+  const days = daySchedule[Math.min(dayIndex, daySchedule.length - 1)];
+
+  return {
+    offsetExpr: `+${days} days`,
+    isLearned: +(days >= 50),
+  };
+}
+
 export async function reviewWord(word: Word): Promise<void> {
   const newPriority = word.priority + 1;
-  const days = newPriority + (newPriority - 1) * 2;
-  let isLearned = +(newPriority > 50);
+  const { offsetExpr, isLearned } = getNextReviewSchedule(newPriority);
 
   await getDbInstance().runAsync(
     `UPDATE words
@@ -132,6 +152,6 @@ export async function reviewWord(word: Word): Promise<void> {
          priority = ?,
          learned = ?
      WHERE id = ?;`,
-    [`+${days} days`, newPriority, isLearned, word.id]
+    [offsetExpr, newPriority, isLearned, word.id]
   );
 }
