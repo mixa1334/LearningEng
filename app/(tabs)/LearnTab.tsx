@@ -1,7 +1,6 @@
 import ContentDivider from "@/components/common/ContentDivider";
 import LearningContent from "@/components/learn/LearningContent";
 import LearningErrorState from "@/components/learn/LearningErrorState";
-import LearningTabHeader from "@/components/learn/LearningTabHeader";
 import WordsOverview from "@/components/learn/WordsOverview";
 import { useLearningDailySet } from "@/hooks/useLearn";
 import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
@@ -12,15 +11,7 @@ import {
   useSafeAreaInsets
 } from "react-native-safe-area-context";
 
-enum ActiveLearningTab {
-  learn = "learn_tab",
-  review = "review_tab",
-}
-
 export default function LearnTab() {
-  const [activeTab, setActiveTab] = useState<ActiveLearningTab>(
-    ActiveLearningTab.learn
-  );
   const { wordsToReview, wordsToLearn, error, reloadDailySet } =
     useLearningDailySet();
 
@@ -31,10 +22,6 @@ export default function LearnTab() {
   const contentHorizontalPadding = SPACING_MD;
   const contentTopPadding = SPACING_XXL;
   const contentBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
-
-  const switchToLearnScreen = () => setActiveTab(ActiveLearningTab.learn);
-  const switchToReviewScreen = () => setActiveTab(ActiveLearningTab.review);
-  const isLearnTab = activeTab === ActiveLearningTab.learn;
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -67,19 +54,10 @@ export default function LearnTab() {
       >
         <ContentDivider name="Learning" />
         <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-          <LearningTabHeader
-            isLearnTab={isLearnTab}
-            onSelectLearn={switchToLearnScreen}
-            onSelectReview={switchToReviewScreen}
+          <LearningContent
+            wordsToLearn={wordsToLearn}
+            wordsToReview={wordsToReview}
           />
-
-          <View style={styles.content}>
-            <LearningContent
-              isLearnTab={isLearnTab}
-              wordsToLearn={wordsToLearn}
-              wordsToReview={wordsToReview}
-            />
-          </View>
         </View>
 
         <View style={{ marginTop: SPACING_XXL * 2 }}>
@@ -105,33 +83,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
     overflow: "hidden",
-  },
-  tabButtons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    borderBottomWidth: 1,
-  },
-  topBtn: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: "center",
-    borderBottomWidth: 2,
-    borderBottomColor: "transparent",
-  },
-  topBtnText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "5%",
-  },
-  fullCenter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "5%",
   },
 });
