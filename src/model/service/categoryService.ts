@@ -4,6 +4,35 @@ import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";
 import { rowToCategory } from "../mapper/typesMapper";
 
+export async function addNewCategoriesBatch(
+  newCategories: NewCategoryDto[],
+  categoryType: EntityType = EntityType.useradd
+): Promise<void> {
+  if (!newCategories.length) {
+    return;
+  }
+
+  const db = getDbInstance();
+  const PARAMS_PER_CATEGORY = 3;
+  const MAX_PARAMS = 900;
+  const BATCH_SIZE = Math.max(1, Math.floor(MAX_PARAMS / PARAMS_PER_CATEGORY));
+
+  await db.withExclusiveTransactionAsync(async (tx) => {
+    for (let i = 0; i < newCategories.length; i += BATCH_SIZE) {
+      const batch = newCategories.slice(i, i + BATCH_SIZE);
+      const placeholders = batch.map(() => "(?, ?, ?)").join(", ");
+      const sql = `INSERT INTO categories (name, type, icon) VALUES ${placeholders}`;
+
+      const params: (string | EntityType)[] = [];
+      for (const category of batch) {
+        params.push(category.name, categoryType, category.icon);
+      }
+
+      await tx.runAsync(sql, params);
+    }
+  });
+}
+
 export async function addNewCategory(
   newCategory: NewCategoryDto,
   categoryType: EntityType = EntityType.useradd

@@ -18,6 +18,47 @@ export async function resetWordLearningProgress(): Promise<void> {
   await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')");
 }
 
+export async function addNewWordsBatch(
+  newWords: NewWordDto[],
+  wordType: EntityType = EntityType.useradd
+): Promise<void> {
+  if (!newWords.length) {
+    return;
+  }
+
+  const db = getDbInstance();
+  const reviewDate = new Date().toISOString();
+
+  const PARAMS_PER_WORD = 9;
+  const MAX_PARAMS = 900;
+  const BATCH_SIZE = Math.max(1, Math.floor(MAX_PARAMS / PARAMS_PER_WORD));
+
+  await db.withExclusiveTransactionAsync(async (tx) => {
+    for (let i = 0; i < newWords.length; i += BATCH_SIZE) {
+      const batch = newWords.slice(i, i + BATCH_SIZE);
+      const placeholders = batch.map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
+      const sql = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES ${placeholders}`;
+
+      const params: (string | number | EntityType)[] = [];
+      for (const word of batch) {
+        params.push(
+          word.word_en,
+          word.word_ru,
+          word.transcription,
+          wordType,
+          0,
+          word.category_id,
+          reviewDate,
+          0,
+          word.text_example
+        );
+      }
+
+      await tx.runAsync(sql, params);
+    }
+  });
+}
+
 export async function addNewWord(newWord: NewWordDto, wordType: EntityType = EntityType.useradd): Promise<number> {
   const reviewDate = new Date().toISOString();
   const insertedRow = await getDbInstance().runAsync(INSERT_WORD, [
