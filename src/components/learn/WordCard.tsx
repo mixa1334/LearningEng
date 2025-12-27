@@ -1,7 +1,13 @@
 import { Word } from "@/src/model/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { useTheme } from "react-native-paper";
 
 interface WordCardProps {
@@ -12,10 +18,17 @@ interface WordCardProps {
   readonly rejectBtnName: string;
 }
 
-export default function WordCard({ word, accept, acceptBtnName, reject, rejectBtnName }: WordCardProps) {
+export default function WordCard({
+  word,
+  accept,
+  acceptBtnName,
+  reject,
+  rejectBtnName,
+}: WordCardProps) {
   const [showTranslation, setShowTranslation] = useState(false);
   const [pending, setPending] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [isEnglishPrimary, setIsEnglishPrimary] = useState(true);
   const theme = useTheme();
   const { width, height } = useWindowDimensions();
 
@@ -23,7 +36,15 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
     setShowTranslation(false);
     setPending(false);
     setAccepted(false);
+    setIsEnglishPrimary(Math.random() < 0.5);
   }, [word.id]);
+
+  const questionText = isEnglishPrimary
+    ? `${word.word_en} ${word.transcription ?? ""}`.trim()
+    : word.word_ru;
+  const answerText = isEnglishPrimary
+    ? word.word_ru
+    : `${word.word_en} ${word.transcription ?? ""}`.trim();
 
   const cardWidth = width * 0.8;
   const cardHeight = height * 0.4;
@@ -68,45 +89,82 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
       ]}
     >
       <View style={styles.content}>
-        <Text style={[styles.category, { color: theme.colors.onSecondaryContainer }]}>
+        <Text
+          style={[
+            styles.category,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
+        >
           {word.category.icon} {word.category.name}
         </Text>
         <Text style={[styles.word, { color: theme.colors.onPrimaryContainer }]}>
-          {word.word_en} {word.transcription}
+          {questionText}
         </Text>
 
         {showTranslation ? (
-          <Text style={[styles.translation, { color: theme.colors.primary }]} numberOfLines={3}>
-            {word.word_ru}
+          <Text
+            style={[styles.translation, { color: theme.colors.primary }]}
+            numberOfLines={3}
+          >
+            {answerText}
           </Text>
         ) : (
-          <TouchableOpacity style={styles.eyeBtn} onPress={handleShowTranslation}>
-            <Ionicons name="eye-outline" size={22} color={theme.colors.primary} />
-            <Text style={[styles.eyeText, { color: theme.colors.primary }]}>Show translation</Text>
+          <TouchableOpacity
+            style={styles.eyeBtn}
+            onPress={handleShowTranslation}
+          >
+            <Ionicons
+              name="eye-outline"
+              size={22}
+              color={theme.colors.primary}
+            />
+            <Text style={[styles.eyeText, { color: theme.colors.primary }]}>
+              Show translation
+            </Text>
           </TouchableOpacity>
         )}
 
-        <Text style={[styles.example, { color: theme.colors.onSecondaryContainer }]} numberOfLines={3}>
+        <Text
+          style={[styles.example, { color: theme.colors.onSecondaryContainer }]}
+          numberOfLines={3}
+        >
           {word.text_example}
         </Text>
       </View>
 
       <View style={styles.bottomBar}>
         {pending ? (
-          <TouchableOpacity style={[styles.btnBase, { backgroundColor: acceptColor }]} onPress={handleContinue}>
+          <TouchableOpacity
+            style={[styles.btnBase, { backgroundColor: acceptColor }]}
+            onPress={handleContinue}
+          >
             <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
               Continue
             </Text>
           </TouchableOpacity>
         ) : (
           <>
-            <TouchableOpacity style={[styles.btnBase, { backgroundColor: acceptColor }]} onPress={handleAccept}>
-              <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
+            <TouchableOpacity
+              style={[styles.btnBase, { backgroundColor: acceptColor }]}
+              onPress={handleAccept}
+            >
+              <Text
+                style={styles.btnText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
                 {acceptBtnName}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btnBase, { backgroundColor: rejectColor }]} onPress={handleReject}>
-              <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
+            <TouchableOpacity
+              style={[styles.btnBase, { backgroundColor: rejectColor }]}
+              onPress={handleReject}
+            >
+              <Text
+                style={styles.btnText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
                 {rejectBtnName}
               </Text>
             </TouchableOpacity>
@@ -132,7 +190,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
   },
-  content:{
+  content: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
