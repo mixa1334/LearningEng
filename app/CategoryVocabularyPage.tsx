@@ -1,6 +1,6 @@
-import CategoriesList from "@/components/category/CategoriesList";
-import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
-import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
+import CategoriesList from "@/src/components/category/CategoriesList";
+import CreateCategoryDialog from "@/src/components/category/CreateCategoryDialog";
+import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button, useTheme } from "react-native-paper";

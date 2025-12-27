@@ -3,7 +3,7 @@ import {
   TAB_BAR_BASE_HEIGHT,
   TAB_BAR_BOTTOM_INSET_MULTIPLIER,
   TAB_BAR_HORIZONTAL_MARGIN,
-} from "@/resources/constants/layout";
+} from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";

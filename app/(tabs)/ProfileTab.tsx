@@ -1,8 +1,8 @@
-import DailyGoalCard from "@/components/profile/DailyGoalCard";
-import ProfileHeaderCard from "@/components/profile/ProfileHeaderCard";
-import ProgressCard from "@/components/profile/ProgressCard";
-import SettingsDialog from "@/components/profile/SettingsDialog";
-import { SPACING_XL, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
+import DailyGoalCard from "@/src/components/profile/DailyGoalCard";
+import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
+import ProgressCard from "@/src/components/profile/ProgressCard";
+import SettingsDialog from "@/src/components/profile/SettingsDialog";
+import { SPACING_XL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Button, useTheme } from "react-native-paper";

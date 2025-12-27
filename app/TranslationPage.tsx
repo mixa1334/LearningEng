@@ -1,10 +1,10 @@
-import { CategoryPicker } from "@/components/category/CategoryPicker";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useVocabulary } from "@/hooks/useVocabulary";
-import { Category, Language, Translation } from "@/model/entity/types";
-import { SPACING_XL, SPACING_XXL } from "@/resources/constants/layout";
-import { StateType } from "@/store/slice/stateType";
+import { CategoryPicker } from "@/src/components/category/CategoryPicker";
+import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import { useTranslation } from "@/src/hooks/useTranslation";
+import { useVocabulary } from "@/src/hooks/useVocabulary";
+import { Category, Language, Translation } from "@/src/model/entity/types";
+import { SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
+import { StateType } from "@/src/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";

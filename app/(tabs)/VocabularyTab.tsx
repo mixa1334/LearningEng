@@ -1,5 +1,5 @@
-import { TouchableCard } from "@/components/common/TouchableCard";
-import { SPACING_LG, SPACING_MD, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
+import { TouchableCard } from "@/src/components/common/TouchableCard";
+import { SPACING_LG, SPACING_MD, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { useRouter } from "expo-router";
 import React from "react";
 import { View } from "react-native";

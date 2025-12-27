@@ -1,9 +1,9 @@
-import ContentDivider from "@/components/common/ContentDivider";
-import LearningContent from "@/components/learn/LearningContent";
-import LearningErrorState from "@/components/learn/LearningErrorState";
-import WordsOverview from "@/components/learn/WordsOverview";
-import { useLearningDailySet } from "@/hooks/useLearn";
-import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
+import ContentDivider from "@/src/components/common/ContentDivider";
+import LearningContent from "@/src/components/learn/LearningContent";
+import LearningErrorState from "@/src/components/learn/LearningErrorState";
+import WordsOverview from "@/src/components/learn/WordsOverview";
+import { useLearningDailySet } from "@/src/hooks/useLearn";
+import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";

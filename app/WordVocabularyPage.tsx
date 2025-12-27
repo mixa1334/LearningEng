@@ -1,11 +1,11 @@
-import CreateWordDialog from "@/components/word/CreateWordDialog";
-import WordsList from "@/components/word/WordsList";
+import CreateWordDialog from "@/src/components/word/CreateWordDialog";
+import WordsList from "@/src/components/word/WordsList";
 import {
   SPACING_LG,
   SPACING_MD,
   SPACING_SM,
   TAB_BAR_BASE_HEIGHT,
-} from "@/resources/constants/layout";
+} from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
 import { Button, useTheme } from "react-native-paper";
