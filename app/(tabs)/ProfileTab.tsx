@@ -1,4 +1,5 @@
 import DailyGoalCard from "@/src/components/profile/DailyGoalCard";
+import FaqCard from "@/src/components/profile/FaqCard";
 import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/src/components/profile/ProgressCard";
 import SettingsDialog from "@/src/components/profile/SettingsDialog";
@@ -34,6 +35,8 @@ export default function ProfileTab() {
       <ProgressCard />
 
       <DailyGoalCard />
+
+      <FaqCard />
 
       <Button mode="contained-tonal" icon="cog" onPress={toggleSettings} style={styles.settingsBtn}>
         Settings
