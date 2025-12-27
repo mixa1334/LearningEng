@@ -6,9 +6,10 @@ export interface Quote {
   h: string;
 }
 
+// Requests are restricted by IP to 5 per 30 second period by default.
 export async function getDailyQuote(): Promise<Quote> {
   return axios
-    .get<Quote[]>("https://zenquotes.io/api/today")
+    .get<Quote[]>("https://zenquotes.io/api/today", { timeout: 5000 })
     .then((response) => {
       const data = response.data;
       if (data.length > 0) {
@@ -18,6 +19,10 @@ export async function getDailyQuote(): Promise<Quote> {
     })
     .catch((error) => {
       console.error(error);
-      return { q: "Some quote is missing", a: "Some author is missing", h: "Some quote is missing" };
+      return {
+        q: "Some quote is missing",
+        a: "Some author is missing",
+        h: "Some quote is missing",
+      };
     });
 }
