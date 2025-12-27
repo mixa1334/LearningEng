@@ -2,6 +2,7 @@ import DailyGoalCard from "@/src/components/profile/DailyGoalCard";
 import FaqCard from "@/src/components/profile/FaqCard";
 import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/src/components/profile/ProgressCard";
+import QuoteCard from "@/src/components/profile/QuoteCard";
 import SettingsDialog from "@/src/components/profile/SettingsDialog";
 import { SPACING_XL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
@@ -35,6 +36,8 @@ export default function ProfileTab() {
       <ProgressCard />
 
       <DailyGoalCard />
+
+      <QuoteCard />
 
       <FaqCard />
 
