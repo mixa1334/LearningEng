@@ -7,8 +7,7 @@
   { "name": "Study & education", "icon": "📚" },
   { "name": "Health & body", "icon": "💊" },
   { "name": "Nature & environment", "icon": "🌿" },
-  { "name": "Time & weather", "icon": "⏰" },
-  { "name": "Hobbies & free time", "icon": "🎯" },
   { "name": "Technology & communication", "icon": "💻" },
   { "name": "Feelings & opinions", "icon": "😊" }
 ]
+
