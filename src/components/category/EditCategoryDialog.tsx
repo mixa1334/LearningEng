@@ -1,8 +1,8 @@
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { Category } from "@/src/model/entity/types";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Dialog, Portal, Text, TextInput, useTheme } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Button, Dialog, IconButton, Portal, Text, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 import SimpleEmojiPicker from "../common/SimpleEmojiPicker";
 
 interface EditCategoryDialogProps {
@@ -13,7 +13,7 @@ interface EditCategoryDialogProps {
 
 export default function EditCategoryDialog({ visible, exit, category }: EditCategoryDialogProps) {
   const theme = useTheme();
-  const { editCategory } = useVocabulary();
+  const { editCategory, removeCategory } = useVocabulary();
   const [categoryToEdit, setCategoryToEdit] = useState(category);
   useEffect(() => setCategoryToEdit(category), [category]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -33,10 +33,24 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
     exit();
   };
 
+  const handleDeleteCategory = () => {
+    removeCategory(categoryToEdit);
+    exit();
+  };
+
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={exit} style={{ backgroundColor: theme.colors.secondaryContainer }}>
-        <Dialog.Title style={{ color: theme.colors.onBackground }}>Edit category</Dialog.Title>
+      <Dialog
+        visible={visible}
+        onDismiss={exit}
+        style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}
+      >
+        <View style={styles.headerContainer}>
+          <Dialog.Title style={[styles.title, { color: theme.colors.onBackground }]}>
+            Edit category
+          </Dialog.Title>
+          <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
+        </View>
         <Dialog.Content>
           {editName ? (
           <TextInput
@@ -45,22 +59,56 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
             onChangeText={setCategoryName}
             style={styles.input}
             mode="outlined"
-            theme={{ colors: { background: theme.colors.surface } }}
+            theme={{
+              colors: {
+                background: theme.colors.surface,
+                outline: theme.colors.outlineVariant,
+                primary: theme.colors.primary,
+              },
+            }}
             onBlur={() => setEditName(false)}
             autoFocus
           />) : (
-            <TouchableOpacity style={[styles.editableField, { backgroundColor: theme.colors.tertiary }]} onPress={() => setEditName(true)}>
-            <Text style={[styles.editableLabel, { color: theme.colors.onTertiary }]}>Name</Text>
-            <Text style={[styles.editableValue, { color: theme.colors.onTertiary }]} numberOfLines={1}>
-              {categoryToEdit.name || "Tap to enter"}
-            </Text>
-          </TouchableOpacity>
+            <TouchableRipple
+              style={[styles.editableField, { backgroundColor: theme.colors.secondaryContainer }]}
+              borderless={false}
+              rippleColor={theme.colors.outlineVariant}
+              onPress={() => setEditName(true)}
+            >
+              <View>
+                <Text style={[styles.editableLabel, { color: theme.colors.onSecondaryContainer }]}>
+                  Name
+                </Text>
+                <Text
+                  style={[styles.editableValue, { color: theme.colors.onSecondaryContainer }]}
+                  numberOfLines={1}
+                >
+                  {categoryToEdit.name || "Tap to enter"}
+                </Text>
+              </View>
+            </TouchableRipple>
           )}
 
 
           {!showEmojiPicker && (
-            <Button mode="outlined" icon="emoticon-outline" onPress={() => setShowEmojiPicker(true)} style={{ marginTop: 10 }}>
-              {categoryToEdit.icon} Choose emoji
+            <Button
+              mode="contained-tonal"
+              icon="emoticon-outline"
+              onPress={() => setShowEmojiPicker(true)}
+              style={[
+                styles.emojiButton,
+                {
+                  backgroundColor: theme.colors.outlineVariant,
+                  borderColor: theme.colors.outlineVariant,
+                },
+              ]}
+              textColor={theme.colors.onSecondaryContainer}
+              contentStyle={styles.emojiButtonContent}
+            >
+              <View style={styles.emojiInner}>
+                <Text style={styles.emojiEmoji}>{categoryToEdit.icon || "🙂"}</Text>
+                <Text style={styles.emojiLabel}>Change emoji</Text>
+              </View>
             </Button>
           )}
           {showEmojiPicker && (
@@ -75,10 +123,22 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
           )}
         </Dialog.Content>
         <Dialog.Actions style={styles.actions}>
-          <Button onPress={exit} style={styles.actionButton}>
-            Close
+          <Button
+            mode="contained"
+            icon="delete"
+            textColor={theme.colors.onError}
+            style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
+            onPress={handleDeleteCategory}
+          >
+            Delete
           </Button>
-          <Button mode="contained" onPress={handleEditCategory} style={styles.actionButton}>
+          <Button
+            mode="contained"
+            icon="content-save"
+            textColor={theme.colors.onPrimary}
+            style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
+            onPress={handleEditCategory}
+          >
             Save
           </Button>
         </Dialog.Actions>
@@ -88,6 +148,9 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 }
 
 const styles = StyleSheet.create({
+  dialog: {
+    borderRadius: 24,
+  },
   input: {
     marginVertical: 8,
     borderRadius: 12,
@@ -96,8 +159,31 @@ const styles = StyleSheet.create({
     height: 250,
     margin: 10,
   },
-  actionButton: {
-    marginHorizontal: 8,
+  emojiButton: {
+    marginTop: 10,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 999,
+  },
+  emojiButtonContent: {
+    justifyContent: "center",
+  },
+  emojiInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  emojiEmoji: {
+    fontSize: 20,
+  },
+  emojiLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  primaryButton: {
+    marginLeft: 8,
+  },
+  destructiveButton: {
+    marginRight: 8,
   },
   actions: {
     flexDirection: "row",
@@ -107,8 +193,9 @@ const styles = StyleSheet.create({
   editableField: {
     marginVertical: 6,
     borderRadius: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     paddingVertical: 10,
+    overflow: "hidden",
   },
   editableLabel: {
     fontSize: 12,
@@ -118,5 +205,15 @@ const styles = StyleSheet.create({
   editableValue: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  title: {
+    fontWeight: "700",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });

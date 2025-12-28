@@ -1,8 +1,17 @@
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { Category, Word } from "@/src/model/entity/types";
 import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Button, Dialog, IconButton, Portal, Text, TextInput, useTheme } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  Portal,
+  Text,
+  TextInput,
+  TouchableRipple,
+  useTheme,
+} from "react-native-paper";
 import { CategoryPicker } from "../category/CategoryPicker";
 
 type EditableField = "en" | "ru" | "transcription" | "example" | null;
@@ -34,7 +43,13 @@ function EditableField({ editingField, targetField, label, value, onChange, onBl
         onChangeText={onChange}
         style={styles.input}
         mode="outlined"
-        theme={{ colors: { background: theme.colors.surface } }}
+        theme={{
+          colors: {
+            background: theme.colors.surface,
+            outline: theme.colors.outlineVariant,
+            primary: theme.colors.primary,
+          },
+        }}
         onBlur={onBlur}
         autoFocus
       />
@@ -42,12 +57,24 @@ function EditableField({ editingField, targetField, label, value, onChange, onBl
   }
 
   return (
-    <TouchableOpacity style={[styles.editableField, { backgroundColor: theme.colors.tertiary }]} onPress={onPress}>
-      <Text style={[styles.editableLabel, { color: theme.colors.onTertiary }]}>{label}</Text>
-      <Text style={[styles.editableValue, { color: theme.colors.onTertiary }]} numberOfLines={1}>
-        {value || "Tap to enter"}
-      </Text>
-    </TouchableOpacity>
+    <TouchableRipple
+      style={[styles.editableField, { backgroundColor: theme.colors.secondaryContainer }]}
+      borderless={false}
+      rippleColor={theme.colors.outlineVariant}
+      onPress={onPress}
+    >
+      <View>
+        <Text style={[styles.editableLabel, { color: theme.colors.onSecondaryContainer }]}>
+          {label}
+        </Text>
+        <Text
+          style={[styles.editableValue, { color: theme.colors.onSecondaryContainer }]}
+          numberOfLines={1}
+        >
+          {value || "Tap to enter"}
+        </Text>
+      </View>
+    </TouchableRipple>
   );
 }
 
@@ -100,15 +127,23 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={exit} style={{ backgroundColor: theme.colors.secondaryContainer }}>
+      <Dialog
+        visible={visible}
+        onDismiss={exit}
+        style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}
+      >
         <View style={styles.headerContainer}>
-          <Dialog.Title style={{ color: theme.colors.onBackground }}>
-            <Text>Edit Word</Text>
+          <Dialog.Title style={[styles.title, { color: theme.colors.onBackground }]}>
+            Edit word
           </Dialog.Title>
           <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
         </View>
 
         <Dialog.Content>
+          <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            Tap a field to quickly update any part of the word.
+          </Text>
+
           <EditableField
             editingField={editingField}
             targetField="en"
@@ -146,9 +181,30 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
             onPress={() => startEditing("example")}
           />
 
-          <Text style={[styles.sectionLabel, { color: theme.colors.onBackground }]}>Category</Text>
-          <Button mode="outlined" style={styles.categorySelector} onPress={() => setShowCategoryPicker(!showCategoryPicker)}>
-            {wordToEdit.category ? `${wordToEdit.category.icon} ${wordToEdit.category.name}` : "Select category"}
+          <Text style={[styles.sectionLabel, { color: theme.colors.onBackground }]}>
+            Category
+          </Text>
+          <Button
+            mode="contained-tonal"
+            style={[
+              styles.categorySelector,
+              {
+                backgroundColor: theme.colors.outlineVariant,
+                borderColor: theme.colors.outlineVariant,
+              },
+            ]}
+            onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+            textColor={theme.colors.onSecondaryContainer}
+            contentStyle={styles.categorySelectorButtonContent}
+          >
+            {wordToEdit.category ? (
+              <View style={styles.categorySelectorContent}>
+                <Text style={styles.categoryEmoji}>{wordToEdit.category.icon}</Text>
+                <Text style={styles.categoryLabel}>{wordToEdit.category.name}</Text>
+              </View>
+            ) : (
+              "Select category"
+            )}
           </Button>
           <CategoryPicker
             visible={showCategoryPicker}
@@ -161,7 +217,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
             mode="contained"
             icon="delete"
             textColor={theme.colors.onError}
-            style={{ backgroundColor: theme.colors.error }}
+            style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
             onPress={handleDeleteWord}
           >
             Delete
@@ -169,7 +225,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
           <Button
             mode="contained"
             icon="content-save"
-            style={{ backgroundColor: theme.colors.primary }}
+            style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
             textColor={theme.colors.onPrimary}
             onPress={handleEditWord}
           >
@@ -182,6 +238,9 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 }
 
 const styles = StyleSheet.create({
+  dialog: {
+    borderRadius: 24,
+  },
   input: {
     marginVertical: 8,
     borderRadius: 12,
@@ -189,8 +248,9 @@ const styles = StyleSheet.create({
   editableField: {
     marginVertical: 6,
     borderRadius: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     paddingVertical: 10,
+    overflow: "hidden",
   },
   editableLabel: {
     fontSize: 12,
@@ -211,7 +271,22 @@ const styles = StyleSheet.create({
   },
   categorySelector: {
     marginBottom: 4,
-    borderRadius: 8,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 999,
+  },
+  categorySelectorContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  categoryEmoji: {
+    fontSize: 18,
+  },
+  categoryLabel: {
+    fontSize: 14,
+  },
+  categorySelectorButtonContent: {
+    justifyContent: "flex-start",
   },
   actions: {
     flexDirection: "row",
@@ -224,5 +299,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 10,
     paddingRight: 10,
+  },
+  title: {
+    fontWeight: "700",
+  },
+  subtitle: {
+    marginBottom: 12,
+    fontSize: 13,
+    opacity: 0.8,
+  },
+  primaryButton: {
+    marginLeft: 8,
+  },
+  destructiveButton: {
+    marginRight: 8,
   },
 });
