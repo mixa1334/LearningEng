@@ -294,15 +294,6 @@ export default function WordBuildingMode() {
           >
             Build the English word by picking letters in the correct order.
           </Text>
-          <Text
-            style={[
-              styles.infoTextSecondary,
-              { color: theme.colors.onPrimary },
-            ]}
-          >
-            You will see the Russian word on top and a shuffled pool of
-            letters below. Tap letters to form the correct English word.
-          </Text>
           <Button
             mode="contained-tonal"
             onPress={startSession}
@@ -422,12 +413,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     marginBottom: 12,
-  },
-  infoTextSecondary: {
-    fontSize: 14,
-    fontWeight: "400",
-    textAlign: "center",
-    marginBottom: 16,
   },
   sessionContent: {
     flex: 1,
