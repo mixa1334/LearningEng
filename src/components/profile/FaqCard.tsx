@@ -46,7 +46,8 @@ export default function FaqCard() {
                 Personal dashboard
               </Text>
               <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-                See your name, streak and daily goal in one place.
+                Track your streak, daily word goal, and overall progress on the
+                profile screen.
               </Text>
             </View>
 
@@ -60,7 +61,8 @@ export default function FaqCard() {
                 Learning & review
               </Text>
               <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-                Learn new words and quickly review what you already know.
+                Practice with daily Learn & Review sessions, including
+                word‑building and word‑pair games.
               </Text>
             </View>
 
@@ -74,7 +76,8 @@ export default function FaqCard() {
                 Vocabulary
               </Text>
               <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-                Organize words into categories and edit your own dictionary.
+                Organize words into categories, add your own entries, and keep a
+                personal dictionary that stays with you.
               </Text>
             </View>
 
@@ -88,7 +91,8 @@ export default function FaqCard() {
                 Translation
               </Text>
               <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-                Translate words English ↔ Russian and see your recent history.
+                Translate words English ↔ Russian, browse your history, and save
+                useful translations into your vocabulary.
               </Text>
             </View>
           </>
