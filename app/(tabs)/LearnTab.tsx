@@ -1,16 +1,19 @@
 import ContentDivider from "@/src/components/common/ContentDivider";
 import LearningContent from "@/src/components/learn/LearningContent";
 import LearningErrorState from "@/src/components/learn/LearningErrorState";
+import WordBuildingMode from "@/src/components/learn/WordBuildingMode";
 import WordPairsMode from "@/src/components/learn/WordPairsMode";
 import WordsOverview from "@/src/components/learn/WordsOverview";
 import { useLearningDailySet } from "@/src/hooks/useLearn";
-import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import {
+  SPACING_MD,
+  SPACING_XXL,
+  TAB_BAR_BASE_HEIGHT,
+} from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
-import {
-  useSafeAreaInsets
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LearnTab() {
   const { wordsToReview, wordsToLearn, error, reloadDailySet } =
@@ -22,7 +25,8 @@ export default function LearnTab() {
 
   const contentHorizontalPadding = SPACING_MD;
   const contentTopPadding = SPACING_XXL;
-  const contentBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
+  const contentBottomPadding =
+    insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -37,44 +41,47 @@ export default function LearnTab() {
   }
 
   return (
-      <ScrollView
-        style={{ flex: 1, backgroundColor: theme.colors.background }}
-        contentContainerStyle={[
-          styles.page,
-          {
-            backgroundColor: theme.colors.background,
-            paddingTop: contentTopPadding,
-            paddingBottom: contentBottomPadding,
-            paddingHorizontal: contentHorizontalPadding,
-          },
-        ]}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        showsVerticalScrollIndicator={false}
-      >
-        <ContentDivider name="Learning" />
-        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-          <LearningContent
-            wordsToLearn={wordsToLearn}
-            wordsToReview={wordsToReview}
-          />
-        </View>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+      contentContainerStyle={[
+        styles.page,
+        {
+          backgroundColor: theme.colors.background,
+          paddingTop: contentTopPadding,
+          paddingBottom: contentBottomPadding,
+          paddingHorizontal: contentHorizontalPadding,
+        },
+      ]}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      showsVerticalScrollIndicator={false}
+    >
+      <ContentDivider name="Learning" />
+      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+        <LearningContent
+          wordsToLearn={wordsToLearn}
+          wordsToReview={wordsToReview}
+        />
+      </View>
 
-        <View style={{ marginTop: SPACING_XXL * 2 }}>
-          <ContentDivider name="Quick review" />
-        </View>
-        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-          <WordsOverview />
-        </View>
+      <View style={{ marginTop: SPACING_XXL * 2 }}>
+        <ContentDivider name="Quick review" />
+      </View>
+      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+        <WordsOverview />
+      </View>
 
-        <View style={{ marginTop: SPACING_XXL * 2 }}>
-          <ContentDivider name="Word pairs" />
-        </View>
-        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-          <WordPairsMode />
-        </View>
-      </ScrollView>
+      <ContentDivider name="Word pairs" />
+      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+        <WordPairsMode />
+      </View>
+
+      <ContentDivider name="Build the word" />
+      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+        <WordBuildingMode />
+      </View>
+    </ScrollView>
   );
 }
 
