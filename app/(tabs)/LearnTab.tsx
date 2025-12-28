@@ -1,6 +1,7 @@
 import ContentDivider from "@/src/components/common/ContentDivider";
 import LearningContent from "@/src/components/learn/LearningContent";
 import LearningErrorState from "@/src/components/learn/LearningErrorState";
+import WordPairsMode from "@/src/components/learn/WordPairsMode";
 import WordsOverview from "@/src/components/learn/WordsOverview";
 import { useLearningDailySet } from "@/src/hooks/useLearn";
 import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
@@ -65,6 +66,13 @@ export default function LearnTab() {
         </View>
         <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
           <WordsOverview />
+        </View>
+
+        <View style={{ marginTop: SPACING_XXL * 2 }}>
+          <ContentDivider name="Word pairs" />
+        </View>
+        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+          <WordPairsMode />
         </View>
       </ScrollView>
   );
