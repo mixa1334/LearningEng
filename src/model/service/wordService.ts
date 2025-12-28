@@ -116,7 +116,7 @@ export async function getAllWords(limit: number): Promise<Word[]> {
 }
 
 export async function getWordsByType(wordType: EntityType): Promise<Word[]> {
-  const rows = await getDbInstance().getAllAsync<any>(`${SELECT_WORDS} WHERE w.type = ?`, [wordType]);
+  const rows = await getDbInstance().getAllAsync<any>(`${SELECT_WORDS} WHERE w.type = ? ORDER BY w.category_id DESC`, [wordType]);
   return rows.map(rowToWord);
 }
 
