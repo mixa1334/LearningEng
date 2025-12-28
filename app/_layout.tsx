@@ -2,7 +2,7 @@ import { GoalAchieveOverlay } from "@/src/components/common/GoalAchieveOverlay";
 import LoadingSpinner from "@/src/components/common/LoadingSpinner";
 import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { useBootstrapSettings } from "@/src/hooks/useBootstrapSettings";
-import { runMigrations } from "@/src/model/database/migrations";
+import { runMigrations } from "@/src/database/migrations";
 import { store } from "@/src/store";
 import { Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";

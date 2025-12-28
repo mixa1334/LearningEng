@@ -1,5 +1,5 @@
+import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { Category, Word } from "@/src/model/entity/types";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {

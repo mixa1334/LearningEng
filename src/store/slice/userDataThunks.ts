@@ -1,4 +1,4 @@
-import { updateAfterLearningWord, updateAfterReviewingWord } from "@/src/model/service/userDataService";
+import { updateAfterLearningWord, updateAfterReviewingWord } from "@/src/service/userDataService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const updateStatsAfterLearnThunk = createAsyncThunk<{

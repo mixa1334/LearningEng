@@ -1,8 +1,8 @@
-import { NewCategoryDto } from "@/src/model/dto/NewCategoryDto";
-import { NewWordDto } from "@/src/model/dto/NewWordDto";
-import { Category, EntityType, Word } from "@/src/model/entity/types";
-import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByType } from "@/src/model/service/categoryService";
-import { addNewWord, deleteUserWord, editUserWord, getWordsByType } from "@/src/model/service/wordService";
+import { NewCategoryDto } from "@/src/dto/NewCategoryDto";
+import { NewWordDto } from "@/src/dto/NewWordDto";
+import { Category, EntityType, Word } from "@/src/entity/types";
+import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByType } from "@/src/service/categoryService";
+import { addNewWord, deleteUserWord, editUserWord, getWordsByType } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadDailyWordSetThunk } from "./learnSlice";
 

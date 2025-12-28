@@ -1,5 +1,5 @@
-import { Language, Translation } from "@/src/model/entity/types";
-import { clearTranslations, getTranslations, removeTranslation, translateAndSaveWord } from "@/src/model/service/translationService";
+import { Language, Translation } from "@/src/entity/types";
+import { clearTranslations, getTranslations, removeTranslation, translateAndSaveWord } from "@/src/service/translationService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { StateType } from "./stateType";

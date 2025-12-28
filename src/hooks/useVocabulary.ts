@@ -1,6 +1,6 @@
-import { NewCategoryDto } from "@/src/model/dto/NewCategoryDto";
-import { NewWordDto } from "@/src/model/dto/NewWordDto";
-import { Category, Word } from "@/src/model/entity/types";
+import { NewCategoryDto } from "@/src/dto/NewCategoryDto";
+import { NewWordDto } from "@/src/dto/NewWordDto";
+import { Category, Word } from "@/src/entity/types";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
     addCategoryThunk,

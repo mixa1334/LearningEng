@@ -1,4 +1,4 @@
-import { EntityType, type Word } from "@/src/model/entity/types";
+import { EntityType, type Word } from "@/src/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
 import { UpdateWordDto } from "../dto/UpdateWordDto";

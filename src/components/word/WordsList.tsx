@@ -1,5 +1,5 @@
+import { Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { Word } from "@/src/model/entity/types";
 import React, { useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { Text, TouchableRipple, useTheme } from "react-native-paper";

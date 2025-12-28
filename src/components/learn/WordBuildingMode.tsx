@@ -1,5 +1,5 @@
+import { Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { Word } from "@/src/model/entity/types";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button, Switch, useTheme } from "react-native-paper";

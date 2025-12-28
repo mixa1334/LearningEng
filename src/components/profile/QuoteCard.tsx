@@ -1,5 +1,5 @@
-import { getDailyQuote, Quote } from "@/src/model/service/dailyQuoteService";
 import { SPACING_XL } from "@/src/resources/constants/layout";
+import { getDailyQuote, Quote } from "@/src/service/dailyQuoteService";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";

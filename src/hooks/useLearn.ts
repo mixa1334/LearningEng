@@ -1,4 +1,4 @@
-import { Word } from "@/src/model/entity/types";
+import { Word } from "@/src/entity/types";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
     loadDailyWordSetThunk,

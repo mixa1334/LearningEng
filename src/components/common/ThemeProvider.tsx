@@ -1,5 +1,5 @@
-import { THEMES } from "@/src/model/entity/types";
-import { getUserTheme, setUserTheme } from "@/src/model/service/userDataService";
+import { THEMES } from "@/src/entity/types";
+import { getUserTheme, setUserTheme } from "@/src/service/userDataService";
 import React, {
     createContext,
     useCallback,

@@ -1,4 +1,4 @@
-import { Category, EntityType } from "@/src/model/entity/types";
+import { Category, EntityType } from "@/src/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";

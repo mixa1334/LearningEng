@@ -1,6 +1,6 @@
-import { UserData } from "@/src/model/entity/types";
-import { changeDailyGoal, changeName, loadUserData, resetUserData } from "@/src/model/service/userDataService";
-import { DEFAULT_USER_DATA } from "@/src/model/storage/userDataStorageHelper";
+import { UserData } from "@/src/entity/types";
+import { changeDailyGoal, changeName, loadUserData, resetUserData } from "@/src/service/userDataService";
+import { DEFAULT_USER_DATA } from "@/src/storage/userDataStorageHelper";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadDailyWordSetThunk } from "./learnSlice";
 import { updateStatsAfterLearnThunk, updateStatsAfterReviewThunk } from "./userDataThunks";

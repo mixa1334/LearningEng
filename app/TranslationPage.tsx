@@ -1,22 +1,22 @@
 import { CategoryPicker } from "@/src/components/category/CategoryPicker";
 import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import { Category, Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { Category, Language, Translation } from "@/src/model/entity/types";
 import { SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
-  Button,
-  Card,
-  Dialog,
-  IconButton,
-  Portal,
-  Text,
-  TextInput,
-  useTheme,
+    Button,
+    Card,
+    Dialog,
+    IconButton,
+    Portal,
+    Text,
+    TextInput,
+    useTheme,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

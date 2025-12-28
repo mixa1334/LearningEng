@@ -1,4 +1,4 @@
-import type { Word } from "@/src/model/entity/types";
+import type { Word } from "@/src/entity/types";
 import {
     getDailyWordsToLearn,
     getDailyWordsToReview,
@@ -6,7 +6,7 @@ import {
     resetWordLearningProgress,
     reviewWord,
     startLearningWord,
-} from "@/src/model/service/wordService";
+} from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { updateStatsAfterLearnThunk, updateStatsAfterReviewThunk } from "./userDataThunks";

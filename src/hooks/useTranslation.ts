@@ -1,4 +1,4 @@
-import { Language, Translation } from "@/src/model/entity/types";
+import { Language, Translation } from "@/src/entity/types";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import { clearTranslationsThunk, loadTranslationsThunk, removeTranslationThunk, translateWordThunk } from "@/src/store/slice/translationSlice";
 
