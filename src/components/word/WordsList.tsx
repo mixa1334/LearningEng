@@ -1,7 +1,7 @@
 import { Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text, TouchableRipple, useTheme } from "react-native-paper";
 import EditWordDialog from "./EditWordDialog";
 
@@ -10,8 +10,6 @@ export default function WordsList() {
   const { userWords } = useVocabulary();
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
-  const { height: screenHeight } = useWindowDimensions();
-  const maxListHeight = screenHeight * 0.35;
 
   const openEditWordModal = (word: Word) => {
     setWordToEdit(word);
@@ -28,7 +26,7 @@ export default function WordsList() {
         />
       )}
 
-      <View style={[styles.listContent, { maxHeight: maxListHeight }]}>
+      <View style={styles.listContent}>
         {userWords.map((item) => (
           <TouchableRipple
             key={item.id.toString()}

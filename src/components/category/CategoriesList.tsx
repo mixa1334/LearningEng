@@ -1,7 +1,7 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text, TouchableRipple, useTheme } from "react-native-paper";
 import EditCategoryDialog from "./EditCategoryDialog";
 
@@ -11,8 +11,6 @@ export default function CategoriesList() {
 
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
-  const { height: screenHeight } = useWindowDimensions();
-  const maxListHeight = screenHeight * 0.35;
 
   const openEditCategoryModal = (category: Category) => {
     setCategoryToEdit(category);
@@ -28,7 +26,7 @@ export default function CategoriesList() {
           category={categoryToEdit}
         />
       )}
-      <View style={[styles.listContent, { maxHeight: maxListHeight }]}>
+      <View style={styles.listContent}>
         {userCategories.map((item) => (
           <TouchableRipple
             key={item.id.toString()}

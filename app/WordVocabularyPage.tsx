@@ -7,22 +7,19 @@ import {
   TAB_BAR_BASE_HEIGHT,
 } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { Button, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function WordVocabularyPage() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { height: screenHeight } = useWindowDimensions();
 
   const pageHorizontalPadding = SPACING_LG;
   const pageTopPadding = insets.top + SPACING_MD;
   const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
 
   const [showAddWordModal, setShowAddWordModal] = useState(false);
-
-  const listMaxHeight = screenHeight * 0.35;
 
   return (
     <ScrollView
