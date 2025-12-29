@@ -7,7 +7,7 @@ import { StateType } from "./stateType";
 export type TranslationState = {
   currentTranslation: Translation | undefined;
   translations: Translation[];
-  status: StateType;
+  status?: StateType;
 };
 
 const initialTranslationState: TranslationState = {
@@ -16,12 +16,13 @@ const initialTranslationState: TranslationState = {
   status: StateType.idle,
 };
 
-export const translateWordThunk = createAsyncThunk<Translation, { word: string; language: Language }>(
+export const translateWordThunk = createAsyncThunk<TranslationState, { word: string; language: Language }>(
   "translation/translateWord",
-  async ({ word, language }, { dispatch }) => {
-    const translation = await translateAndSaveWord(word, language);
-    dispatch(loadTranslationsThunk());
-    return translation;
+  async ({ word, language }, { getState }) => {
+    const currentTranslation = await translateAndSaveWord(word, language);
+    const currentState = (getState() as RootState).translation;
+    const translations = [currentTranslation, ...currentState.translations];
+    return { currentTranslation, translations };
   }
 );
 
@@ -30,18 +31,20 @@ export const loadTranslationsThunk = createAsyncThunk<Translation[]>("translatio
   return translations;
 });
 
-export const removeTranslationThunk = createAsyncThunk<Translation[], Translation>(
+export const removeTranslationThunk = createAsyncThunk<TranslationState, Translation>(
   "translation/removeTranslation",
   async (translation, { getState }) => {
     await removeTranslation(translation);
-    const translations = (getState() as RootState).translation.translations.filter((t) => t.id !== translation.id);
-    return translations;
+    const currentState = (getState() as RootState).translation;
+    const currentTranslation = currentState.currentTranslation?.id === translation.id ? undefined : currentState.currentTranslation;
+    const translations = currentState.translations.filter((t) => t.id !== translation.id);
+    return { currentTranslation, translations };
   }
 );
 
 export const clearTranslationsThunk = createAsyncThunk<TranslationState>("translation/clearTranslations", async () => {
   await clearTranslations();
-  return initialTranslationState;
+  return { ...initialTranslationState };
 });
 
 const translationSlice = createSlice({
@@ -53,7 +56,8 @@ const translationSlice = createSlice({
       state.status = StateType.loading;
     });
     builder.addCase(translateWordThunk.fulfilled, (state, action) => {
-      state.currentTranslation = action.payload;
+      state.currentTranslation = action.payload.currentTranslation;
+      state.translations = action.payload.translations;
       state.status = StateType.succeeded;
     });
     builder.addCase(loadTranslationsThunk.fulfilled, (state, action) => {
@@ -61,10 +65,11 @@ const translationSlice = createSlice({
     });
     builder.addCase(removeTranslationThunk.fulfilled, (state, action) => {
       state.status = StateType.succeeded;
-      state.translations = action.payload;
+      state.currentTranslation = action.payload.currentTranslation;
+      state.translations = action.payload.translations;
     });
     builder.addCase(clearTranslationsThunk.fulfilled, (state, action) => {
-      return { ...state, ...action.payload };
+      return action.payload;
     });
   },
 });
