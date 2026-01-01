@@ -9,14 +9,14 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
-    Button,
-    Card,
-    Dialog,
-    IconButton,
-    Portal,
-    Text,
-    TextInput,
-    useTheme,
+  Button,
+  Card,
+  Dialog,
+  IconButton,
+  Portal,
+  Text,
+  TextInput,
+  useTheme,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -43,7 +43,7 @@ export default function TranslationPage() {
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const pageHorizontalPadding = SPACING_XL;
-  const pageTopPadding = insets.top + SPACING_XXL;
+  const pageTopPadding = SPACING_XXL;
   const pageBottomPadding = insets.bottom + SPACING_XL;
 
   const switchLanguages = () => {

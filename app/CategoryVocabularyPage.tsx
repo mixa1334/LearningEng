@@ -10,7 +10,7 @@ export default function CategoryVocabularyPage() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const pageHorizontalPadding = SPACING_LG;
-  const pageTopPadding = insets.top + SPACING_MD;
+  const pageTopPadding = SPACING_MD;
   const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
 
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);

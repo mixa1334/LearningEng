@@ -1,10 +1,10 @@
 import CreateWordDialog from "@/src/components/vocabulary/word/CreateWordDialog";
 import WordsList from "@/src/components/vocabulary/word/WordsList";
 import {
-    SPACING_LG,
-    SPACING_MD,
-    SPACING_SM,
-    TAB_BAR_BASE_HEIGHT,
+  SPACING_LG,
+  SPACING_MD,
+  SPACING_SM,
+  TAB_BAR_BASE_HEIGHT,
 } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
@@ -16,7 +16,7 @@ export default function WordVocabularyPage() {
   const insets = useSafeAreaInsets();
 
   const pageHorizontalPadding = SPACING_LG;
-  const pageTopPadding = insets.top + SPACING_MD;
+  const pageTopPadding = SPACING_MD;
   const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
 
   const [showAddWordModal, setShowAddWordModal] = useState(false);
