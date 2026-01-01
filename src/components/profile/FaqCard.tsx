@@ -7,7 +7,7 @@ export default function FaqCard() {
   const theme = useTheme();
 
   return (
-    <ExpandedCard title="FAQ" icon="help" autoScroll={false}>
+    <ExpandedCard title="FAQ" icon="help" autoScroll={false} touchableOpacity={0.7}>
       <View>
         <View style={styles.item}>
           <Text

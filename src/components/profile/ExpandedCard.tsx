@@ -7,6 +7,7 @@ import { useAutoScroll } from "../common/AutoScrollContext";
 
 interface ExpandedCardProps {
   readonly title: string;
+  readonly touchableOpacity: number;
   readonly children: React.ReactNode;
   readonly autoScroll: boolean;
   readonly icon?: keyof typeof MaterialIcons.glyphMap;
@@ -14,6 +15,7 @@ interface ExpandedCardProps {
 
 export default function ExpandedCard({
   title,
+  touchableOpacity,
   children,
   autoScroll,
   icon,
@@ -31,7 +33,7 @@ export default function ExpandedCard({
 
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={touchableOpacity}
       onPress={toggleExpanded}
       style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}
     >

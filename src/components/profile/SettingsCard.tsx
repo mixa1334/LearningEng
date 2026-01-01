@@ -82,7 +82,7 @@ export default function SettingsCard() {
   };
 
   return (
-    <ExpandedCard title="Settings" icon="settings" autoScroll={true}>
+    <ExpandedCard title="Settings" icon="settings" autoScroll={true} touchableOpacity={1}>
       <View style={{ marginTop: SPACING_MD }}>
         <View style={styles.settingRow}>
           <Text>Dark Theme</Text>

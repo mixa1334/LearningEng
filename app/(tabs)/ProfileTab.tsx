@@ -5,7 +5,7 @@ import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/src/components/profile/ProgressCard";
 import QuoteCard from "@/src/components/profile/QuoteCard";
 import SettingsCard from "@/src/components/profile/SettingsCard";
-import { SPACING_XL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import { SPACING_XL, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import React from "react";
 import { ScrollView } from "react-native";
 import { useTheme } from "react-native-paper";
@@ -26,7 +26,7 @@ function ProfileTabContent() {
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = insets.top;
-  const pageBottomPadding = insets.bottom + SPACING_XL + TAB_BAR_BASE_HEIGHT * 2;
+  const pageBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
 
   return (
     <ScrollView
