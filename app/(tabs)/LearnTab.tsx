@@ -1,4 +1,5 @@
 import ContentDivider from "@/src/components/common/ContentDivider";
+import ExpandedSection from "@/src/components/common/ExpandedSection";
 import LearningContent from "@/src/components/learn/LearningContent";
 import LearningErrorState from "@/src/components/learn/LearningErrorState";
 import WordBuildingMode from "@/src/components/learn/WordBuildingMode";
@@ -11,25 +12,18 @@ import {
   TAB_BAR_BASE_HEIGHT,
 } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+type ExtraMode = "quick" | "pairs" | "build" | null;
 
 export default function LearnTab() {
   const { wordsToReview, wordsToLearn, error, reloadDailySet } =
     useLearningDailySet();
 
   const [refreshing, setRefreshing] = useState(false);
-  const [activeExtraMode, setActiveExtraMode] = useState<
-    "quick" | "pairs" | "build" | null
-  >(null);
+  const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(null);
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -37,6 +31,10 @@ export default function LearnTab() {
   const contentTopPadding = SPACING_XXL;
   const contentBottomPadding =
     insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
+
+  const handleExtraModePress = (mode: ExtraMode) => {
+    setActiveExtraMode((prev) => (prev === mode ? null : mode));
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -53,15 +51,13 @@ export default function LearnTab() {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: theme.colors.background }}
-      contentContainerStyle={[
-        styles.page,
-        {
-          backgroundColor: theme.colors.background,
-          paddingTop: contentTopPadding,
-          paddingBottom: contentBottomPadding,
-          paddingHorizontal: contentHorizontalPadding,
-        },
-      ]}
+      contentContainerStyle={{
+        flexGrow: 1,
+        backgroundColor: theme.colors.background,
+        paddingTop: contentTopPadding,
+        paddingBottom: contentBottomPadding,
+        paddingHorizontal: contentHorizontalPadding,
+      }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -79,115 +75,34 @@ export default function LearnTab() {
         <ContentDivider name="Practice more" />
       </View>
 
-      {/* Quick review expandable section */}
-      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() =>
-            setActiveExtraMode((prev) => (prev === "quick" ? null : "quick"))
-          }
-        >
-          <View style={styles.sectionHeader}>
-            <Text
-              style={[
-                styles.sectionTitle,
-                { color: theme.colors.onPrimary },
-              ]}
-            >
-              Quick review
-            </Text>
-            <Text
-              style={[
-                styles.sectionArrow,
-                { color: theme.colors.onPrimary },
-              ]}
-            >
-              {activeExtraMode === "quick" ? "▲" : "▼"}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        {activeExtraMode === "quick" && (
-          <View style={styles.sectionBody}>
-            <WordsOverview />
-          </View>
-        )}
-      </View>
+      <ExpandedSection
+        title="Quick review"
+        isExpanded={activeExtraMode === "quick"}
+        onPress={() => handleExtraModePress("quick")}
+      >
+        <WordsOverview />
+      </ExpandedSection>
 
-      {/* Word pairs expandable section */}
-      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() =>
-            setActiveExtraMode((prev) => (prev === "pairs" ? null : "pairs"))
-          }
-        >
-          <View style={styles.sectionHeader}>
-            <Text
-              style={[
-                styles.sectionTitle,
-                { color: theme.colors.onPrimary },
-              ]}
-            >
-              Word pairs
-            </Text>
-            <Text
-              style={[
-                styles.sectionArrow,
-                { color: theme.colors.onPrimary },
-              ]}
-            >
-              {activeExtraMode === "pairs" ? "▲" : "▼"}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        {activeExtraMode === "pairs" && (
-          <View style={styles.sectionBody}>
-            <WordPairsMode />
-          </View>
-        )}
-      </View>
+      <ExpandedSection
+        title="Word pairs"
+        isExpanded={activeExtraMode === "pairs"}
+        onPress={() => handleExtraModePress("pairs")}
+      >
+        <WordPairsMode />
+      </ExpandedSection>
 
-      {/* Build the word expandable section */}
-      <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() =>
-            setActiveExtraMode((prev) => (prev === "build" ? null : "build"))
-          }
-        >
-          <View style={styles.sectionHeader}>
-            <Text
-              style={[
-                styles.sectionTitle,
-                { color: theme.colors.onPrimary },
-              ]}
-            >
-              Build the word
-            </Text>
-            <Text
-              style={[
-                styles.sectionArrow,
-                { color: theme.colors.onPrimary },
-              ]}
-            >
-              {activeExtraMode === "build" ? "▲" : "▼"}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        {activeExtraMode === "build" && (
-          <View style={styles.sectionBody}>
-            <WordBuildingMode />
-          </View>
-        )}
-      </View>
+      <ExpandedSection
+        title="Build the word"
+        isExpanded={activeExtraMode === "build"}
+        onPress={() => handleExtraModePress("build")}
+      >
+        <WordBuildingMode />
+      </ExpandedSection>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  page: {
-    flexGrow: 1,
-  },
   card: {
     flex: 1,
     borderRadius: 12,
@@ -198,24 +113,5 @@ const styles = StyleSheet.create({
     elevation: 4,
     overflow: "hidden",
     marginBottom: SPACING_MD,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  sectionArrow: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  sectionBody: {
-    paddingHorizontal: 16,
-    paddingBottom: 20,
   },
 });

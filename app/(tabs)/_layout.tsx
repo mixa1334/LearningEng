@@ -12,28 +12,19 @@ import { View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface IconProps {
-  readonly color: string;
+interface IconProps { 
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
   readonly focused: boolean;
 }
 
-function TabIcon({ color, iconName, focused }: IconProps) {
+function TabIcon({ iconName, focused }: IconProps) {
   const theme = useTheme();
 
-  const activeBackgroundColor =
-    theme.colors.secondaryContainer ??
-    theme.colors.elevation?.level2 ??
-    theme.colors.surface;
-  const inactiveBackgroundColor = theme.dark
-    ? "rgba(255,255,255,0.12)"
-    : "rgba(255,255,255, 0.5)";
-  const activeIconColor =
-    theme.colors.onSecondaryContainer ?? theme.colors.primary;
-  const inactiveIconColor = color;
+  const backgroundColor = focused ? theme.colors.background : theme.colors.onBackground;
+  const iconColor = focused ? theme.colors.onBackground : theme.colors.background;
 
   const iconSize = 24;
-  const containerSize = 40; // fixed circle size
+  const containerSize = 40;
 
   return (
     <View
@@ -41,9 +32,7 @@ function TabIcon({ color, iconName, focused }: IconProps) {
         width: containerSize,
         height: containerSize,
         borderRadius: containerSize / 2,
-        backgroundColor: focused
-          ? activeBackgroundColor
-          : inactiveBackgroundColor,
+        backgroundColor: backgroundColor,
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -51,7 +40,7 @@ function TabIcon({ color, iconName, focused }: IconProps) {
       <MaterialIcons
         name={iconName}
         size={iconSize}
-        color={focused ? activeIconColor : inactiveIconColor}
+        color={iconColor}
       />
     </View>
   );
@@ -81,9 +70,6 @@ export default function TabLayout() {
           marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
           marginBottom: bottomInset,
           height: tabBarHeight,
-          shadowColor: theme.colors.shadow,
-          shadowOpacity: 0.08,
-          shadowRadius: 8,
           elevation: 4,
         },
         tabBarItemStyle: {
@@ -116,8 +102,8 @@ export default function TabLayout() {
         name="VocabularyTab"
         options={{
           title: "Vocabulary",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} iconName="book" focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon iconName="book" focused={focused} />
           ),
         }}
       />
@@ -125,8 +111,8 @@ export default function TabLayout() {
         name="LearnTab"
         options={{
           title: "Learn & Review Words",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} iconName="school" focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon iconName="school" focused={focused} />
           ),
         }}
       />
@@ -134,8 +120,8 @@ export default function TabLayout() {
         name="ProfileTab"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} iconName="person" focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon iconName="person" focused={focused} />
           ),
         }}
       />

@@ -1,19 +1,18 @@
+import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_LG, SPACING_XL } from "@/src/resources/constants/layout";
-import { useAppSelector } from "@/src/store";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export function GoalAchieveOverlay() {
   const { width, height } = useWindowDimensions();
-  const dailyGoalAchieve = useAppSelector((s) => s.userData.dailyGoalAchieve);
-  const name = useAppSelector((s) => s.userData.name);
+  const {name, dailyGoalAchieve} = useUserData();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (dailyGoalAchieve) {
       setVisible(true);
-      const timer = setTimeout(() => setVisible(false), 1500);
+      const timer = setTimeout(() => setVisible(false), 2000);
       return () => clearTimeout(timer);
     }
   }, [dailyGoalAchieve]);
@@ -24,7 +23,10 @@ export function GoalAchieveOverlay() {
     <View style={styles.overlay}>
       <View style={styles.content}>
         <Text style={styles.congratsText}>
-          🎉 {name}, you met your daily goal!
+          🎉 {name} 🎉
+        </Text>
+        <Text style={styles.congratsText}>
+          You met your daily learning goal!
         </Text>
         <LottieView
           source={require("@/assets/animations/confetti_daily_goal.json")}
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(0,0,0,0.9)",
     zIndex: 999,
   },
   content: {
@@ -57,8 +59,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     letterSpacing: 0.5,
     color: "#ffffff",
-    textShadowColor: "rgba(0, 0, 0, 0.4)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
 });
