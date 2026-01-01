@@ -1,3 +1,7 @@
+import {
+  AutoScrollProvider,
+  useAutoScroll,
+} from "@/src/components/common/AutoScrollContext";
 import ContentDivider from "@/src/components/common/ContentDivider";
 import ExpandedSection from "@/src/components/common/ExpandedSection";
 import LearningContent from "@/src/components/learn/LearningContent";
@@ -23,11 +27,22 @@ enum ExtraMode {
 }
 
 export default function LearnTab() {
+  return (
+    <AutoScrollProvider>
+      <LearnTabContent />
+    </AutoScrollProvider>
+  );
+}
+
+function LearnTabContent() {
+  const { scrollViewRef } = useAutoScroll();
   const { wordsToReview, wordsToLearn, error, reloadDailySet } =
     useLearningDailySet();
 
   const [refreshing, setRefreshing] = useState(false);
-  const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode | null>(null);
+  const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode | null>(
+    null
+  );
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -54,6 +69,7 @@ export default function LearnTab() {
 
   return (
     <ScrollView
+      ref={scrollViewRef}
       style={{ flex: 1, backgroundColor: theme.colors.background }}
       contentContainerStyle={{
         flexGrow: 1,
