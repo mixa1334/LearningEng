@@ -1,10 +1,10 @@
-import CreateWordDialog from "@/src/components/word/CreateWordDialog";
-import WordsList from "@/src/components/word/WordsList";
+import CreateWordDialog from "@/src/components/vocabulary/word/CreateWordDialog";
+import WordsList from "@/src/components/vocabulary/word/WordsList";
 import {
-  SPACING_LG,
-  SPACING_MD,
-  SPACING_SM,
-  TAB_BAR_BASE_HEIGHT,
+    SPACING_LG,
+    SPACING_MD,
+    SPACING_SM,
+    TAB_BAR_BASE_HEIGHT,
 } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";

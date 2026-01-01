@@ -1,5 +1,5 @@
-import { CategoryPicker } from "@/src/components/category/CategoryPicker";
 import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import { CategoryPicker } from "@/src/components/vocabulary/category/CategoryPicker";
 import { Category, Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { useVocabulary } from "@/src/hooks/useVocabulary";

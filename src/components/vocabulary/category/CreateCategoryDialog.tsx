@@ -2,7 +2,7 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Dialog, IconButton, Portal, Text, TextInput, useTheme } from "react-native-paper";
-import SimpleEmojiPicker from "../common/SimpleEmojiPicker";
+import SimpleEmojiPicker from "../../common/SimpleEmojiPicker";
 
 interface CreateCategoryDialogProps {
   readonly visible: boolean;

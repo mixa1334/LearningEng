@@ -3,14 +3,14 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
-  Button,
-  Dialog,
-  IconButton,
-  Portal,
-  Text,
-  TextInput,
-  TouchableRipple,
-  useTheme,
+    Button,
+    Dialog,
+    IconButton,
+    Portal,
+    Text,
+    TextInput,
+    TouchableRipple,
+    useTheme,
 } from "react-native-paper";
 import { CategoryPicker } from "../category/CategoryPicker";
 
