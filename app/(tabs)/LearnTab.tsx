@@ -16,14 +16,18 @@ import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type ExtraMode = "quick" | "pairs" | "build" | null;
+enum ExtraMode {
+  OVERVIEW = "overview",
+  PAIRS = "pairs",
+  BUILDER = "builder",
+}
 
 export default function LearnTab() {
   const { wordsToReview, wordsToLearn, error, reloadDailySet } =
     useLearningDailySet();
 
   const [refreshing, setRefreshing] = useState(false);
-  const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(null);
+  const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode | null>(null);
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -77,24 +81,24 @@ export default function LearnTab() {
 
       <ExpandedSection
         title="Quick review"
-        isExpanded={activeExtraMode === "quick"}
-        onPress={() => handleExtraModePress("quick")}
+        isExpanded={activeExtraMode === ExtraMode.OVERVIEW}
+        onPress={() => handleExtraModePress(ExtraMode.OVERVIEW)}
       >
         <WordsOverview />
       </ExpandedSection>
 
       <ExpandedSection
         title="Word pairs"
-        isExpanded={activeExtraMode === "pairs"}
-        onPress={() => handleExtraModePress("pairs")}
+        isExpanded={activeExtraMode === ExtraMode.PAIRS}
+        onPress={() => handleExtraModePress(ExtraMode.PAIRS)}
       >
         <WordPairsMode />
       </ExpandedSection>
 
       <ExpandedSection
         title="Build the word"
-        isExpanded={activeExtraMode === "build"}
-        onPress={() => handleExtraModePress("build")}
+        isExpanded={activeExtraMode === ExtraMode.BUILDER}
+        onPress={() => handleExtraModePress(ExtraMode.BUILDER)}
       >
         <WordBuildingMode />
       </ExpandedSection>
