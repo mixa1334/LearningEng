@@ -1,55 +1,29 @@
-import { AutoScrollProvider, useAutoScroll } from "@/src/components/common/AutoScrollContext";
+import AnimatedScrollView from "@/src/components/common/AnimatedScrollView";
+import { AutoScrollProvider } from "@/src/components/common/AutoScrollContext";
 import DailyGoalCard from "@/src/components/profile/DailyGoalCard";
 import FaqCard from "@/src/components/profile/FaqCard";
 import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/src/components/profile/ProgressCard";
 import QuoteCard from "@/src/components/profile/QuoteCard";
 import SettingsCard from "@/src/components/profile/SettingsCard";
-import { SPACING_XL, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import React from "react";
-import { ScrollView } from "react-native";
-import { useTheme } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ProfileTab() {
   return (
     <AutoScrollProvider>
-      <ProfileTabContent />
+      <AnimatedScrollView title="Profile" refreshingEnabled={false}>
+        <ProfileHeaderCard />
+
+        <ProgressCard />
+
+        <DailyGoalCard />
+
+        <QuoteCard />
+
+        <FaqCard />
+
+        <SettingsCard />
+      </AnimatedScrollView>
     </AutoScrollProvider>
-  );
-}
-
-function ProfileTabContent() {
-  const theme = useTheme();
-  const insets = useSafeAreaInsets();
-  const { scrollViewRef } = useAutoScroll();
-
-  const pageHorizontalPadding = SPACING_XL;
-  const pageTopPadding = insets.top;
-  const pageBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
-
-  return (
-    <ScrollView
-      ref={scrollViewRef}
-      style={{ flex: 1,backgroundColor: theme.colors.background }}
-      contentContainerStyle={{
-        paddingTop: pageTopPadding,
-        paddingBottom: pageBottomPadding,
-        paddingHorizontal: pageHorizontalPadding,
-      }}
-      showsVerticalScrollIndicator={false}
-    >
-      <ProfileHeaderCard />
-
-      <ProgressCard />
-
-      <DailyGoalCard />
-
-      <QuoteCard />
-
-      <FaqCard />
-
-      <SettingsCard/>
-    </ScrollView>
   );
 }
