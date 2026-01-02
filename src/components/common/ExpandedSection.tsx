@@ -43,14 +43,13 @@ export default function ExpandedSection({
           </Text>
         </View>
       </TouchableOpacity>
-      {isExpanded && <View style={styles.sectionBody}>{children}</View>}
+      {isExpanded && children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
     borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -74,9 +73,5 @@ const styles = StyleSheet.create({
   sectionArrow: {
     fontSize: 18,
     fontWeight: "600",
-  },
-  sectionBody: {
-    paddingHorizontal: 16,
-    paddingBottom: 20,
-  },
+  }
 });

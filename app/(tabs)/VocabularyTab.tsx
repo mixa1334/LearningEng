@@ -12,7 +12,7 @@ export default function VocabularyTab() {
 
   return (
     <AutoScrollProvider>
-      <AnimatedScrollView title="Vocabulary" refreshingEnabled={false}>
+      <AnimatedScrollView headerTitle="Vocabulary">
         <TouchableCard
           icon="albums-outline"
           title="Categories"

@@ -4,52 +4,40 @@ import {
   SPACING_XXL,
   TAB_BAR_BASE_HEIGHT,
 } from "@/src/resources/constants/layout";
-import React, { useState } from "react";
-import { Animated, Platform, RefreshControl, Text } from "react-native";
+import React from "react";
+import { Animated, Text } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface AnimatedScrollViewProps {
   readonly children: React.ReactNode;
-  readonly title?: string;
-  readonly refreshingEnabled: boolean;
-  readonly refreshAction?: () => void;
+  readonly headerTitle?: string;
 }
 
 export default function AnimatedScrollView({
   children,
-  title,
-  refreshingEnabled,
-  refreshAction,
+  headerTitle,
 }: AnimatedScrollViewProps) {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { scrollViewRef } = useAutoScroll();
-  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      refreshAction?.();
-      setRefreshing(false);
-    }, 200);
-  };
-
-  const HEADER_HEIGHT = insets.top + SPACING_XXL;
+  const HEADER_HEIGHT = insets.top + SPACING_XXL + SPACING_MD;
   const contentHorizontalPadding = SPACING_MD;
+  const contentTopPadding = insets.top * 1.5;
   const contentBottomPadding =
     insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const headerTranslateY = scrollY.interpolate({
-    inputRange: [0, 150],
+    inputRange: [0, 100],
     outputRange: [-HEADER_HEIGHT, 0],
     extrapolate: "clamp",
   });
 
   const headerOpacity = scrollY.interpolate({
-    inputRange: [0, 150],
+    inputRange: [0, 100],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
@@ -80,40 +68,20 @@ export default function AnimatedScrollView({
             fontWeight: "600",
           }}
         >
-          {title ?? "LearningEng"}
+          {headerTitle ?? "LearningEng"}
         </Text>
       </Animated.View>
 
       <Animated.ScrollView
         ref={scrollViewRef}
         style={{ flex: 1, backgroundColor: theme.colors.background }}
-        contentInset={
-          Platform.OS === "ios" ? { top: insets.top * 1.5 } : undefined
-        }
-        contentOffset={
-          Platform.OS === "ios" ? { x: 0, y: -insets.top * 1.5 } : undefined
-        }
         contentContainerStyle={{
           flexGrow: 1,
           backgroundColor: theme.colors.background,
+          paddingTop: contentTopPadding,
           paddingBottom: contentBottomPadding,
           paddingHorizontal: contentHorizontalPadding,
         }}
-        refreshControl={
-          refreshingEnabled ? (
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              progressViewOffset={insets.top}
-              // iOS indicator color
-              tintColor={theme.colors.primary}
-              titleColor={theme.colors.onPrimary}
-              // Android indicator colors
-              colors={[theme.colors.primary]}
-              progressBackgroundColor={theme.colors.surface}
-            />
-          ) : undefined
-        }
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={Animated.event(

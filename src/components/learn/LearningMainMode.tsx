@@ -1,19 +1,15 @@
 import { Word } from "@/src/entity/types";
-import { useLearnUtil } from "@/src/hooks/useLearn";
+import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
+import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "react-native-paper";
+import LearningErrorState from "./LearningErrorState";
 import WordCard from "./WordCard";
 
-interface LearningContentProps {
-  readonly wordsToLearn: Word[];
-  readonly wordsToReview: Word[];
-}
-
-export default function LearningContent({
-  wordsToLearn,
-  wordsToReview,
-}: LearningContentProps) {
+export default function LearningMainMode() {
+  const { wordsToLearn, wordsToReview, error, reloadDailySet } =
+    useLearningDailySet();
   const [isLearnTab, setIsLearnTab] = useState(true);
   const {
     markWordReviewed,
@@ -32,35 +28,14 @@ export default function LearningContent({
   const handleSelectLearn = () => setIsLearnTab(true);
   const handleSelectReview = () => setIsLearnTab(false);
 
-  const renderContent = () => {
-    if (words.length === 0) {
-      return (
-        <View style={styles.center}>
-          <Text style={[styles.emptyText, { color: theme.colors.onPrimary }]}>
-            You completed tasks, come back later!
-          </Text>
-        </View>
-      );
-    }
-
-    return (
-      <WordCard
-        word={words[0]}
-        accept={() => accept(words[0])}
-        acceptBtnName={acceptLabel}
-        reject={() => reject(words[0])}
-        rejectBtnName={rejectLabel}
-      />
-    );
-  };
+  if (error) {
+    return <LearningErrorState error={error} onRetry={reloadDailySet} />;
+  }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
       <View
-        style={[
-          styles.tabHeader,
-          { backgroundColor: theme.colors.secondary },
-        ]}
+        style={[styles.tabHeader, { backgroundColor: theme.colors.secondary }]}
       >
         <TouchableOpacity
           style={[
@@ -92,14 +67,37 @@ export default function LearningContent({
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>{renderContent()}</View>
+      <View style={styles.content}>
+        {words.length === 0 ? (
+          <View style={styles.center}>
+            <Text style={[styles.emptyText, { color: theme.colors.onPrimary }]}>
+              You completed tasks, come back later!
+            </Text>
+          </View>
+        ) : (
+          <WordCard
+            word={words[0]}
+            accept={() => accept(words[0])}
+            acceptBtnName={acceptLabel}
+            reject={() => reject(words[0])}
+            rejectBtnName={rejectLabel}
+          />
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    overflow: "hidden",
+    marginBottom: SPACING_MD,
   },
   tabHeader: {
     flexDirection: "row",
@@ -124,7 +122,7 @@ const styles = StyleSheet.create({
     padding: "5%",
   },
   center: {
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,

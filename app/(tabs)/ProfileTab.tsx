@@ -11,7 +11,7 @@ import React from "react";
 export default function ProfileTab() {
   return (
     <AutoScrollProvider>
-      <AnimatedScrollView title="Profile" refreshingEnabled={false}>
+      <AnimatedScrollView headerTitle="Profile">
         <ProfileHeaderCard />
 
         <ProgressCard />

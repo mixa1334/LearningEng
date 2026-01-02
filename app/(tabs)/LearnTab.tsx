@@ -2,16 +2,13 @@ import AnimatedScrollView from "@/src/components/common/AnimatedScrollView";
 import { AutoScrollProvider } from "@/src/components/common/AutoScrollContext";
 import ContentDivider from "@/src/components/common/ContentDivider";
 import ExpandedSection from "@/src/components/common/ExpandedSection";
-import LearningContent from "@/src/components/learn/LearningContent";
-import LearningErrorState from "@/src/components/learn/LearningErrorState";
+import LearningMainMode from "@/src/components/learn/LearningMainMode";
 import WordBuildingMode from "@/src/components/learn/WordBuildingMode";
 import WordPairsMode from "@/src/components/learn/WordPairsMode";
 import WordsOverview from "@/src/components/learn/WordsOverview";
-import { useLearningDailySet } from "@/src/hooks/useLearn";
-import { SPACING_MD, SPACING_XXL } from "@/src/resources/constants/layout";
+import { SPACING_XXL } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { View } from "react-native";
 
 enum ExtraMode {
   OVERVIEW = "overview",
@@ -20,39 +17,20 @@ enum ExtraMode {
 }
 
 export default function LearnTab() {
-  const { wordsToReview, wordsToLearn, error, reloadDailySet } =
-    useLearningDailySet();
   const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode | null>(
     null
   );
-  const theme = useTheme();
 
-  const refreshAction = () => {
-    reloadDailySet();
-  };
   const handleExtraModePress = (mode: ExtraMode) => {
     setActiveExtraMode((prev) => (prev === mode ? null : mode));
   };
 
-  if (error) {
-    return <LearningErrorState error={error} onRetry={reloadDailySet} />;
-  }
-
   return (
     <AutoScrollProvider>
-      <AnimatedScrollView
-        title="Learn"
-        refreshingEnabled={true}
-        refreshAction={refreshAction}
-      >
+      <AnimatedScrollView headerTitle="Learn">
         <ContentDivider name="Learning" />
 
-        <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
-          <LearningContent
-            wordsToLearn={wordsToLearn}
-            wordsToReview={wordsToReview}
-          />
-        </View>
+        <LearningMainMode />
 
         <View style={{ marginTop: SPACING_XXL * 2 }}>
           <ContentDivider name="Practice more" />
@@ -85,17 +63,3 @@ export default function LearnTab() {
     </AutoScrollProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-    overflow: "hidden",
-    marginBottom: SPACING_MD,
-  },
-});
