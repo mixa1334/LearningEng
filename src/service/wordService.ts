@@ -1,8 +1,43 @@
-import { EntityType, type Word } from "@/src/entity/types";
+import { Category, EntityType, type Word } from "@/src/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
 import { UpdateWordDto } from "../dto/UpdateWordDto";
 import { rowToWord } from "../mapper/typesMapper";
+
+export class WordCriteria {
+  category?: Category;
+  type?: EntityType;
+  lastIdOffset?: number;
+
+  appendCategory(category?: Category): this {
+    this.category = category;
+    return this;
+  }
+
+  appendType(type?: EntityType): this {
+    this.type = type;
+    return this;
+  }
+
+  appendIdOffset(idOffset?: number): this {
+    this.lastIdOffset = idOffset;
+    return this;
+  }
+
+  buildQuery(): string {
+    let query = `1 = 1`;
+    if (this.category) {
+      query += ` AND w.category_id = ${this.category.id}`;
+    }
+    if (this.type) {
+      query += ` AND w.type = '${this.type}'`;
+    }
+    if (this.lastIdOffset) {
+      query += ` AND w.id > ${this.lastIdOffset}`;
+    }
+    return query;
+  }
+}
 
 const SELECT_WORDS = `SELECT
       w.id, w.word_en, w.word_ru, w.transcription, w.type, w.learned,
@@ -15,7 +50,9 @@ const SELECT_WORDS = `SELECT
 const INSERT_WORD = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 export async function resetWordLearningProgress(): Promise<void> {
-  await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')");
+  await getDbInstance().runAsync(
+    "UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')"
+  );
 }
 
 export async function addNewWordsBatch(
@@ -36,7 +73,9 @@ export async function addNewWordsBatch(
   await db.withExclusiveTransactionAsync(async (tx) => {
     for (let i = 0; i < newWords.length; i += BATCH_SIZE) {
       const batch = newWords.slice(i, i + BATCH_SIZE);
-      const placeholders = batch.map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
+      const placeholders = batch
+        .map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .join(", ");
       const sql = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES ${placeholders}`;
 
       const params: (string | number | EntityType)[] = [];
@@ -59,7 +98,10 @@ export async function addNewWordsBatch(
   });
 }
 
-export async function addNewWord(newWord: NewWordDto, wordType: EntityType = EntityType.useradd): Promise<number> {
+export async function addNewWord(
+  newWord: NewWordDto,
+  wordType: EntityType = EntityType.useradd
+): Promise<number> {
   const reviewDate = new Date().toISOString();
   const insertedRow = await getDbInstance().runAsync(INSERT_WORD, [
     newWord.word_en,
@@ -87,9 +129,10 @@ export async function deleteUserWord(wordToDelete: Word): Promise<boolean> {
 export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
   let result = false;
   await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
-    const existingCategory = await tx.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE id = ?;`, [
-      word.category.id,
-    ]);
+    const existingCategory = await tx.getFirstAsync<{ id: number }>(
+      `SELECT id FROM categories WHERE id = ?;`,
+      [word.category.id]
+    );
 
     if (!existingCategory) {
       throw new Error(`Category with id ${word.category.id} does not exist`);
@@ -98,7 +141,14 @@ export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
     const updatedRows = await tx.runAsync(
       `UPDATE words SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
       WHERE type = 'user_added' AND id = ?`,
-      [word.word_en, word.word_ru, word.transcription, word.category.id, word.text_example, word.id]
+      [
+        word.word_en,
+        word.word_ru,
+        word.transcription,
+        word.category.id,
+        word.text_example,
+        word.id,
+      ]
     );
 
     result = updatedRows.changes > 0;
@@ -106,17 +156,16 @@ export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
   return result;
 }
 
-export async function getAllWords(limit: number): Promise<Word[]> {
+export async function getWordsByCriteria(
+  criteria: WordCriteria
+): Promise<Word[]> {
+  const condition = criteria.buildQuery();
   const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS}
-    LIMIT ?`,
-    [limit]
+    WHERE ${condition}
+    ORDER BY w.category_id DESC
+    LIMIT 10`
   );
-  return rows.map(rowToWord);
-}
-
-export async function getWordsByType(wordType: EntityType): Promise<Word[]> {
-  const rows = await getDbInstance().getAllAsync<any>(`${SELECT_WORDS} WHERE w.type = ? ORDER BY w.category_id DESC`, [wordType]);
   return rows.map(rowToWord);
 }
 
@@ -162,7 +211,10 @@ export async function markWordCompletelyLearned(word: Word): Promise<void> {
   );
 }
 
-function getNextReviewSchedule(priority: number): { offsetExpr: string; isLearned: number } {
+function getNextReviewSchedule(priority: number): {
+  offsetExpr: string;
+  isLearned: number;
+} {
   const minuteSchedule = [5, 10, 30, 60, 120, 240];
 
   if (priority <= minuteSchedule.length) {
