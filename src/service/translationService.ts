@@ -17,10 +17,7 @@ const translate = async (text: string, language: Language): Promise<string> => {
   const response = await api
     .get("/get", { params: { q: text, langpair: `${language}|${toLanguage}` } })
     .then((response) => response.data.responseData.translatedText)
-    .catch((error) => {
-      console.error(error);
-      return "Unable to translate";
-    });
+    .catch(() => "Unable to translate");
   return response.length > 20 ? response.slice(0, 20) + "…" : response;
 };
 
