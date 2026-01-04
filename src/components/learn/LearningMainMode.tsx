@@ -1,5 +1,4 @@
 import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
-import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button, useTheme } from "react-native-paper";
@@ -93,7 +92,7 @@ export default function LearningMainMode() {
 
       <View style={styles.content}>
         {word === undefined ? (
-          <View style={styles.center}>
+          <View style={[styles.completeMsg, { backgroundColor: theme.colors.primaryContainer }]}>
             <Text
               style={[styles.emptyText, { color: theme.colors.onBackground }]}
             >
@@ -125,7 +124,6 @@ const styles = StyleSheet.create({
   container: {
     elevation: 4,
     overflow: "hidden",
-    marginBottom: SPACING_MD,
   },
   tabHeader: {
     flexDirection: "row",
@@ -150,12 +148,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: "5%",
   },
-  center: {
-    // flex: 1,
+  completeMsg: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
-    gap: 10,
+    padding: 20,
+    gap: 15,
+    marginTop: 10,
+    borderRadius: 20,
   },
   emptyText: {
     fontSize: 18,

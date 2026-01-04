@@ -6,12 +6,15 @@ import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/src/components/profile/ProgressCard";
 import QuoteCard from "@/src/components/profile/QuoteCard";
 import SettingsCard from "@/src/components/profile/SettingsCard";
+import { useUserData } from "@/src/hooks/useUserData";
 import React from "react";
 
 export default function ProfileTab() {
+  const { name } = useUserData();
+
   return (
     <AutoScrollProvider>
-      <AnimatedScrollView headerTitle="Profile">
+      <AnimatedScrollView headerTitle={name}>
         <ProfileHeaderCard />
 
         <ProgressCard />

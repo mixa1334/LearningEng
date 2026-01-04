@@ -7,7 +7,7 @@ import PracticeModeSettings from "@/src/components/learn/PracticeModeSettings";
 import WordBuildingMode from "@/src/components/learn/WordBuildingMode";
 import WordPairsMode from "@/src/components/learn/WordPairsMode";
 import WordsOverview from "@/src/components/learn/WordsOverview";
-import { SPACING_XXL } from "@/src/resources/constants/layout";
+import { SPACING_XL } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { View } from "react-native";
 
@@ -29,22 +29,16 @@ export default function LearnTab() {
 
   return (
     <AutoScrollProvider>
-      <AnimatedScrollView headerTitle="Learn">
+      <AnimatedScrollView headerTitle="Learning & Practice">
         <ContentDivider name="Learning" />
 
         <LearningMainMode />
 
-        <View style={{ marginTop: SPACING_XXL * 2 }}>
+        <View style={{ marginTop: SPACING_XL}}>
           <ContentDivider name="Practice more" />
         </View>
 
-        <ExpandedSection
-          title="Settings"
-          isExpanded={activeExtraMode === ExtraMode.SETTINGS}
-          onPress={() => handleModeSectionPress(ExtraMode.SETTINGS)}
-        >
-          <PracticeModeSettings />
-        </ExpandedSection>
+        <PracticeModeSettings />
 
         <ExpandedSection
           title="Quick review"

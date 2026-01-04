@@ -28,94 +28,71 @@ export default function PracticeModeSettings() {
   const handleOnlyUserWords = () => setOnlyUserWords(!onlyUserAddedWords);
 
   return (
-    <View style={styles.container}>
+    <>
       <View
         style={[
           styles.topRow,
           { backgroundColor: theme.colors.surfaceVariant },
         ]}
       >
-        <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>
-          Only user added words
-        </Text>
-        <Switch
-          value={onlyUserAddedWords}
-          onValueChange={handleOnlyUserWords}
-        />
-      </View>
-      <View
-        style={[
-          styles.topRow,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
+        <View style={styles.switcherContainer}>
+          <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>
+            only user words
+          </Text>
+          <Switch
+            value={onlyUserAddedWords}
+            onValueChange={handleOnlyUserWords}
+          />
+        </View>
         <Button
           mode="contained-tonal"
           style={[
-            styles.categorySelector,
             {
-              backgroundColor: theme.colors.outlineVariant,
-              borderColor: theme.colors.outlineVariant,
+              backgroundColor: theme.colors.outline,
             },
           ]}
           onPress={() => setShowCategoryPicker(true)}
-          textColor={theme.colors.onSecondaryContainer}
-          contentStyle={styles.categorySelectorButtonContent}
         >
-          {category ? (
-            <View style={styles.categorySelectorContent}>
-              <Text style={styles.categoryEmoji}>{category.icon}</Text>
-              <Text style={styles.categoryLabel}>{category.name}</Text>
-            </View>
-          ) : (
-            "Select category"
-          )}
+          <Text style={[styles.categorySelectorText, { color: theme.colors.background }]}>
+            {category ? category.icon + " " + category.name : "Category"}
+          </Text>
         </Button>
-        <CategoryPicker
-          visible={showCategoryPicker}
-          onClose={handleCloseCategoryPicker}
-          onSelectCategory={handleSelectNewCategory}
-        />
       </View>
-    </View>
+      <CategoryPicker
+        visible={showCategoryPicker}
+        onClose={handleCloseCategoryPicker}
+        onSelectCategory={handleSelectNewCategory}
+      />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  categoryEmoji: {
-    fontSize: 18,
-  },
-  categoryLabel: {
-    fontSize: 14,
-  },
-  categorySelectorContent: {
+  switcherContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-  },
-  categorySelectorButtonContent: {
-    justifyContent: "flex-start",
-  },
-  categorySelector: {
-    marginBottom: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 999,
+    gap: 5,
   },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderRadius: 12,
     marginBottom: 16,
   },
   topRowLabel: {
     fontSize: 14,
+    fontWeight: "600",
+  },
+  categorySelector: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  categorySelectorText: {
+    fontSize: 13,
     fontWeight: "600",
   },
 });
