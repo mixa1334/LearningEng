@@ -2,7 +2,7 @@ import { NewCategoryDto } from "@/src/dto/NewCategoryDto";
 import { NewWordDto } from "@/src/dto/NewWordDto";
 import { Category, EntityType, Word } from "@/src/entity/types";
 import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByType } from "@/src/service/categoryService";
-import { addNewWord, deleteUserWord, editUserWord, getWordsByType } from "@/src/service/wordService";
+import { addNewWord, deleteUserWord, editUserWord, getWordsByCriteria, WordCriteria } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadDailyWordSetThunk } from "./learnSlice";
 
@@ -47,25 +47,25 @@ export const removeCategoryThunk = createAsyncThunk<Category[], Category>(
 export const addWordThunk = createAsyncThunk<Word[], NewWordDto>("vocabulary/addWordThunk", async (newWord, { dispatch }) => {
   await addNewWord(newWord);
   dispatch(loadDailyWordSetThunk());
-  return getWordsByType(EntityType.useradd);
+  return getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
 });
 
 export const editWordThunk = createAsyncThunk<Word[], Word>("vocabulary/editWordThunk", async (wordToEdit) => {
   await editUserWord(wordToEdit);
-  return getWordsByType(EntityType.useradd);
+  return getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
 });
 
 export const removeWordThunk = createAsyncThunk<Word[], Word>(
   "vocabulary/removeWordThunk",
   async (wordToDelete) => {
     await deleteUserWord(wordToDelete);
-    return getWordsByType(EntityType.useradd);
+    return getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
   }
 );
 
 export const loadVocabularyThunk = createAsyncThunk<VocabularyState>("vocabulary/loadVocabularyThunk", async () => {
-  const userWords = await getWordsByType(EntityType.useradd);
-  const preloadedWords = await getWordsByType(EntityType.preloaded);
+  const userWords = await getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
+  const preloadedWords = await getWordsByCriteria(new WordCriteria().appendType(EntityType.preloaded));
   const userCategories = await getCategoriesByType(EntityType.useradd);
   const preloadedCategories = await getCategoriesByType(EntityType.preloaded);
   return {
