@@ -1,25 +1,32 @@
 import type { Word } from "@/src/entity/types";
 import {
-    getDailyWordsToLearn,
-    getDailyWordsToReview,
-    markWordCompletelyLearned,
-    resetWordLearningProgress,
-    reviewWord,
-    startLearningWord,
+  getDailyWordsToLearn,
+  getDailyWordsToReview,
+  markWordCompletelyLearned,
+  resetWordLearningProgress,
+  reviewWord,
+  startLearningWord,
 } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
-import { updateStatsAfterLearnThunk, updateStatsAfterReviewThunk } from "./userDataThunks";
+import {
+  updateStatsAfterLearnThunk,
+  updateStatsAfterReviewThunk,
+} from "./userDataThunks";
 
 export type LearnState = {
   wordsToReview: Word[];
   wordsToLearn: Word[];
+  reviewWord: Word | undefined;
+  learnWord: Word | undefined;
   error: string | undefined;
 };
 
 const initialLearnState: LearnState = {
   wordsToReview: [],
   wordsToLearn: [],
+  reviewWord: undefined,
+  learnWord: undefined,
   error: undefined,
 };
 
@@ -47,15 +54,6 @@ export const markWordCompletelyLearnedThunk = createAsyncThunk<Word[], Word>(
   }
 );
 
-export const markWordNotReviewedThunk = createAsyncThunk<Word[]>(
-  "learn/wordsToReview/markWordNotReviewed",
-  async (_, { getState }) => {
-    const wordsToReview = (getState() as RootState).learn.wordsToReview;
-    if (wordsToReview.length <= 1) return wordsToReview;
-    return [...wordsToReview.slice(1), wordsToReview[0]];
-  }
-);
-
 export const markWordReviewedThunk = createAsyncThunk<Word[], Word>(
   "learn/wordsToReview/markWordReviewed",
   async (word, { getState, dispatch }) => {
@@ -66,10 +64,13 @@ export const markWordReviewedThunk = createAsyncThunk<Word[], Word>(
   }
 );
 
-export const resetLearningStatsThunk = createAsyncThunk<void, void>("learn/resetLearningStats", async (_, { dispatch }) => {
-  await resetWordLearningProgress();
-  dispatch(loadDailyWordSetThunk());
-});
+export const resetLearningStatsThunk = createAsyncThunk<void, void>(
+  "learn/resetLearningStats",
+  async (_, { dispatch }) => {
+    await resetWordLearningProgress();
+    dispatch(loadDailyWordSetThunk());
+  }
+);
 
 export const startLearnWordThunk = createAsyncThunk<Word[], Word>(
   "learn/wordsToLearn/startLearnWord",
@@ -81,33 +82,55 @@ export const startLearnWordThunk = createAsyncThunk<Word[], Word>(
   }
 );
 
+const extractWord = (words: Word[]) =>
+  words.length > 0 ? words[0] : undefined;
+
 const learnSlice = createSlice({
   name: "learn",
   initialState: initialLearnState,
-  reducers: {},
+  reducers: {
+    skipWordWhenReviewing: (state) => {
+      let words = state.wordsToReview;
+      if (words.length <= 1) return;
+      words = [...words.slice(1), words[0]];
+      state.reviewWord = words[0];
+      state.wordsToReview = words;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadDailyWordSetThunk.fulfilled, (state, action) => {
-        state.wordsToReview = action.payload.wordsToReview;
-        state.wordsToLearn = action.payload.wordsToLearn;
-        state.error = undefined;
+        const wordsToReview = action.payload.wordsToReview;
+        state.wordsToReview = wordsToReview;
+        state.reviewWord = extractWord(wordsToReview);
+
+        const wordsToLearn = action.payload.wordsToLearn;
+        state.wordsToLearn = wordsToLearn;
+        state.learnWord = extractWord(wordsToLearn);
+
+        // state.error = undefined;
       })
       .addCase(loadDailyWordSetThunk.rejected, (state, action) => {
         state.error = action.error.message;
       })
       .addCase(markWordReviewedThunk.fulfilled, (state, action) => {
-        state.wordsToReview = action.payload;
+        const wordsToReview = action.payload;
+        state.wordsToReview = wordsToReview;
+        state.reviewWord = extractWord(wordsToReview);
       })
       .addCase(markWordCompletelyLearnedThunk.fulfilled, (state, action) => {
-        state.wordsToLearn = action.payload;
-      })
-      .addCase(markWordNotReviewedThunk.fulfilled, (state, action) => {
-        state.wordsToReview = action.payload;
+        const wordsToLearn = action.payload;
+        state.wordsToLearn = wordsToLearn;
+        state.learnWord = extractWord(wordsToLearn);
       })
       .addCase(startLearnWordThunk.fulfilled, (state, action) => {
-        state.wordsToLearn = action.payload;
+        const wordsToLearn = action.payload;
+        state.wordsToLearn = wordsToLearn;
+        state.learnWord = extractWord(wordsToLearn);
       });
   },
 });
+
+export const { skipWordWhenReviewing } = learnSlice.actions;
 
 export const learnReducer = learnSlice.reducer;
