@@ -12,7 +12,7 @@ import { View } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface IconProps { 
+interface IconProps {
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
   readonly focused: boolean;
 }
@@ -20,8 +20,12 @@ interface IconProps {
 function TabIcon({ iconName, focused }: IconProps) {
   const theme = useTheme();
 
-  const backgroundColor = focused ? theme.colors.background : theme.colors.onBackground;
-  const iconColor = focused ? theme.colors.onBackground : theme.colors.background;
+  const backgroundColor = focused
+    ? theme.colors.background
+    : theme.colors.onBackground;
+  const iconColor = focused
+    ? theme.colors.onBackground
+    : theme.colors.background;
 
   const iconSize = 24;
   const containerSize = 40;
@@ -37,11 +41,7 @@ function TabIcon({ iconName, focused }: IconProps) {
         justifyContent: "center",
       }}
     >
-      <MaterialIcons
-        name={iconName}
-        size={iconSize}
-        color={iconColor}
-      />
+      <MaterialIcons name={iconName} size={iconSize} color={iconColor} />
     </View>
   );
 }
@@ -85,18 +85,13 @@ export default function TabLayout() {
               flex: 1,
               borderRadius: tabBarRadius,
               overflow: "hidden",
-              backgroundColor: "rgba(0, 0, 0, 0.25)",
+              backgroundColor: theme.dark
+                ? "rgba(255, 255, 255, 0.25)"
+                : "rgba(0, 0, 0, 0.25)",
             }}
           />
         ),
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
-        tabBarShowLabel: false,
         headerShown: false,
-        headerStyle: {
-          backgroundColor: theme.colors.primary,
-        },
-        headerTintColor: theme.colors.onPrimary,
       }}
     >
       <Tabs.Screen

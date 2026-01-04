@@ -9,15 +9,15 @@ import { Animated, Text } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface AnimatedScrollViewProps {
+interface AnimatedAutoScrollViewProps {
   readonly children: React.ReactNode;
   readonly headerTitle?: string;
 }
 
-export default function AnimatedScrollView({
+export default function AnimatedAutoScrollView({
   children,
   headerTitle,
-}: AnimatedScrollViewProps) {
+}: AnimatedAutoScrollViewProps) {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { scrollViewRef } = useAutoScroll();
@@ -51,7 +51,7 @@ export default function AnimatedScrollView({
           left: 0,
           right: 0,
           height: HEADER_HEIGHT,
-          backgroundColor: theme.colors.primary,
+          backgroundColor: theme.colors.background,
           justifyContent: "center",
           alignItems: "center",
           paddingHorizontal: SPACING_MD,
@@ -59,11 +59,13 @@ export default function AnimatedScrollView({
           transform: [{ translateY: headerTranslateY }],
           opacity: headerOpacity,
           zIndex: 10,
+          borderBottomWidth: 3,
+          borderBottomColor: theme.colors.outlineVariant,
         }}
       >
         <Text
           style={{
-            color: theme.colors.onPrimary,
+            color: theme.colors.onBackground,
             fontSize: 18,
             fontWeight: "600",
           }}

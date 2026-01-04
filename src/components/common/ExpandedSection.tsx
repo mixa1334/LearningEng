@@ -28,16 +28,16 @@ export default function ExpandedSection({
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+    <View style={[styles.card, { backgroundColor: theme.colors.primaryContainer }]}>
       <TouchableOpacity activeOpacity={0.8} onPress={handlePress}>
         <View style={styles.sectionHeader}>
           <Text
-            style={[styles.sectionTitle, { color: theme.colors.onPrimary }]}
+            style={[styles.sectionTitle, { color: theme.colors.onPrimaryContainer }]}
           >
             {title}
           </Text>
           <Text
-            style={[styles.sectionArrow, { color: theme.colors.onPrimary }]}
+            style={[styles.sectionArrow, { color: theme.colors.onPrimaryContainer }]}
           >
             {isExpanded ? "▲" : "▼"}
           </Text>

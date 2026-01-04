@@ -1,4 +1,4 @@
-import AnimatedScrollView from "@/src/components/common/AnimatedScrollView";
+import AnimatedScrollView from "@/src/components/common/AnimatedAutoScrollView";
 import { AutoScrollProvider } from "@/src/components/common/AutoScrollContext";
 import { TouchableCard } from "@/src/components/common/TouchableCard";
 import { useRouter } from "expo-router";

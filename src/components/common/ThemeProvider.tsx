@@ -1,14 +1,36 @@
 import { THEMES } from "@/src/entity/types";
 import { getUserTheme, setUserTheme } from "@/src/service/userDataService";
 import React, {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
-import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider, useTheme } from "react-native-paper";
+
+const lightTheme = {
+  ...MD3LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    accept: "#4CAF50",
+    reject: "#D32F2F",
+  },
+};
+
+const darkTheme = {
+  ...MD3DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    accept: "#2E7D32",
+    reject: "#B00020",
+  },
+};
+
+export type AppTheme = typeof lightTheme;
+
+export const useAppTheme = () => useTheme<AppTheme>();
 
 type ThemeContextType = {
   isDark: boolean;
@@ -22,7 +44,11 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useThemeContext = () => useContext(ThemeContext);
 
-export function ThemeProvider({ children }: { readonly children: React.ReactNode }) {
+export function ThemeProvider({
+  children,
+}: {
+  readonly children: React.ReactNode;
+}) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -32,23 +58,22 @@ export function ThemeProvider({ children }: { readonly children: React.ReactNode
     })();
   }, []);
 
-  const toggleTheme = useCallback(
-    async () => {
-      const newValue = !isDark;
-      setIsDark(newValue);
-      await setUserTheme(newValue ? THEMES.DARK : THEMES.LIGHT);
-    },
-    [isDark],
-  );
+  const toggleTheme = useCallback(async () => {
+    const newValue = !isDark;
+    setIsDark(newValue);
+    await setUserTheme(newValue ? THEMES.DARK : THEMES.LIGHT);
+  }, [isDark]);
 
-  const theme = isDark ? MD3DarkTheme : MD3LightTheme;
+  const theme = isDark
+    ? darkTheme
+    : lightTheme;
 
   const contextValue = useMemo(
     () => ({
       isDark,
       toggleTheme,
     }),
-    [isDark, toggleTheme],
+    [isDark, toggleTheme]
   );
 
   return (

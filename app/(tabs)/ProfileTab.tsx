@@ -1,4 +1,4 @@
-import AnimatedScrollView from "@/src/components/common/AnimatedScrollView";
+import AnimatedScrollView from "@/src/components/common/AnimatedAutoScrollView";
 import { AutoScrollProvider } from "@/src/components/common/AutoScrollContext";
 import DailyGoalCard from "@/src/components/profile/DailyGoalCard";
 import FaqCard from "@/src/components/profile/FaqCard";
