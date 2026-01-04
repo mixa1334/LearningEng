@@ -1,185 +1,190 @@
-import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { useEffect, useMemo, useState } from "react";
+import { usePractice } from "@/src/hooks/usePractice";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, Switch, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import WordCard from "./WordCard";
 
 export default function WordsOverview() {
   const theme = useTheme();
 
-  const { userWords, preloadedWords } = useVocabulary();
+  const { words, loadNextSet, resetSet } = usePractice();
 
-  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
-  const [accepted, setAccepted] = useState(0);
-  const [rejected, setRejected] = useState(0);
+  const noWordsToReview = words.length === 0;
+
+  const [acceptedCount, setAcceptedCount] = useState(0);
+  const [rejectedCount, setRejectedCount] = useState(0);
   const [index, setIndex] = useState(0);
 
   const [isStarted, setIsStarted] = useState(false);
+  const [isSetEnded, setIsSetEnded] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const wordsPool = useMemo(
-    () => (onlyUserAddedWords ? userWords : [...userWords, ...preloadedWords]),
-    [onlyUserAddedWords, userWords, preloadedWords]
-  );
-
-  const resetProgress = () => {
-    setAccepted(0);
-    setRejected(0);
+  const resetProgress = async () => {
+    setAcceptedCount(0);
+    setRejectedCount(0);
     setIndex(0);
-  };
-
-  const resetSession = () => {
-    resetProgress();
     setIsStarted(false);
     setIsCompleted(false);
-  };
-
-  useEffect(() => {
-    // when source words or filter changes, stop current session
-    resetSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wordsPool.length]);
-
-  const switchOnlyUserAddedWords = () => {
-    setOnlyUserAddedWords((prev) => !prev);
+    setIsSetEnded(false);
+    if (noWordsToReview) {
+      resetSet();
+    }
   };
 
   const startSession = () => {
-    if (wordsPool.length === 0) return;
     resetProgress();
-    setIsCompleted(false);
     setIsStarted(true);
   };
 
   const endSession = () => {
-    setIsStarted(false);
-    if (index > 0) {
-      setIsCompleted(true);
-    } else {
-      setIsCompleted(false);
-    }
+    setIsCompleted(true);
   };
 
-  const updateTotalCounter = () => {
-    setIndex((prevIndex) => {
-      const newIndex = prevIndex + 1;
-      if (newIndex >= wordsPool.length) {
-        setIsStarted(false);
-        if (newIndex > 0) {
-          setIsCompleted(true);
-        }
-      }
-      return newIndex;
-    });
+  const updateIndex = () => {
+    let newIndex = index + 1;
+    if (newIndex === words.length) {
+      newIndex = 0;
+      setIsSetEnded(true);
+    }
+    setIndex(newIndex);
+  };
+
+  const loadMoreWordsToLearn = () => {
+    loadNextSet();
+    setIndex(0);
+    setIsSetEnded(false);
   };
 
   const accept = () => {
-    setAccepted((prev) => prev + 1);
-    updateTotalCounter();
+    setAcceptedCount((prev) => prev + 1);
+    updateIndex();
   };
 
   const reject = () => {
-    setRejected((prev) => prev + 1);
-    updateTotalCounter();
+    setRejectedCount((prev) => prev + 1);
+    updateIndex();
   };
 
   const calculatePercentage = () => {
-    const totalReviewed = accepted + rejected;
+    const totalReviewed = acceptedCount + rejectedCount;
     if (totalReviewed === 0) return 0;
-    return Math.round((accepted / totalReviewed) * 100);
+    return Math.round((acceptedCount / totalReviewed) * 100);
   };
 
-  const handleUsePrebuiltWords = () => {
-    setOnlyUserAddedWords(false);
-  };
-
-  const hasWords = wordsPool.length > 0;
-
-  const renderContent = () => {
-    if (!hasWords) {
-      return (
-        <View style={styles.centered}>
-          <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
-            No words to review, try to add some words to your vocabulary!
-          </Text>
-          {preloadedWords.length > 0 && (
-            <Button
-              mode="contained-tonal"
-              onPress={handleUsePrebuiltWords}
-              style={[styles.endBtn, { backgroundColor: theme.colors.secondaryContainer }]}
-              icon="play"
-            >
-              Use prebuilt words
-            </Button>
-          )}
-        </View>
-      );
-    }
-
-    if (!isStarted && !isCompleted) {
-      return (
-        <View style={styles.centered}>
-          <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
-            Review your vocabulary words one by one and mark the ones you know.
-          </Text>
-          <Button mode="contained-tonal" onPress={startSession} style={styles.reviewBtn} icon="play">
-            Start
-          </Button>
-        </View>
-      );
-    }
-
-    if (!isStarted && isCompleted) {
-      return (
-        <View style={styles.centered}>
-          <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>
-            You remembered {calculatePercentage()}% of words
-          </Text>
-          <Button mode="contained-tonal" onPress={startSession} style={styles.reviewBtn} icon="restart">
-            Review again
-          </Button>
-        </View>
-      );
-    }
-
+  if (noWordsToReview && !isStarted) {
     return (
+      <View style={styles.centered}>
+        <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
+          No words to review, adjust settings above or add more words!
+        </Text>
+      </View>
+    );
+  }
+
+  if (noWordsToReview || isCompleted) {
+    return (
+      <View style={styles.centered}>
+        <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>
+          You remembered {calculatePercentage()}% of words
+        </Text>
+        <Button
+          mode="contained-tonal"
+          onPress={startSession}
+          style={styles.reviewBtn}
+          icon="restart"
+        >
+          Review again
+        </Button>
+      </View>
+    );
+  }
+
+  if (!isStarted) {
+    return (
+      <View style={styles.centered}>
+        <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
+          Review your vocabulary words one by one and mark the ones you know.
+        </Text>
+        <Button
+          mode="contained-tonal"
+          onPress={startSession}
+          style={styles.reviewBtn}
+          icon="play"
+        >
+          Start
+        </Button>
+      </View>
+    );
+  }
+
+  if (isSetEnded) {
+    return (
+      <View style={styles.centered}>
+        <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>
+          You remembered {calculatePercentage()}% of words
+        </Text>
+        <Button
+          mode="contained-tonal"
+          onPress={loadMoreWordsToLearn}
+          style={styles.reviewBtn}
+          icon="play"
+        >
+          Load next set
+        </Button>
+        <Button
+          mode="contained-tonal"
+          onPress={endSession}
+          style={styles.reviewBtn}
+          icon="flag-checkered"
+        >
+          End session
+        </Button>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
       <View style={styles.sessionContent}>
-        <View style={[styles.progressCard, { backgroundColor: theme.colors.surfaceVariant }]}>
-          <Text style={[styles.progressText, { color: theme.colors.onSurface }]}>
-            Reviewed {index} / {wordsPool.length}
+        <View
+          style={[
+            styles.progressCard,
+            { backgroundColor: theme.colors.surfaceVariant },
+          ]}
+        >
+          <Text
+            style={[styles.progressText, { color: theme.colors.onSurface }]}
+          >
+            Reviewed {index} / {words.length}
           </Text>
-          <Text style={[styles.progressText, { color: theme.colors.onSurfaceVariant }]}>Known: {accepted}</Text>
+          <Text
+            style={[
+              styles.progressText,
+              { color: theme.colors.onSurfaceVariant },
+            ]}
+          >
+            Known: {acceptedCount}
+          </Text>
         </View>
         <WordCard
-          word={wordsPool[index]}
+          word={words[index]}
           accept={accept}
           acceptBtnName="Know"
           reject={reject}
           rejectBtnName="Don't know"
         />
-      </View>
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={[styles.topRow, { backgroundColor: theme.colors.surfaceVariant }]}>
-        <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>Only user added words</Text>
-        <Switch value={onlyUserAddedWords} onValueChange={switchOnlyUserAddedWords} />
-      </View>
-
-      {renderContent()}
-
-      {isStarted && (
         <Button
           mode="contained-tonal"
           onPress={endSession}
-          style={[styles.endBtn, { backgroundColor: theme.colors.errorContainer }]}
+          style={[
+            styles.endBtn,
+            { backgroundColor: theme.colors.errorContainer },
+          ]}
           icon="flag-checkered"
         >
           End session
         </Button>
-      )}
+      </View>
     </View>
   );
 }
@@ -187,7 +192,7 @@ export default function WordsOverview() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 16,
   },
   topRow: {
     flexDirection: "row",

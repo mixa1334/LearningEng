@@ -1,14 +1,13 @@
-import { Word } from "@/src/entity/types";
 import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import LearningErrorState from "./LearningErrorState";
 import WordCard from "./WordCard";
 
 export default function LearningMainMode() {
-  const { wordsToLearn, wordsToReview, error, reloadDailySet } =
+  const { reviewWord, learnWord, error, reloadDailySet } =
     useLearningDailySet();
   const [isLearnTab, setIsLearnTab] = useState(true);
   const {
@@ -19,7 +18,7 @@ export default function LearningMainMode() {
   } = useLearnUtil();
   const theme = useTheme();
 
-  const words: Word[] = isLearnTab ? wordsToLearn : wordsToReview;
+  const word = isLearnTab ? learnWord : reviewWord;
   const accept = isLearnTab ? markWordCompletelyLearned : markWordReviewed;
   const reject = isLearnTab ? startLearnNewWord : markWordNotReviewed;
   const acceptLabel = isLearnTab ? "I know" : "I remember";
@@ -33,53 +32,87 @@ export default function LearningMainMode() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+    <View style={styles.container}>
       <View
-        style={[styles.tabHeader, { backgroundColor: theme.colors.secondary }]}
+        style={[
+          styles.tabHeader,
+          { backgroundColor: theme.colors.primaryContainer },
+        ]}
       >
         <TouchableOpacity
           style={[
             styles.tabButton,
-            isLearnTab && {
-              borderBottomColor: theme.colors.surface,
-              backgroundColor: theme.colors.outline,
+            {
+              backgroundColor: isLearnTab
+                ? theme.colors.primary
+                : theme.colors.secondary,
             },
           ]}
           onPress={handleSelectLearn}
         >
-          <Text style={[styles.tabLabel, { color: theme.colors.onPrimary }]}>
+          <Text
+            style={[
+              styles.tabLabel,
+              {
+                color: isLearnTab
+                  ? theme.colors.onPrimary
+                  : theme.colors.onSecondary,
+                fontWeight: isLearnTab ? "600" : "400",
+              },
+            ]}
+          >
             Learn
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.tabButton,
-            !isLearnTab && {
-              borderBottomColor: theme.colors.surface,
-              backgroundColor: theme.colors.outline,
+            {
+              backgroundColor: isLearnTab
+                ? theme.colors.secondary
+                : theme.colors.primary,
             },
           ]}
           onPress={handleSelectReview}
         >
-          <Text style={[styles.tabLabel, { color: theme.colors.onPrimary }]}>
+          <Text
+            style={[
+              styles.tabLabel,
+              {
+                color: isLearnTab
+                  ? theme.colors.onSecondary
+                  : theme.colors.onPrimary,
+                fontWeight: isLearnTab ? "400" : "600",
+              },
+            ]}
+          >
             Review
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.content}>
-        {words.length === 0 ? (
+        {word === undefined ? (
           <View style={styles.center}>
-            <Text style={[styles.emptyText, { color: theme.colors.onPrimary }]}>
-              You completed tasks, come back later!
+            <Text
+              style={[styles.emptyText, { color: theme.colors.onBackground }]}
+            >
+              You&apos;ve completed daily set!
             </Text>
+            <Button
+              buttonColor={theme.colors.primary}
+              textColor={theme.colors.onPrimary}
+              onPress={reloadDailySet}
+            >
+              Load one more daily set
+            </Button>
           </View>
         ) : (
           <WordCard
-            word={words[0]}
-            accept={() => accept(words[0])}
+            word={word}
+            accept={accept}
             acceptBtnName={acceptLabel}
-            reject={() => reject(words[0])}
+            reject={reject}
             rejectBtnName={rejectLabel}
           />
         )}
@@ -90,11 +123,6 @@ export default function LearningMainMode() {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
     elevation: 4,
     overflow: "hidden",
     marginBottom: SPACING_MD,
@@ -102,14 +130,15 @@ const styles = StyleSheet.create({
   tabHeader: {
     flexDirection: "row",
     justifyContent: "center",
-    borderBottomWidth: 1,
+    padding: 15,
+    gap: 15,
+    borderRadius: 30,
   },
   tabButton: {
     flex: 1,
     paddingVertical: 12,
     alignItems: "center",
-    borderBottomWidth: 2,
-    borderBottomColor: "transparent",
+    borderRadius: 30,
   },
   tabLabel: {
     fontSize: 16,
@@ -126,6 +155,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    gap: 10,
   },
   emptyText: {
     fontSize: 18,

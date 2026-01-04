@@ -2,19 +2,19 @@ import { Word } from "@/src/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    useWindowDimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
 } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useAppTheme } from "../common/ThemeProvider";
 
 interface WordCardProps {
   readonly word: Word;
-  readonly accept: () => void;
+  readonly accept: (word: Word) => void;
   readonly acceptBtnName: string;
-  readonly reject: () => void;
+  readonly reject: (word: Word) => void;
   readonly rejectBtnName: string;
 }
 
@@ -29,7 +29,7 @@ export default function WordCard({
   const [pending, setPending] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isEnglishPrimary, setIsEnglishPrimary] = useState(true);
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { width, height } = useWindowDimensions();
 
   useEffect(() => {
@@ -48,17 +48,15 @@ export default function WordCard({
 
   const cardWidth = width * 0.8;
   const cardHeight = height * 0.4;
-  const acceptColor = theme.dark ? "#2E7D32" : "#4CAF50";
-  const rejectColor = theme.dark ? "#B00020" : "#D32F2F";
 
   const handleShowTranslation = () => setShowTranslation(true);
 
-  const handleUserInput = (action: () => void) => {
+  const handleUserInput = (action: (word: Word) => void) => {
     if (showTranslation) {
       setShowTranslation(false);
       setPending(false);
       setAccepted(false);
-      action();
+      action(word);
     } else {
       setShowTranslation(true);
       setPending(true);
@@ -135,7 +133,7 @@ export default function WordCard({
       <View style={styles.bottomBar}>
         {pending ? (
           <TouchableOpacity
-            style={[styles.btnBase, { backgroundColor: acceptColor }]}
+            style={[styles.btnBase, { backgroundColor: theme.colors.accept }]}
             onPress={handleContinue}
           >
             <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
@@ -145,7 +143,7 @@ export default function WordCard({
         ) : (
           <>
             <TouchableOpacity
-              style={[styles.btnBase, { backgroundColor: acceptColor }]}
+              style={[styles.btnBase, { backgroundColor: theme.colors.accept }]}
               onPress={handleAccept}
             >
               <Text
@@ -157,7 +155,7 @@ export default function WordCard({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.btnBase, { backgroundColor: rejectColor }]}
+              style={[styles.btnBase, { backgroundColor: theme.colors.reject }]}
               onPress={handleReject}
             >
               <Text
