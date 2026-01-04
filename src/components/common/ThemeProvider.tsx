@@ -16,6 +16,7 @@ const lightTheme = {
     ...MD3LightTheme.colors,
     accept: "#4CAF50",
     reject: "#D32F2F",
+    shadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
   },
 };
 
@@ -25,6 +26,7 @@ const darkTheme = {
     ...MD3DarkTheme.colors,
     accept: "#2E7D32",
     reject: "#B00020",
+    shadow: "0 0 10px 0 rgba(255, 255, 255, 0.2)",
   },
 };
 

@@ -1,3 +1,4 @@
+import { SPACING_MD } from "@/src/resources/constants/layout";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20, // more spacing
+    marginBottom: SPACING_MD,
   },
   line: {
     flex: 1,

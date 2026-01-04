@@ -1,3 +1,4 @@
+import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import {
   SAFE_AREA_MIN_BOTTOM,
   TAB_BAR_BASE_HEIGHT,
@@ -9,7 +10,6 @@ import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface IconProps {
@@ -18,14 +18,14 @@ interface IconProps {
 }
 
 function TabIcon({ iconName, focused }: IconProps) {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const backgroundColor = focused
-    ? theme.colors.background
-    : theme.colors.onBackground;
+    ? theme.colors.primary
+    : theme.colors.primaryContainer;
   const iconColor = focused
-    ? theme.colors.onBackground
-    : theme.colors.background;
+    ? theme.colors.onPrimary
+    : theme.colors.onPrimaryContainer;
 
   const iconSize = 24;
   const containerSize = 40;
@@ -47,7 +47,7 @@ function TabIcon({ iconName, focused }: IconProps) {
 }
 
 export default function TabLayout() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
   const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
@@ -64,30 +64,21 @@ export default function TabLayout() {
           alignItems: "center",
           alignContent: "center",
           borderTopWidth: 0,
-          borderTopColor: "transparent",
           position: "absolute",
-          backgroundColor: "transparent",
           marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
           marginBottom: bottomInset,
           height: tabBarHeight,
           elevation: 0,
-          shadowColor: "transparent",
-        },
-        tabBarItemStyle: {
-          justifyContent: "center",
-          alignItems: "center",
         },
         tabBarBackground: () => (
           <BlurView
-            intensity={50}
-            tint={theme.dark ? "light" : "dark"}
+            intensity={70}
+            tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
             style={{
               flex: 1,
               borderRadius: tabBarRadius,
+              boxShadow: theme.colors.shadow,
               overflow: "hidden",
-              backgroundColor: theme.dark
-                ? "rgba(255, 255, 255, 0.25)"
-                : "rgba(0, 0, 0, 0.25)",
             }}
           />
         ),
