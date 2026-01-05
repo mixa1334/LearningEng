@@ -8,7 +8,12 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { MD3DarkTheme, MD3LightTheme, PaperProvider, useTheme } from "react-native-paper";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  PaperProvider,
+  useTheme,
+} from "react-native-paper";
 
 const lightTheme = {
   ...MD3LightTheme,
@@ -17,7 +22,9 @@ const lightTheme = {
     accept: "#4CAF50",
     reject: "#D32F2F",
     onAcceptReject: "#FFFFFF",
+    text: "#FFFFFF",
     shadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
+    goalAchieveOverlay: "rgba(0,0,0,0.9)",
   },
 };
 
@@ -28,7 +35,9 @@ const darkTheme = {
     accept: "#2E7D32",
     reject: "#B00020",
     onAcceptReject: "#FFFFFF",
+    text: "#000000",
     shadow: "0 0 10px 0 rgba(255, 255, 255, 0.2)",
+    goalAchieveOverlay: "rgba(255,255,255,0.9)",
   },
 };
 
@@ -68,9 +77,7 @@ export function ThemeProvider({
     await setUserTheme(newValue ? THEMES.DARK : THEMES.LIGHT);
   }, [isDark]);
 
-  const theme = isDark
-    ? darkTheme
-    : lightTheme;
+  const theme = isDark ? darkTheme : lightTheme;
 
   const contextValue = useMemo(
     () => ({

@@ -97,12 +97,16 @@ export default function WordsOverview() {
             { color: theme.colors.onSecondaryContainer },
           ]}
         >
-          You remembered {acceptedCount} of {acceptedCount + rejectedCount} words ({calculatePercentage()}%)
+          You remembered {acceptedCount} of {acceptedCount + rejectedCount}{" "}
+          words ({calculatePercentage()}%)
         </Text>
         <Button
           mode="contained-tonal"
           onPress={startSession}
-          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
+          style={[
+            styles.reviewBtn,
+            { backgroundColor: theme.colors.onPrimaryContainer },
+          ]}
           textColor={theme.colors.onPrimary}
           icon="restart"
         >
@@ -190,15 +194,12 @@ export default function WordsOverview() {
           <Text
             style={[styles.progressText, { color: theme.colors.onPrimary }]}
           >
-            Reviewed: {index}
+            Total words: {acceptedCount + rejectedCount}
           </Text>
           <Button
             mode="contained-tonal"
             onPress={endSession}
-            style={[
-              styles.endBtn,
-              { backgroundColor: theme.colors.reject },
-            ]}
+            style={[styles.endBtn, { backgroundColor: theme.colors.reject }]}
             textColor={theme.colors.onAcceptReject}
             icon="flag-checkered"
           >
@@ -266,9 +267,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 10,
   },
   section: {
     flexDirection: "row",

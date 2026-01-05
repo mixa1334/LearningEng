@@ -3,16 +3,20 @@ import { SPACING_LG, SPACING_XL } from "@/src/resources/constants/layout";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { useAppTheme } from "./ThemeProvider";
 
 export function GoalAchieveOverlay() {
+  const theme = useAppTheme();
   const { width, height } = useWindowDimensions();
-  const {name, dailyGoalAchieve} = useUserData();
+  const { name, dailyGoalAchieve } = useUserData();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (dailyGoalAchieve) {
       setVisible(true);
-      const timer = setTimeout(() => setVisible(false), 2000);
+      const timer = setTimeout(() => {
+        setVisible(false);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [dailyGoalAchieve]);
@@ -20,13 +24,18 @@ export function GoalAchieveOverlay() {
   if (!visible) return null;
 
   return (
-    <View style={styles.overlay}>
+    <View
+      style={[
+        styles.overlay,
+        { backgroundColor: theme.colors.goalAchieveOverlay },
+      ]}
+    >
       <View style={styles.content}>
-        <Text style={styles.congratsText}>
+        <Text style={[styles.congratsText, { color: theme.colors.text }]}>
           🎉 {name} 🎉
         </Text>
-        <Text style={styles.congratsText}>
-          You met your daily learning goal!
+        <Text style={[styles.congratsText, { color: theme.colors.text }]}>
+          You have achieved your daily learning goal!
         </Text>
         <LottieView
           source={require("@/assets/animations/confetti_daily_goal.json")}
@@ -44,7 +53,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.9)",
     zIndex: 999,
   },
   content: {
@@ -58,6 +66,5 @@ const styles = StyleSheet.create({
     marginBottom: SPACING_LG,
     textAlign: "center",
     letterSpacing: 0.5,
-    color: "#ffffff",
   },
 });
