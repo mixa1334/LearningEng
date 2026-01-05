@@ -12,7 +12,8 @@ interface CategoryPickerProps {
 
 export function CategoryPicker({ visible, onClose, onSelectCategory }: CategoryPickerProps) {
   const theme = useTheme();
-  const { allCategories } = useVocabulary();
+  const { userCategories, preloadedCategories } = useVocabulary();
+  const allCategories = [...userCategories, ...preloadedCategories];
 
   return (
     <Portal>

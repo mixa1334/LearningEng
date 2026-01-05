@@ -3,7 +3,7 @@ import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
 import { resetPracticeSetThunk } from "@/src/store/slice/practiceSlice";
 import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
-import { loadVocabularyThunk } from "@/src/store/slice/vocabularySlice";
+import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 
 type BootstrapStatus = "idle" | "pending" | "success" | "error";
 
@@ -22,7 +22,7 @@ function loadSettingsOnce(dispatch: AppDispatch) {
         Promise.all([
           dispatch(loadDailyWordSetThunk()).unwrap(),
           dispatch(loadTranslationsThunk()).unwrap(),
-          dispatch(loadVocabularyThunk()).unwrap(),
+          dispatch(initalizeVocabularyThunk()).unwrap(),
           dispatch(resetPracticeSetThunk()).unwrap(),
         ])
       )

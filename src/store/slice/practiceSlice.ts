@@ -15,17 +15,22 @@ const initialPracticeState: PracticeState = {
   words: [],
 };
 
-const buildCategoryTypeCriteria = (practice: any) => {
-  return new WordCriteria()
-    .appendCategory(practice.category)
-    .appendType(practice.onlyUserAddedWords ? EntityType.useradd : undefined);
+const buildCriteria = (practice: RootState["practice"]) => {
+  const criteria = new WordCriteria()
+    .appendLimit(10)
+    .appendOrderBy("ASC")
+    .appendCategory(practice.category);
+  if (practice.onlyUserAddedWords) {
+    criteria.appendType(EntityType.useradd);
+  }
+  return criteria;
 };
 
 export const resetPracticeSetThunk = createAsyncThunk<Word[]>(
   "practiceState/resetPracticeSet",
   async (_, { getState }) => {
     const practice = (getState() as RootState).practice;
-    const criteria = buildCategoryTypeCriteria(practice);
+    const criteria = buildCriteria(practice);
     return await getWordsByCriteria(criteria);
   }
 );
@@ -37,7 +42,7 @@ export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
     const prevWords = practice.words;
     const offset =
       prevWords.length > 0 ? prevWords[prevWords.length - 1].id : 0;
-    const criteria = buildCategoryTypeCriteria(practice).appendIdOffset(offset);
+    const criteria = buildCriteria(practice).appendIdOffset(offset);
     return await getWordsByCriteria(criteria);
   }
 );

@@ -3,18 +3,22 @@ import { NewWordDto } from "@/src/dto/NewWordDto";
 import { Category, Word } from "@/src/entity/types";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
-    addCategoryThunk,
-    addWordThunk,
-    editCategoryThunk,
-    editWordThunk,
-    removeCategoryThunk,
-    removeWordThunk
+  addCategoryThunk,
+  addWordThunk,
+  editCategoryThunk,
+  editWordThunk,
+  removeCategoryThunk,
+  removeWordThunk,
+  updateWordCriteriaThunk
 } from "@/src/store/slice/vocabularySlice";
+import { WordCriteria } from "../service/wordService";
 
 
 export function useVocabulary() {
   const dispatch = useAppDispatch();
-  const { userWords, preloadedWords, userCategories, allCategories } = useAppSelector((s) => s.vocabulary);
+  const { userCategories, preloadedCategories, criteriaDto, words } = useAppSelector((s) => s.vocabulary);
+
+  const updateWordCriteria = (criteria: WordCriteria) => dispatch(updateWordCriteriaThunk(criteria));
 
   const addWord = (newWord: NewWordDto) => dispatch(addWordThunk(newWord));
 
@@ -29,15 +33,16 @@ export function useVocabulary() {
   const editCategory = (categoryToEdit: Category) => dispatch(editCategoryThunk(categoryToEdit));
 
   return {
-    userWords,
-    preloadedWords,
     userCategories,
-    allCategories,
+    preloadedCategories,
+    criteriaDto,
+    words,
     addWord,
     addCategory,
     removeWord,
     removeCategory,
     editWord,
     editCategory,
+    updateWordCriteria,
   };
 }

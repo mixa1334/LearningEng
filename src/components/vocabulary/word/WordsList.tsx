@@ -7,7 +7,7 @@ import EditWordDialog from "./EditWordDialog";
 
 export default function WordsList() {
   const theme = useTheme();
-  const { userWords } = useVocabulary();
+  const { words } = useVocabulary();
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
 
@@ -27,7 +27,7 @@ export default function WordsList() {
       )}
 
       <View style={styles.listContent}>
-        {userWords.map((item) => (
+        {words.map((item) => (
           <TouchableRipple
             key={item.id.toString()}
             style={[
