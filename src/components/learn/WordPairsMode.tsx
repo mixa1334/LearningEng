@@ -2,8 +2,9 @@ import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { PracticeModeChildProps } from "./PracticeModeWrapper";
+import { useAppTheme } from "../common/ThemeProvider";
 
 const VISIBLE_PAIRS = 4;
 
@@ -27,7 +28,7 @@ type CorrectPair = {
 } | null;
 
 export default function WordPairsMode(props: PracticeModeChildProps) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { words } = usePractice();
 
   const [sessionWords, setSessionWords] = useState<Word[]>([]);
@@ -137,122 +138,162 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.gameArea}>
-        <View style={styles.columnsHeader}>
-          <Text style={[styles.columnTitle, { color: theme.colors.onPrimary }]}>
-            Russian
+      <View style={styles.sessionContent}>
+        <View
+          style={[
+            styles.progressCard,
+            { backgroundColor: theme.colors.primary },
+          ]}
+        >
+          <Text
+            style={[styles.progressText, { color: theme.colors.accept }]}
+          >
+            Solved: {solvedIds.length}
           </Text>
-          <Text style={[styles.columnTitle, { color: theme.colors.onPrimary }]}>
-            English
+          <Text
+            style={[styles.progressText, { color: theme.colors.reject }]}
+          >
+            Remaining: {words.length - solvedIds.length}
           </Text>
+          <Button
+            mode="contained-tonal"
+            onPress={stopGame}
+            style={[styles.endBtn, { backgroundColor: theme.colors.reject }]}
+            textColor={theme.colors.onAcceptReject}
+            icon="flag-checkered"
+          >
+            End
+          </Button>
         </View>
-        <View style={styles.rows}>
-          {visibleIds.map((ruId, index) => {
-            const enId = englishOrder[index];
-            const ruWord = getWordById(ruId);
-            const enWord = enId !== undefined ? getWordById(enId) : undefined;
 
-            if (!ruWord && !enWord) {
-              return null;
-            }
+        <View
+          style={[
+            styles.modeCard,
+            { backgroundColor: theme.colors.primary },
+          ]}
+        >
+          <View style={styles.gameArea}>
+            <View style={styles.columnsHeader}>
+              <Text
+                style={[
+                  styles.columnTitle,
+                  { color: theme.colors.onPrimary },
+                ]}
+              >
+                Russian
+              </Text>
+              <Text
+                style={[
+                  styles.columnTitle,
+                  { color: theme.colors.onPrimary },
+                ]}
+              >
+                English
+              </Text>
+            </View>
+            <View style={styles.rows}>
+              {visibleIds.map((ruId, index) => {
+                const enId = englishOrder[index];
+                const ruWord = getWordById(ruId);
+                const enWord =
+                  enId !== undefined ? getWordById(enId) : undefined;
 
-            const ruSelected = selectedRuId === ruId;
-            const ruIncorrect = incorrectPair?.ruId === ruId;
-            const ruCorrect = correctPair?.ruId === ruId;
-            const enSelected = enId !== undefined && selectedEnId === enId;
-            const enIncorrect =
-              enId !== undefined && incorrectPair?.enId === enId;
-            const enCorrect = enId !== undefined && correctPair?.enId === enId;
+                if (!ruWord && !enWord) {
+                  return null;
+                }
 
-            return (
-              <View key={`row-${ruId}-${enId ?? "none"}`} style={styles.row}>
-                <View style={styles.cell}>
-                  {ruWord && (
-                    <TouchableOpacity
-                      style={[
-                        styles.wordChip,
-                        {
-                          backgroundColor: theme.colors.surfaceVariant,
-                          borderColor: theme.colors.outline,
-                        },
-                        ruSelected && {
-                          borderColor: theme.colors.primaryContainer,
-                          backgroundColor: theme.colors.outline,
-                        },
-                        ruIncorrect && {
-                          borderColor: theme.colors.error,
-                          backgroundColor: theme.colors.error,
-                        },
-                        ruCorrect && {
-                          borderColor: theme.colors.primary,
-                          backgroundColor: "#4CAF50",
-                        },
-                      ]}
-                      onPress={() => handleSelectRu(ruId)}
-                    >
-                      <Text
-                        style={[
-                          styles.wordText,
-                          { color: theme.colors.onSurfaceVariant },
-                        ]}
-                      >
-                        {ruWord.word_ru}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
+                const ruSelected = selectedRuId === ruId;
+                const ruIncorrect = incorrectPair?.ruId === ruId;
+                const ruCorrect = correctPair?.ruId === ruId;
+                const enSelected = enId !== undefined && selectedEnId === enId;
+                const enIncorrect =
+                  enId !== undefined && incorrectPair?.enId === enId;
+                const enCorrect =
+                  enId !== undefined && correctPair?.enId === enId;
 
-                <View style={styles.cell}>
-                  {enId !== undefined && enWord && (
-                    <TouchableOpacity
-                      style={[
-                        styles.wordChip,
-                        {
-                          backgroundColor: theme.colors.surfaceVariant,
-                          borderColor: theme.colors.outline,
-                        },
-                        enSelected && {
-                          borderColor: theme.colors.primary,
-                          backgroundColor: theme.colors.outline,
-                        },
-                        enIncorrect && {
-                          borderColor: theme.colors.error,
-                          backgroundColor: theme.colors.error,
-                        },
-                        enCorrect && {
-                          borderColor: theme.colors.secondary,
-                          backgroundColor: "#4CAF50",
-                        },
-                      ]}
-                      onPress={() => handleSelectEn(enId)}
-                    >
-                      <Text
-                        style={[
-                          styles.wordText,
-                          { color: theme.colors.onSurfaceVariant },
-                        ]}
-                      >
-                        {enWord.word_en}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-            );
-          })}
+                return (
+                  <View
+                    key={`row-${ruId}-${enId ?? "none"}`}
+                    style={styles.row}
+                  >
+                    <View style={styles.cell}>
+                      {ruWord && (
+                        <TouchableOpacity
+                          style={[
+                            styles.wordChip,
+                            {
+                              backgroundColor: theme.colors.surfaceVariant,
+                              borderColor: theme.colors.outline,
+                            },
+                            ruSelected && {
+                              borderColor: theme.colors.primaryContainer,
+                              backgroundColor: theme.colors.outline,
+                            },
+                            ruIncorrect && {
+                              borderColor: theme.colors.error,
+                              backgroundColor: theme.colors.error,
+                            },
+                            ruCorrect && {
+                              borderColor: theme.colors.primary,
+                              backgroundColor: "#4CAF50",
+                            },
+                          ]}
+                          onPress={() => handleSelectRu(ruId)}
+                        >
+                          <Text
+                            style={[
+                              styles.wordText,
+                              { color: theme.colors.onSurfaceVariant },
+                            ]}
+                          >
+                            {ruWord.word_ru}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+
+                    <View style={styles.cell}>
+                      {enId !== undefined && enWord && (
+                        <TouchableOpacity
+                          style={[
+                            styles.wordChip,
+                            {
+                              backgroundColor: theme.colors.surfaceVariant,
+                              borderColor: theme.colors.outline,
+                            },
+                            enSelected && {
+                              borderColor: theme.colors.primary,
+                              backgroundColor: theme.colors.outline,
+                            },
+                            enIncorrect && {
+                              borderColor: theme.colors.error,
+                              backgroundColor: theme.colors.error,
+                            },
+                            enCorrect && {
+                              borderColor: theme.colors.secondary,
+                              backgroundColor: "#4CAF50",
+                            },
+                          ]}
+                          onPress={() => handleSelectEn(enId)}
+                        >
+                          <Text
+                            style={[
+                              styles.wordText,
+                              { color: theme.colors.onSurfaceVariant },
+                            ]}
+                          >
+                            {enWord.word_en}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
         </View>
       </View>
-      <Button
-        mode="contained-tonal"
-        onPress={stopGame}
-        style={[
-          styles.controlButton,
-          { backgroundColor: theme.colors.errorContainer },
-        ]}
-        icon="stop"
-      >
-        Stop
-      </Button>
     </View>
   );
 }
@@ -261,6 +302,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  sessionContent: {
+    flex: 1,
   },
   centered: {
     flex: 1,
@@ -277,6 +321,29 @@ const styles = StyleSheet.create({
   gameArea: {
     flex: 1,
     minHeight: 260,
+  },
+  modeCard: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    borderRadius: 20,
+    alignSelf: "center",
+    marginVertical: 16,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    width: "100%",
+  },
+  progressCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 10,
   },
   columnsHeader: {
     flexDirection: "row",
@@ -321,10 +388,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
   },
-  controlButton: {
-    marginTop: 16,
+  endBtn: {
     borderRadius: 8,
-    alignSelf: "center",
-    paddingHorizontal: 24,
   },
 });

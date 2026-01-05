@@ -1,8 +1,9 @@
 import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { PracticeModeChildProps } from "./PracticeModeWrapper";
+import { useAppTheme } from "../common/ThemeProvider";
 
 type LetterTile = {
   id: number;
@@ -21,7 +22,7 @@ function shuffleArray<T>(items: readonly T[]): T[] {
 }
 
 export default function WordBuildingMode(props: PracticeModeChildProps) {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { words } = usePractice();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -214,32 +215,58 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
       <View style={styles.sessionContent}>
         <View
           style={[
-            styles.wordHeader,
-            { backgroundColor: theme.colors.surfaceVariant },
+            styles.progressCard,
+            { backgroundColor: theme.colors.primary },
           ]}
         >
           <Text
-            style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}
+            style={[styles.progressText, { color: theme.colors.accept }]}
           >
-            Russian word
+            Current: {currentIndex + 1} / {words.length}
           </Text>
           <Text
-            style={[styles.wordHeaderValue, { color: theme.colors.onSurface }]}
+            style={[styles.progressText, { color: theme.colors.reject }]}
           >
-            {words[currentIndex].word_ru}
+            Words left: {wordsLeft}
           </Text>
+          <Button
+            mode="contained-tonal"
+            onPress={endSession}
+            style={[styles.endBtn, { backgroundColor: theme.colors.reject }]}
+            textColor={theme.colors.onAcceptReject}
+            icon="flag-checkered"
+          >
+            End
+          </Button>
         </View>
 
-        {renderLetterBoxes()}
-
-        {renderLetterPool()}
-
-        <View style={styles.progressRow}>
-          <Text
-            style={[styles.progressText, { color: theme.colors.onPrimary }]}
+        <View
+          style={[
+            styles.modeCard,
+            { backgroundColor: theme.colors.primary },
+          ]}
+        >
+          <View
+            style={[
+              styles.wordHeader,
+              { backgroundColor: theme.colors.surfaceVariant },
+            ]}
           >
-            Words left: {wordsLeft} / {words.length}
-          </Text>
+            <Text
+              style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}
+            >
+              Russian word
+            </Text>
+            <Text
+              style={[styles.wordHeaderValue, { color: theme.colors.onSurface }]}
+            >
+              {words[currentIndex].word_ru}
+            </Text>
+          </View>
+
+          {renderLetterBoxes()}
+
+          {renderLetterPool()}
         </View>
       </View>
     );
@@ -248,18 +275,6 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
   return (
     <View style={styles.container}>
       {renderContent()}
-
-      <Button
-        mode="contained-tonal"
-        onPress={endSession}
-        style={[
-          styles.bottomButton,
-          { backgroundColor: theme.colors.errorContainer },
-        ]}
-        icon="flag-checkered"
-      >
-        End training
-      </Button>
     </View>
   );
 }
@@ -296,6 +311,29 @@ const styles = StyleSheet.create({
   },
   sessionContent: {
     flex: 1,
+  },
+  modeCard: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    borderRadius: 20,
+    alignSelf: "center",
+    marginVertical: 16,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    width: "100%",
+  },
+  progressCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 10,
   },
   wordHeader: {
     paddingVertical: 10,
@@ -359,16 +397,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
   },
-  controlButton: {
-    marginTop: 16,
+  endBtn: {
     borderRadius: 8,
-    alignSelf: "center",
-    paddingHorizontal: 24,
-  },
-  bottomButton: {
-    marginTop: 16,
-    borderRadius: 8,
-    alignSelf: "center",
-    paddingHorizontal: 24,
   },
 });
