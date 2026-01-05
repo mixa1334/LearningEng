@@ -1,16 +1,14 @@
 import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Modal, StyleSheet, View } from "react-native";
 import {
-    Button,
-    Dialog,
-    IconButton,
-    Portal,
-    Text,
-    TextInput,
-    TouchableRipple,
-    useTheme,
+  Button,
+  IconButton,
+  Text,
+  TextInput,
+  TouchableRipple,
+  useTheme,
 } from "react-native-paper";
 import { CategoryPicker } from "../category/CategoryPicker";
 
@@ -126,120 +124,154 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   };
 
   return (
-    <Portal>
-      <Dialog
-        visible={visible}
-        onDismiss={exit}
-        style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}
-      >
-        <View style={styles.headerContainer}>
-          <Dialog.Title style={[styles.title, { color: theme.colors.onBackground }]}>
-            Edit word
-          </Dialog.Title>
-          <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
+    <Modal
+      transparent
+      visible={visible}
+      animationType="fade"
+      onRequestClose={exit}
+    >
+      <View style={styles.backdrop}>
+        <View
+          style={[
+            styles.dialog,
+            { backgroundColor: theme.colors.secondaryContainer },
+          ]}
+        >
+          <View style={styles.headerContainer}>
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+              Edit word
+            </Text>
+            <IconButton
+              icon="close"
+              size={24}
+              onPress={exit}
+              accessibilityLabel="Close dialog"
+            />
+          </View>
+
+          <View>
+            <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+              Tap a field to quickly update any part of the word.
+            </Text>
+
+            <EditableField
+              editingField={editingField}
+              targetField="en"
+              label="English word"
+              value={wordToEdit.word_en}
+              onChange={setWordEn}
+              onBlur={stopEditing}
+              onPress={() => startEditing("en")}
+            />
+            <EditableField
+              editingField={editingField}
+              targetField="ru"
+              label="Russian word"
+              value={wordToEdit.word_ru}
+              onChange={setWordRu}
+              onBlur={stopEditing}
+              onPress={() => startEditing("ru")}
+            />
+            <EditableField
+              editingField={editingField}
+              targetField="transcription"
+              label="Transcription (optional)"
+              value={wordToEdit.transcription}
+              onChange={setWordTranscription}
+              onBlur={stopEditing}
+              onPress={() => startEditing("transcription")}
+            />
+            <EditableField
+              editingField={editingField}
+              targetField="example"
+              label="Text example (optional)"
+              value={wordToEdit.text_example}
+              onChange={setWordTextExample}
+              onBlur={stopEditing}
+              onPress={() => startEditing("example")}
+            />
+
+            <Text
+              style={[styles.sectionLabel, { color: theme.colors.onBackground }]}
+            >
+              Category
+            </Text>
+            <Button
+              mode="contained-tonal"
+              style={[
+                styles.categorySelector,
+                {
+                  backgroundColor: theme.colors.outlineVariant,
+                  borderColor: theme.colors.outlineVariant,
+                },
+              ]}
+              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+              textColor={theme.colors.onSecondaryContainer}
+              contentStyle={styles.categorySelectorButtonContent}
+            >
+              {wordToEdit.category ? (
+                <View style={styles.categorySelectorContent}>
+                  <Text style={styles.categoryEmoji}>
+                    {wordToEdit.category.icon}
+                  </Text>
+                  <Text style={styles.categoryLabel}>
+                    {wordToEdit.category.name}
+                  </Text>
+                </View>
+              ) : (
+                "Select category"
+              )}
+            </Button>
+            <CategoryPicker
+              visible={showCategoryPicker}
+              onClose={() => setShowCategoryPicker(false)}
+              onSelectCategory={selectCategory}
+            />
+          </View>
+
+          <View style={styles.actions}>
+            <Button
+              mode="contained"
+              icon="delete"
+              textColor={theme.colors.onError}
+              style={[
+                styles.destructiveButton,
+                { backgroundColor: theme.colors.error },
+              ]}
+              onPress={handleDeleteWord}
+            >
+              Delete
+            </Button>
+            <Button
+              mode="contained"
+              icon="content-save"
+              style={[
+                styles.primaryButton,
+                { backgroundColor: theme.colors.primary },
+              ]}
+              textColor={theme.colors.onPrimary}
+              onPress={handleEditWord}
+            >
+              Save
+            </Button>
+          </View>
         </View>
-
-        <Dialog.Content>
-          <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
-            Tap a field to quickly update any part of the word.
-          </Text>
-
-          <EditableField
-            editingField={editingField}
-            targetField="en"
-            label="English word"
-            value={wordToEdit.word_en}
-            onChange={setWordEn}
-            onBlur={stopEditing}
-            onPress={() => startEditing("en")}
-          />
-          <EditableField
-            editingField={editingField}
-            targetField="ru"
-            label="Russian word"
-            value={wordToEdit.word_ru}
-            onChange={setWordRu}
-            onBlur={stopEditing}
-            onPress={() => startEditing("ru")}
-          />
-          <EditableField
-            editingField={editingField}
-            targetField="transcription"
-            label="Transcription (optional)"
-            value={wordToEdit.transcription}
-            onChange={setWordTranscription}
-            onBlur={stopEditing}
-            onPress={() => startEditing("transcription")}
-          />
-          <EditableField
-            editingField={editingField}
-            targetField="example"
-            label="Text example (optional)"
-            value={wordToEdit.text_example}
-            onChange={setWordTextExample}
-            onBlur={stopEditing}
-            onPress={() => startEditing("example")}
-          />
-
-          <Text style={[styles.sectionLabel, { color: theme.colors.onBackground }]}>
-            Category
-          </Text>
-          <Button
-            mode="contained-tonal"
-            style={[
-              styles.categorySelector,
-              {
-                backgroundColor: theme.colors.outlineVariant,
-                borderColor: theme.colors.outlineVariant,
-              },
-            ]}
-            onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-            textColor={theme.colors.onSecondaryContainer}
-            contentStyle={styles.categorySelectorButtonContent}
-          >
-            {wordToEdit.category ? (
-              <View style={styles.categorySelectorContent}>
-                <Text style={styles.categoryEmoji}>{wordToEdit.category.icon}</Text>
-                <Text style={styles.categoryLabel}>{wordToEdit.category.name}</Text>
-              </View>
-            ) : (
-              "Select category"
-            )}
-          </Button>
-          <CategoryPicker
-            visible={showCategoryPicker}
-            onClose={() => setShowCategoryPicker(false)}
-            onSelectCategory={selectCategory}
-          />
-        </Dialog.Content>
-        <Dialog.Actions style={styles.actions}>
-          <Button
-            mode="contained"
-            icon="delete"
-            textColor={theme.colors.onError}
-            style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
-            onPress={handleDeleteWord}
-          >
-            Delete
-          </Button>
-          <Button
-            mode="contained"
-            icon="content-save"
-            style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
-            textColor={theme.colors.onPrimary}
-            onPress={handleEditWord}
-          >
-            Save
-          </Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+      </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   dialog: {
     borderRadius: 24,
+    padding: 16,
+    width: "90%",
+  },
+  backdrop: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   input: {
     marginVertical: 8,

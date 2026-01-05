@@ -23,7 +23,7 @@ export function CategoryPicker({
     <Modal
       transparent
       visible={visible}
-      animationType="slide"
+      animationType="fade"
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
