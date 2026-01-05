@@ -1,8 +1,8 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { SCREEN_HEIGHT_0_5 } from "@/src/resources/constants/layout";
-import { FlatList, StyleSheet, View } from "react-native";
-import { Button, Dialog, IconButton, Portal, Text, useTheme } from "react-native-paper";
+import { FlatList, Modal, StyleSheet, View } from "react-native";
+import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
 interface CategoryPickerProps {
   readonly visible: boolean;
@@ -10,25 +10,40 @@ interface CategoryPickerProps {
   readonly onSelectCategory: (category: Category) => void;
 }
 
-export function CategoryPicker({ visible, onClose, onSelectCategory }: CategoryPickerProps) {
+export function CategoryPicker({
+  visible,
+  onClose,
+  onSelectCategory,
+}: CategoryPickerProps) {
   const theme = useTheme();
   const { userCategories, preloadedCategories } = useVocabulary();
   const allCategories = [...userCategories, ...preloadedCategories];
 
   return (
-    <Portal>
-      <Dialog
-        visible={visible}
-        onDismiss={onClose}
-        style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}
-      >
-        <View style={styles.headerContainer}>
-          <Dialog.Title style={[styles.title, { color: theme.colors.onBackground }]}>
-            Select category
-          </Dialog.Title>
-          <IconButton icon="close" size={24} onPress={onClose} accessibilityLabel="Close category picker" />
-        </View>
-        <Dialog.Content>
+    <Modal
+      transparent
+      visible={visible}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View style={styles.backdrop}>
+        <View
+          style={[
+            styles.dialog,
+            { backgroundColor: theme.colors.secondaryContainer },
+          ]}
+        >
+          <View style={styles.headerContainer}>
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+              Select category
+            </Text>
+            <IconButton
+              icon="close"
+              size={24}
+              onPress={onClose}
+              accessibilityLabel="Close category picker"
+            />
+          </View>
           <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
             Choose a category to assign. You can change it later.
           </Text>
@@ -52,15 +67,23 @@ export function CategoryPicker({ visible, onClose, onSelectCategory }: CategoryP
               </Button>
             )}
           />
-        </Dialog.Content>
-      </Dialog>
-    </Portal>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   dialog: {
+    width: "90%",
     borderRadius: 24,
+    padding: 16,
+  },
+  backdrop: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   headerContainer: {
     flexDirection: "row",
