@@ -1,8 +1,8 @@
-import { Word } from "@/src/entity/types";
-import { useVocabulary } from "@/src/hooks/useVocabulary";
+import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, Switch, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
+import { PracticeModeChildProps } from "./PracticeModeWrapper";
 
 type LetterTile = {
   id: number;
@@ -20,16 +20,10 @@ function shuffleArray<T>(items: readonly T[]): T[] {
   return array;
 }
 
-export default function WordBuildingMode() {
+export default function WordBuildingMode(props: PracticeModeChildProps) {
   const theme = useTheme();
-  const { userWords, preloadedWords } = useVocabulary();
+  const { words } = usePractice();
 
-  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
-
-  const [isStarted, setIsStarted] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  const [sessionWords, setSessionWords] = useState<Word[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [letterPool, setLetterPool] = useState<LetterTile[]>([]);
@@ -39,37 +33,18 @@ export default function WordBuildingMode() {
   );
   const [isWordHighlighted, setIsWordHighlighted] = useState(false);
 
-  const wordsPool = useMemo(
-    () => (onlyUserAddedWords ? userWords : [...userWords, ...preloadedWords]),
-    [onlyUserAddedWords, userWords, preloadedWords]
-  );
-
-  const currentWord: Word | undefined =
-    sessionWords.length > 0 ? sessionWords[currentIndex] : undefined;
-
-  const normalizedTarget = useMemo(() => {
-    if (!currentWord) return "";
-    return currentWord.word_en.trim();
-  }, [currentWord]);
-
-  const totalWords = wordsPool.length;
-
   const resetState = () => {
-    setIsStarted(false);
-    setIsCompleted(false);
-    setSessionWords([]);
-    setCurrentIndex(0);
-    setLetterPool([]);
+    const index = 0;
+    setCurrentIndex(index);
+    setLetterPool(buildLetterPool(words[index].word_en.trim()));
     setUsedLetterIds([]);
     setIncorrectLetterId(null);
     setIsWordHighlighted(false);
   };
 
   useEffect(() => {
-    // when source words or filter changes, stop current session
     resetState();
-     
-  }, [wordsPool.length]);
+  }, [words]);
 
   const buildLetterPool = (word: string): LetterTile[] => {
     const chars = word.split("");
@@ -80,29 +55,10 @@ export default function WordBuildingMode() {
     return shuffleArray(tiles);
   };
 
-  const startSession = () => {
-    if (wordsPool.length === 0) return;
-    const shuffledWords = shuffleArray(wordsPool);
-    setSessionWords(shuffledWords);
-    setCurrentIndex(0);
-    const firstWord = shuffledWords[0];
-    setLetterPool(buildLetterPool(firstWord.word_en.trim()));
-    setUsedLetterIds([]);
-    setIncorrectLetterId(null);
-    setIsWordHighlighted(false);
-    setIsCompleted(false);
-    setIsStarted(true);
-  };
-
   const endSession = () => {
-    setIsStarted(false);
-    setIsCompleted(false);
-    setSessionWords([]);
-    setCurrentIndex(0);
-    setLetterPool([]);
-    setUsedLetterIds([]);
-    setIncorrectLetterId(null);
-    setIsWordHighlighted(false);
+    props.onEndSession?.(
+      `You solved ${currentIndex + 1} / ${words.length} words`
+    );
   };
 
   const moveToNextWord = () => {
@@ -110,34 +66,24 @@ export default function WordBuildingMode() {
     setIncorrectLetterId(null);
     setUsedLetterIds([]);
 
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = prevIndex + 1;
-      if (nextIndex >= sessionWords.length) {
-        setIsStarted(false);
-        setIsCompleted(false);
-        setLetterPool([]);
-        setUsedLetterIds([]);
-        setIncorrectLetterId(null);
-        setIsWordHighlighted(false);
-        return prevIndex;
-      }
-
-      const nextWord = sessionWords[nextIndex];
-      setLetterPool(buildLetterPool(nextWord.word_en.trim()));
-      return nextIndex;
-    });
-  };
-
-  const handleToggleOnlyUserAdded = () => {
-    setOnlyUserAddedWords((prev) => !prev);
+    const nextIndex = currentIndex + 1;
+    if (nextIndex >= words.length) {
+      props.onEndCurrentSet?.(
+        `You solved ${currentIndex + 1} / ${words.length} words`
+      );
+      return;
+    }
+    const nextWord = words[nextIndex];
+    setLetterPool(buildLetterPool(nextWord.word_en.trim()));
+    setCurrentIndex(nextIndex);
   };
 
   const handleSelectLetter = (tile: LetterTile) => {
-    if (!isStarted || !currentWord || isWordHighlighted) return;
+    if (isWordHighlighted) return;
     if (usedLetterIds.includes(tile.id)) return;
 
     const pickedCount = usedLetterIds.length;
-    const expectedChar = normalizedTarget[pickedCount];
+    const expectedChar = words[currentIndex].word_en[pickedCount];
 
     if (!expectedChar) {
       return;
@@ -150,7 +96,7 @@ export default function WordBuildingMode() {
       setUsedLetterIds(newUsed);
       setIncorrectLetterId(null);
 
-      if (newUsed.length === normalizedTarget.length) {
+      if (newUsed.length === words[currentIndex].word_en.length) {
         setIsWordHighlighted(true);
         const timeout = setTimeout(() => {
           moveToNextWord();
@@ -176,17 +122,10 @@ export default function WordBuildingMode() {
     return orderedTiles;
   }, [letterPool, usedLetterIds]);
 
-  const wordsLeft =
-    isStarted && sessionWords.length > 0
-      ? sessionWords.length - currentIndex - (isWordHighlighted ? 0 : 1)
-      : 0;
-
-  const hasWords = totalWords > 0;
+  const wordsLeft = words.length - currentIndex - (isWordHighlighted ? 0 : 1);
 
   const renderLetterBoxes = () => {
-    if (!currentWord) return null;
-
-    const length = normalizedTarget.length;
+    const length = words[currentIndex].word_en.length;
 
     return (
       <View style={styles.letterBoxesRow}>
@@ -229,8 +168,6 @@ export default function WordBuildingMode() {
   };
 
   const renderLetterPool = () => {
-    if (!currentWord) return null;
-
     return (
       <View style={styles.letterPool}>
         {letterPool.map((tile) => {
@@ -254,7 +191,7 @@ export default function WordBuildingMode() {
                   borderColor: theme.colors.error,
                 },
               ]}
-              disabled={isUsed || !isStarted}
+              disabled={isUsed}
               onPress={() => handleSelectLetter(tile)}
             >
               <Text
@@ -273,43 +210,6 @@ export default function WordBuildingMode() {
   };
 
   const renderContent = () => {
-    if (!hasWords) {
-      return (
-        <View style={styles.centered}>
-          <Text
-            style={[styles.infoText, { color: theme.colors.onPrimary }]}
-          >
-            No words available for training. Try adding some words to your
-            vocabulary.
-          </Text>
-        </View>
-      );
-    }
-
-    if (!isStarted && !isCompleted) {
-      return (
-        <View style={styles.centered}>
-          <Text
-            style={[styles.infoText, { color: theme.colors.onPrimary }]}
-          >
-            Build the English word by picking letters in the correct order.
-          </Text>
-          <Button
-            mode="contained-tonal"
-            onPress={startSession}
-            style={styles.controlButton}
-            icon="play"
-          >
-            Start
-          </Button>
-        </View>
-      );
-    }
-
-    if (!currentWord) {
-      return null;
-    }
-
     return (
       <View style={styles.sessionContent}>
         <View
@@ -318,13 +218,15 @@ export default function WordBuildingMode() {
             { backgroundColor: theme.colors.surfaceVariant },
           ]}
         >
-          <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}>
+          <Text
+            style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}
+          >
             Russian word
           </Text>
           <Text
             style={[styles.wordHeaderValue, { color: theme.colors.onSurface }]}
           >
-            {currentWord.word_ru}
+            {words[currentIndex].word_ru}
           </Text>
         </View>
 
@@ -334,12 +236,9 @@ export default function WordBuildingMode() {
 
         <View style={styles.progressRow}>
           <Text
-            style={[
-              styles.progressText,
-              { color: theme.colors.onPrimary },
-            ]}
+            style={[styles.progressText, { color: theme.colors.onPrimary }]}
           >
-            Words left: {wordsLeft >= 0 ? wordsLeft : 0} / {sessionWords.length}
+            Words left: {wordsLeft} / {words.length}
           </Text>
         </View>
       </View>
@@ -348,38 +247,19 @@ export default function WordBuildingMode() {
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.topRow,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
-        <Text
-          style={[styles.topRowLabel, { color: theme.colors.onSurface }]}
-        >
-          Only user added words
-        </Text>
-        <Switch
-          value={onlyUserAddedWords}
-          onValueChange={handleToggleOnlyUserAdded}
-        />
-      </View>
-
       {renderContent()}
 
-      {isStarted && (
-        <Button
-          mode="contained-tonal"
-          onPress={endSession}
-          style={[
-            styles.bottomButton,
-            { backgroundColor: theme.colors.errorContainer },
-          ]}
-          icon="flag-checkered"
-        >
-          End training
-        </Button>
-      )}
+      <Button
+        mode="contained-tonal"
+        onPress={endSession}
+        style={[
+          styles.bottomButton,
+          { backgroundColor: theme.colors.errorContainer },
+        ]}
+        icon="flag-checkered"
+      >
+        End training
+      </Button>
     </View>
   );
 }
@@ -492,5 +372,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 });
-
-

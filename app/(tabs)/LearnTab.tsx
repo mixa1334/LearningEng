@@ -79,7 +79,7 @@ export default function LearnTab() {
           <PracticeModeWrapper
             descriptionText="Build the English word by picking letters in the correct order."
             practiceWordsPoolLengthRule={(wordsPoolLength) =>
-              wordsPoolLength >= 1
+              wordsPoolLength !== 0
             }
           >
             <WordBuildingMode />
