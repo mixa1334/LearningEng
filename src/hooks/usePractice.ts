@@ -13,10 +13,10 @@ export function usePractice() {
     (s) => s.practice
   );
 
-  const setCategory = (category: Category) =>
+  const setCategory = (category?: Category) =>
     dispatch(setNewCategory(category));
-  const setOnlyUserWords = (_: boolean) => {
-    dispatch(setOnlyUserAdded(_));
+  const setOnlyUserWords = (onlyUserAddedWords: boolean) => {
+    dispatch(setOnlyUserAdded(onlyUserAddedWords));
   };
 
   const loadNextSet = () => dispatch(loadNextPracticeSetThunk());

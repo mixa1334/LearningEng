@@ -51,7 +51,7 @@ const practiceSlice = createSlice({
   name: "practice",
   initialState: { ...initialPracticeState },
   reducers: {
-    setNewCategory: (state, action: PayloadAction<Category>) => {
+    setNewCategory: (state, action: PayloadAction<Category | undefined>) => {
       state.category = action.payload;
     },
     setOnlyUserAdded: (state, action: PayloadAction<boolean>) => {
