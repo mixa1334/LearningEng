@@ -6,7 +6,7 @@ import LearningErrorState from "./LearningErrorState";
 import WordCard from "./WordCard";
 
 export default function LearningMainMode() {
-  const { reviewWord, learnWord, error, reloadDailySet } =
+  const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } =
     useLearningDailySet();
   const [isLearnTab, setIsLearnTab] = useState(true);
   const {
@@ -96,15 +96,17 @@ export default function LearningMainMode() {
             <Text
               style={[styles.emptyText, { color: theme.colors.onBackground }]}
             >
-              You&apos;ve completed daily set!
+              {isLearnTab ? "You've completed daily set!" + word : "No words to review, come back later!"}
             </Text>
-            <Button
-              buttonColor={theme.colors.primary}
-              textColor={theme.colors.onPrimary}
-              onPress={reloadDailySet}
-            >
-              Load one more daily set
-            </Button>
+            {isLearnTab && (
+              <Button
+                buttonColor={theme.colors.primary}
+                textColor={theme.colors.onPrimary}
+                onPress={loadExtraDailySet}
+              >
+                Load more words
+              </Button>
+            )}
           </View>
         ) : (
           <WordCard
@@ -146,7 +148,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: "5%",
   },
   completeMsg: {
     flex: 1,
@@ -156,6 +157,7 @@ const styles = StyleSheet.create({
     gap: 15,
     marginTop: 10,
     borderRadius: 20,
+    width: "100%",
   },
   emptyText: {
     fontSize: 18,

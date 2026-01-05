@@ -80,7 +80,7 @@ export default function WordCard({
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.primaryContainer,
+          backgroundColor: theme.colors.primary,
           minWidth: cardWidth,
           minHeight: cardHeight,
         },
@@ -90,25 +90,25 @@ export default function WordCard({
         <Text
           style={[
             styles.category,
-            { color: theme.colors.onSecondaryContainer },
+            { color: theme.colors.onPrimary },
           ]}
         >
           {word.category.icon} {word.category.name}
         </Text>
-        <Text style={[styles.word, { color: theme.colors.onPrimaryContainer }]}>
+        <Text style={[styles.word, { color: theme.colors.onPrimary }]}>
           {questionText}
         </Text>
 
         {showTranslation ? (
           <Text
-            style={[styles.translation, { color: theme.colors.primary }]}
+            style={[styles.translation, { color: theme.colors.onPrimary }]}
             numberOfLines={3}
           >
             {answerText}
           </Text>
         ) : (
           <TouchableOpacity
-            style={styles.eyeBtn}
+            style={[styles.eyeBtn, { backgroundColor: theme.colors.primaryContainer }]}
             onPress={handleShowTranslation}
           >
             <Ionicons
@@ -123,7 +123,7 @@ export default function WordCard({
         )}
 
         <Text
-          style={[styles.example, { color: theme.colors.onSecondaryContainer }]}
+          style={[styles.example, { color: theme.colors.onPrimary }]}
           numberOfLines={3}
         >
           {word.text_example}
@@ -147,7 +147,7 @@ export default function WordCard({
               onPress={handleAccept}
             >
               <Text
-                style={styles.btnText}
+                style={[styles.btnText, { color: theme.colors.onAcceptReject }]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
               >
@@ -159,7 +159,7 @@ export default function WordCard({
               onPress={handleReject}
             >
               <Text
-                style={styles.btnText}
+                style={[styles.btnText, { color: theme.colors.onAcceptReject }]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
               >
@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: "rgba(0,0,0,0.05)",
   },
   eyeText: {
     marginLeft: 6,
@@ -261,6 +260,5 @@ const styles = StyleSheet.create({
   btnText: {
     fontWeight: "600",
     fontSize: 15,
-    color: "#fff",
   },
 });

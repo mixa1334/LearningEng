@@ -1,11 +1,12 @@
 import { usePractice } from "@/src/hooks/usePractice";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button } from "react-native-paper";
+import { useAppTheme } from "../common/ThemeProvider";
 import WordCard from "./WordCard";
 
 export default function WordsOverview() {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const { words, loadNextSet, resetSet } = usePractice();
 
@@ -33,6 +34,7 @@ export default function WordsOverview() {
 
   const startSession = () => {
     resetProgress();
+    if (noWordsToReview) return;
     setIsStarted(true);
   };
 
@@ -74,26 +76,37 @@ export default function WordsOverview() {
   if (noWordsToReview && !isStarted) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
-          No words to review, adjust settings above or add more words!
+        <Text
+          style={[
+            styles.infoText,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
+        >
+          No words to review
         </Text>
       </View>
     );
   }
 
-  if (noWordsToReview || isCompleted) {
+  if (isCompleted || noWordsToReview) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>
-          You remembered {calculatePercentage()}% of words
+        <Text
+          style={[
+            styles.resultText,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
+        >
+          You remembered {acceptedCount} of {acceptedCount + rejectedCount} words ({calculatePercentage()}%)
         </Text>
         <Button
           mode="contained-tonal"
           onPress={startSession}
-          style={styles.reviewBtn}
+          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
+          textColor={theme.colors.onPrimary}
           icon="restart"
         >
-          Review again
+          Start again
         </Button>
       </View>
     );
@@ -102,13 +115,22 @@ export default function WordsOverview() {
   if (!isStarted) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
+        <Text
+          style={[
+            styles.infoText,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
+        >
           Review your vocabulary words one by one and mark the ones you know.
         </Text>
         <Button
           mode="contained-tonal"
           onPress={startSession}
-          style={styles.reviewBtn}
+          style={[
+            styles.reviewBtn,
+            { backgroundColor: theme.colors.onPrimaryContainer },
+          ]}
+          textColor={theme.colors.onPrimary}
           icon="play"
         >
           Start
@@ -120,25 +142,38 @@ export default function WordsOverview() {
   if (isSetEnded) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onPrimary }]}>
-          You remembered {calculatePercentage()}% of words
+        <Text
+          style={[
+            styles.resultText,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
+        >
+          You have finished reviewing the current set
         </Text>
-        <Button
-          mode="contained-tonal"
-          onPress={loadMoreWordsToLearn}
-          style={styles.reviewBtn}
-          icon="play"
-        >
-          Load next set
-        </Button>
-        <Button
-          mode="contained-tonal"
-          onPress={endSession}
-          style={styles.reviewBtn}
-          icon="flag-checkered"
-        >
-          End session
-        </Button>
+
+        <View style={styles.buttonsRow}>
+          <Button
+            mode="contained-tonal"
+            onPress={endSession}
+            style={[styles.reviewBtn, { backgroundColor: theme.colors.reject }]}
+            textColor={theme.colors.onAcceptReject}
+            icon="flag-checkered"
+          >
+            End
+          </Button>
+          <Button
+            mode="contained-tonal"
+            onPress={loadMoreWordsToLearn}
+            style={[
+              styles.reviewBtn,
+              { backgroundColor: theme.colors.onPrimaryContainer },
+            ]}
+            textColor={theme.colors.primaryContainer}
+            icon="play"
+          >
+            Continue
+          </Button>
+        </View>
       </View>
     );
   }
@@ -149,22 +184,26 @@ export default function WordsOverview() {
         <View
           style={[
             styles.progressCard,
-            { backgroundColor: theme.colors.surfaceVariant },
+            { backgroundColor: theme.colors.primary },
           ]}
         >
           <Text
-            style={[styles.progressText, { color: theme.colors.onSurface }]}
+            style={[styles.progressText, { color: theme.colors.onPrimary }]}
           >
-            Reviewed {index} / {words.length}
+            Reviewed: {index}
           </Text>
-          <Text
+          <Button
+            mode="contained-tonal"
+            onPress={endSession}
             style={[
-              styles.progressText,
-              { color: theme.colors.onSurfaceVariant },
+              styles.endBtn,
+              { backgroundColor: theme.colors.reject },
             ]}
+            textColor={theme.colors.onAcceptReject}
+            icon="flag-checkered"
           >
-            Known: {acceptedCount}
-          </Text>
+            End
+          </Button>
         </View>
         <WordCard
           word={words[index]}
@@ -173,23 +212,18 @@ export default function WordsOverview() {
           reject={reject}
           rejectBtnName="Don't know"
         />
-        <Button
-          mode="contained-tonal"
-          onPress={endSession}
-          style={[
-            styles.endBtn,
-            { backgroundColor: theme.colors.errorContainer },
-          ]}
-          icon="flag-checkered"
-        >
-          End session
-        </Button>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -256,11 +290,8 @@ const styles = StyleSheet.create({
   reviewBtn: {
     marginTop: 12,
     borderRadius: 8,
-    paddingHorizontal: 16,
   },
   endBtn: {
-    marginVertical: 16,
     borderRadius: 8,
-    paddingHorizontal: 16,
   },
 });

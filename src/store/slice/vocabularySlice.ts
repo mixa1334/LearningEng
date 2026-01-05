@@ -5,6 +5,7 @@ import { addNewCategory, deleteUserCategory, editUserCategory, getCategoriesByTy
 import { addNewWord, deleteUserWord, editUserWord, getWordsByCriteria, WordCriteria } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadDailyWordSetThunk } from "./learnSlice";
+import { resetPracticeSetThunk } from "./practiceSlice";
 
 export type VocabularyState = {
   userWords: Word[];
@@ -44,21 +45,27 @@ export const removeCategoryThunk = createAsyncThunk<Category[], Category>(
   }
 );
 
+//todo some refactor with update word mb
 export const addWordThunk = createAsyncThunk<Word[], NewWordDto>("vocabulary/addWordThunk", async (newWord, { dispatch }) => {
   await addNewWord(newWord);
   dispatch(loadDailyWordSetThunk());
+  dispatch(resetPracticeSetThunk());
   return getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
 });
 
-export const editWordThunk = createAsyncThunk<Word[], Word>("vocabulary/editWordThunk", async (wordToEdit) => {
+export const editWordThunk = createAsyncThunk<Word[], Word>("vocabulary/editWordThunk", async (wordToEdit, { dispatch }) => {
   await editUserWord(wordToEdit);
+  dispatch(loadDailyWordSetThunk());
+  dispatch(resetPracticeSetThunk());
   return getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
 });
 
 export const removeWordThunk = createAsyncThunk<Word[], Word>(
   "vocabulary/removeWordThunk",
-  async (wordToDelete) => {
+  async (wordToDelete, { dispatch }) => {
     await deleteUserWord(wordToDelete);
+    dispatch(loadDailyWordSetThunk());
+    dispatch(resetPracticeSetThunk());
     return getWordsByCriteria(new WordCriteria().appendType(EntityType.useradd));
   }
 );

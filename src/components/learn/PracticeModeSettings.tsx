@@ -1,5 +1,6 @@
 import { Category } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
+import { truncate } from "@/src/util/stringHelper";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Switch } from "react-native-paper";
@@ -25,7 +26,10 @@ export default function PracticeModeSettings() {
     resetSet();
   };
 
-  const handleOnlyUserWords = () => setOnlyUserWords(!onlyUserAddedWords);
+  const handleOnlyUserWords = () => {
+    setOnlyUserWords(!onlyUserAddedWords);
+    resetSet();
+  };
 
   return (
     <>
@@ -54,7 +58,7 @@ export default function PracticeModeSettings() {
           onPress={() => setShowCategoryPicker(true)}
         >
           <Text style={[styles.categorySelectorText, { color: theme.colors.background }]}>
-            {category ? category.icon + " " + category.name : "Category"}
+            {category ? category.icon + " " + truncate(category.name, 7) : "Category"}
           </Text>
         </Button>
       </View>

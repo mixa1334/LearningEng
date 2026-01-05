@@ -2,6 +2,7 @@ import { Word } from "@/src/entity/types";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
   loadDailyWordSetThunk,
+  loadExtraDailyWordSetThunk,
   markWordCompletelyLearnedThunk,
   markWordReviewedThunk,
   skipWordWhenReviewing,
@@ -15,6 +16,8 @@ export function useLearningDailySet() {
 
   const reloadDailySet = () => dispatch(loadDailyWordSetThunk());
 
+  const loadExtraDailySet = () => dispatch(loadExtraDailyWordSetThunk());
+
   return {
     reviewWord,
     wordsToReview,
@@ -22,6 +25,7 @@ export function useLearningDailySet() {
     wordsToLearn,
     error,
     reloadDailySet,
+    loadExtraDailySet,
   };
 }
 

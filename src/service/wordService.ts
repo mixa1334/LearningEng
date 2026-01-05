@@ -163,7 +163,7 @@ export async function getWordsByCriteria(
   const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS}
     WHERE ${condition}
-    ORDER BY w.category_id DESC
+    ORDER BY w.id ASC
     LIMIT 10`
   );
   return rows.map(rowToWord);
@@ -174,7 +174,7 @@ export async function getDailyWordsToLearn(limit: number = 5): Promise<Word[]> {
     `${SELECT_WORDS}
     WHERE w.learned = 0
       AND w.priority = 0
-    ORDER BY w.type DESC
+    ORDER BY w.id DESC
     LIMIT ?`,
     [limit]
   );

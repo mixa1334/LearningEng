@@ -45,6 +45,15 @@ export const loadDailyWordSetThunk = createAsyncThunk<
   return { wordsToLearn, wordsToReview };
 });
 
+export const loadExtraDailyWordSetThunk = createAsyncThunk<Word[]>(
+  "learn/loadExtraDailyWordSet",
+  async (_, { getState }) => {
+    const dailyGoal = (getState() as RootState).userData.dailyGoal;
+    const wordsToLearn = await getDailyWordsToLearn(dailyGoal);
+    return wordsToLearn;
+  }
+);
+
 export const markWordCompletelyLearnedThunk = createAsyncThunk<Word[], Word>(
   "learn/wordsToLearn/markWordCompletelyLearned",
   async (word, { getState }) => {
@@ -112,6 +121,11 @@ const learnSlice = createSlice({
       })
       .addCase(loadDailyWordSetThunk.rejected, (state, action) => {
         state.error = action.error.message;
+      })
+      .addCase(loadExtraDailyWordSetThunk.fulfilled, (state, action) => {
+        const wordsToLearn = action.payload;
+        state.wordsToLearn = wordsToLearn;
+        state.learnWord = extractWord(wordsToLearn);
       })
       .addCase(markWordReviewedThunk.fulfilled, (state, action) => {
         const wordsToReview = action.payload;
