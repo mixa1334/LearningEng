@@ -130,9 +130,9 @@ const styles = StyleSheet.create({
   tabHeader: {
     flexDirection: "row",
     justifyContent: "center",
-    padding: 15,
+    padding: 7,
     gap: 15,
-    borderRadius: 30,
+    borderRadius: 100,
   },
   tabButton: {
     flex: 1,

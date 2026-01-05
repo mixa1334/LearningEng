@@ -27,8 +27,8 @@ function AppContent() {
           options={{
             title: "Translation",
             headerBackTitle: "Back",
-            headerStyle: { backgroundColor: theme.colors.primary },
-            headerTintColor: theme.colors.onPrimary,
+            headerStyle: { backgroundColor: theme.colors.surfaceVariant },
+            headerTintColor: theme.colors.onSurfaceVariant,
           }}
         />
         <Stack.Screen
@@ -36,8 +36,8 @@ function AppContent() {
           options={{
             title: "Words",
             headerBackTitle: "Back",
-            headerStyle: { backgroundColor: theme.colors.primary },
-            headerTintColor: theme.colors.onPrimary,
+            headerStyle: { backgroundColor: theme.colors.surfaceVariant },
+            headerTintColor: theme.colors.onSurfaceVariant,
           }}
         />
         <Stack.Screen
@@ -45,8 +45,8 @@ function AppContent() {
           options={{
             title: "Categories",
             headerBackTitle: "Back",
-            headerStyle: { backgroundColor: theme.colors.primary },
-            headerTintColor: theme.colors.onPrimary,
+            headerStyle: { backgroundColor: theme.colors.surfaceVariant },
+            headerTintColor: theme.colors.onSurfaceVariant,
           }}
         />
       </Stack>
