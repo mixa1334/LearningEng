@@ -1,6 +1,5 @@
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { CategoryPicker } from "@/src/components/vocabulary/category/CategoryPicker";
-import CreateWordDialog from "@/src/components/vocabulary/word/CreateWordDialog";
 import WordsList from "@/src/components/vocabulary/word/WordsList";
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
@@ -18,8 +17,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { Button, IconButton, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -37,7 +35,6 @@ export default function WordVocabularyPage() {
   const [selectedCategory, setSelectedCategory] = useState<
     Category | undefined
   >(undefined);
-  const [showAddWordModal, setShowAddWordModal] = useState(false);
   const [searchPattern, setSearchPattern] = useState("");
 
   useEffect(() => {
@@ -59,7 +56,6 @@ export default function WordVocabularyPage() {
 
   return (
     <View style={styles.container}>
-      {/* Sticky Top Navbar */}
       <View
         style={[
           styles.navbar,
@@ -118,14 +114,6 @@ export default function WordVocabularyPage() {
             placeholderTextColor={theme.colors.onSurface}
           />
         </View>
-
-        <TouchableOpacity onPress={() => setShowAddWordModal(true)}>
-          <Ionicons
-            name="add-circle-outline"
-            size={28}
-            color={theme.colors.primary}
-          />
-        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -137,11 +125,6 @@ export default function WordVocabularyPage() {
           paddingHorizontal: pageHorizontalPadding,
         }}
       >
-        <CreateWordDialog
-          visible={showAddWordModal}
-          exit={() => setShowAddWordModal(false)}
-        />
-
         <WordsList />
       </ScrollView>
     </View>
