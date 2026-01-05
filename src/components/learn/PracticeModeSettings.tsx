@@ -18,10 +18,14 @@ export default function PracticeModeSettings() {
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const theme = useAppTheme();
 
-  const handleCloseCategoryPicker = () => setShowCategoryPicker(false);
+  const handleCloseCategoryPicker = () => {
+    setShowCategoryPicker(false);
+    setCategory(undefined);
+    resetSet();
+  };
 
   const handleSelectNewCategory = (category: Category) => {
-    handleCloseCategoryPicker();
+    setShowCategoryPicker(false);
     setCategory(category);
     resetSet();
   };
@@ -57,8 +61,15 @@ export default function PracticeModeSettings() {
           ]}
           onPress={() => setShowCategoryPicker(true)}
         >
-          <Text style={[styles.categorySelectorText, { color: theme.colors.background }]}>
-            {category ? category.icon + " " + truncate(category.name, 7) : "Category"}
+          <Text
+            style={[
+              styles.categorySelectorText,
+              { color: theme.colors.background },
+            ]}
+          >
+            {category
+              ? category.icon + " " + truncate(category.name, 7)
+              : "Category"}
           </Text>
         </Button>
       </View>

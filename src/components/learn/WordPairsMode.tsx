@@ -1,8 +1,9 @@
 import { Word } from "@/src/entity/types";
-import { useVocabulary } from "@/src/hooks/useVocabulary";
-import React, { useEffect, useMemo, useState } from "react";
+import { usePractice } from "@/src/hooks/usePractice";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, Switch, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
+import { PracticeModeChildProps } from "./PracticeModeWrapper";
 
 const VISIBLE_PAIRS = 4;
 
@@ -25,12 +26,9 @@ type CorrectPair = {
   enId: number;
 } | null;
 
-export default function WordPairsMode() {
+export default function WordPairsMode(props: PracticeModeChildProps) {
   const theme = useTheme();
-  const { userWords, preloadedWords } = useVocabulary();
-
-  const [onlyUserAddedWords, setOnlyUserAddedWords] = useState(true);
-  const [isStarted, setIsStarted] = useState(false);
+  const { words } = usePractice();
 
   const [sessionWords, setSessionWords] = useState<Word[]>([]);
   const [visibleIds, setVisibleIds] = useState<number[]>([]);
@@ -42,31 +40,8 @@ export default function WordPairsMode() {
   const [incorrectPair, setIncorrectPair] = useState<IncorrectPair>(null);
   const [correctPair, setCorrectPair] = useState<CorrectPair>(null);
 
-  const wordsPool = useMemo(() => {
-    return onlyUserAddedWords ? userWords : [...userWords, ...preloadedWords];
-  }, [onlyUserAddedWords, userWords, preloadedWords]);
-
   const resetGame = () => {
-    setIsStarted(false);
-    setSessionWords([]);
-    setVisibleIds([]);
-    setSolvedIds([]);
-    setEnglishOrder([]);
-    setSelectedRuId(null);
-    setSelectedEnId(null);
-    setIncorrectPair(null);
-  };
-
-  useEffect(() => {
-    resetGame();
-  }, [wordsPool.length]);
-
-  const startGame = () => {
-    if (wordsPool.length < 2) {
-      return;
-    }
-
-    const shuffled = shuffleArray(wordsPool);
+    const shuffled = shuffleArray(words);
     const maxVisible = Math.min(VISIBLE_PAIRS, shuffled.length);
     const visible = shuffled.slice(0, maxVisible).map((w) => w.id);
 
@@ -77,11 +52,14 @@ export default function WordPairsMode() {
     setSelectedRuId(null);
     setSelectedEnId(null);
     setIncorrectPair(null);
-    setIsStarted(true);
   };
 
-  const stopGame = () => {
+  useEffect(() => {
     resetGame();
+  }, [words]);
+
+  const stopGame = () => {
+    props.onEndSession?.(`You solved ${solvedIds.length} / ${words.length} pairs`);
   };
 
   const getWordById = (id: number) => {
@@ -89,12 +67,12 @@ export default function WordPairsMode() {
   };
 
   const handleSelectRu = (id: number) => {
-    if (!isStarted || incorrectPair || correctPair) return;
+    if (incorrectPair || correctPair) return;
     setSelectedRuId((prev) => (prev === id ? null : id));
   };
 
   const handleSelectEn = (id: number) => {
-    if (!isStarted || incorrectPair || correctPair) return;
+    if (incorrectPair || correctPair) return;
     setSelectedEnId((prev) => (prev === id ? null : id));
   };
 
@@ -102,11 +80,9 @@ export default function WordPairsMode() {
     const newSolved = [...solvedIds, matchedId];
     const remainingVisibleRu = visibleIds.filter((id) => id !== matchedId);
 
-
     const usedIds = new Set<number>([...newSolved, ...remainingVisibleRu]);
     const remainingWords = sessionWords.filter((w) => !usedIds.has(w.id));
     const nextWord = remainingWords[0];
-
 
     let updatedVisible = [...remainingVisibleRu];
     if (nextWord) {
@@ -117,8 +93,8 @@ export default function WordPairsMode() {
       setSolvedIds(newSolved);
       setVisibleIds([]);
       setEnglishOrder([]);
-      setIsStarted(false);
-      return;
+      props.onEndCurrentSet?.(`You solved ${solvedIds.length + 1} / ${words.length} pairs`);
+      // return;
     }
 
     const shuffledVisible = shuffleArray(updatedVisible);
@@ -131,7 +107,6 @@ export default function WordPairsMode() {
   };
 
   useEffect(() => {
-    if (!isStarted) return;
     if (selectedRuId === null || selectedEnId === null) {
       return;
     }
@@ -158,65 +133,10 @@ export default function WordPairsMode() {
       }, 500);
       return () => clearTimeout(timeout);
     }
+  }, [selectedRuId, selectedEnId]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRuId, selectedEnId, isStarted]);
-
-  const handleToggleOnlyUserAdded = () => {
-    setOnlyUserAddedWords((prev) => !prev);
-  };
-
-  const hasEnoughWords = wordsPool.length >= 2;
-
-  const renderContent = () => {
-    if (!hasEnoughWords) {
-      return (
-        <View style={styles.centered}>
-          <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
-            Not enough words to create pairs. Try adding more words to your
-            vocabulary.
-          </Text>
-        </View>
-      );
-    }
-
-    if (!isStarted && solvedIds.length > 0) {
-      return (
-        <View style={styles.centered}>
-          <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
-            You matched all available pairs!
-          </Text>
-          <Button
-            mode="contained-tonal"
-            onPress={startGame}
-            style={styles.controlButton}
-            icon="restart"
-          >
-            Play again
-          </Button>
-        </View>
-      );
-    }
-
-    if (!isStarted) {
-      return (
-        <View style={styles.centered}>
-          <Text style={[styles.infoText, { color: theme.colors.onPrimary }]}>
-            Match each Russian word with its English translation.
-          </Text>
-          <Button
-            mode="contained-tonal"
-            onPress={startGame}
-            style={styles.controlButton}
-            icon="play"
-          >
-            Start
-          </Button>
-        </View>
-      );
-    }
-
-    return (
+  return (
+    <View style={styles.container}>
       <View style={styles.gameArea}>
         <View style={styles.columnsHeader}>
           <Text style={[styles.columnTitle, { color: theme.colors.onPrimary }]}>
@@ -240,14 +160,12 @@ export default function WordPairsMode() {
             const ruIncorrect = incorrectPair?.ruId === ruId;
             const ruCorrect = correctPair?.ruId === ruId;
             const enSelected = enId !== undefined && selectedEnId === enId;
-            const enIncorrect = enId !== undefined && incorrectPair?.enId === enId;
+            const enIncorrect =
+              enId !== undefined && incorrectPair?.enId === enId;
             const enCorrect = enId !== undefined && correctPair?.enId === enId;
 
             return (
-              <View
-                key={`row-${ruId}-${enId ?? "none"}`}
-                style={styles.row}
-              >
+              <View key={`row-${ruId}-${enId ?? "none"}`} style={styles.row}>
                 <View style={styles.cell}>
                   {ruWord && (
                     <TouchableOpacity
@@ -323,50 +241,18 @@ export default function WordPairsMode() {
             );
           })}
         </View>
-
-        <View style={styles.progressRow}>
-          <Text style={[styles.progressText, { color: theme.colors.onPrimary }]}>
-            Solved {solvedIds.length} / {wordsPool.length}
-          </Text>
-        </View>
       </View>
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <View
+      <Button
+        mode="contained-tonal"
+        onPress={stopGame}
         style={[
-          styles.topRow,
-          { backgroundColor: theme.colors.surfaceVariant },
+          styles.controlButton,
+          { backgroundColor: theme.colors.errorContainer },
         ]}
+        icon="stop"
       >
-        <Text
-          style={[styles.topRowLabel, { color: theme.colors.onSurface }]}
-        >
-          Only user added words
-        </Text>
-        <Switch
-          value={onlyUserAddedWords}
-          onValueChange={handleToggleOnlyUserAdded}
-        />
-      </View>
-
-      {renderContent()}
-
-      {isStarted && (
-        <Button
-          mode="contained-tonal"
-          onPress={stopGame}
-          style={[
-            styles.controlButton,
-            { backgroundColor: theme.colors.errorContainer },
-          ]}
-          icon="stop"
-        >
-          Stop
-        </Button>
-      )}
+        Stop
+      </Button>
     </View>
   );
 }
@@ -375,19 +261,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-  },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  topRowLabel: {
-    fontSize: 14,
-    fontWeight: "600",
   },
   centered: {
     flex: 1,
@@ -455,5 +328,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 });
-
-

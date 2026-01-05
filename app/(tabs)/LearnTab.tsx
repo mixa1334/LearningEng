@@ -4,6 +4,7 @@ import ContentDivider from "@/src/components/common/ContentDivider";
 import ExpandedSection from "@/src/components/common/ExpandedSection";
 import LearningMainMode from "@/src/components/learn/LearningMainMode";
 import PracticeModeSettings from "@/src/components/learn/PracticeModeSettings";
+import PracticeModeWrapper from "@/src/components/learn/PracticeModeWrapper";
 import WordBuildingMode from "@/src/components/learn/WordBuildingMode";
 import WordPairsMode from "@/src/components/learn/WordPairsMode";
 import WordsOverview from "@/src/components/learn/WordsOverview";
@@ -34,7 +35,7 @@ export default function LearnTab() {
 
         <LearningMainMode />
 
-        <View style={{ marginTop: SPACING_XL}}>
+        <View style={{ marginTop: SPACING_XL }}>
           <ContentDivider name="Practice more" />
         </View>
 
@@ -45,7 +46,14 @@ export default function LearnTab() {
           isExpanded={activeExtraMode === ExtraMode.OVERVIEW}
           onPress={() => handleModeSectionPress(ExtraMode.OVERVIEW)}
         >
-          <WordsOverview />
+          <PracticeModeWrapper
+            descriptionText="Review your vocabulary words one by one and mark the ones you know."
+            practiceWordsPoolLengthRule={(wordsPoolLength) =>
+              wordsPoolLength !== 0
+            }
+          >
+            <WordsOverview />
+          </PracticeModeWrapper>
         </ExpandedSection>
 
         <ExpandedSection
@@ -53,7 +61,14 @@ export default function LearnTab() {
           isExpanded={activeExtraMode === ExtraMode.PAIRS}
           onPress={() => handleModeSectionPress(ExtraMode.PAIRS)}
         >
-          <WordPairsMode />
+          <PracticeModeWrapper
+            descriptionText="Match each Russian word with its English translation."
+            practiceWordsPoolLengthRule={(wordsPoolLength) =>
+              wordsPoolLength >= 2
+            }
+          >
+            <WordPairsMode />
+          </PracticeModeWrapper>
         </ExpandedSection>
 
         <ExpandedSection
@@ -61,7 +76,14 @@ export default function LearnTab() {
           isExpanded={activeExtraMode === ExtraMode.BUILDER}
           onPress={() => handleModeSectionPress(ExtraMode.BUILDER)}
         >
-          <WordBuildingMode />
+          <PracticeModeWrapper
+            descriptionText="Build the English word by picking letters in the correct order."
+            practiceWordsPoolLengthRule={(wordsPoolLength) =>
+              wordsPoolLength >= 1
+            }
+          >
+            <WordBuildingMode />
+          </PracticeModeWrapper>
         </ExpandedSection>
       </AnimatedScrollView>
     </AutoScrollProvider>
