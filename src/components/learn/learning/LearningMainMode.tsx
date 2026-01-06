@@ -96,7 +96,7 @@ export default function LearningMainMode() {
             <Text
               style={[styles.emptyText, { color: theme.colors.onBackground }]}
             >
-              {isLearnTab ? "You've completed daily set!" + word : "No words to review, come back later!"}
+              {isLearnTab ? "You've completed daily set!" : "No words to review, come back later!"}
             </Text>
             {isLearnTab && (
               <Button
