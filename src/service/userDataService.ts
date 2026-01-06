@@ -9,6 +9,7 @@ import {
   setUserField,
   USER_DATA_KEYS,
 } from "../storage/userDataStorageHelper";
+import { trimTextForSaving } from "../util/stringHelper";
 
 export async function getUserTheme(): Promise<THEMES> {
   return retrieveUserField(USER_DATA_KEYS.THEME);
@@ -24,8 +25,9 @@ export async function setUserTheme(theme: THEMES): Promise<THEMES> {
 
 export async function changeName(name: string): Promise<string> {
   const oldName = retrieveUserField(USER_DATA_KEYS.NAME);
-  if (oldName !== name) {
-    setUserField(USER_DATA_KEYS.NAME, name);
+  const trimmedName = trimTextForSaving(name);
+  if (oldName !== trimmedName) {
+    setUserField(USER_DATA_KEYS.NAME, trimmedName);
   }
   return oldName;
 }

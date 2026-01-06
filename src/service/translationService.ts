@@ -3,6 +3,7 @@ import { getDbInstance } from "../database/db";
 import { NewTranslationDto } from "../dto/NewTranslationDto";
 import { Language, Translation } from "../entity/types";
 import { rowToTranslation } from "../mapper/typesMapper";
+import { trimTextForSaving } from "../util/stringHelper";
 
 // 5000 chars per day free (for anonymous use)
 const DEFAULT_TRANSLATOR_URL = "https://api.mymemory.translated.net";
@@ -22,9 +23,10 @@ const translate = async (text: string, language: Language): Promise<string> => {
 };
 
 export async function translateAndSaveWord(text: string, language: Language): Promise<Translation> {
-  const translatedText = await translate(text, language);
+  const trimmedText = trimTextForSaving(text);
+  const translatedText = await translate(trimmedText, language);
   const newTranslation =
-    language === Language.ENGLISH ? { word_en: text, word_ru: translatedText } : { word_en: translatedText, word_ru: text };
+    language === Language.ENGLISH ? { word_en: trimmedText, word_ru: translatedText } : { word_en: translatedText, word_ru: trimmedText };
   return saveTranslation(newTranslation);
 }
 

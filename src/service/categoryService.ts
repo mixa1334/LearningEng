@@ -3,6 +3,7 @@ import { getDbInstance } from "../database/db";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";
 import { rowToCategory } from "../mapper/typesMapper";
+import { trimTextForSaving } from "../util/stringHelper";
 
 export async function addNewCategoriesBatch(
   newCategories: NewCategoryDto[],
@@ -25,7 +26,7 @@ export async function addNewCategoriesBatch(
 
       const params: (string | EntityType)[] = [];
       for (const category of batch) {
-        params.push(category.name, categoryType, category.icon);
+        params.push(trimTextForSaving(category.name), categoryType, category.icon);
       }
 
       await tx.runAsync(sql, params);
@@ -38,7 +39,7 @@ export async function addNewCategory(
   categoryType: EntityType = EntityType.useradd
 ): Promise<number> {
   const insertedRow = await getDbInstance().runAsync(`INSERT INTO categories (name, type, icon) VALUES (?, ?, ?)`, [
-    newCategory.name,
+    trimTextForSaving(newCategory.name),
     categoryType,
     newCategory.icon,
   ]);
@@ -88,7 +89,7 @@ export async function editUserCategory(category: UpdateCategoryDto): Promise<boo
   const updatedRows = await getDbInstance().runAsync(
     `UPDATE categories SET name = ?, icon = ?
     WHERE type = 'user_added' AND id = ?`,
-    [category.name, category.icon, category.id]
+    [trimTextForSaving(category.name), category.icon, category.id]
   );
   return updatedRows.changes > 0;
 }

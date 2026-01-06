@@ -3,6 +3,7 @@ import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
 import { UpdateWordDto } from "../dto/UpdateWordDto";
 import { rowToWord } from "../mapper/typesMapper";
+import { trimTextForSaving } from "../util/stringHelper";
 
 export interface WordCriteriaDTO {
   category?: Category;
@@ -119,15 +120,10 @@ const SELECT_WORDS = `SELECT
 const INSERT_WORD = `INSERT INTO words (word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
 export async function resetWordLearningProgress(): Promise<void> {
-  await getDbInstance().runAsync(
-    "UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')"
-  );
+  await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')");
 }
 
-export async function addNewWordsBatch(
-  newWords: NewWordDto[],
-  wordType: EntityType = EntityType.useradd
-): Promise<void> {
+export async function addNewWordsBatch(newWords: NewWordDto[], wordType: EntityType = EntityType.useradd): Promise<void> {
   if (!newWords.length) {
     return;
   }
@@ -142,22 +138,20 @@ export async function addNewWordsBatch(
   await db.withExclusiveTransactionAsync(async (tx) => {
     for (let i = 0; i < newWords.length; i += BATCH_SIZE) {
       const batch = newWords.slice(i, i + BATCH_SIZE);
-      const placeholders = batch
-        .map(() => "(?, ?, ?, ?, ?, ?, ?, ?)")
-        .join(", ");
+      const placeholders = batch.map(() => "(?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
       const sql = `INSERT INTO words (word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES ${placeholders}`;
 
       const params: (string | number | EntityType)[] = [];
       for (const word of batch) {
         params.push(
-          word.word_en,
-          word.word_ru,
+          trimTextForSaving(word.word_en),
+          trimTextForSaving(word.word_ru),
           wordType,
           0,
           word.category_id,
           reviewDate,
           0,
-          word.text_example
+          trimTextForSaving(word.text_example)
         );
       }
 
@@ -166,20 +160,17 @@ export async function addNewWordsBatch(
   });
 }
 
-export async function addNewWord(
-  newWord: NewWordDto,
-  wordType: EntityType = EntityType.useradd
-): Promise<number> {
+export async function addNewWord(newWord: NewWordDto, wordType: EntityType = EntityType.useradd): Promise<number> {
   const reviewDate = new Date().toISOString();
   const insertedRow = await getDbInstance().runAsync(INSERT_WORD, [
-    newWord.word_en,
-    newWord.word_ru,
+    trimTextForSaving(newWord.word_en),
+    trimTextForSaving(newWord.word_ru),
     wordType,
     +false,
     newWord.category_id,
     reviewDate,
     0,
-    newWord.text_example,
+    trimTextForSaving(newWord.text_example),
   ]);
   return insertedRow.lastInsertRowId;
 }
@@ -196,10 +187,9 @@ export async function deleteUserWord(wordToDelete: Word): Promise<boolean> {
 export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
   let result = false;
   await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
-    const existingCategory = await tx.getFirstAsync<{ id: number }>(
-      `SELECT id FROM categories WHERE id = ?;`,
-      [word.category.id]
-    );
+    const existingCategory = await tx.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE id = ?;`, [
+      word.category.id,
+    ]);
 
     if (!existingCategory) {
       throw new Error(`Category with id ${word.category.id} does not exist`);
@@ -208,7 +198,13 @@ export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
     const updatedRows = await tx.runAsync(
       `UPDATE words SET word_en = ?, word_ru = ?, category_id = ?, text_example = ?
       WHERE type = 'user_added' AND id = ?`,
-      [word.word_en, word.word_ru, word.category.id, word.text_example, word.id]
+      [
+        trimTextForSaving(word.word_en),
+        trimTextForSaving(word.word_ru),
+        word.category.id,
+        trimTextForSaving(word.text_example),
+        word.id,
+      ]
     );
 
     result = updatedRows.changes > 0;
@@ -216,9 +212,7 @@ export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
   return result;
 }
 
-export async function getWordsByCriteria(
-  criteria: WordCriteria
-): Promise<Word[]> {
+export async function getWordsByCriteria(criteria: WordCriteria): Promise<Word[]> {
   const condition = criteria.buildCondition();
   const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS}
