@@ -1,39 +1,34 @@
+import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import {
   SAFE_AREA_MIN_BOTTOM,
   TAB_BAR_BASE_HEIGHT,
   TAB_BAR_BOTTOM_INSET_MULTIPLIER,
   TAB_BAR_HORIZONTAL_MARGIN,
-} from "@/resources/constants/layout";
+} from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface IconProps {
-  readonly color: string;
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
   readonly focused: boolean;
 }
 
-function TabIcon({ color, iconName, focused }: IconProps) {
-  const theme = useTheme();
+function TabIcon({ iconName, focused }: IconProps) {
+  const theme = useAppTheme();
 
-  const activeBackgroundColor =
-    theme.colors.secondaryContainer ??
-    theme.colors.elevation?.level2 ??
-    theme.colors.surface;
-  const inactiveBackgroundColor = theme.dark
-    ? "rgba(255,255,255,0.12)"
-    : "rgba(255,255,255, 0.5)";
-  const activeIconColor =
-    theme.colors.onSecondaryContainer ?? theme.colors.primary;
-  const inactiveIconColor = color;
+  const backgroundColor = focused
+    ? theme.colors.primary
+    : theme.colors.primaryContainer;
+  const iconColor = focused
+    ? theme.colors.onPrimary
+    : theme.colors.onPrimaryContainer;
 
   const iconSize = 24;
-  const containerSize = 40; // fixed circle size
+  const containerSize = 40;
 
   return (
     <View
@@ -41,24 +36,18 @@ function TabIcon({ color, iconName, focused }: IconProps) {
         width: containerSize,
         height: containerSize,
         borderRadius: containerSize / 2,
-        backgroundColor: focused
-          ? activeBackgroundColor
-          : inactiveBackgroundColor,
+        backgroundColor: backgroundColor,
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <MaterialIcons
-        name={iconName}
-        size={iconSize}
-        color={focused ? activeIconColor : inactiveIconColor}
-      />
+      <MaterialIcons name={iconName} size={iconSize} color={iconColor} />
     </View>
   );
 }
 
 export default function TabLayout() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
   const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
@@ -74,50 +63,34 @@ export default function TabLayout() {
           flexDirection: "row",
           alignItems: "center",
           alignContent: "center",
-          backgroundColor: "transparent",
-          borderRadius: tabBarRadius,
           borderTopWidth: 0,
           position: "absolute",
           marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
           marginBottom: bottomInset,
           height: tabBarHeight,
-          shadowColor: theme.colors.shadow,
-          shadowOpacity: 0.08,
-          shadowRadius: 8,
-          elevation: 4,
-        },
-        tabBarItemStyle: {
-          justifyContent: "center",
-          alignItems: "center",
+          elevation: 0,
         },
         tabBarBackground: () => (
           <BlurView
-            intensity={50}
-            tint={theme.dark ? "light" : "dark"}
+            intensity={70}
+            tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
             style={{
               flex: 1,
               borderRadius: tabBarRadius,
+              boxShadow: theme.colors.shadow,
               overflow: "hidden",
-              backgroundColor: "rgba(0, 0, 0, 0.25)",
             }}
           />
         ),
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
-        tabBarShowLabel: false,
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: theme.colors.primary,
-        },
-        headerTintColor: theme.colors.onPrimary,
+        headerShown: false,
       }}
     >
       <Tabs.Screen
         name="VocabularyTab"
         options={{
           title: "Vocabulary",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} iconName="book" focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon iconName="book" focused={focused} />
           ),
         }}
       />
@@ -125,8 +98,8 @@ export default function TabLayout() {
         name="LearnTab"
         options={{
           title: "Learn & Review Words",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} iconName="school" focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon iconName="school" focused={focused} />
           ),
         }}
       />
@@ -134,8 +107,8 @@ export default function TabLayout() {
         name="ProfileTab"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} iconName="person" focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon iconName="person" focused={focused} />
           ),
         }}
       />

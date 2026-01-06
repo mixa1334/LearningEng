@@ -1,32 +1,60 @@
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Language } from "@/model/entity/types";
-import { SPACING_XL, SPACING_XXL } from "@/resources/constants/layout";
-import { StateType } from "@/store/slice/stateType";
+import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import { Language, Translation } from "@/src/entity/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
+import { SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
+import { StateType } from "@/src/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Button, Card, IconButton, Text, TextInput, useTheme } from "react-native-paper";
+import {
+  Button,
+  Card,
+  IconButton,
+  Text,
+  TextInput,
+  useTheme
+} from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TranslationPage() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { currentTranslation, translations, status, removeTranslation, translateWord, clearTranslations } = useTranslation();
+  const router = useRouter();
+  const {
+    currentTranslation,
+    translations,
+    status,
+    translateWord,
+    clearTranslations,
+  } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
 
   const pageHorizontalPadding = SPACING_XL;
-  const pageTopPadding = insets.top + SPACING_XXL;
+  const pageTopPadding = SPACING_XXL;
   const pageBottomPadding = insets.bottom + SPACING_XL;
 
   const switchLanguages = () => {
-    setLanguage((prev) => (prev === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH));
+    setLanguage((prev) =>
+      prev === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH
+    );
   };
 
   const translate = () => {
     translateWord(wordToTranslate, language);
     setWordToTranslate("");
+  };
+
+  const openWordFromTranslationModal = (translation: Translation) => {
+    router.push({
+      pathname: "/WordFromTranslationModal",
+      params: {
+        translation_id: translation.id.toString(),
+        word_en: translation.word_en,
+        word_ru: translation.word_ru,
+      },
+    });
   };
 
   if (status === StateType.loading) {
@@ -45,15 +73,35 @@ export default function TranslationPage() {
         },
       ]}
     >
-      <Card style={[styles.card, { backgroundColor: theme.colors.secondaryContainer }]}>
+      <Card
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.secondaryContainer },
+        ]}
+      >
         <Card.Title
-          title={language === Language.ENGLISH ? "English → Russian" : "Russian → English"}
-          left={(props) => <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onSecondaryContainer} />}
+          title={
+            language === Language.ENGLISH
+              ? "English → Russian"
+              : "Russian → English"
+          }
+          left={(props) => (
+            <Ionicons
+              {...props}
+              name={"language-outline"}
+              size={24}
+              color={theme.colors.onSecondaryContainer}
+            />
+          )}
         />
         <Card.Content>
           <TextInput
             mode="outlined"
-            placeholder={language === Language.ENGLISH ? "Enter English word" : "Enter Russian word"}
+            placeholder={
+              language === Language.ENGLISH
+                ? "Enter English word"
+                : "Enter Russian word"
+            }
             value={wordToTranslate}
             onChangeText={setWordToTranslate}
             style={styles.input}
@@ -71,7 +119,13 @@ export default function TranslationPage() {
             size={24}
             accessibilityLabel="Switch Languages"
           />
-          <Button mode="contained" icon="translate" onPress={translate} buttonColor="#81c784" textColor="#1b5e20">
+          <Button
+            mode="contained"
+            icon="translate"
+            onPress={translate}
+            buttonColor="#81c784"
+            textColor="#1b5e20"
+          >
             Translate
           </Button>
           <IconButton
@@ -89,14 +143,30 @@ export default function TranslationPage() {
         data={translations}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Card style={[styles.historyCard, { backgroundColor: theme.colors.surfaceVariant }]}>
-            <Card.Content style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Card
+            style={[
+              styles.historyCard,
+              { backgroundColor: theme.colors.surfaceVariant },
+            ]}
+          >
+            <Card.Content
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Text>
                 {item.word_en} - {item.word_ru}
               </Text>
-              <Button icon="delete" onPress={() => removeTranslation(item)} textColor={theme.colors.error}>
-                Remove
-              </Button>
+              <IconButton
+                icon="plus"
+                onPress={() => openWordFromTranslationModal(item)}
+                containerColor="#81c784"
+                iconColor="#1b5e20"
+                size={24}
+                accessibilityLabel="Add to vocabulary"
+              />
             </Card.Content>
           </Card>
         )}
@@ -132,5 +202,29 @@ const styles = StyleSheet.create({
   historyCard: {
     marginBottom: 12,
     borderRadius: 8,
+  },
+  dialogHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 8,
+    paddingTop: 4,
+  },
+  dialogTranslationText: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 12,
+  },
+  sectionLabel: {
+    marginVertical: 8,
+    fontWeight: "600",
+  },
+  categorySelector: {
+    marginBottom: 4,
+    borderRadius: 8,
+  },
+  dialogActions: {
+    justifyContent: "center",
+    paddingBottom: 8,
   },
 });

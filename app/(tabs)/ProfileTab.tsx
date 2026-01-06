@@ -1,54 +1,32 @@
-import DailyGoalCard from "@/components/profile/DailyGoalCard";
-import ProfileHeaderCard from "@/components/profile/ProfileHeaderCard";
-import ProgressCard from "@/components/profile/ProgressCard";
-import SettingsDialog from "@/components/profile/SettingsDialog";
-import { SPACING_XL, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { Button, useTheme } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AnimatedScrollView from "@/src/components/common/AnimatedAutoScrollView";
+import { AutoScrollProvider } from "@/src/components/common/AutoScrollContext";
+import DailyGoalCard from "@/src/components/profile/DailyGoalCard";
+import FaqCard from "@/src/components/profile/FaqCard";
+import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
+import ProgressCard from "@/src/components/profile/ProgressCard";
+import QuoteCard from "@/src/components/profile/QuoteCard";
+import SettingsCard from "@/src/components/profile/SettingsCard";
+import { useUserData } from "@/src/hooks/useUserData";
+import React from "react";
 
 export default function ProfileTab() {
-  const [settingsVisible, setSettingsVisible] = useState(false);
-  const theme = useTheme();
-  const insets = useSafeAreaInsets();
-
-  const pageHorizontalPadding = SPACING_XL;
-  const pageTopPadding = insets.top;
-  const pageBottomPadding = insets.bottom + SPACING_XL + TAB_BAR_BASE_HEIGHT * 2;
-
-  const toggleSettings = () => setSettingsVisible((prev) => !prev);
+  const { name } = useUserData();
 
   return (
-    <ScrollView
-      style={[styles.page, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={{
-        paddingTop: pageTopPadding,
-        paddingBottom: pageBottomPadding,
-        paddingHorizontal: pageHorizontalPadding,
-      }}
-      showsVerticalScrollIndicator={false}
-    >
-      <ProfileHeaderCard />
+    <AutoScrollProvider>
+      <AnimatedScrollView headerTitle={name}>
+        <ProfileHeaderCard />
 
-      <ProgressCard />
+        <ProgressCard />
 
-      <DailyGoalCard />
+        <DailyGoalCard />
 
-      <Button mode="contained-tonal" icon="cog" onPress={toggleSettings} style={styles.settingsBtn}>
-        Settings
-      </Button>
+        <QuoteCard />
 
-      <SettingsDialog visible={settingsVisible} onDismiss={toggleSettings} />
-    </ScrollView>
+        <FaqCard />
+
+        <SettingsCard />
+      </AnimatedScrollView>
+    </AutoScrollProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-  },
-  settingsBtn: {
-    marginTop: 12,
-  },
-});

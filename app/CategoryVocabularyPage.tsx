@@ -1,53 +1,24 @@
-import CategoriesList from "@/components/category/CategoriesList";
-import CreateCategoryDialog from "@/components/category/CreateCategoryDialog";
-import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/resources/constants/layout";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import CategoriesList from "@/src/components/vocabulary/category/CategoriesList";
+import { SPACING_LG, SPACING_MD, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import React from "react";
+import { ScrollView } from "react-native";
+import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function CategoryVocabularyPage() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const pageHorizontalPadding = SPACING_LG;
-  const pageTopPadding = insets.top + SPACING_MD;
-  const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
-
-  const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
 
   return (
     <ScrollView
-      style={[
-        styles.page,
-        {
-          backgroundColor: theme.colors.background,
-        },
-      ]}
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
       contentContainerStyle={{
-        paddingTop: pageTopPadding,
-        paddingBottom: pageBottomPadding,
-        paddingHorizontal: pageHorizontalPadding,
+        paddingTop: SPACING_MD,
+        paddingBottom: insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT,
+        paddingHorizontal: SPACING_LG,
       }}
     >
-      <CreateCategoryDialog visible={showAddCategoryModal} exit={() => setShowAddCategoryModal(false)} />
-
-      <Button
-        icon="plus"
-        mode="outlined"
-        onPress={() => setShowAddCategoryModal(true)}
-        style={[styles.addBtn, { backgroundColor: theme.colors.primary }]}
-        textColor={theme.colors.onPrimary}
-      >
-        add new category
-      </Button>
       <CategoriesList />
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-  },
-  addBtn: { marginBottom: SPACING_SM },
-});
