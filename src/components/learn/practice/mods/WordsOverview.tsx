@@ -2,9 +2,9 @@ import { usePractice } from "@/src/hooks/usePractice";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
-import { useAppTheme } from "../common/ThemeProvider";
-import { PracticeModeChildProps } from "./PracticeModeWrapper";
-import WordCard from "./WordCard";
+import { useAppTheme } from "../../../common/ThemeProvider";
+import WordCard from "../../WordCard";
+import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 export default function WordsOverview(props: PracticeModeChildProps) {
   const theme = useAppTheme();

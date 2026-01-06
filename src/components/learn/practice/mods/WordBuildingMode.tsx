@@ -2,8 +2,8 @@ import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
-import { PracticeModeChildProps } from "./PracticeModeWrapper";
-import { useAppTheme } from "../common/ThemeProvider";
+import { useAppTheme } from "../../../common/ThemeProvider";
+import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 type LetterTile = {
   id: number;

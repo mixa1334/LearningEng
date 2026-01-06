@@ -2,8 +2,8 @@ import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button, useTheme } from "react-native-paper";
-import LearningErrorState from "./LearningErrorState";
-import WordCard from "./WordCard";
+import LearningErrorState from "../LearningErrorState";
+import WordCard from "../WordCard";
 
 export default function LearningMainMode() {
   const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } =

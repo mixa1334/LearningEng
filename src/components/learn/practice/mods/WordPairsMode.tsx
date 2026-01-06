@@ -3,8 +3,8 @@ import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
-import { PracticeModeChildProps } from "./PracticeModeWrapper";
-import { useAppTheme } from "../common/ThemeProvider";
+import { useAppTheme } from "../../../common/ThemeProvider";
+import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const VISIBLE_PAIRS = 4;
 

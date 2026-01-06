@@ -2,7 +2,8 @@ import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
-import { useAppTheme } from "../common/ThemeProvider";
+import { useAutoScroll } from "../../common/AutoScrollContext";
+import { useAppTheme } from "../../common/ThemeProvider";
 
 export type PracticeModeChildProps = {
   onEndCurrentSet?: (endMessage: string) => void;
@@ -16,11 +17,12 @@ interface PracticeModeWrapperProps {
 }
 
 export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
+  const { triggerScroll } = useAutoScroll();
   const theme = useAppTheme();
 
   const { words, loadNextSet, resetSet } = usePractice();
 
-  const noWordsToReview = !props.practiceWordsPoolLengthRule(words.length); 
+  const noWordsToReview = !props.practiceWordsPoolLengthRule(words.length);
 
   const [childTextMessage, setChildTextMessage] = useState("");
 
@@ -46,6 +48,7 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
     resetProgress();
     if (noWordsToReview) return;
     setIsStarted(true);
+    triggerScroll();
   };
 
   const endSession = () => {
@@ -55,19 +58,13 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
   const loadMoreWordsToLearn = () => {
     loadNextSet();
     setIsSetEnded(false);
+    triggerScroll();
   };
 
   if (noWordsToReview && !isStarted) {
     return (
       <View style={styles.centered}>
-        <Text
-          style={[
-            styles.infoText,
-            { color: theme.colors.onSecondaryContainer },
-          ]}
-        >
-          No words to practice
-        </Text>
+        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>No words to practice</Text>
       </View>
     );
   }
@@ -75,21 +72,11 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
   if (isCompleted || noWordsToReview) {
     return (
       <View style={styles.centered}>
-        <Text
-          style={[
-            styles.resultText,
-            { color: theme.colors.onSecondaryContainer },
-          ]}
-        >
-          {childTextMessage}
-        </Text>
+        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
         <Button
           mode="contained-tonal"
           onPress={startSession}
-          style={[
-            styles.reviewBtn,
-            { backgroundColor: theme.colors.onPrimaryContainer },
-          ]}
+          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
           textColor={theme.colors.onPrimary}
           icon="restart"
         >
@@ -102,21 +89,11 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
   if (!isStarted) {
     return (
       <View style={styles.centered}>
-        <Text
-          style={[
-            styles.infoText,
-            { color: theme.colors.onSecondaryContainer },
-          ]}
-        >
-          {props.descriptionText}
-        </Text>
+        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>{props.descriptionText}</Text>
         <Button
           mode="contained-tonal"
           onPress={startSession}
-          style={[
-            styles.reviewBtn,
-            { backgroundColor: theme.colors.onPrimaryContainer },
-          ]}
+          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
           textColor={theme.colors.onPrimary}
           icon="play"
         >
@@ -129,14 +106,7 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
   if (isSetEnded) {
     return (
       <View style={styles.centered}>
-        <Text
-          style={[
-            styles.resultText,
-            { color: theme.colors.onSecondaryContainer },
-          ]}
-        >
-          You have finished current set
-        </Text>
+        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>You have finished current set</Text>
 
         <View style={styles.buttonsRow}>
           <Button
@@ -151,10 +121,7 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
           <Button
             mode="contained-tonal"
             onPress={loadMoreWordsToLearn}
-            style={[
-              styles.reviewBtn,
-              { backgroundColor: theme.colors.onPrimaryContainer },
-            ]}
+            style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
             textColor={theme.colors.primaryContainer}
             icon="play"
           >

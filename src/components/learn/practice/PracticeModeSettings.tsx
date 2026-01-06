@@ -2,8 +2,8 @@ import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Switch } from "react-native-paper";
-import { useAppTheme } from "../common/ThemeProvider";
-import PickCategoryButton from "../vocabulary/category/PickCategoryButton";
+import { useAppTheme } from "../../common/ThemeProvider";
+import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
 
 export default function PracticeModeSettings() {
   const {
