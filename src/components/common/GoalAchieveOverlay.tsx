@@ -14,36 +14,28 @@ export function GoalAchieveOverlay() {
   useEffect(() => {
     if (dailyGoalAchieve) {
       setVisible(true);
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 2000);
-      return () => clearTimeout(timer);
     }
   }, [dailyGoalAchieve]);
 
   if (!visible) return null;
 
   return (
-    <View
-      style={[
-        styles.overlay,
-        { backgroundColor: theme.colors.goalAchieveOverlay },
-      ]}
-    >
+    <View style={[styles.overlay, { backgroundColor: theme.colors.background }]}>
       <View style={styles.content}>
-        <Text style={[styles.congratsText, { color: theme.colors.text }]}>
-          🎉 {name} 🎉
-        </Text>
-        <Text style={[styles.congratsText, { color: theme.colors.text }]}>
+        <Text style={[styles.congratsTextTitle, { color: theme.colors.onBackground }]}>{name}</Text>
+        <Text style={[styles.congratsTextBody, { color: theme.colors.onBackground }]}>
           You have achieved your daily learning goal!
         </Text>
-        <LottieView
-          source={require("@/assets/animations/confetti_daily_goal.json")}
-          autoPlay
-          loop={false}
-          style={{ width: width * 0.8, height: height * 0.4 }}
-        />
+        <Text style={[styles.congratsTextFooter, { color: theme.colors.onBackground }]}>You did it! You&apos;re amazing!</Text>
       </View>
+      <LottieView
+        source={require("@/assets/animations/confetti_daily_goal.json")}
+        autoPlay
+        loop={false}
+        resizeMode="cover"
+        style={StyleSheet.absoluteFillObject}
+        onAnimationFinish={() => setVisible(false)}
+      />
     </View>
   );
 }
@@ -60,9 +52,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING_XL,
     paddingVertical: SPACING_LG,
   },
-  congratsText: {
-    fontSize: 24,
+  congratsTextTitle: {
+    fontSize: 32,
     fontWeight: "800",
+    marginBottom: SPACING_LG,
+    textAlign: "center",
+    letterSpacing: 0.5,
+  },
+  congratsTextBody  : {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: SPACING_LG,
+    textAlign: "center",
+  },
+  congratsTextFooter: {
+    fontSize: 16,
+    fontWeight: "600",
     marginBottom: SPACING_LG,
     textAlign: "center",
     letterSpacing: 0.5,

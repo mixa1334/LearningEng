@@ -24,7 +24,6 @@ const lightTheme = {
     onAcceptReject: "#FFFFFF",
     text: "#FFFFFF",
     shadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
-    goalAchieveOverlay: "rgba(0,0,0,0.9)",
   },
 };
 
@@ -37,7 +36,6 @@ const darkTheme = {
     onAcceptReject: "#FFFFFF",
     text: "#000000",
     shadow: "0 0 10px 0 rgba(255, 255, 255, 0.2)",
-    goalAchieveOverlay: "rgba(255,255,255,0.9)",
   },
 };
 
