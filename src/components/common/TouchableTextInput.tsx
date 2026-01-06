@@ -50,7 +50,7 @@ export default function TouchableTextInput({ label, initialValue, onChange, onBl
         <TouchableRipple
           style={[styles.editableField, { backgroundColor: theme.colors.secondary }]}
           borderless={false}
-          rippleColor={theme.colors.primary}
+          rippleColor={theme.colors.onSecondary}
           onPress={handlePress}
         >
           <View>
