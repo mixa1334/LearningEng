@@ -101,6 +101,17 @@ function AppContent() {
             headerLeft: () => BackButton(theme.colors.primary),
           }}
         />
+        <Stack.Screen
+          name="WordFromTranslationModal"
+          options={{
+            presentation: "modal",
+            headerStyle: { backgroundColor: theme.colors.surfaceVariant },
+            contentStyle: { backgroundColor: theme.colors.background },
+            headerTintColor: theme.colors.onSurfaceVariant,
+            title: "Save to Vocabulary",
+            headerLeft: () => BackButton(theme.colors.primary),
+          }}
+        />
       </Stack>
     </>
   );

@@ -31,13 +31,13 @@ export const loadTranslationsThunk = createAsyncThunk<Translation[]>("translatio
   return translations;
 });
 
-export const removeTranslationThunk = createAsyncThunk<TranslationState, Translation>(
+export const removeTranslationThunk = createAsyncThunk<TranslationState, number>(
   "translation/removeTranslation",
-  async (translation, { getState }) => {
-    await removeTranslation(translation);
+  async (translationId, { getState }) => {
+    await removeTranslation(translationId);
     const currentState = (getState() as RootState).translation;
-    const currentTranslation = currentState.currentTranslation?.id === translation.id ? undefined : currentState.currentTranslation;
-    const translations = currentState.translations.filter((t) => t.id !== translation.id);
+    const currentTranslation = currentState.currentTranslation?.id === translationId ? undefined : currentState.currentTranslation;
+    const translations = currentState.translations.filter((t) => t.id !== translationId);
     return { currentTranslation, translations };
   }
 );

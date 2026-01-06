@@ -47,8 +47,8 @@ export async function getTranslations(): Promise<Translation[]> {
   return rows.map(rowToTranslation);
 }
 
-export async function removeTranslation(translationToDelete: Translation): Promise<boolean> {
-  const deletedRows = await getDbInstance().runAsync(`DELETE FROM translations WHERE id = ?`, [translationToDelete.id]);
+export async function removeTranslation(translationToDeleteId: number): Promise<boolean> {
+  const deletedRows = await getDbInstance().runAsync(`DELETE FROM translations WHERE id = ?`, [translationToDeleteId]);
   return deletedRows.changes > 0;
 }
 

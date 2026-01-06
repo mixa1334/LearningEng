@@ -1,22 +1,19 @@
 import LoadingSpinner from "@/src/components/common/LoadingSpinner";
-import { CategoryPicker } from "@/src/components/vocabulary/category/CategoryPicker";
-import { Category, Language, Translation } from "@/src/entity/types";
+import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
   Button,
   Card,
-  Dialog,
   IconButton,
-  Portal,
   Text,
   TextInput,
-  useTheme,
+  useTheme
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -27,20 +24,11 @@ export default function TranslationPage() {
     currentTranslation,
     translations,
     status,
-    removeTranslation,
     translateWord,
     clearTranslations,
   } = useTranslation();
-  const { addWord } = useVocabulary();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
-  const [selectedTranslation, setSelectedTranslation] =
-    useState<Translation | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
-  const [showAddToVocabDialog, setShowAddToVocabDialog] = useState(false);
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = SPACING_XXL;
@@ -57,37 +45,15 @@ export default function TranslationPage() {
     setWordToTranslate("");
   };
 
-  const openAddToVocabularyDialog = (translation: Translation) => {
-    setSelectedTranslation(translation);
-    setSelectedCategory(null);
-    setShowAddToVocabDialog(true);
-  };
-
-  const closeAddToVocabularyDialog = () => {
-    setShowAddToVocabDialog(false);
-    setShowCategoryPicker(false);
-    setSelectedTranslation(null);
-    setSelectedCategory(null);
-  };
-
-  const handleSaveToVocabulary = () => {
-    if (!selectedTranslation || !selectedCategory) return;
-
-    addWord({
-      word_en: selectedTranslation.word_en,
-      word_ru: selectedTranslation.word_ru,
-      transcription: "",
-      category_id: selectedCategory.id,
-      text_example: "",
+  const openWordFromTranslationModal = (translation: Translation) => {
+    router.push({
+      pathname: "/WordFromTranslationModal",
+      params: {
+        translation_id: translation.id.toString(),
+        word_en: translation.word_en,
+        word_ru: translation.word_ru,
+      },
     });
-
-    removeTranslation(selectedTranslation);
-    closeAddToVocabularyDialog();
-  };
-
-  const handleSelectCategory = (category: Category) => {
-    setSelectedCategory(category);
-    setShowCategoryPicker(false);
   };
 
   if (status === StateType.loading) {
@@ -172,74 +138,6 @@ export default function TranslationPage() {
         </Card.Actions>
       </Card>
 
-      <Portal>
-        <Dialog
-          visible={showAddToVocabDialog}
-          onDismiss={closeAddToVocabularyDialog}
-          style={{ backgroundColor: theme.colors.secondaryContainer }}
-        >
-          <View style={styles.dialogHeader}>
-            <Dialog.Title style={{ color: theme.colors.onBackground }}>
-              Add to vocabulary
-            </Dialog.Title>
-            <IconButton
-              icon="close"
-              size={24}
-              onPress={closeAddToVocabularyDialog}
-              accessibilityLabel="Cancel adding to vocabulary"
-            />
-          </View>
-
-          <Dialog.Content>
-            {selectedTranslation && (
-              <Text
-                style={[
-                  styles.dialogTranslationText,
-                  { color: theme.colors.onBackground },
-                ]}
-              >
-                {selectedTranslation.word_en} - {selectedTranslation.word_ru}
-              </Text>
-            )}
-
-            <Text
-              style={[
-                styles.sectionLabel,
-                { color: theme.colors.onBackground },
-              ]}
-            >
-              Category
-            </Text>
-            <Button
-              mode="outlined"
-              style={styles.categorySelector}
-              onPress={() => setShowCategoryPicker(true)}
-            >
-              {selectedCategory
-                ? `${selectedCategory.icon} ${selectedCategory.name}`
-                : "Select category"}
-            </Button>
-
-            <CategoryPicker
-              visible={showCategoryPicker}
-              onClose={() => setShowCategoryPicker(false)}
-              onSelectCategory={handleSelectCategory}
-            />
-          </Dialog.Content>
-
-          <Dialog.Actions style={styles.dialogActions}>
-            <Button
-              mode="contained"
-              icon="content-save"
-              onPress={handleSaveToVocabulary}
-              disabled={!selectedCategory || !selectedTranslation}
-            >
-              Save
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-
       <FlatList
         data={translations}
         keyExtractor={(item) => item.id.toString()}
@@ -262,7 +160,7 @@ export default function TranslationPage() {
               </Text>
               <IconButton
                 icon="plus"
-                onPress={() => openAddToVocabularyDialog(item)}
+                onPress={() => openWordFromTranslationModal(item)}
                 containerColor="#81c784"
                 iconColor="#1b5e20"
                 size={24}
