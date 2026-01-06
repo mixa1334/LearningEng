@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING_SM,
     borderBottomWidth: 0.5,
     zIndex: 100,
+    gap: SPACING_MD,
   },
   title: {
     fontSize: 18,
@@ -126,7 +127,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    marginHorizontal: SPACING_MD,
     borderRadius: 8,
     paddingHorizontal: 8,
     height: 36,

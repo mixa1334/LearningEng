@@ -1,5 +1,5 @@
 import FieldTextInput from "@/src/components/common/FieldTextInput";
-import SimpleEmojiPicker from "@/src/components/common/SimpleEmojiPicker";
+import PickEmojiButton from "@/src/components/common/PickEmojiButton";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -11,7 +11,6 @@ export default function CreateCategoryModal() {
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryEmoji, setNewCategoryEmoji] = useState<string | undefined>(undefined);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleAddCategory = () => {
     if (!newCategoryName || !newCategoryEmoji) return;
@@ -20,8 +19,7 @@ export default function CreateCategoryModal() {
       icon: newCategoryEmoji,
     });
     setNewCategoryName("");
-    setNewCategoryEmoji("");
-    setShowEmojiPicker(false);
+    setNewCategoryEmoji(undefined);
     router.back();
   };
 
@@ -29,29 +27,7 @@ export default function CreateCategoryModal() {
     <View style={styles.container}>
       <Text style={styles.subtitle}>Group your words with a name and emoji for quick scanning.</Text>
       <FieldTextInput label="Category name" initialValue={newCategoryName} onChangeText={setNewCategoryName} />
-      {!showEmojiPicker && (
-        <Button
-          mode="contained-tonal"
-          icon="emoticon-outline"
-          onPress={() => setShowEmojiPicker(true)}
-          style={styles.emojiButton}
-        >
-          <View style={styles.emojiInner}>
-            <Text style={styles.emojiEmoji}>{newCategoryEmoji || "🙂"}</Text>
-            <Text style={styles.emojiLabel}>{newCategoryEmoji ? "Change emoji" : "Choose emoji"}</Text>
-          </View>
-        </Button>
-      )}
-      {showEmojiPicker && (
-        <View style={styles.emojiPickerContainer}>
-          <SimpleEmojiPicker
-            onEmojiSelected={(emoji) => {
-              setNewCategoryEmoji(emoji);
-              setShowEmojiPicker(false);
-            }}
-          />
-        </View>
-      )}
+      <PickEmojiButton emoji={newCategoryEmoji} onSelectEmoji={setNewCategoryEmoji} />
       <Button
         mode="contained"
         icon="plus"

@@ -3,7 +3,7 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
-import SimpleEmojiPicker from "../../common/SimpleEmojiPicker";
+import PickEmojiButton from "../../common/PickEmojiButton";
 import TouchableTextInput from "../../common/TouchableTextInput";
 
 interface EditCategoryDialogProps {
@@ -17,7 +17,6 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   const { editCategory, removeCategory } = useVocabulary();
   const [categoryToEdit, setCategoryToEdit] = useState(category);
   useEffect(() => setCategoryToEdit(category), [category]);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const setCategoryName = (text: string) => {
     if (!categoryToEdit) return;
@@ -50,43 +49,9 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
             <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
           </View>
           <View>
-            <TouchableTextInput
-              label="Category name"
-              initialValue={categoryToEdit?.name}
-              onChange={setCategoryName}
-            />
+            <TouchableTextInput label="Category name" initialValue={categoryToEdit?.name} onChange={setCategoryName} />
 
-            {!showEmojiPicker && (
-              <Button
-                mode="contained-tonal"
-                icon="emoticon-outline"
-                onPress={() => setShowEmojiPicker(true)}
-                style={[
-                  styles.emojiButton,
-                  {
-                    backgroundColor: theme.colors.outlineVariant,
-                    borderColor: theme.colors.outlineVariant,
-                  },
-                ]}
-                textColor={theme.colors.onSecondaryContainer}
-                contentStyle={styles.emojiButtonContent}
-              >
-                <View style={styles.emojiInner}>
-                  <Text style={styles.emojiEmoji}>{categoryToEdit?.icon || "🙂"}</Text>
-                  <Text style={styles.emojiLabel}>Change emoji</Text>
-                </View>
-              </Button>
-            )}
-            {showEmojiPicker && (
-              <View style={styles.emojiPickerContainer}>
-                <SimpleEmojiPicker
-                  onEmojiSelected={(emoji) => {
-                    setCategoryEmoji(emoji);
-                    setShowEmojiPicker(false);
-                  }}
-                />
-              </View>
-            )}
+            <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
           </View>
 
           <View style={styles.actions}>
@@ -106,7 +71,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
               onPress={handleEditCategory}
             >
-              Save
+              Update
             </Button>
           </View>
         </View>
@@ -127,30 +92,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  emojiPickerContainer: {
-    height: 250,
-    margin: 10,
-  },
-  emojiButton: {
-    marginTop: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 999,
-  },
-  emojiButtonContent: {
-    justifyContent: "center",
-  },
-  emojiInner: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  emojiEmoji: {
-    fontSize: 20,
-  },
-  emojiLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
   primaryButton: {
     marginLeft: 8,
   },
@@ -158,6 +99,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   actions: {
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
