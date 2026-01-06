@@ -10,11 +10,13 @@ This document gives a high-level overview aimed at new contributors or future-yo
 - Offer **daily learning and review** sessions so words are seen repeatedly over time.
 - Include a **built-in translation helper** (English ↔ Russian) tightly integrated with your personal vocabulary.
 
+The app is structured around three main tabs: **Vocabulary**, **Learn & Review Words**, and **Profile**.
+
 ### Core concepts
 
 - **User profile & progress** – daily goal, streaks, and progress cards.
-- **Vocabulary** – categories and words you add and manage.
-- **Learning flows** – sessions that pick a subset of words for learning/review.
+- **Vocabulary** – categories and words you add and manage, plus quick access to the translation helper.
+- **Learning & practice flows** – daily sets and practice modes that pick a subset of words for learning/review.
 - **Translation helper** – quick lookup with history and ability to add useful translations to your vocabulary.
 
 

@@ -6,10 +6,10 @@ Use this document to showcase the most important screens of **LearningEng**.
 
 - **Dashboard / Profile**
   - Daily goal, progress cards, and quick access to settings.
-- **Learn tab**
+- **Learn & Review Words tab**
   - Learning card UI with a word, translation, and actions.
-- **Review tab/flow**
-  - Example of reviewing previously learned words.
+  - Review flow for previously learned words.
+  - Optional practice modes (e.g. word pairs, word building) if you want to showcase them.
 - **Vocabulary tab**
   - Category list screen.
   - Word list screen with add/edit dialogs.

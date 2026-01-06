@@ -115,19 +115,26 @@ In `package.json`:
   - `WordVocabularyPage.tsx` – manage words.
   - `TranslationPage.tsx` – English–Russian translation page.
 
-- **`components/`**: Reusable UI components.
-  - `common/` – shared UI (cards, dividers, loading spinner, theme provider, etc.).
-  - `learn/` – learning flow components (learning content, headers, word cards, etc.).
-  - `profile/` – profile, progress, daily goal, settings dialog.
-  - `word/` – dialogs and lists for word management.
+- **`src/`**: Main application code (logic, UI, data access).
+  - `components/` – reusable UI components.
+    - `common/` – shared UI (cards, dividers, loading spinner, theme provider, etc.).
+    - `learn/` – learning and practice flow components (learning cards, practice modes, error states, etc.).
+    - `profile/` – profile, progress, daily goal, FAQ, quotes, settings.
+    - `vocabulary/` – category and word lists, pickers, and edit dialogs.
+  - `hooks/` – domain-specific hooks (`useLearn`, `usePractice`, `useVocabulary`, `useTranslation`, `useUserData`, etc.).
+  - `store/` – Redux store configuration and slices.
+    - `index.ts` – creates the store and typed hooks.
+    - `slice/*Slice.ts` – slices for learning, practice, vocabulary, translation, and user data.
+  - `entity/` – core TypeScript types for categories, words, translations, and user data.
+  - `database/` – SQLite setup and migration runner (`db.ts`, `migrations.ts`).
+  - `service/` – domain services for categories, words, translations, user data, daily quote, and backup.
+  - `storage/` – helpers for persisting user-related settings and data.
+  - `mapper/` – mapping helpers between raw DB rows and entity types.
+  - `resources/` – constants and SQL schema (`resources/constants`, `resources/sql/schema.ts`).
+  - `util/` – generic helpers (e.g. date and string utilities).
 
-- **`store/`**: Redux store configuration and slices.
-  - `index.ts` – creates the store and typed hooks.
-  - `slice/*Slice.ts` – separate slices for learning, vocabulary, translation, and user data.
-
-- **`assets/`**: Static assets (images, fonts, animations, etc.).
-- **`resources/`**: Constants (layout spacing, dimensions, etc.).
-- **`util/`**: Utility functions and helpers.
+- **`assets/`**: Static assets (images, animations, and seed data in `assets/data/*`).
+- **`docs/`**: Project documentation (overview, architecture, learning flows, data model, and screenshots).
 
 ---
 
