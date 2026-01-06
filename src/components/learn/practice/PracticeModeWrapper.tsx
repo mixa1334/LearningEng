@@ -32,7 +32,7 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
 
   useEffect(() => {
     resetProgress();
-  }, []);
+  }, [props.children]);
 
   const resetProgress = () => {
     setIsStarted(false);

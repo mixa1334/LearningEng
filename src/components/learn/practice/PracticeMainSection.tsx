@@ -6,6 +6,7 @@ import WordsOverview from "@/src/components/learn/practice/mods/WordsOverview";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SegmentedButtons } from "react-native-paper";
+import { useAppTheme } from "../../common/ThemeProvider";
 
 enum ExtraMode {
   OVERVIEW = "overview",
@@ -38,30 +39,38 @@ const PracticeModeComponents: Record<
   },
 };
 
+const config = [
+  { value: ExtraMode.OVERVIEW, label: "Review" },
+  { value: ExtraMode.PAIRS, label: "Pairs" },
+  { value: ExtraMode.BUILDER, label: "Builder" },
+];
+
 export default function PracticeMainSection() {
+  const theme = useAppTheme();
   const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(ExtraMode.OVERVIEW);
 
   const ActiveModeComponent = PracticeModeComponents[activeExtraMode].component;
 
   return (
     <View>
-      <PracticeModeSettings />
+      <View style={[styles.topRow, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <PracticeModeSettings />
 
-      <SegmentedButtons
-        value={activeExtraMode}
-        onValueChange={setActiveExtraMode}
-        buttons={[
-          {
-            value: ExtraMode.OVERVIEW,
-            label: "Quick review",
-          },
-          {
-            value: ExtraMode.PAIRS,
-            label: "Word pairs",
-          },
-          { value: ExtraMode.BUILDER, label: "Build the word" },
-        ]}
-      />
+        <SegmentedButtons
+          style={[styles.segmentedButtons, {}]}
+          value={activeExtraMode}
+          onValueChange={setActiveExtraMode}
+          buttons={config.map((btn) => ({
+            ...btn,
+            style: {
+              backgroundColor: btn.value === activeExtraMode ? theme.colors.secondary : theme.colors.surface,
+            },
+            labelStyle: {
+              color: btn.value === activeExtraMode ? theme.colors.onSecondary : theme.colors.onSurface,
+            },
+          }))}
+        />
+      </View>
 
       <PracticeModeWrapper
         descriptionText={PracticeModeComponents[activeExtraMode].descriptionText}
@@ -73,4 +82,17 @@ export default function PracticeMainSection() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  topRow: {
+    flexDirection: "column",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+    gap: 10,
+  },
+  segmentedButtons: {
+    width: "100%",
+  },
+});

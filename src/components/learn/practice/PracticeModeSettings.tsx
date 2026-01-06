@@ -6,13 +6,7 @@ import { useAppTheme } from "../../common/ThemeProvider";
 import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
 
 export default function PracticeModeSettings() {
-  const {
-    onlyUserAddedWords,
-    setOnlyUserWords,
-    category,
-    setCategory,
-    resetSet,
-  } = usePractice();
+  const { onlyUserAddedWords, setOnlyUserWords, category, setCategory, resetSet } = usePractice();
   const theme = useAppTheme();
 
   useEffect(() => {
@@ -24,25 +18,13 @@ export default function PracticeModeSettings() {
   };
 
   return (
-    <View
-      style={[styles.topRow, { backgroundColor: theme.colors.surfaceVariant }]}
-    >
+    <View style={styles.topRow}>
       <View style={styles.switcherContainer}>
-        <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>
-          only user words
-        </Text>
-        <Switch
-          value={onlyUserAddedWords}
-          onValueChange={handleOnlyUserWords}
-        />
+        <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>only user words</Text>
+        <Switch value={onlyUserAddedWords} onValueChange={handleOnlyUserWords} />
       </View>
-      <PickCategoryButton
-        category={category}
-        onSelectCategory={setCategory}
-        onClose={() => setCategory(undefined)}
-        truncateLength={7}
-      />
-    </View> 
+      <PickCategoryButton category={category} onSelectCategory={setCategory} onClose={() => setCategory()} truncateLength={7} />
+    </View>
   );
 }
 
@@ -56,22 +38,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    borderRadius: 12,
-    marginBottom: 16,
+    width: "100%",
   },
   topRowLabel: {
     fontSize: 14,
-    fontWeight: "600",
-  },
-  categorySelector: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-  },
-  categorySelectorText: {
-    fontSize: 13,
     fontWeight: "600",
   },
 });
