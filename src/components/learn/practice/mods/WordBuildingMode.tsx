@@ -29,9 +29,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
   const [letterPool, setLetterPool] = useState<LetterTile[]>([]);
   const [usedLetterIds, setUsedLetterIds] = useState<number[]>([]);
-  const [incorrectLetterId, setIncorrectLetterId] = useState<number | null>(
-    null
-  );
+  const [incorrectLetterId, setIncorrectLetterId] = useState<number | null>(null);
   const [isWordHighlighted, setIsWordHighlighted] = useState(false);
 
   const resetState = () => {
@@ -57,9 +55,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
   };
 
   const endSession = () => {
-    props.onEndSession?.(
-      `You solved ${currentIndex + 1} / ${words.length} words`
-    );
+    props.onEndSession?.(`You solved ${currentIndex + 1} / ${words.length} words`);
   };
 
   const moveToNextWord = () => {
@@ -69,9 +65,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
     const nextIndex = currentIndex + 1;
     if (nextIndex >= words.length) {
-      props.onEndCurrentSet?.(
-        `You solved ${currentIndex + 1} / ${words.length} words`
-      );
+      props.onEndCurrentSet?.(`You solved ${currentIndex + 1} / ${words.length} words`);
       return;
     }
     const nextWord = words[nextIndex];
@@ -117,9 +111,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
   const selectedLetters = useMemo(() => {
     const usedSet = new Set(usedLetterIds);
-    const orderedTiles = letterPool
-      .filter((tile) => usedSet.has(tile.id))
-      .sort((a, b) => a.id - b.id);
+    const orderedTiles = letterPool.filter((tile) => usedSet.has(tile.id)).sort((a, b) => a.id - b.id);
     return orderedTiles;
   }, [letterPool, usedLetterIds]);
 
@@ -153,14 +145,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
                 },
               ]}
             >
-              <Text
-                style={[
-                  styles.letterBoxText,
-                  { color: theme.colors.onSurface },
-                ]}
-              >
-                {filledTile ? filledTile.char : ""}
-              </Text>
+              <Text style={[styles.letterBoxText, { color: theme.colors.onSurface }]}>{filledTile ? filledTile.char : ""}</Text>
             </View>
           );
         })}
@@ -195,14 +180,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
               disabled={isUsed}
               onPress={() => handleSelectLetter(tile)}
             >
-              <Text
-                style={[
-                  styles.letterTileText,
-                  { color: theme.colors.onSurfaceVariant },
-                ]}
-              >
-                {tile.char}
-              </Text>
+              <Text style={[styles.letterTileText, { color: theme.colors.onSurfaceVariant }]}>{tile.char}</Text>
             </TouchableOpacity>
           );
         })}
@@ -213,21 +191,9 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
   const renderContent = () => {
     return (
       <View style={styles.sessionContent}>
-        <View
-          style={[
-            styles.progressCard,
-            { backgroundColor: theme.colors.primary },
-          ]}
-        >
-          <Text
-            style={[styles.progressText, { color: theme.colors.accept }]}
-          >
-            Current: {currentIndex + 1} / {words.length}
-          </Text>
-          <Text
-            style={[styles.progressText, { color: theme.colors.reject }]}
-          >
-            Words left: {wordsLeft}
+        <View style={[styles.progressCard, { backgroundColor: theme.colors.primary }]}>
+          <Text style={[styles.progressText, { color: theme.colors.onPrimary }]}>
+            Solved: {currentIndex} / {words.length}
           </Text>
           <Button
             mode="contained-tonal"
@@ -240,28 +206,10 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
           </Button>
         </View>
 
-        <View
-          style={[
-            styles.modeCard,
-            { backgroundColor: theme.colors.primary },
-          ]}
-        >
-          <View
-            style={[
-              styles.wordHeader,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
-          >
-            <Text
-              style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}
-            >
-              Russian word
-            </Text>
-            <Text
-              style={[styles.wordHeaderValue, { color: theme.colors.onSurface }]}
-            >
-              {words[currentIndex].word_ru}
-            </Text>
+        <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
+          <View style={[styles.wordHeader, { backgroundColor: theme.colors.surfaceVariant }]}>
+            <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}>Russian word</Text>
+            <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurface }]}>{words[currentIndex].word_ru}</Text>
           </View>
 
           {renderLetterBoxes()}
@@ -272,11 +220,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      {renderContent()}
-    </View>
-  );
+  return <View style={styles.container}>{renderContent()}</View>;
 }
 
 const styles = StyleSheet.create({

@@ -57,12 +57,12 @@ export default function WordsOverview(props: PracticeModeChildProps) {
           ]}
         >
           <Text
-            style={[styles.progressText, { color: theme.colors.accept }]}
+            style={[styles.progressText, { color: theme.colors.onPrimary }]}
           >
             Known: {acceptedCount}
           </Text>
           <Text
-            style={[styles.progressText, { color: theme.colors.reject }]}
+            style={[styles.progressText, { color: theme.colors.onPrimary }]}
           >
             Unknown: {rejectedCount}
           </Text>

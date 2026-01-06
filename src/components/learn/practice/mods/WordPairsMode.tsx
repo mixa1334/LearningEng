@@ -139,21 +139,9 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
   return (
     <View style={styles.container}>
       <View style={styles.sessionContent}>
-        <View
-          style={[
-            styles.progressCard,
-            { backgroundColor: theme.colors.primary },
-          ]}
-        >
-          <Text
-            style={[styles.progressText, { color: theme.colors.accept }]}
-          >
-            Solved: {solvedIds.length}
-          </Text>
-          <Text
-            style={[styles.progressText, { color: theme.colors.reject }]}
-          >
-            Remaining: {words.length - solvedIds.length}
+        <View style={[styles.progressCard, { backgroundColor: theme.colors.primary }]}>
+          <Text style={[styles.progressText, { color: theme.colors.onPrimary }]}>
+            Solved: {solvedIds.length} / {words.length}
           </Text>
           <Button
             mode="contained-tonal"
@@ -166,37 +154,17 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
           </Button>
         </View>
 
-        <View
-          style={[
-            styles.modeCard,
-            { backgroundColor: theme.colors.primary },
-          ]}
-        >
+        <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
           <View style={styles.gameArea}>
             <View style={styles.columnsHeader}>
-              <Text
-                style={[
-                  styles.columnTitle,
-                  { color: theme.colors.onPrimary },
-                ]}
-              >
-                Russian
-              </Text>
-              <Text
-                style={[
-                  styles.columnTitle,
-                  { color: theme.colors.onPrimary },
-                ]}
-              >
-                English
-              </Text>
+              <Text style={[styles.columnTitle, { color: theme.colors.onPrimary }]}>Russian</Text>
+              <Text style={[styles.columnTitle, { color: theme.colors.onPrimary }]}>English</Text>
             </View>
             <View style={styles.rows}>
               {visibleIds.map((ruId, index) => {
                 const enId = englishOrder[index];
                 const ruWord = getWordById(ruId);
-                const enWord =
-                  enId !== undefined ? getWordById(enId) : undefined;
+                const enWord = enId !== undefined ? getWordById(enId) : undefined;
 
                 if (!ruWord && !enWord) {
                   return null;
@@ -206,16 +174,11 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
                 const ruIncorrect = incorrectPair?.ruId === ruId;
                 const ruCorrect = correctPair?.ruId === ruId;
                 const enSelected = enId !== undefined && selectedEnId === enId;
-                const enIncorrect =
-                  enId !== undefined && incorrectPair?.enId === enId;
-                const enCorrect =
-                  enId !== undefined && correctPair?.enId === enId;
+                const enIncorrect = enId !== undefined && incorrectPair?.enId === enId;
+                const enCorrect = enId !== undefined && correctPair?.enId === enId;
 
                 return (
-                  <View
-                    key={`row-${ruId}-${enId ?? "none"}`}
-                    style={styles.row}
-                  >
+                  <View key={`row-${ruId}-${enId ?? "none"}`} style={styles.row}>
                     <View style={styles.cell}>
                       {ruWord && (
                         <TouchableOpacity
@@ -240,14 +203,7 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
                           ]}
                           onPress={() => handleSelectRu(ruId)}
                         >
-                          <Text
-                            style={[
-                              styles.wordText,
-                              { color: theme.colors.onSurfaceVariant },
-                            ]}
-                          >
-                            {ruWord.word_ru}
-                          </Text>
+                          <Text style={[styles.wordText, { color: theme.colors.onSurfaceVariant }]}>{ruWord.word_ru}</Text>
                         </TouchableOpacity>
                       )}
                     </View>
@@ -276,14 +232,7 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
                           ]}
                           onPress={() => handleSelectEn(enId)}
                         >
-                          <Text
-                            style={[
-                              styles.wordText,
-                              { color: theme.colors.onSurfaceVariant },
-                            ]}
-                          >
-                            {enWord.word_en}
-                          </Text>
+                          <Text style={[styles.wordText, { color: theme.colors.onSurfaceVariant }]}>{enWord.word_en}</Text>
                         </TouchableOpacity>
                       )}
                     </View>
@@ -320,13 +269,11 @@ const styles = StyleSheet.create({
   },
   gameArea: {
     flex: 1,
-    minHeight: 260,
+    minHeight: 350,
   },
   modeCard: {
-    alignItems: "center",
     justifyContent: "flex-start",
     borderRadius: 20,
-    alignSelf: "center",
     marginVertical: 16,
     padding: 20,
     shadowColor: "#000",
@@ -363,11 +310,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 8,
     marginBottom: 10,
+    width: "100%",
+    alignItems: "stretch",
   },
   cell: {
     flex: 1,
   },
   wordChip: {
+    flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 14,
     borderRadius: 12,
