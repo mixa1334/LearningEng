@@ -68,7 +68,7 @@ export default function PickCategoryButton({
 
 const styles = StyleSheet.create({
   categorySelector: {
-    marginBottom: 4,
+    marginVertical: 8,
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 999,
   },
