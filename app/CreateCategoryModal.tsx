@@ -10,11 +10,11 @@ export default function CreateCategoryModal() {
   const router = useRouter();
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [newCategoryEmoji, setNewCategoryEmoji] = useState("");
+  const [newCategoryEmoji, setNewCategoryEmoji] = useState<string | undefined>(undefined);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleAddCategory = () => {
-    if (!newCategoryName) return;
+    if (!newCategoryName || !newCategoryEmoji) return;
     addCategory({
       name: newCategoryName,
       icon: newCategoryEmoji,
@@ -52,7 +52,13 @@ export default function CreateCategoryModal() {
           />
         </View>
       )}
-      <Button mode="contained" icon="plus" onPress={handleAddCategory} style={styles.actionButton}>
+      <Button
+        mode="contained"
+        icon="plus"
+        onPress={handleAddCategory}
+        style={styles.actionButton}
+        disabled={!newCategoryName || !newCategoryEmoji}
+      >
         Save
       </Button>
     </View>
