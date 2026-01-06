@@ -1,5 +1,5 @@
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
-import { CategoryPicker } from "@/src/components/vocabulary/category/CategoryPicker";
+import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import WordsList from "@/src/components/vocabulary/word/WordsList";
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
@@ -10,28 +10,21 @@ import {
   TAB_BAR_BASE_HEIGHT,
 } from "@/src/resources/constants/layout";
 import { WordCriteria } from "@/src/service/wordService";
-import { truncate } from "@/src/util/stringHelper";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View
-} from "react-native";
-import { Button, IconButton, Text } from "react-native-paper";
+import { ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { IconButton } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function WordVocabularyPage() {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
-  const {criteriaDto, updateWordCriteria} = useVocabulary();
+  const { criteriaDto, updateWordCriteria } = useVocabulary();
 
   const pageHorizontalPadding = SPACING_LG;
   const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
 
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
     Category | undefined
   >(undefined);
@@ -49,11 +42,6 @@ export default function WordVocabularyPage() {
     setSelectedCategory(undefined);
   };
 
-  const handleCategorySelect = (category: Category) => {
-    setSelectedCategory(category);
-    setShowCategoryPicker(false);
-  };
-
   return (
     <View style={styles.container}>
       <View
@@ -65,39 +53,19 @@ export default function WordVocabularyPage() {
           },
         ]}
       >
-        <CategoryPicker
-          visible={showCategoryPicker}
-          onClose={() => setShowCategoryPicker(false)}
-          onSelectCategory={handleCategorySelect}
-        />
         <IconButton
           icon="close"
           onPress={clearSearch}
-          iconColor={theme.colors.error}
-          containerColor={theme.colors.onError}
+          iconColor={theme.colors.onError}
+          containerColor={theme.colors.error}
           size={18}
           accessibilityLabel="Clear search"
         />
-        <Button
-          mode="contained-tonal"
-          style={[
-            {
-              backgroundColor: theme.colors.outline,
-            },
-          ]}
-          onPress={() => setShowCategoryPicker(true)}
-        >
-          <Text
-            style={[
-              styles.categorySelectorText,
-              { color: theme.colors.background },
-            ]}
-          >
-            {selectedCategory
-              ? selectedCategory.icon + " " + truncate(selectedCategory.name, 7)
-              : "Category"}
-          </Text>
-        </Button>
+        <PickCategoryButton
+          category={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          truncateLength={7}
+        />
 
         <View
           style={[

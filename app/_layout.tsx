@@ -40,7 +40,7 @@ function AppContent() {
             title: "Translation",
             headerBackTitle: "Back",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-            headerTintColor: theme.colors.onSurfaceVariant,
+            headerTintColor: theme.colors.primary,
           }}
         />
         <Stack.Screen
@@ -49,7 +49,7 @@ function AppContent() {
             title: "Words",
             headerBackTitle: "Back",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-            headerTintColor: theme.colors.onSurfaceVariant,
+            headerTintColor: theme.colors.primary,
             headerRight: () => (
               <IconButton
                 icon="plus-circle-outline"
@@ -67,7 +67,7 @@ function AppContent() {
             title: "Categories",
             headerBackTitle: "Back",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-            headerTintColor: theme.colors.onSurfaceVariant,
+            headerTintColor: theme.colors.primary,
             headerRight: () => (
               <IconButton
                 icon="plus-circle-outline"
@@ -85,7 +85,7 @@ function AppContent() {
             presentation: "modal",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
             contentStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.onSurfaceVariant,
+            headerTintColor: theme.colors.primary,
             title: "Create Category",
             headerLeft: () => BackButton(theme.colors.primary),
           }}
@@ -96,7 +96,7 @@ function AppContent() {
             presentation: "modal",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
             contentStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.onSurfaceVariant,
+            headerTintColor: theme.colors.primary,
             title: "Create Word",
             headerLeft: () => BackButton(theme.colors.primary),
           }}
@@ -107,7 +107,7 @@ function AppContent() {
             presentation: "modal",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
             contentStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.onSurfaceVariant,
+            headerTintColor: theme.colors.primary,
             title: "Save to Vocabulary",
             headerLeft: () => BackButton(theme.colors.primary),
           }}

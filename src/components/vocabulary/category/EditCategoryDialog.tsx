@@ -42,7 +42,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={exit}
     >
       <View style={styles.backdrop}>

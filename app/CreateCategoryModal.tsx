@@ -25,7 +25,6 @@ export default function CreateCategoryModal() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>New category</Text>
       <Text style={styles.subtitle}>
         Group your words with a name and emoji for quick scanning.
       </Text>
@@ -74,7 +73,6 @@ export default function CreateCategoryModal() {
 }
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
-  title: { fontWeight: "700", fontSize: 20 },
   subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
   input: { marginVertical: 8, borderRadius: 12 },
   emojiPickerContainer: { height: 250, marginTop: 10 },

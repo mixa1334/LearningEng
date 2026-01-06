@@ -12,7 +12,7 @@ import {
 import { useAppDispatch } from "@/src/store";
 import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
-import { loadVocabularyThunk } from "@/src/store/slice/vocabularySlice";
+import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
 import ExpandedCard from "./ExpandedCard";
 
@@ -59,9 +59,9 @@ export default function SettingsCard() {
       await restoreFromBackupFileUri(uri);
 
       await Promise.all([
-        dispatch(loadUserDataThunk() as any),
-        dispatch(loadVocabularyThunk() as any),
-        dispatch(loadTranslationsThunk() as any),
+        dispatch(loadUserDataThunk()),
+        dispatch(initalizeVocabularyThunk()),
+        dispatch(loadTranslationsThunk()),
       ]);
 
       Alert.alert(

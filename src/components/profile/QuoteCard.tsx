@@ -4,9 +4,15 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+const DEFAULT_QUOTE: Quote = {
+  q: "loading...",
+  a: "loading...",
+  h: "loading...",
+};
+
 export default function QuoteCard() {
   const theme = useTheme();
-  const [quote, setQuote] = useState<Quote | null>(null);
+  const [quote, setQuote] = useState<Quote>(DEFAULT_QUOTE);
 
   useEffect(() => {
     getDailyQuote().then((quote) => {
@@ -34,31 +40,27 @@ export default function QuoteCard() {
         Today&apos;s thought
       </Text>
 
-      {quote && (
-        <>
-          <Text
-            style={[
-              styles.quote,
-              {
-                color: theme.colors.onTertiary,
-              },
-            ]}
-          >
-            “{quote.q}”
-          </Text>
+      <Text
+        style={[
+          styles.quote,
+          {
+            color: theme.colors.onTertiary,
+          },
+        ]}
+      >
+        “{quote.q}”
+      </Text>
 
-          <Text
-            style={[
-              styles.author,
-              {
-                color: theme.colors.onTertiary,
-              },
-            ]}
-          >
-            — {quote.a}
-          </Text>
-        </>
-      )}
+      <Text
+        style={[
+          styles.author,
+          {
+            color: theme.colors.onTertiary,
+          },
+        ]}
+      >
+        — {quote.a}
+      </Text>
     </View>
   );
 }

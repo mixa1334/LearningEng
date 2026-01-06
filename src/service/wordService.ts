@@ -109,14 +109,14 @@ export class WordCriteria {
 }
 
 const SELECT_WORDS = `SELECT
-      w.id, w.word_en, w.word_ru, w.transcription, w.type, w.learned,
+      w.id, w.word_en, w.word_ru, w.type, w.learned,
       w.next_review, w.priority, w.text_example, w.category_id,
       c.name AS category_name, c.type AS category_type, c.icon AS category_icon
     FROM words w
     JOIN categories c ON c.id = w.category_id
 `;
 
-const INSERT_WORD = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+const INSERT_WORD = `INSERT INTO words (word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
 export async function resetWordLearningProgress(): Promise<void> {
   await getDbInstance().runAsync(
@@ -135,7 +135,7 @@ export async function addNewWordsBatch(
   const db = getDbInstance();
   const reviewDate = new Date().toISOString();
 
-  const PARAMS_PER_WORD = 9;
+  const PARAMS_PER_WORD = 8;
   const MAX_PARAMS = 900;
   const BATCH_SIZE = Math.max(1, Math.floor(MAX_PARAMS / PARAMS_PER_WORD));
 
@@ -143,16 +143,15 @@ export async function addNewWordsBatch(
     for (let i = 0; i < newWords.length; i += BATCH_SIZE) {
       const batch = newWords.slice(i, i + BATCH_SIZE);
       const placeholders = batch
-        .map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        .map(() => "(?, ?, ?, ?, ?, ?, ?, ?)")
         .join(", ");
-      const sql = `INSERT INTO words (word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES ${placeholders}`;
+      const sql = `INSERT INTO words (word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES ${placeholders}`;
 
       const params: (string | number | EntityType)[] = [];
       for (const word of batch) {
         params.push(
           word.word_en,
           word.word_ru,
-          word.transcription,
           wordType,
           0,
           word.category_id,
@@ -175,7 +174,6 @@ export async function addNewWord(
   const insertedRow = await getDbInstance().runAsync(INSERT_WORD, [
     newWord.word_en,
     newWord.word_ru,
-    newWord.transcription,
     wordType,
     +false,
     newWord.category_id,
@@ -208,16 +206,9 @@ export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
     }
 
     const updatedRows = await tx.runAsync(
-      `UPDATE words SET word_en = ?, word_ru = ?, transcription = ?, category_id = ?, text_example = ?
+      `UPDATE words SET word_en = ?, word_ru = ?, category_id = ?, text_example = ?
       WHERE type = 'user_added' AND id = ?`,
-      [
-        word.word_en,
-        word.word_ru,
-        word.transcription,
-        word.category.id,
-        word.text_example,
-        word.id,
-      ]
+      [word.word_en, word.word_ru, word.category.id, word.text_example, word.id]
     );
 
     result = updatedRows.changes > 0;

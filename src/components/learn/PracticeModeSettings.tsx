@@ -1,11 +1,9 @@
-import { Category } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
-import { truncate } from "@/src/util/stringHelper";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button, Switch } from "react-native-paper";
+import { Switch } from "react-native-paper";
 import { useAppTheme } from "../common/ThemeProvider";
-import { CategoryPicker } from "../vocabulary/category/CategoryPicker";
+import PickCategoryButton from "../vocabulary/category/PickCategoryButton";
 
 export default function PracticeModeSettings() {
   const {
@@ -15,70 +13,36 @@ export default function PracticeModeSettings() {
     setCategory,
     resetSet,
   } = usePractice();
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const theme = useAppTheme();
 
-  const handleCloseCategoryPicker = () => {
-    setShowCategoryPicker(false);
-    setCategory(undefined);
+  useEffect(() => {
     resetSet();
-  };
-
-  const handleSelectNewCategory = (category: Category) => {
-    setShowCategoryPicker(false);
-    setCategory(category);
-    resetSet();
-  };
+  }, [category, onlyUserAddedWords, resetSet]);
 
   const handleOnlyUserWords = () => {
     setOnlyUserWords(!onlyUserAddedWords);
-    resetSet();
   };
 
   return (
-    <>
-      <View
-        style={[
-          styles.topRow,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
-        <View style={styles.switcherContainer}>
-          <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>
-            only user words
-          </Text>
-          <Switch
-            value={onlyUserAddedWords}
-            onValueChange={handleOnlyUserWords}
-          />
-        </View>
-        <Button
-          mode="contained-tonal"
-          style={[
-            {
-              backgroundColor: theme.colors.outline,
-            },
-          ]}
-          onPress={() => setShowCategoryPicker(true)}
-        >
-          <Text
-            style={[
-              styles.categorySelectorText,
-              { color: theme.colors.background },
-            ]}
-          >
-            {category
-              ? category.icon + " " + truncate(category.name, 7)
-              : "Category"}
-          </Text>
-        </Button>
+    <View
+      style={[styles.topRow, { backgroundColor: theme.colors.surfaceVariant }]}
+    >
+      <View style={styles.switcherContainer}>
+        <Text style={[styles.topRowLabel, { color: theme.colors.onSurface }]}>
+          only user words
+        </Text>
+        <Switch
+          value={onlyUserAddedWords}
+          onValueChange={handleOnlyUserWords}
+        />
       </View>
-      <CategoryPicker
-        visible={showCategoryPicker}
-        onClose={handleCloseCategoryPicker}
-        onSelectCategory={handleSelectNewCategory}
+      <PickCategoryButton
+        category={category}
+        onSelectCategory={setCategory}
+        onClose={() => setCategory(undefined)}
+        truncateLength={7}
       />
-    </>
+    </View> 
   );
 }
 

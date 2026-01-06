@@ -5,7 +5,6 @@ export function rowToWord(row: any): Word {
     id: row.id,
     word_en: row.word_en,
     word_ru: row.word_ru,
-    transcription: row.transcription,
     type: row.type,
     learned: !!row.learned,
     next_review: row.next_review,

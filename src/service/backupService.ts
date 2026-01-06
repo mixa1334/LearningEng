@@ -23,7 +23,6 @@ type BackupFileV1 = {
     id: number;
     word_en: string;
     word_ru: string;
-    transcription: string;
     type: string;
     learned: number;
     category_id: number;
@@ -53,7 +52,7 @@ export async function createBackupFileAndShare(): Promise<void> {
   );
 
   const words = await db.getAllAsync<BackupFileV1["words"][number]>(
-    "SELECT id, word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example FROM words"
+    "SELECT id, word_en, word_ru, type, learned, category_id, next_review, priority, text_example FROM words"
   );
 
   const translations = await db.getAllAsync<BackupFileV1["translations"][number]>(
@@ -138,12 +137,11 @@ export async function restoreFromBackupFileUri(fileUri: string): Promise<void> {
 
     for (const w of words) {
       await tx.runAsync(
-        "INSERT INTO words (id, word_en, word_ru, transcription, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        "INSERT INTO words (id, word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
         [
           w.id,
           w.word_en,
           w.word_ru,
-          w.transcription,
           w.type,
           w.learned,
           w.category_id,

@@ -10,9 +10,9 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
-import { CategoryPicker } from "../category/CategoryPicker";
+import PickCategoryButton from "../category/PickCategoryButton";
 
-type EditableField = "en" | "ru" | "transcription" | "example" | null;
+type EditableField = "en" | "ru" | "example" | null;
 
 interface EditWordDialogProps {
   readonly visible: boolean;
@@ -30,7 +30,15 @@ interface EditableFieldProps {
   readonly onPress: () => void;
 }
 
-function EditableField({ editingField, targetField, label, value, onChange, onBlur, onPress }: EditableFieldProps) {
+function EditableField({
+  editingField,
+  targetField,
+  label,
+  value,
+  onChange,
+  onBlur,
+  onPress,
+}: EditableFieldProps) {
   const theme = useTheme();
 
   if (editingField === targetField) {
@@ -56,17 +64,28 @@ function EditableField({ editingField, targetField, label, value, onChange, onBl
 
   return (
     <TouchableRipple
-      style={[styles.editableField, { backgroundColor: theme.colors.secondaryContainer }]}
+      style={[
+        styles.editableField,
+        { backgroundColor: theme.colors.secondaryContainer },
+      ]}
       borderless={false}
       rippleColor={theme.colors.outlineVariant}
       onPress={onPress}
     >
       <View>
-        <Text style={[styles.editableLabel, { color: theme.colors.onSecondaryContainer }]}>
+        <Text
+          style={[
+            styles.editableLabel,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
+        >
           {label}
         </Text>
         <Text
-          style={[styles.editableValue, { color: theme.colors.onSecondaryContainer }]}
+          style={[
+            styles.editableValue,
+            { color: theme.colors.onSecondaryContainer },
+          ]}
           numberOfLines={1}
         >
           {value || "Tap to enter"}
@@ -76,13 +95,16 @@ function EditableField({ editingField, targetField, label, value, onChange, onBl
   );
 }
 
-export default function EditWordDialog({ visible, exit, word }: EditWordDialogProps) {
+export default function EditWordDialog({
+  visible,
+  exit,
+  word,
+}: EditWordDialogProps) {
   const theme = useTheme();
   useEffect(() => setWordToEdit(word), [word]);
   const { editWord, removeWord } = useVocabulary();
   const [wordToEdit, setWordToEdit] = useState(word);
   const [editingField, setEditingField] = useState<EditableField>(null);
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
   const setWordEn = (text: string) => {
     setWordToEdit({ ...wordToEdit, word_en: text });
@@ -92,15 +114,11 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
     setWordToEdit({ ...wordToEdit, word_ru: text });
   };
 
-  const setWordTranscription = (text: string) => {
-    setWordToEdit({ ...wordToEdit, transcription: text });
-  };
-
   const setWordTextExample = (text: string) => {
     setWordToEdit({ ...wordToEdit, text_example: text });
   };
 
-  const startEditing = (field: "en" | "ru" | "transcription" | "example") => {
+  const startEditing = (field: "en" | "ru" | "example") => {
     setEditingField(field);
   };
 
@@ -120,14 +138,13 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
   const selectCategory = (category: Category) => {
     setWordToEdit({ ...wordToEdit, category: category });
-    setShowCategoryPicker(false);
   };
 
   return (
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={exit}
     >
       <View style={styles.backdrop}>
@@ -150,7 +167,9 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
           </View>
 
           <View>
-            <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+            <Text
+              style={[styles.subtitle, { color: theme.colors.onBackground }]}
+            >
               Tap a field to quickly update any part of the word.
             </Text>
 
@@ -174,15 +193,6 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
             />
             <EditableField
               editingField={editingField}
-              targetField="transcription"
-              label="Transcription (optional)"
-              value={wordToEdit.transcription}
-              onChange={setWordTranscription}
-              onBlur={stopEditing}
-              onPress={() => startEditing("transcription")}
-            />
-            <EditableField
-              editingField={editingField}
               targetField="example"
               label="Text example (optional)"
               value={wordToEdit.text_example}
@@ -190,43 +200,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
               onBlur={stopEditing}
               onPress={() => startEditing("example")}
             />
-
-            <Text
-              style={[styles.sectionLabel, { color: theme.colors.onBackground }]}
-            >
-              Category
-            </Text>
-            <Button
-              mode="contained-tonal"
-              style={[
-                styles.categorySelector,
-                {
-                  backgroundColor: theme.colors.outlineVariant,
-                  borderColor: theme.colors.outlineVariant,
-                },
-              ]}
-              onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-              textColor={theme.colors.onSecondaryContainer}
-              contentStyle={styles.categorySelectorButtonContent}
-            >
-              {wordToEdit.category ? (
-                <View style={styles.categorySelectorContent}>
-                  <Text style={styles.categoryEmoji}>
-                    {wordToEdit.category.icon}
-                  </Text>
-                  <Text style={styles.categoryLabel}>
-                    {wordToEdit.category.name}
-                  </Text>
-                </View>
-              ) : (
-                "Select category"
-              )}
-            </Button>
-            <CategoryPicker
-              visible={showCategoryPicker}
-              onClose={() => setShowCategoryPicker(false)}
-              onSelectCategory={selectCategory}
-            />
+            <PickCategoryButton category={wordToEdit.category} onSelectCategory={selectCategory} />
           </View>
 
           <View style={styles.actions}>
@@ -292,33 +266,6 @@ const styles = StyleSheet.create({
   editableValue: {
     fontSize: 16,
     fontWeight: "500",
-  },
-  categoryBtn: {
-    marginVertical: 4,
-    borderRadius: 8,
-  },
-  sectionLabel: {
-    marginVertical: 8,
-    fontWeight: "600",
-  },
-  categorySelector: {
-    marginBottom: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 999,
-  },
-  categorySelectorContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  categoryEmoji: {
-    fontSize: 18,
-  },
-  categoryLabel: {
-    fontSize: 14,
-  },
-  categorySelectorButtonContent: {
-    justifyContent: "flex-start",
   },
   actions: {
     flexDirection: "row",

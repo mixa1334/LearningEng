@@ -1,5 +1,4 @@
-import { useAppTheme } from "@/src/components/common/ThemeProvider";
-import { CategoryPicker } from "@/src/components/vocabulary/category/CategoryPicker";
+import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import { Category } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
@@ -16,27 +15,17 @@ export default function WordFromTranslationModal() {
   }>();
 
   const { addWord } = useVocabulary();
-
   const { removeTranslation } = useTranslation();
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
+  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(
+    undefined
   );
-  const [showCategoryPicker, setShowCategoryPicker] = useState(false);
-
-  const theme = useAppTheme();
-
-  const handleSelectCategory = (category: Category) => {
-    setSelectedCategory(category);
-    setShowCategoryPicker(false);
-  };
 
   const handleSaveToVocabulary = () => {
     if (!selectedCategory) return;
     addWord({
       word_en: word_en,
       word_ru: word_ru,
-      transcription: "",
       category_id: selectedCategory.id,
       text_example: "",
     });
@@ -46,44 +35,25 @@ export default function WordFromTranslationModal() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.dialogHeader}>
-        <Text style={{ color: theme.colors.onBackground }}>
-          Add to vocabulary
-        </Text>
-      </View>
+      <Text style={styles.subtitle}>
+        Choose a category for this translation and save it to your vocabulary.
+      </Text>
 
-      <Text
-        style={[
-          styles.dialogTranslationText,
-          { color: theme.colors.onBackground },
-        ]}
-      >
+      <Text style={styles.translationText}>
         {word_en} - {word_ru}
       </Text>
 
-      <Text style={[styles.sectionLabel, { color: theme.colors.onBackground }]}>
-        Category
-      </Text>
-      <Button
-        mode="outlined"
-        style={styles.categorySelector}
-        onPress={() => setShowCategoryPicker(true)}
-      >
-        {selectedCategory
-          ? `${selectedCategory.icon} ${selectedCategory.name}`
-          : "Select category"}
-      </Button>
-
-      <CategoryPicker
-        visible={showCategoryPicker}
-        onClose={() => setShowCategoryPicker(false)}
-        onSelectCategory={handleSelectCategory}
+      <Text style={styles.sectionLabel}>Category</Text>
+      <PickCategoryButton
+        category={selectedCategory}
+        onSelectCategory={setSelectedCategory}
       />
 
       <Button
         mode="contained"
         icon="content-save"
         onPress={handleSaveToVocabulary}
+        style={styles.actionButton}
         disabled={!selectedCategory}
       >
         Save
@@ -94,24 +64,18 @@ export default function WordFromTranslationModal() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
-  dialogHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 8,
-    paddingTop: 4,
-  },
-  dialogTranslationText: {
+  subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
+  translationText: {
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
   },
   sectionLabel: {
-    marginVertical: 8,
-    fontWeight: "600",
-  },
-  categorySelector: {
+    marginTop: 12,
     marginBottom: 4,
-    borderRadius: 8,
+    fontWeight: "600",
+    fontSize: 13,
+    opacity: 0.9,
   },
+  actionButton: { marginTop: 20 },
 });

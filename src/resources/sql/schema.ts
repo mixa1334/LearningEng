@@ -1,6 +1,7 @@
 export const SCHEMA_CREATION_IF_NOT_EXISTS = `
     -- DROP TABLE IF EXISTS categories;
     -- DROP TABLE IF EXISTS words;
+    -- DROP TABLE IF EXISTS translations;
 
     PRAGMA foreign_keys = ON;
 
@@ -22,7 +23,6 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       word_en TEXT NOT NULL,
       word_ru TEXT NOT NULL,
-      transcription TEXT NOT NULL,
       type TEXT NOT NULL CHECK (type IN ('pre_loaded', 'user_added')) DEFAULT 'pre_loaded',
       learned INTEGER NOT NULL DEFAULT 0,
       category_id INTEGER NOT NULL,

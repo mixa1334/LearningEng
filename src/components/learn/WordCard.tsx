@@ -39,12 +39,8 @@ export default function WordCard({
     setIsEnglishPrimary(Math.random() < 0.5);
   }, [word.id]);
 
-  const questionText = isEnglishPrimary
-    ? `${word.word_en} ${word.transcription ?? ""}`.trim()
-    : word.word_ru;
-  const answerText = isEnglishPrimary
-    ? word.word_ru
-    : `${word.word_en} ${word.transcription ?? ""}`.trim();
+  const questionText = isEnglishPrimary ? word.word_en : word.word_ru;
+  const answerText = isEnglishPrimary ? word.word_ru : word.word_en;
 
   const cardWidth = width * 0.8;
   const cardHeight = height * 0.4;

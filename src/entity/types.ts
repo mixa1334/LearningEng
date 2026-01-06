@@ -19,7 +19,6 @@ export type Word = {
   id: number;
   word_en: string;
   word_ru: string;
-  transcription: string;
   type: EntityType;
   learned: boolean;
   category: Category;
