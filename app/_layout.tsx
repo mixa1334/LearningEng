@@ -13,9 +13,13 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
-function BackButton(color: string) {
+type BackButtonProps = {
+  color: string;
+};
+
+function BackButton({ color }: BackButtonProps) {
   const router = useRouter();
-  
+
   return (
     <IconButton
       icon="arrow-left"
@@ -90,7 +94,7 @@ function AppContent() {
             contentStyle: { backgroundColor: theme.colors.background },
             headerTintColor: theme.colors.primary,
             title: "Create Category",
-            headerLeft: () => BackButton(theme.colors.primary),
+            headerLeft: () => <BackButton color={theme.colors.primary} />,
           }}
         />
         <Stack.Screen
@@ -101,7 +105,7 @@ function AppContent() {
             contentStyle: { backgroundColor: theme.colors.background },
             headerTintColor: theme.colors.primary,
             title: "Create Word",
-            headerLeft: () => BackButton(theme.colors.primary),
+            headerLeft: () => <BackButton color={theme.colors.primary} />,
           }}
         />
         <Stack.Screen
@@ -112,7 +116,7 @@ function AppContent() {
             contentStyle: { backgroundColor: theme.colors.background },
             headerTintColor: theme.colors.primary,
             title: "Save to Vocabulary",
-            headerLeft: () => BackButton(theme.colors.primary),
+            headerLeft: () => <BackButton color={theme.colors.primary} />,
           }}
         />
       </Stack>
