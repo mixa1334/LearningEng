@@ -4,7 +4,7 @@ import { useTranslation } from "@/src/hooks/useTranslation";
 import { SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
@@ -20,6 +20,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TranslationPage() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const {
     currentTranslation,
     translations,

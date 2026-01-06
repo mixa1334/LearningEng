@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { runMigrations } from "@/src/database/migrations";
 import { useBootstrapSettings } from "@/src/hooks/useBootstrapSettings";
 import { store } from "@/src/store";
-import { router, Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
 import React, { Suspense } from "react";
 import { StatusBar } from "react-native";
@@ -14,6 +14,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
 function BackButton(color: string) {
+  const router = useRouter();
+  
   return (
     <IconButton
       icon="arrow-left"
@@ -27,6 +29,7 @@ function BackButton(color: string) {
 
 function AppContent() {
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <>

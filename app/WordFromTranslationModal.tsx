@@ -2,12 +2,13 @@ import PickCategoryButton from "@/src/components/vocabulary/category/PickCategor
 import { Category } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 
 export default function WordFromTranslationModal() {
+  const router = useRouter();
   const { translation_id, word_en, word_ru } = useLocalSearchParams<{
     translation_id: string;
     word_en: string;

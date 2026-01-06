@@ -2,13 +2,14 @@ import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
-import { Button, IconButton, Text, TextInput, TouchableRipple, useTheme } from "react-native-paper";
+import { Button, IconButton, Text, useTheme } from "react-native-paper";
 import SimpleEmojiPicker from "../../common/SimpleEmojiPicker";
+import TouchableTextInput from "../../common/TouchableTextInput";
 
 interface EditCategoryDialogProps {
   readonly visible: boolean;
   readonly exit: () => void;
-  readonly category: Category;
+  readonly category?: Category;
 }
 
 export default function EditCategoryDialog({ visible, exit, category }: EditCategoryDialogProps) {
@@ -18,100 +19,42 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   useEffect(() => setCategoryToEdit(category), [category]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  const [editName, setEditName] = useState(false);
-
   const setCategoryName = (text: string) => {
+    if (!categoryToEdit) return;
     setCategoryToEdit({ ...categoryToEdit, name: text });
   };
 
   const setCategoryEmoji = (emoji: string) => {
+    if (!categoryToEdit) return;
     setCategoryToEdit({ ...categoryToEdit, icon: emoji });
   };
 
   const handleEditCategory = () => {
+    if (!categoryToEdit) return;
     editCategory(categoryToEdit);
     exit();
   };
 
   const handleDeleteCategory = () => {
+    if (!categoryToEdit) return;
     removeCategory(categoryToEdit);
     exit();
   };
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="slide"
-      onRequestClose={exit}
-    >
+    <Modal transparent visible={visible} animationType="slide" onRequestClose={exit}>
       <View style={styles.backdrop}>
-        <View
-          style={[
-            styles.dialog,
-            { backgroundColor: theme.colors.secondaryContainer },
-          ]}
-        >
+        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
           <View style={styles.headerContainer}>
-            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-              Edit category
-            </Text>
-            <IconButton
-              icon="close"
-              size={24}
-              onPress={exit}
-              accessibilityLabel="Close dialog"
-            />
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>Edit category</Text>
+            <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
           </View>
           <View>
-            {editName ? (
-              <TextInput
-                label="Category name"
-                value={categoryToEdit.name}
-                onChangeText={setCategoryName}
-                style={styles.input}
-                mode="outlined"
-                theme={{
-                  colors: {
-                    background: theme.colors.surface,
-                    outline: theme.colors.outlineVariant,
-                    primary: theme.colors.primary,
-                  },
-                }}
-                onBlur={() => setEditName(false)}
-                autoFocus
-              />
-            ) : (
-              <TouchableRipple
-                style={[
-                  styles.editableField,
-                  { backgroundColor: theme.colors.secondaryContainer },
-                ]}
-                borderless={false}
-                rippleColor={theme.colors.outlineVariant}
-                onPress={() => setEditName(true)}
-              >
-                <View>
-                  <Text
-                    style={[
-                      styles.editableLabel,
-                      { color: theme.colors.onSecondaryContainer },
-                    ]}
-                  >
-                    Name
-                  </Text>
-                  <Text
-                    style={[
-                      styles.editableValue,
-                      { color: theme.colors.onSecondaryContainer },
-                    ]}
-                    numberOfLines={1}
-                  >
-                    {categoryToEdit.name || "Tap to enter"}
-                  </Text>
-                </View>
-              </TouchableRipple>
-            )}
+            <TouchableTextInput
+              label="Category name"
+              initialValue={categoryToEdit?.name}
+              onChange={setCategoryName}
+            />
 
             {!showEmojiPicker && (
               <Button
@@ -129,9 +72,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
                 contentStyle={styles.emojiButtonContent}
               >
                 <View style={styles.emojiInner}>
-                  <Text style={styles.emojiEmoji}>
-                    {categoryToEdit.icon || "🙂"}
-                  </Text>
+                  <Text style={styles.emojiEmoji}>{categoryToEdit?.icon || "🙂"}</Text>
                   <Text style={styles.emojiLabel}>Change emoji</Text>
                 </View>
               </Button>
@@ -153,10 +94,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               mode="contained"
               icon="delete"
               textColor={theme.colors.onError}
-              style={[
-                styles.destructiveButton,
-                { backgroundColor: theme.colors.error },
-              ]}
+              style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
               onPress={handleDeleteCategory}
             >
               Delete
@@ -165,10 +103,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               mode="contained"
               icon="content-save"
               textColor={theme.colors.onPrimary}
-              style={[
-                styles.primaryButton,
-                { backgroundColor: theme.colors.primary },
-              ]}
+              style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
               onPress={handleEditCategory}
             >
               Save
@@ -191,10 +126,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  input: {
-    marginVertical: 8,
-    borderRadius: 12,
   },
   emojiPickerContainer: {
     height: 250,

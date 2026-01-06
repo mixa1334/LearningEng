@@ -1,11 +1,13 @@
+import FieldTextInput from "@/src/components/common/FieldTextInput";
 import SimpleEmojiPicker from "@/src/components/common/SimpleEmojiPicker";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 
 export default function CreateCategoryModal() {
+  const router = useRouter();
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryEmoji, setNewCategoryEmoji] = useState("");
@@ -25,16 +27,8 @@ export default function CreateCategoryModal() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>
-        Group your words with a name and emoji for quick scanning.
-      </Text>
-      <TextInput
-        label="Category name"
-        value={newCategoryName}
-        onChangeText={setNewCategoryName}
-        style={styles.input}
-        mode="outlined"
-      />
+      <Text style={styles.subtitle}>Group your words with a name and emoji for quick scanning.</Text>
+      <FieldTextInput label="Category name" initialValue={newCategoryName} onChangeText={setNewCategoryName} />
       {!showEmojiPicker && (
         <Button
           mode="contained-tonal"
@@ -44,9 +38,7 @@ export default function CreateCategoryModal() {
         >
           <View style={styles.emojiInner}>
             <Text style={styles.emojiEmoji}>{newCategoryEmoji || "🙂"}</Text>
-            <Text style={styles.emojiLabel}>
-              {newCategoryEmoji ? "Change emoji" : "Choose emoji"}
-            </Text>
+            <Text style={styles.emojiLabel}>{newCategoryEmoji ? "Change emoji" : "Choose emoji"}</Text>
           </View>
         </Button>
       )}
@@ -60,12 +52,7 @@ export default function CreateCategoryModal() {
           />
         </View>
       )}
-      <Button
-        mode="contained"
-        icon="plus"
-        onPress={handleAddCategory}
-        style={styles.actionButton}
-      >
+      <Button mode="contained" icon="plus" onPress={handleAddCategory} style={styles.actionButton}>
         Save
       </Button>
     </View>
@@ -74,7 +61,6 @@ export default function CreateCategoryModal() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
   subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
-  input: { marginVertical: 8, borderRadius: 12 },
   emojiPickerContainer: { height: 250, marginTop: 10 },
   emojiButton: { marginTop: 10, borderRadius: 999 },
   emojiInner: { flexDirection: "row", alignItems: "center", gap: 8 },

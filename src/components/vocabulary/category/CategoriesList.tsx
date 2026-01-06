@@ -10,7 +10,7 @@ export default function CategoriesList() {
   const { userCategories } = useVocabulary();
 
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | undefined>(undefined);
 
   const openEditCategoryModal = (category: Category) => {
     setCategoryToEdit(category);
@@ -19,13 +19,11 @@ export default function CategoriesList() {
 
   return (
     <>
-      {showEditCategoryModal && categoryToEdit && (
-        <EditCategoryDialog
-          visible={showEditCategoryModal}
-          exit={() => setShowEditCategoryModal(false)}
-          category={categoryToEdit}
-        />
-      )}
+      <EditCategoryDialog
+        visible={showEditCategoryModal && categoryToEdit !== undefined}
+        exit={() => setShowEditCategoryModal(false)}
+        category={categoryToEdit}
+      />
       <View style={styles.listContent}>
         {userCategories.map((item) => (
           <TouchableRipple
@@ -43,10 +41,7 @@ export default function CategoriesList() {
           >
             <View style={styles.itemContent}>
               <View style={styles.itemMain}>
-                <Text
-                  style={[styles.wordText, { color: theme.colors.onSurface }]}
-                  numberOfLines={1}
-                >
+                <Text style={[styles.wordText, { color: theme.colors.onSurface }]} numberOfLines={1}>
                   {item.icon} {item.name}
                 </Text>
               </View>
