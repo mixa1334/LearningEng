@@ -1,6 +1,7 @@
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_MD } from "@/src/resources/constants/layout";
+import * as Haptics from "expo-haptics";
 import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
@@ -13,6 +14,7 @@ export default function ResetProgressCard() {
   const { resetUserStats, resetWordsProgress } = useUserData();
 
   const handleResetUserStats = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     Alert.alert("ACTION IS PERMANENT", "Are you sure you want to reset your entire user data?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -26,6 +28,7 @@ export default function ResetProgressCard() {
   };
 
   const handleResetVocabularyProgress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     Alert.alert("ACTION IS PERMANENT", "Are you sure you want to reset your entire vocabulary progress?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -42,7 +45,7 @@ export default function ResetProgressCard() {
     <ExpandedCard title="Reset Data" icon="delete" autoScroll={true} touchableOpacity={1}>
       <View style={[styles.resetSettingsRow, { marginTop: SPACING_MD }]}>
         <Button
-          mode="text"
+          mode="contained"
           style={{ backgroundColor: theme.colors.error }}
           labelStyle={[styles.resetButton, { color: theme.colors.onError }]}
           onPress={handleResetUserStats}
@@ -50,7 +53,7 @@ export default function ResetProgressCard() {
           Reset user data
         </Button>
         <Button
-          mode="text"
+          mode="contained"
           style={{ backgroundColor: theme.colors.error }}
           labelStyle={[styles.resetButton, { color: theme.colors.onError }]}
           onPress={handleResetVocabularyProgress}

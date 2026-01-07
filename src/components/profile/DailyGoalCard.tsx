@@ -1,6 +1,7 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, useTheme } from "react-native-paper";
@@ -12,8 +13,12 @@ export default function DailyGoalCard() {
   const backgroundColor = dailyGoalAchieve ? theme.colors.primary : theme.colors.surfaceVariant;
   const textColor = dailyGoalAchieve ? theme.colors.onPrimary : theme.colors.onSurface;
 
-  const increaseGoal = () => changeGoal(dailyGoal + 1);
+  const increaseGoal = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    changeGoal(dailyGoal + 1);
+  };
   const decreaseGoal = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     const newDailyGoal = dailyGoal - 1;
     if (newDailyGoal > 0) {
       changeGoal(newDailyGoal);

@@ -1,5 +1,6 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
@@ -13,6 +14,7 @@ export default function CategoriesList() {
   const [categoryToEdit, setCategoryToEdit] = useState<Category | undefined>(undefined);
 
   const openEditCategoryModal = (category: Category) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCategoryToEdit(category);
     setShowEditCategoryModal(true);
   };

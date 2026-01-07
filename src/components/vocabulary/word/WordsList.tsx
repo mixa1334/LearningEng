@@ -1,5 +1,6 @@
 import { Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
@@ -12,6 +13,7 @@ export default function WordsList() {
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
 
   const openEditWordModal = (word: Word) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setWordToEdit(word);
     setShowEditWordModal(true);
   };
@@ -19,11 +21,7 @@ export default function WordsList() {
   return (
     <>
       {showEditWordModal && wordToEdit && (
-        <EditWordDialog
-          visible={showEditWordModal}
-          exit={() => setShowEditWordModal(false)}
-          word={wordToEdit}
-        />
+        <EditWordDialog visible={showEditWordModal} exit={() => setShowEditWordModal(false)} word={wordToEdit} />
       )}
 
       <View style={styles.listContent}>
@@ -47,22 +45,10 @@ export default function WordsList() {
               </View>
 
               <View style={styles.wordTexts}>
-                <Text
-                  style={[
-                    styles.wordPrimary,
-                    { color: theme.colors.onSurface },
-                  ]}
-                  numberOfLines={1}
-                >
+                <Text style={[styles.wordPrimary, { color: theme.colors.onSurface }]} numberOfLines={1}>
                   {item.word_en}
                 </Text>
-                <Text
-                  style={[
-                    styles.wordSecondary,
-                    { color: theme.colors.onSurfaceVariant },
-                  ]}
-                  numberOfLines={1}
-                >
+                <Text style={[styles.wordSecondary, { color: theme.colors.onSurfaceVariant }]} numberOfLines={1}>
                   {item.word_ru}
                 </Text>
               </View>
