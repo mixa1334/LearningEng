@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
@@ -36,7 +37,13 @@ export default function PickEmojiButton({ emoji, onSelectEmoji }: PickEmojiButto
           ]}
           contentStyle={styles.emojiButtonContent}
         >
-          <Text style={styles.emojiEmoji}>{emoji}</Text>
+          {emoji ? (
+            <View style={styles.emojiContainer}>
+              <Text style={styles.emojiEmoji}>{emoji}</Text>
+            </View>
+          ) : (
+            <MaterialIcons name="emoji-emotions" size={20} color={theme.colors.onSecondary} />
+          )}
         </Button>
       )}
     </>
@@ -49,7 +56,14 @@ const styles = StyleSheet.create({
     margin: 10,
     width: "100%",
   },
-  emojiButtonContent: {},
+  emojiButtonContent: {
+    width: "100%",
+  },
+  emojiContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   emojiEmoji: {
     fontSize: 20,
   },
