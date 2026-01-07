@@ -1,16 +1,8 @@
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
-import {
-  SAFE_AREA_MIN_BOTTOM,
-  TAB_BAR_BASE_HEIGHT,
-  TAB_BAR_BOTTOM_INSET_MULTIPLIER,
-  TAB_BAR_HORIZONTAL_MARGIN,
-} from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface IconProps {
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
@@ -21,11 +13,11 @@ function TabIcon({ iconName, focused }: IconProps) {
   const theme = useAppTheme();
 
   const backgroundColor = focused
-    ? theme.colors.primary
-    : theme.colors.primaryContainer;
+    ? theme.colors.onBackground
+    : theme.colors.surfaceVariant;
   const iconColor = focused
-    ? theme.colors.onPrimary
-    : theme.colors.onPrimaryContainer;
+    ? theme.colors.background
+    : theme.colors.onBackground;
 
   const iconSize = 24;
   const containerSize = 40;
@@ -48,12 +40,6 @@ function TabIcon({ iconName, focused }: IconProps) {
 
 export default function TabLayout() {
   const theme = useAppTheme();
-  const insets = useSafeAreaInsets();
-
-  const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
-  const tabBarHeight =
-    TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
-  const tabBarRadius = tabBarHeight / 2;
 
   return (
     <Tabs
@@ -61,27 +47,13 @@ export default function TabLayout() {
         tabBarStyle: {
           display: "flex",
           flexDirection: "row",
-          alignItems: "center",
-          alignContent: "center",
+          alignItems: "flex-start",
+          paddingTop: 10,
           borderTopWidth: 0,
           position: "absolute",
-          marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
-          marginBottom: bottomInset,
-          height: tabBarHeight,
           elevation: 0,
+          backgroundColor: theme.colors.surfaceVariant,
         },
-        tabBarBackground: () => (
-          <BlurView
-            intensity={70}
-            tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
-            style={{
-              flex: 1,
-              borderRadius: tabBarRadius,
-              boxShadow: theme.colors.shadow,
-              overflow: "hidden",
-            }}
-          />
-        ),
         headerShown: false,
       }}
     >
