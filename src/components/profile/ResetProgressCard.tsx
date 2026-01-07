@@ -3,9 +3,10 @@ import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import * as Haptics from "expo-haptics";
 import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
+import userImportantConfirmation from "@/src/util/userConfirmations";
 import ExpandedCard from "./ExpandedCard";
 
 export default function ResetProgressCard() {
@@ -15,30 +16,16 @@ export default function ResetProgressCard() {
 
   const handleResetUserStats = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    Alert.alert("ACTION IS PERMANENT", "Are you sure you want to reset your entire user data?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Reset",
-        style: "destructive",
-        onPress: () => {
-          resetUserStats();
-        },
-      },
-    ]);
+    userImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to reset your entire user data?", () => {
+      resetUserStats();
+    });
   };
 
   const handleResetVocabularyProgress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    Alert.alert("ACTION IS PERMANENT", "Are you sure you want to reset your entire vocabulary progress?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Reset",
-        style: "destructive",
-        onPress: () => {
-          resetWordsProgress();
-        },
-      },
-    ]);
+    userImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to reset your entire vocabulary progress?", () => {
+      resetWordsProgress();
+    });
   };
 
   return (

@@ -11,7 +11,7 @@ export default function CategoriesList() {
   const { userCategories } = useVocabulary();
 
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | undefined>(undefined);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   const openEditCategoryModal = (category: Category) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -21,11 +21,13 @@ export default function CategoriesList() {
 
   return (
     <>
-      <EditCategoryDialog
-        visible={showEditCategoryModal && categoryToEdit !== undefined}
-        exit={() => setShowEditCategoryModal(false)}
-        category={categoryToEdit}
-      />
+      {showEditCategoryModal && categoryToEdit && (
+        <EditCategoryDialog
+          visible={showEditCategoryModal}
+          exit={() => setShowEditCategoryModal(false)}
+          category={categoryToEdit}
+        />
+      )}
       <View style={styles.listContent}>
         {userCategories.map((item) => (
           <Pressable

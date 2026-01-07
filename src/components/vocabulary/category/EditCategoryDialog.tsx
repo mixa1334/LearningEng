@@ -1,5 +1,7 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
+import userImportantConfirmation from "@/src/util/userConfirmations";
+import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
@@ -9,7 +11,7 @@ import TouchableTextInput from "../../common/TouchableTextInput";
 interface EditCategoryDialogProps {
   readonly visible: boolean;
   readonly exit: () => void;
-  readonly category?: Category;
+  readonly category: Category;
 }
 
 export default function EditCategoryDialog({ visible, exit, category }: EditCategoryDialogProps) {
@@ -19,25 +21,24 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   useEffect(() => setCategoryToEdit(category), [category]);
 
   const setCategoryName = (text: string) => {
-    if (!categoryToEdit) return;
     setCategoryToEdit({ ...categoryToEdit, name: text });
   };
 
   const setCategoryEmoji = (emoji: string) => {
-    if (!categoryToEdit) return;
     setCategoryToEdit({ ...categoryToEdit, icon: emoji });
   };
 
   const handleEditCategory = () => {
-    if (!categoryToEdit) return;
     editCategory(categoryToEdit);
     exit();
   };
 
   const handleDeleteCategory = () => {
-    if (!categoryToEdit) return;
-    removeCategory(categoryToEdit);
-    exit();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    userImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this category?", () => {
+      removeCategory(categoryToEdit); 
+      exit();
+    });
   };
 
   return (
