@@ -9,7 +9,7 @@ interface PickEmojiButtonProps {
   readonly onSelectEmoji: (emoji: string) => void;
 }
 
-export default function PickEmojiButton({ emoji = "🙂", onSelectEmoji }: PickEmojiButtonProps) {
+export default function PickEmojiButton({ emoji, onSelectEmoji }: PickEmojiButtonProps) {
   const theme = useAppTheme();
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -30,17 +30,13 @@ export default function PickEmojiButton({ emoji = "🙂", onSelectEmoji }: PickE
           mode="contained-tonal"
           onPress={() => setShowEmojiPicker(true)}
           style={[
-            styles.emojiButton,
             {
               backgroundColor: theme.colors.secondary,
             },
           ]}
           contentStyle={styles.emojiButtonContent}
         >
-          <View style={styles.emojiInner}>
-            <Text style={styles.emojiEmoji}>{emoji}</Text>
-            <Text style={[styles.emojiLabel, { color: theme.colors.onSecondary }]}>Change</Text>
-          </View>
+          <Text style={styles.emojiEmoji}>{emoji}</Text>
         </Button>
       )}
     </>
@@ -51,20 +47,9 @@ const styles = StyleSheet.create({
   emojiPickerContainer: {
     height: 250,
     margin: 10,
+    width: "100%",
   },
-  emojiButton: {
-    marginTop: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 999,
-  },
-  emojiButtonContent: {
-    justifyContent: "center",
-  },
-  emojiInner: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
+  emojiButtonContent: {},
   emojiEmoji: {
     fontSize: 20,
   },

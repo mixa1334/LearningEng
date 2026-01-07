@@ -41,14 +41,14 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   };
 
   return (
-    <Modal transparent visible={visible} animationType="slide" onRequestClose={exit}>
+    <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
       <View style={styles.backdrop}>
         <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
           <View style={styles.headerContainer}>
             <Text style={[styles.title, { color: theme.colors.onBackground }]}>Edit category</Text>
             <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
           </View>
-          <View>
+          <View style={styles.form}>
             <TouchableTextInput label="Category name" initialValue={categoryToEdit?.name} onChange={setCategoryName} />
 
             <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
@@ -59,7 +59,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               mode="contained"
               icon="delete"
               textColor={theme.colors.onError}
-              style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
+              style={{ backgroundColor: theme.colors.error }}
               onPress={handleDeleteCategory}
             >
               Delete
@@ -68,7 +68,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               mode="contained"
               icon="content-save"
               textColor={theme.colors.onPrimary}
-              style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
+              style={{ backgroundColor: theme.colors.primary }}
               onPress={handleEditCategory}
             >
               Update
@@ -81,10 +81,15 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 }
 
 const styles = StyleSheet.create({
+  form: {
+    alignItems: "center",
+    gap: 10,
+  },
   dialog: {
     borderRadius: 24,
-    padding: 16,
-    width: "90%",
+    padding: 24,
+    width: "80%",
+    gap: 30,
   },
   backdrop: {
     flex: 1,
@@ -92,14 +97,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  primaryButton: {
-    marginLeft: 8,
-  },
-  destructiveButton: {
-    marginRight: 8,
-  },
   actions: {
-    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -127,7 +125,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingLeft: 10,
-    paddingRight: 10,
   },
 });

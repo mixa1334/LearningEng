@@ -45,7 +45,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   };
 
   return (
-    <Modal transparent visible={visible} animationType="slide" onRequestClose={exit}>
+    <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
       <View style={styles.backdrop}>
         <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
           <View style={styles.headerContainer}>
