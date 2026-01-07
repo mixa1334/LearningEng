@@ -5,6 +5,7 @@ import FaqCard from "@/src/components/profile/FaqCard";
 import ProfileHeaderCard from "@/src/components/profile/ProfileHeaderCard";
 import ProgressCard from "@/src/components/profile/ProgressCard";
 import QuoteCard from "@/src/components/profile/QuoteCard";
+import ResetProgressCard from "@/src/components/profile/ResetProgressCard";
 import SettingsCard from "@/src/components/profile/SettingsCard";
 import { useUserData } from "@/src/hooks/useUserData";
 import React from "react";
@@ -26,6 +27,8 @@ export default function ProfileTab() {
         <FaqCard />
 
         <SettingsCard />
+
+        <ResetProgressCard />
       </AnimatedScrollView>
     </AutoScrollProvider>
   );
