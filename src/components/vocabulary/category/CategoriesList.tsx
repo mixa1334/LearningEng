@@ -1,8 +1,8 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text, TouchableRipple, useTheme } from "react-native-paper";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 import EditCategoryDialog from "./EditCategoryDialog";
 
 export default function CategoriesList() {
@@ -26,17 +26,17 @@ export default function CategoriesList() {
       />
       <View style={styles.listContent}>
         {userCategories.map((item) => (
-          <TouchableRipple
+          <Pressable
             key={item.id.toString()}
-            style={[
+            style={({ pressed }) => [
               styles.itemRow,
               {
+                opacity: pressed ? 0.8 : 1,
+                transform: [{ scale: pressed ? 0.97 : 1 }],
                 backgroundColor: theme.colors.surfaceVariant,
                 borderColor: theme.colors.outlineVariant,
               },
             ]}
-            borderless={false}
-            rippleColor={theme.colors.outlineVariant}
             onPress={() => openEditCategoryModal(item)}
           >
             <View style={styles.itemContent}>
@@ -46,7 +46,7 @@ export default function CategoriesList() {
                 </Text>
               </View>
             </View>
-          </TouchableRipple>
+          </Pressable>
         ))}
       </View>
     </>
@@ -55,21 +55,14 @@ export default function CategoriesList() {
 
 const styles = StyleSheet.create({
   listContent: {
-    backgroundColor: "transparent",
     paddingBottom: 4,
     paddingHorizontal: 4,
   },
   itemRow: {
     borderRadius: 18,
-    marginVertical: 6,
-    borderWidth: StyleSheet.hairlineWidth,
+    marginVertical: 8,
+    paddingVertical: 8,
     overflow: "hidden",
-    // subtle shadow for card-like look
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 1,
   },
   itemMain: {
     flex: 1,

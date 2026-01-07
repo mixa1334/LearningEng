@@ -47,7 +47,7 @@ function AppContent() {
             title: "Translation",
             headerBackTitle: "Back",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-            headerTintColor: theme.colors.primary,
+            headerTintColor: theme.colors.onBackground,
           }}
         />
         <Stack.Screen
@@ -56,12 +56,12 @@ function AppContent() {
             title: "Words",
             headerBackTitle: "Back",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-            headerTintColor: theme.colors.primary,
+            headerTintColor: theme.colors.onBackground,
             headerRight: () => (
               <IconButton
                 icon="plus-circle-outline"
                 onPress={() => router.push("/CreateWordModal")}
-                iconColor={theme.colors.primary}
+                iconColor={theme.colors.onBackground}
                 size={24}
                 accessibilityLabel="Create"
               />
@@ -74,12 +74,12 @@ function AppContent() {
             title: "Categories",
             headerBackTitle: "Back",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-            headerTintColor: theme.colors.primary,
+            headerTintColor: theme.colors.onBackground,
             headerRight: () => (
               <IconButton
                 icon="plus-circle-outline"
                 onPress={() => router.push("/CreateCategoryModal")}
-                iconColor={theme.colors.primary}
+                iconColor={theme.colors.onBackground}
                 size={24}
                 accessibilityLabel="Create"
               />
@@ -92,9 +92,9 @@ function AppContent() {
             presentation: "modal",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
             contentStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.primary,
+            headerTintColor: theme.colors.onBackground,
             title: "Create Category",
-            headerLeft: () => <BackButton color={theme.colors.primary} />,
+            headerLeft: () => <BackButton color={theme.colors.onBackground} />,
           }}
         />
         <Stack.Screen
@@ -103,9 +103,9 @@ function AppContent() {
             presentation: "modal",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
             contentStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.primary,
+            headerTintColor: theme.colors.onBackground,
             title: "Create Word",
-            headerLeft: () => <BackButton color={theme.colors.primary} />,
+            headerLeft: () => <BackButton color={theme.colors.onBackground} />,
           }}
         />
         <Stack.Screen
@@ -114,9 +114,9 @@ function AppContent() {
             presentation: "modal",
             headerStyle: { backgroundColor: theme.colors.surfaceVariant },
             contentStyle: { backgroundColor: theme.colors.background },
-            headerTintColor: theme.colors.primary,
+            headerTintColor: theme.colors.onBackground,
             title: "Save to Vocabulary",
-            headerLeft: () => <BackButton color={theme.colors.primary} />,
+            headerLeft: () => <BackButton color={theme.colors.onBackground} />,
           }}
         />
       </Stack>

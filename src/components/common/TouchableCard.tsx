@@ -31,24 +31,22 @@ export function TouchableCard({ icon, title, description, onPress }: TouchableCa
 const styles = StyleSheet.create({
   titleRow: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
-    marginBottom: 10,
     gap: 10,
   },
   card: {
     borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
+    padding: 30,
+    marginBottom: 24,
+    gap: 15,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
   },
   description: {
+    textAlign: "left",
     fontSize: 14,
   },
 });
