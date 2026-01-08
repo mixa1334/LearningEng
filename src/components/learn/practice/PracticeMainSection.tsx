@@ -24,17 +24,17 @@ const PracticeModeComponents: Record<
 > = {
   [ExtraMode.OVERVIEW]: {
     component: WordsOverview,
-    descriptionText: "Review your vocabulary words one by one and mark the ones you know.",
+    descriptionText: "Review your vocabulary words one by one and mark the ones you know",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
   [ExtraMode.PAIRS]: {
     component: WordPairsMode,
-    descriptionText: "Match each Russian word with its English translation.",
+    descriptionText: "Match each Russian word with its English translation",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 2,
   },
   [ExtraMode.BUILDER]: {
     component: WordBuildingMode,
-    descriptionText: "Build the English word by picking letters in the correct order.",
+    descriptionText: "Build the English word by picking letters in the correct order",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
 };
