@@ -3,12 +3,14 @@ import { NewWordDto } from "@/src/dto/NewWordDto";
 import { Category, EntityType, Word } from "@/src/entity/types";
 import {
   addNewCategory,
+  deleteAllUserCategories,
   deleteUserCategory,
   editUserCategory,
   getCategoriesByType,
 } from "@/src/service/categoryService";
 import {
   addNewWord,
+  deleteAllUserWords,
   deleteUserWord,
   editUserWord,
   getWordsByCriteria,
@@ -18,7 +20,9 @@ import {
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { loadDailyWordSetThunk } from "./learnSlice";
-import { resetPracticeSetThunk } from "./practiceSlice";
+import { reloadPracticeThunk, resetPracticeSetThunk } from "./practiceSlice";
+
+const getDefaultCriteria = () => new WordCriteria().appendType(EntityType.useradd).appendOrderBy("DESC").toRedux();
 
 export type VocabularyState = {
   userCategories: Category[];
@@ -30,10 +34,7 @@ export type VocabularyState = {
 const initialVocabularyState: VocabularyState = {
   userCategories: [],
   preloadedCategories: [],
-  criteriaDto: new WordCriteria()
-    .appendType(EntityType.useradd)
-    .appendOrderBy("DESC")
-    .toRedux(),
+  criteriaDto: getDefaultCriteria(),
   words: [],
 };
 
@@ -61,76 +62,72 @@ export const removeCategoryThunk = createAsyncThunk<void, Category>(
   }
 );
 
-const reloadUserCategoriesThunk = createAsyncThunk<Category[]>(
-  "vocabulary/reloadUserCategoriesThunk",
-  async () => {
-    return await getCategoriesByType(EntityType.useradd);
+const reloadUserCategoriesThunk = createAsyncThunk<Category[]>("vocabulary/reloadUserCategoriesThunk", async () => {
+  return await getCategoriesByType(EntityType.useradd);
+});
+
+export const addWordThunk = createAsyncThunk<void, NewWordDto>("vocabulary/addWordThunk", async (newWord, { dispatch }) => {
+  await addNewWord(newWord);
+  dispatch(loadDailyWordSetThunk());
+  dispatch(resetPracticeSetThunk());
+  dispatch(reloadWordsThunk());
+});
+
+export const editWordThunk = createAsyncThunk<void, Word>("vocabulary/editWordThunk", async (wordToEdit, { dispatch }) => {
+  await editUserWord(wordToEdit);
+  dispatch(loadDailyWordSetThunk());
+  dispatch(resetPracticeSetThunk());
+  dispatch(reloadWordsThunk());
+});
+
+export const removeWordThunk = createAsyncThunk<void, Word>("vocabulary/removeWordThunk", async (wordToDelete, { dispatch }) => {
+  await deleteUserWord(wordToDelete);
+  dispatch(loadDailyWordSetThunk());
+  dispatch(resetPracticeSetThunk());
+  dispatch(reloadWordsThunk());
+});
+
+export const updateWordCriteriaThunk = createAsyncThunk<{ criteriaDto: WordCriteriaDTO; words: Word[] }, WordCriteria>(
+  "vocabulary/updateWordCriteriaThunk",
+  async (criteria) => {
+    return {
+      criteriaDto: criteria.toRedux(),
+      words: await getWordsByCriteria(criteria),
+    };
   }
 );
 
-export const addWordThunk = createAsyncThunk<void, NewWordDto>(
-  "vocabulary/addWordThunk",
-  async (newWord, { dispatch }) => {
-    await addNewWord(newWord);
-    dispatch(loadDailyWordSetThunk());
-    dispatch(resetPracticeSetThunk());
-    dispatch(reloadWordsThunk());
-  }
-);
+const reloadWordsThunk = createAsyncThunk<Word[]>("vocabulary/reloadWordsThunk", async (_, { getState }) => {
+  return await getWordsByCriteria(WordCriteria.fromRedux((getState() as RootState).vocabulary.criteriaDto));
+});
 
-export const editWordThunk = createAsyncThunk<void, Word>(
-  "vocabulary/editWordThunk",
-  async (wordToEdit, { dispatch }) => {
-    await editUserWord(wordToEdit);
-    dispatch(loadDailyWordSetThunk());
-    dispatch(resetPracticeSetThunk());
-    dispatch(reloadWordsThunk());
-  }
-);
-
-export const removeWordThunk = createAsyncThunk<void, Word>(
-  "vocabulary/removeWordThunk",
-  async (wordToDelete, { dispatch }) => {
-    await deleteUserWord(wordToDelete);
-    dispatch(loadDailyWordSetThunk());
-    dispatch(resetPracticeSetThunk());
-    dispatch(reloadWordsThunk());
-  }
-);
-
-export const updateWordCriteriaThunk = createAsyncThunk<
-  { criteriaDto: WordCriteriaDTO; words: Word[] },
-  WordCriteria
->("vocabulary/updateWordCriteriaThunk", async (criteria) => {
+export const initalizeVocabularyThunk = createAsyncThunk<VocabularyState>("vocabulary/initalizeVocabularyThunk", async () => {
+  const userCategories = await getCategoriesByType(EntityType.useradd);
+  const preloadedCategories = await getCategoriesByType(EntityType.preloaded);
+  //add pagination withh limits!
+  const criteria = WordCriteria.fromRedux(initialVocabularyState.criteriaDto);
+  const words = await getWordsByCriteria(criteria);
   return {
+    userCategories,
+    preloadedCategories,
     criteriaDto: criteria.toRedux(),
-    words: await getWordsByCriteria(criteria),
+    words,
   };
 });
 
-const reloadWordsThunk = createAsyncThunk<Word[]>(
-  "vocabulary/reloadWordsThunk",
-  async (_, { getState }) => {
-    return await getWordsByCriteria(
-      WordCriteria.fromRedux((getState() as RootState).vocabulary.criteriaDto)
-    );
-  }
-);
-
-export const initalizeVocabularyThunk = createAsyncThunk<VocabularyState>(
-  "vocabulary/initalizeVocabularyThunk",
-  async () => {
-    const userCategories = await getCategoriesByType(EntityType.useradd);
-    const preloadedCategories = await getCategoriesByType(EntityType.preloaded);
-    //add pagination withh limits!
-    const criteria = WordCriteria.fromRedux(initialVocabularyState.criteriaDto);
-    const words = await getWordsByCriteria(criteria);
-    return {
-      userCategories,
-      preloadedCategories,
-      criteriaDto: criteria.toRedux(),
-      words,
-    };
+export const removeUserVocabularyThunk = createAsyncThunk<void>(
+  "vocabulary/removeUserVocabularyThunk",
+  async (_, { dispatch }) => {
+    const wordsDeleted = await deleteAllUserWords();
+    const categoriesDeleted = await deleteAllUserCategories();
+    if (categoriesDeleted) {
+      await dispatch(reloadUserCategoriesThunk());
+    }
+    if (wordsDeleted) {
+      dispatch(reloadWordsThunk());
+      dispatch(loadDailyWordSetThunk());
+      dispatch(reloadPracticeThunk());
+    }
   }
 );
 
@@ -152,6 +149,9 @@ const vocabularySlice = createSlice({
       })
       .addCase(reloadWordsThunk.fulfilled, (state, action) => {
         state.words = action.payload;
+      })
+      .addCase(removeUserVocabularyThunk.fulfilled, (state, action) => {
+        state.criteriaDto = getDefaultCriteria();
       }),
 });
 

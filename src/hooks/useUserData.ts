@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import { resetLearningStatsThunk } from "@/src/store/slice/learnSlice";
 import { changeDailyGoalThunk, changeNameThunk, resetUserDataThunk } from "@/src/store/slice/userDataSlice";
+import { removeUserVocabularyThunk } from "../store/slice/vocabularySlice";
 
 export function useUserData() {
   const dispatch = useAppDispatch();
@@ -11,6 +12,7 @@ export function useUserData() {
   const changeName = (name: string) => dispatch(changeNameThunk(name));
   const resetUserStats = () => dispatch(resetUserDataThunk());
   const resetWordsProgress = () => dispatch(resetLearningStatsThunk());
+  const removeUserVocabulary = () => dispatch(removeUserVocabularyThunk());
 
   return {
     name,
@@ -25,5 +27,6 @@ export function useUserData() {
     changeName,
     resetUserStats,
     resetWordsProgress,
+    removeUserVocabulary,
   };
 }

@@ -1,7 +1,7 @@
 import TouchableTextInput from "@/src/components/common/TouchableTextInput";
 import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import userImportantConfirmation from "@/src/util/userConfirmations";
+import sendUserImportantConfirmation from "@/src/util/userConfirmations";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
@@ -34,7 +34,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
   const handleDeleteWord = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    userImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this word?", () => {
+    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this word?", () => {
       removeWord(wordToEdit);
       exit();
     });
@@ -98,7 +98,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
               textColor={theme.colors.onPrimary}
               onPress={handleEditWord}
             >
-              Save
+              Update
             </Button>
           </View>
         </View>

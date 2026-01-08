@@ -5,6 +5,14 @@ import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";
 import { rowToCategory } from "../mapper/typesMapper";
 import { trimTextForSaving } from "../util/stringHelper";
 
+// db always has preloaded category with id 1!!!!!! (if migration have been run successfully)
+
+export async function deleteAllUserCategories(): Promise<boolean> {
+  await getDbInstance().runAsync("UPDATE words SET category_id = 1 WHERE type = 'user_added'");
+  const deletedRows = await getDbInstance().runAsync("DELETE FROM categories WHERE type = 'user_added'");
+  return deletedRows.changes > 0;
+}
+
 export async function addNewCategoriesBatch(
   newCategories: NewCategoryDto[],
   categoryType: EntityType = EntityType.useradd

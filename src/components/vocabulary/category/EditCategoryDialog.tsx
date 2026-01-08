@@ -1,6 +1,6 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import userImportantConfirmation from "@/src/util/userConfirmations";
+import sendUserImportantConfirmation from "@/src/util/userConfirmations";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
@@ -35,7 +35,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 
   const handleDeleteCategory = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    userImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this category?", () => {
+    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this category?", () => {
       removeCategory(categoryToEdit); 
       exit();
     });

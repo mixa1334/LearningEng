@@ -6,6 +6,8 @@ import { Button, Switch, Text } from "react-native-paper";
 
 import { createBackupFileAndShare, restoreFromBackupFileUri } from "@/src/service/backupService";
 import { useAppDispatch } from "@/src/store";
+import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
+import { reloadPracticeThunk } from "@/src/store/slice/practiceSlice";
 import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
@@ -45,7 +47,16 @@ export default function SettingsCard() {
       const uri = result.assets[0].uri;
       await restoreFromBackupFileUri(uri);
 
-      await Promise.all([dispatch(loadUserDataThunk()), dispatch(initalizeVocabularyThunk()), dispatch(loadTranslationsThunk())]);
+      await dispatch(loadUserDataThunk())
+        .unwrap()
+        .then(() =>
+          Promise.all([
+            dispatch(loadDailyWordSetThunk()).unwrap(),
+            dispatch(loadTranslationsThunk()).unwrap(),
+            dispatch(initalizeVocabularyThunk()).unwrap(),
+            dispatch(reloadPracticeThunk()).unwrap(),
+          ])
+        );
 
       Alert.alert("Restore completed", "Your data has been restored successfully.");
     } catch (e) {

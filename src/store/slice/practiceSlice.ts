@@ -15,37 +15,44 @@ const initialPracticeState: PracticeState = {
   words: [],
 };
 
-const buildCriteria = (practice: RootState["practice"]) => {
-  const criteria = new WordCriteria()
-    .appendLimit(10)
-    .appendOrderBy("ASC")
-    .appendCategory(practice.category);
+const buildCriteria = (practice: PracticeState) => {
+  const criteria = new WordCriteria().appendLimit(10).appendOrderBy("ASC").appendCategory(practice.category);
   if (practice.onlyUserAddedWords) {
     criteria.appendType(EntityType.useradd);
   }
   return criteria;
 };
 
-export const resetPracticeSetThunk = createAsyncThunk<Word[]>(
-  "practiceState/resetPracticeSet",
-  async (_, { getState }) => {
-    const practice = (getState() as RootState).practice;
-    const criteria = buildCriteria(practice);
-    return await getWordsByCriteria(criteria);
-  }
-);
+export const resetPracticeSetThunk = createAsyncThunk<Word[]>("practiceState/resetPracticeSet", async (_, { getState }) => {
+  const practice = (getState() as RootState).practice;
+  const criteria = buildCriteria(practice);
+  return await getWordsByCriteria(criteria);
+});
 
 export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
   "practiceState/loadNextPracticeStateSet",
   async (_, { getState }) => {
     const practice = (getState() as RootState).practice;
     const prevWords = practice.words;
-    const offset =
-      prevWords.length > 0 ? prevWords[prevWords.length - 1].id : 0;
+    const offset = prevWords.length > 0 ? prevWords[prevWords.length - 1].id : 0;
     const criteria = buildCriteria(practice).appendIdOffset(offset);
     return await getWordsByCriteria(criteria);
   }
 );
+
+export const reloadPracticeThunk = createAsyncThunk<PracticeState>("practiceState/reloadPracticeThunk", async () => {
+  const practiceState = {
+    onlyUserAddedWords: true,
+    words: [],
+    category: undefined,
+  };
+  const criteria = buildCriteria(practiceState);
+  const words = await getWordsByCriteria(criteria);
+  return {
+    ...practiceState,
+    words,
+  };
+});
 
 const practiceSlice = createSlice({
   name: "practice",
@@ -59,12 +66,16 @@ const practiceSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadNextPracticeSetThunk.fulfilled, (state, action) => {
-      state.words = action.payload;
-    });
-    builder.addCase(resetPracticeSetThunk.fulfilled, (state, action) => {
-      state.words = action.payload;
-    });
+    builder
+      .addCase(loadNextPracticeSetThunk.fulfilled, (state, action) => {
+        state.words = action.payload;
+      })
+      .addCase(resetPracticeSetThunk.fulfilled, (state, action) => {
+        state.words = action.payload;
+      })
+      .addCase(reloadPracticeThunk.fulfilled, (state, action) => {
+        return action.payload;
+      });
   },
 });
 
