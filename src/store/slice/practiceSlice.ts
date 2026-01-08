@@ -3,24 +3,31 @@ import { getWordsByCriteria, WordCriteria } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 
+//cuz depends on ids (which are in asc order) we need to load words in asc order
+const ORDER_BY = "ASC";
+
+export const DEFAULT_PRACTICE_LIMIT = 10;
+
 export type PracticeState = {
   category?: Category;
-  onlyUserAddedWords: boolean;
+  wordType?: EntityType;
+  practiceLimit: number;
   words: Word[];
 };
 
 const initialPracticeState: PracticeState = {
   category: undefined,
-  onlyUserAddedWords: true,
+  wordType: EntityType.useradd,
+  practiceLimit: DEFAULT_PRACTICE_LIMIT,
   words: [],
 };
 
 const buildCriteria = (practice: PracticeState) => {
-  const criteria = new WordCriteria().appendLimit(10).appendOrderBy("ASC").appendCategory(practice.category);
-  if (practice.onlyUserAddedWords) {
-    criteria.appendType(EntityType.useradd);
-  }
-  return criteria;
+  return new WordCriteria()
+    .appendLimit(practice.practiceLimit)
+    .appendOrderBy(ORDER_BY)
+    .appendCategory(practice.category)
+    .appendType(practice.wordType);
 };
 
 export const resetPracticeSetThunk = createAsyncThunk<Word[]>("practiceState/resetPracticeSet", async (_, { getState }) => {
@@ -41,28 +48,29 @@ export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
 );
 
 export const reloadPracticeThunk = createAsyncThunk<PracticeState>("practiceState/reloadPracticeThunk", async () => {
-  const practiceState = {
-    onlyUserAddedWords: true,
-    words: [],
-    category: undefined,
-  };
+  const practiceState = { ...initialPracticeState };
   const criteria = buildCriteria(practiceState);
-  const words = await getWordsByCriteria(criteria);
-  return {
-    ...practiceState,
-    words,
-  };
+  practiceState.words = await getWordsByCriteria(criteria);
+  return practiceState;
 });
 
 const practiceSlice = createSlice({
   name: "practice",
   initialState: { ...initialPracticeState },
   reducers: {
-    setNewCategory: (state, action: PayloadAction<Category | undefined>) => {
+    setNewCategoryAction: (state, action: PayloadAction<Category | undefined>) => {
       state.category = action.payload;
     },
-    setOnlyUserAdded: (state, action: PayloadAction<boolean>) => {
-      state.onlyUserAddedWords = action.payload;
+    setWordTypeAction: (state, action: PayloadAction<EntityType | undefined>) => {
+      state.wordType = action.payload;
+    },
+    setPracticeLimitAction: (state, action: PayloadAction<number>) => {
+      state.practiceLimit = action.payload;
+    },
+    resetCriteriaAction: (state) => {
+      state.category = undefined;
+      state.wordType = EntityType.useradd;
+      state.practiceLimit = DEFAULT_PRACTICE_LIMIT;
     },
   },
   extraReducers: (builder) => {
@@ -79,6 +87,6 @@ const practiceSlice = createSlice({
   },
 });
 
-export const { setNewCategory, setOnlyUserAdded } = practiceSlice.actions;
+export const { setNewCategoryAction, setWordTypeAction, setPracticeLimitAction, resetCriteriaAction } = practiceSlice.actions;
 
 export const practiceReducer = practiceSlice.reducer;

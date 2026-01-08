@@ -1,104 +1,60 @@
 import { usePractice } from "@/src/hooks/usePractice";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
 import { useAppTheme } from "../../common/ThemeProvider";
 
 export type PracticeModeChildProps = {
-  onEndCurrentSet?: (endMessage: string) => void;
-  onEndSession?: (endMessage: string) => void;
+  readonly onEndCurrentSet?: (endMessage: string) => void;
 };
 
 interface PracticeModeWrapperProps {
-  readonly descriptionText: string;
   readonly practiceWordsPoolLengthRule: (wordsPoolLength: number) => boolean;
   readonly children: React.ReactElement<PracticeModeChildProps>;
 }
 
-export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
+export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, children }: PracticeModeWrapperProps) {
   const { triggerScroll } = useAutoScroll();
   const theme = useAppTheme();
 
-  const { words, loadNextSet, resetSet } = usePractice();
+  const { words, loadNextPracticeSet, resetPracticeSet } = usePractice();
 
-  const noWordsToReview = !props.practiceWordsPoolLengthRule(words.length);
+  const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
 
   const [childTextMessage, setChildTextMessage] = useState("");
 
-  const [isStarted, setIsStarted] = useState(false);
   const [isSetEnded, setIsSetEnded] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
 
-  useEffect(() => {
-    resetProgress();
-  }, [props.children]);
+  const [isOverLoadedSession, setIsOverLoadedSession] = useState(false);
 
-  const resetProgress = () => {
-    setIsStarted(false);
-    setIsCompleted(false);
+  const resetPracticeSession = () => {
+    resetPracticeSet();
     setIsSetEnded(false);
-    setChildTextMessage("");
-    if (noWordsToReview) {
-      resetSet();
-    }
-  };
-
-  const startSession = () => {
-    resetProgress();
-    if (noWordsToReview) return;
-    setIsStarted(true);
     triggerScroll();
-  };
-
-  const endSession = () => {
-    setIsCompleted(true);
   };
 
   const loadMoreWordsToLearn = () => {
-    loadNextSet();
+    loadNextPracticeSet();
     setIsSetEnded(false);
     triggerScroll();
   };
 
-  if (noWordsToReview && !isStarted) {
+  if (noWordsToReview) {
     return (
       <View style={styles.centered}>
         <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>No words to practice</Text>
-      </View>
-    );
-  }
-
-  if (isCompleted || noWordsToReview) {
-    return (
-      <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
-        <Button
-          mode="contained-tonal"
-          onPress={startSession}
-          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-          textColor={theme.colors.onPrimary}
-          icon="restart"
-        >
-          Start again
-        </Button>
-      </View>
-    );
-  }
-
-  if (!isStarted) {
-    return (
-      <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>{props.descriptionText}</Text>
-        <Button
-          mode="contained-tonal"
-          onPress={startSession}
-          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-          textColor={theme.colors.onPrimary}
-          icon="play"
-        >
-          Start
-        </Button>
+        {isOverLoadedSession && (
+          <Button
+            mode="contained-tonal"
+            onPress={resetPracticeSession}
+            style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
+            textColor={theme.colors.primaryContainer}
+            icon="restart"
+          >
+            Reset session
+          </Button>
+        )}
       </View>
     );
   }
@@ -107,17 +63,9 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
     return (
       <View style={styles.centered}>
         <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>You have finished current set</Text>
+        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
 
         <View style={styles.buttonsRow}>
-          <Button
-            mode="contained-tonal"
-            onPress={endSession}
-            style={[styles.reviewBtn, { backgroundColor: theme.colors.reject }]}
-            textColor={theme.colors.onAcceptReject}
-            icon="flag-checkered"
-          >
-            End
-          </Button>
           <Button
             mode="contained-tonal"
             onPress={loadMoreWordsToLearn}
@@ -132,14 +80,11 @@ export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
     );
   }
 
-  return React.cloneElement(props.children, {
+  return React.cloneElement(children, {
     onEndCurrentSet: (endMessage) => {
       setIsSetEnded(true);
       setChildTextMessage(endMessage);
-    },
-    onEndSession: (endMessage) => {
-      setIsCompleted(true);
-      setChildTextMessage(endMessage);
+      setIsOverLoadedSession(true);
     },
   });
 }

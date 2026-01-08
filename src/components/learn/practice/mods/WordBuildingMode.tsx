@@ -1,7 +1,6 @@
 import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button } from "react-native-paper";
 import { useAppTheme } from "../../../common/ThemeProvider";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
@@ -52,10 +51,6 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
       char,
     }));
     return shuffleArray(tiles);
-  };
-
-  const endSession = () => {
-    props.onEndSession?.(`You solved ${currentIndex + 1} / ${words.length} words`);
   };
 
   const moveToNextWord = () => {
@@ -191,20 +186,6 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
   const renderContent = () => {
     return (
       <View style={styles.sessionContent}>
-        <View style={[styles.progressCard, { backgroundColor: theme.colors.primary }]}>
-          <Text style={[styles.progressText, { color: theme.colors.onPrimary }]}>
-            Solved: {currentIndex} / {words.length}
-          </Text>
-          <Button
-            mode="contained-tonal"
-            onPress={endSession}
-            style={[styles.endBtn, { backgroundColor: theme.colors.reject }]}
-            textColor={theme.colors.onAcceptReject}
-            icon="flag-checkered"
-          >
-            End
-          </Button>
-        </View>
 
         <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
           <View style={[styles.wordHeader, { backgroundColor: theme.colors.surfaceVariant }]}>
@@ -226,7 +207,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   topRow: {
     flexDirection: "row",

@@ -2,7 +2,6 @@ import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button } from "react-native-paper";
 import { useAppTheme } from "../../../common/ThemeProvider";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
@@ -59,11 +58,7 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
     resetGame();
   }, [words]);
 
-  const stopGame = () => {
-    props.onEndSession?.(`You solved ${solvedIds.length} / ${words.length} pairs`);
-  };
-
-  const getWordById = (id: number) => {
+  const getWordById = (id: number): Word | undefined => {
     return sessionWords.find((w) => w.id === id);
   };
 
@@ -139,20 +134,6 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
   return (
     <View style={styles.container}>
       <View style={styles.sessionContent}>
-        <View style={[styles.progressCard, { backgroundColor: theme.colors.primary }]}>
-          <Text style={[styles.progressText, { color: theme.colors.onPrimary }]}>
-            Solved: {solvedIds.length} / {words.length}
-          </Text>
-          <Button
-            mode="contained-tonal"
-            onPress={stopGame}
-            style={[styles.endBtn, { backgroundColor: theme.colors.reject }]}
-            textColor={theme.colors.onAcceptReject}
-            icon="flag-checkered"
-          >
-            End
-          </Button>
-        </View>
 
         <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
           <View style={styles.gameArea}>
@@ -250,7 +231,7 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   sessionContent: {
     flex: 1,
