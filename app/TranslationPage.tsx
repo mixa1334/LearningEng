@@ -63,29 +63,46 @@ export default function TranslationPage() {
         },
       ]}
     >
-      <Card style={[styles.card, { backgroundColor: theme.colors.secondaryContainer }]}>
+      <Card style={[styles.card, { backgroundColor: theme.colors.primary }]}>
         <Card.Title
+          titleStyle={{ color: theme.colors.onPrimary }}
           title={language === Language.ENGLISH ? "English → Russian" : "Russian → English"}
-          left={(props) => <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onSecondaryContainer} />}
+          left={(props) => <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onPrimary} />}
         />
         <Card.Content>
           <TextInput
-            mode="outlined"
+            mode="flat"
+            // underlineColor="transparent"
+            // activeUnderlineColor="transparent"
             placeholder={language === Language.ENGLISH ? "Enter English word" : "Enter Russian word"}
             value={wordToTranslate}
             onChangeText={setWordToTranslate}
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.colors.secondaryContainer, borderRadius: 8 }]}
+            theme={{
+              colors: {
+                primary: theme.colors.secondary,
+                placeholder: theme.colors.onSecondaryContainer,
+                text: theme.colors.onSecondaryContainer,
+                background: theme.colors.secondaryContainer,
+                surface: theme.colors.secondaryContainer,
+                surfaceVariant: theme.colors.secondaryContainer,
+                outline: "transparent",
+                outlineVariant: "transparent",
+              },
+            }}
           />
-          <Text style={styles.result}>
-            {currentTranslation?.word_en} - {currentTranslation?.word_ru}
-          </Text>
+          {currentTranslation && (
+            <Text style={[styles.result, { color: theme.colors.onPrimary }]}>
+              {currentTranslation.word_en} - {currentTranslation.word_ru}
+            </Text>
+          )}
         </Card.Content>
         <Card.Actions style={styles.actions}>
           <IconButton
             icon="swap-horizontal"
             onPress={switchLanguages}
-            containerColor={theme.colors.onSecondaryContainer}
-            iconColor={theme.colors.secondaryContainer}
+            containerColor={theme.colors.onPrimary}
+            iconColor={theme.colors.primary}
             size={24}
             accessibilityLabel="Switch Languages"
           />
@@ -151,8 +168,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   result: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 22,
+    fontWeight: "700",
     marginTop: 8,
   },
   actions: {
