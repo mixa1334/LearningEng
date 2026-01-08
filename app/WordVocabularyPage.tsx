@@ -3,14 +3,10 @@ import PickCategoryButton from "@/src/components/vocabulary/category/PickCategor
 import WordsList from "@/src/components/vocabulary/word/WordsList";
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import {
-  SPACING_LG,
-  SPACING_MD,
-  SPACING_SM,
-  TAB_BAR_BASE_HEIGHT,
-} from "@/src/resources/constants/layout";
+import { SPACING_LG, SPACING_MD, SPACING_SM } from "@/src/resources/constants/layout";
 import { WordCriteria } from "@/src/service/wordService";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { IconButton } from "react-native-paper";
@@ -22,12 +18,7 @@ export default function WordVocabularyPage() {
 
   const { criteriaDto, updateWordCriteria } = useVocabulary();
 
-  const pageHorizontalPadding = SPACING_LG;
-  const pageBottomPadding = insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT;
-
-  const [selectedCategory, setSelectedCategory] = useState<
-    Category | undefined
-  >(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
   const [searchPattern, setSearchPattern] = useState("");
 
   useEffect(() => {
@@ -38,6 +29,7 @@ export default function WordVocabularyPage() {
   }, [selectedCategory, searchPattern]);
 
   const clearSearch = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     setSearchPattern("");
     setSelectedCategory(undefined);
   };
@@ -61,18 +53,9 @@ export default function WordVocabularyPage() {
           size={18}
           accessibilityLabel="Clear search"
         />
-        <PickCategoryButton
-          category={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          truncateLength={7}
-        />
+        <PickCategoryButton category={selectedCategory} onSelectCategory={setSelectedCategory} truncateLength={7} />
 
-        <View
-          style={[
-            styles.searchContainer,
-            { backgroundColor: theme.colors.surface },
-          ]}
-        >
+        <View style={[styles.searchContainer, { backgroundColor: theme.colors.surface }]}>
           <Ionicons name="search" size={18} color={theme.colors.onSurface} />
           <TextInput
             placeholder="Search text..."
@@ -89,8 +72,8 @@ export default function WordVocabularyPage() {
         contentContainerStyle={{
           // 60 is the height of the navbar
           paddingTop: SPACING_MD + 60,
-          paddingBottom: pageBottomPadding,
-          paddingHorizontal: pageHorizontalPadding,
+          paddingBottom: insets.bottom,
+          paddingHorizontal: SPACING_LG,
         }}
       >
         <WordsList />

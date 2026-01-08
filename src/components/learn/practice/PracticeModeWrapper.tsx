@@ -62,7 +62,6 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   if (isSetEnded) {
     return (
       <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>You have finished current set</Text>
         <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
 
         <View style={styles.buttonsRow}>

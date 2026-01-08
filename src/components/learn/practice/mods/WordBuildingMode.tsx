@@ -1,5 +1,5 @@
 import { usePractice } from "@/src/hooks/usePractice";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../common/ThemeProvider";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
@@ -20,47 +20,40 @@ function shuffleArray<T>(items: readonly T[]): T[] {
   return array;
 }
 
+function buildLetterPool(word: string): LetterTile[] {
+  const chars = word.split("");
+  const tiles: LetterTile[] = chars.map((char, index) => ({
+    id: index + 1,
+    char,
+  }));
+  return shuffleArray(tiles);
+}
+
 export default function WordBuildingMode(props: PracticeModeChildProps) {
   const theme = useAppTheme();
   const { words } = usePractice();
 
+  const [withoutMistakesCount, setWithoutMistakesCount] = useState(0);
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [letterPool, setLetterPool] = useState<LetterTile[]>([]);
+  const [madeMistakeOnWord, setMadeMistakeOnWord] = useState(false);
+
+  const [letterPool, setLetterPool] = useState<LetterTile[]>(buildLetterPool(words[0].word_en.trim()));
   const [usedLetterIds, setUsedLetterIds] = useState<number[]>([]);
   const [incorrectLetterId, setIncorrectLetterId] = useState<number | null>(null);
   const [isWordHighlighted, setIsWordHighlighted] = useState(false);
 
-  const resetState = () => {
-    const index = 0;
-    setCurrentIndex(index);
-    setLetterPool(buildLetterPool(words[index].word_en.trim()));
-    setUsedLetterIds([]);
-    setIncorrectLetterId(null);
-    setIsWordHighlighted(false);
-  };
-
-  useEffect(() => {
-    resetState();
-  }, [words]);
-
-  const buildLetterPool = (word: string): LetterTile[] => {
-    const chars = word.split("");
-    const tiles: LetterTile[] = chars.map((char, index) => ({
-      id: index + 1,
-      char,
-    }));
-    return shuffleArray(tiles);
-  };
-
   const moveToNextWord = () => {
+    setWithoutMistakesCount((prev) => prev + (madeMistakeOnWord ? 0 : 1));
     setIsWordHighlighted(false);
     setIncorrectLetterId(null);
     setUsedLetterIds([]);
+    setMadeMistakeOnWord(false);
 
     const nextIndex = currentIndex + 1;
     if (nextIndex >= words.length) {
-      props.onEndCurrentSet?.(`You solved ${currentIndex + 1} / ${words.length} words`);
+      props.onEndCurrentSet?.(`You solved ${withoutMistakesCount} / ${words.length} words without mistakes`);
       return;
     }
     const nextWord = words[nextIndex];
@@ -97,6 +90,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
       return;
     }
 
+    setMadeMistakeOnWord(true);
     setIncorrectLetterId(tile.id);
     const timeout = setTimeout(() => {
       setIncorrectLetterId(null);
@@ -186,7 +180,6 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
   const renderContent = () => {
     return (
       <View style={styles.sessionContent}>
-
         <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
           <View style={[styles.wordHeader, { backgroundColor: theme.colors.surfaceVariant }]}>
             <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}>Russian word</Text>

@@ -30,6 +30,8 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
   const theme = useAppTheme();
   const { words } = usePractice();
 
+  const [mistakesCount, setMistakesCount] = useState(0);
+
   const [sessionWords, setSessionWords] = useState<Word[]>([]);
   const [visibleIds, setVisibleIds] = useState<number[]>([]);
   const [solvedIds, setSolvedIds] = useState<number[]>([]);
@@ -89,8 +91,8 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
       setSolvedIds(newSolved);
       setVisibleIds([]);
       setEnglishOrder([]);
-      props.onEndCurrentSet?.(`You solved ${solvedIds.length + 1} / ${words.length} pairs`);
-      // return;
+      props.onEndCurrentSet?.(`You made ${mistakesCount} mistakes while solving ${words.length} pairs`);
+      return;
     }
 
     const shuffledVisible = shuffleArray(updatedVisible);
@@ -122,6 +124,7 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
       const ruId = selectedRuId;
       const enId = selectedEnId;
       setIncorrectPair({ ruId, enId });
+      setMistakesCount((prev) => prev + 1);
       const timeout = setTimeout(() => {
         setIncorrectPair(null);
         setSelectedRuId(null);
@@ -134,7 +137,6 @@ export default function WordPairsMode(props: PracticeModeChildProps) {
   return (
     <View style={styles.container}>
       <View style={styles.sessionContent}>
-
         <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
           <View style={styles.gameArea}>
             <View style={styles.columnsHeader}>

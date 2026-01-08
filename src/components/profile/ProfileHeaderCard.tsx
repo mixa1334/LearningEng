@@ -1,6 +1,7 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_MD, SPACING_XL } from "@/src/resources/constants/layout";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, TextInput, useTheme } from "react-native-paper";
@@ -10,7 +11,10 @@ export default function ProfileHeaderCard() {
   const theme = useTheme();
   const [editableName, setEditableName] = useState(false);
 
-  const toggleEditableName = () => setEditableName((prev) => !prev);
+  const toggleEditableName = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    setEditableName((prev) => !prev);
+  };
 
   return (
     <View

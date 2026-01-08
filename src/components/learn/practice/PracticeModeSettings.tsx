@@ -1,5 +1,6 @@
 import { EntityType } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
+import * as Haptics from "expo-haptics";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { Button, IconButton, Switch } from "react-native-paper";
@@ -51,7 +52,10 @@ export default function PracticeModeSettings() {
       <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }]}>
         <IconButton
           icon="refresh"
-          onPress={() => resetCriteria()}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+            resetCriteria();
+          }}
           iconColor={theme.colors.onError}
           containerColor={theme.colors.error}
           size={18}
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 10,
     borderRadius: 12,
-    marginTop: 8,
+    marginTop: 5,
     gap: 16,
   },
   switcherContainer: {
@@ -127,7 +131,7 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     position: "absolute",
-    top: 4,
-    left: 4,
+    top: 3,
+    left: 3,
   },
 });

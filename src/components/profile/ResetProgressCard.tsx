@@ -39,7 +39,7 @@ export default function ResetProgressCard() {
   };
 
   return (
-    <ExpandedCard title="Reset" icon="delete" autoScroll={true} touchableOpacity={1}>
+    <ExpandedCard title="Reset" icon="close" autoScroll={true} touchableOpacity={1}>
       <View style={[styles.resetSettingsRow, { marginTop: SPACING_MD }]}>
         <Button
           mode="contained"
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     width: "80%",
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: "600",
   },
 });

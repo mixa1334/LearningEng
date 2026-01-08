@@ -1,4 +1,5 @@
 import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button, useTheme } from "react-native-paper";
@@ -6,15 +7,9 @@ import LearningErrorState from "../LearningErrorState";
 import WordCard from "../WordCard";
 
 export default function LearningMainMode() {
-  const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } =
-    useLearningDailySet();
+  const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } = useLearningDailySet();
   const [isLearnTab, setIsLearnTab] = useState(true);
-  const {
-    markWordReviewed,
-    markWordNotReviewed,
-    startLearnNewWord,
-    markWordCompletelyLearned,
-  } = useLearnUtil();
+  const { markWordReviewed, markWordNotReviewed, startLearnNewWord, markWordCompletelyLearned } = useLearnUtil();
   const theme = useTheme();
 
   const word = isLearnTab ? learnWord : reviewWord;
@@ -23,8 +18,14 @@ export default function LearningMainMode() {
   const acceptLabel = isLearnTab ? "I know" : "I remember";
   const rejectLabel = isLearnTab ? "Start learn" : "Show late";
 
-  const handleSelectLearn = () => setIsLearnTab(true);
-  const handleSelectReview = () => setIsLearnTab(false);
+  const handleSelectLearn = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setIsLearnTab(true);
+  };
+  const handleSelectReview = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setIsLearnTab(false);
+  };
 
   if (error) {
     return <LearningErrorState error={error} onRetry={reloadDailySet} />;
@@ -32,19 +33,12 @@ export default function LearningMainMode() {
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.tabHeader,
-          { backgroundColor: theme.colors.primaryContainer },
-        ]}
-      >
+      <View style={[styles.tabHeader, { backgroundColor: theme.colors.primaryContainer }]}>
         <TouchableOpacity
           style={[
             styles.tabButton,
             {
-              backgroundColor: isLearnTab
-                ? theme.colors.primary
-                : theme.colors.secondary,
+              backgroundColor: isLearnTab ? theme.colors.primary : theme.colors.secondary,
             },
           ]}
           onPress={handleSelectLearn}
@@ -53,9 +47,7 @@ export default function LearningMainMode() {
             style={[
               styles.tabLabel,
               {
-                color: isLearnTab
-                  ? theme.colors.onPrimary
-                  : theme.colors.onSecondary,
+                color: isLearnTab ? theme.colors.onPrimary : theme.colors.onSecondary,
                 fontWeight: isLearnTab ? "600" : "400",
               },
             ]}
@@ -67,9 +59,7 @@ export default function LearningMainMode() {
           style={[
             styles.tabButton,
             {
-              backgroundColor: isLearnTab
-                ? theme.colors.secondary
-                : theme.colors.primary,
+              backgroundColor: isLearnTab ? theme.colors.secondary : theme.colors.primary,
             },
           ]}
           onPress={handleSelectReview}
@@ -78,9 +68,7 @@ export default function LearningMainMode() {
             style={[
               styles.tabLabel,
               {
-                color: isLearnTab
-                  ? theme.colors.onSecondary
-                  : theme.colors.onPrimary,
+                color: isLearnTab ? theme.colors.onSecondary : theme.colors.onPrimary,
                 fontWeight: isLearnTab ? "400" : "600",
               },
             ]}
@@ -93,29 +81,17 @@ export default function LearningMainMode() {
       <View style={styles.content}>
         {word === undefined ? (
           <View style={[styles.completeMsg, { backgroundColor: theme.colors.primaryContainer }]}>
-            <Text
-              style={[styles.emptyText, { color: theme.colors.onBackground }]}
-            >
+            <Text style={[styles.emptyText, { color: theme.colors.onBackground }]}>
               {isLearnTab ? "You've completed daily set!" : "No words to review, come back later!"}
             </Text>
             {isLearnTab && (
-              <Button
-                buttonColor={theme.colors.primary}
-                textColor={theme.colors.onPrimary}
-                onPress={loadExtraDailySet}
-              >
+              <Button buttonColor={theme.colors.primary} textColor={theme.colors.onPrimary} onPress={loadExtraDailySet}>
                 Load more words
               </Button>
             )}
           </View>
         ) : (
-          <WordCard
-            word={word}
-            accept={accept}
-            acceptBtnName={acceptLabel}
-            reject={reject}
-            rejectBtnName={rejectLabel}
-          />
+          <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
         )}
       </View>
     </View>

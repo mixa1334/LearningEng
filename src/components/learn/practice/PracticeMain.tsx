@@ -65,6 +65,11 @@ export default function PracticeMain() {
     setActiveExtraMode(newMode);
   };
 
+  const handleSessionStart = () => {
+    setIsSessionStarted(true);
+    triggerScroll();
+  };
+
   const handleSessionEnd = () => {
     setIsSessionStarted(false);
     resetPracticeSet();
@@ -147,10 +152,7 @@ export default function PracticeMain() {
         </Text>
         <Button
           mode="contained-tonal"
-          onPress={() => {
-            setIsSessionStarted(true);
-            triggerScroll();
-          }}
+          onPress={handleSessionStart}
           style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
           textColor={theme.colors.onPrimary}
           icon="play"

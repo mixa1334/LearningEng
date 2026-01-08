@@ -14,11 +14,11 @@ export default function DailyGoalCard() {
   const textColor = dailyGoalAchieve ? theme.colors.onPrimary : theme.colors.onSurface;
 
   const increaseGoal = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     changeGoal(dailyGoal + 1);
   };
   const decreaseGoal = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const newDailyGoal = dailyGoal - 1;
     if (newDailyGoal > 0) {
       changeGoal(newDailyGoal);
