@@ -1,7 +1,7 @@
 import PracticeModeSettings from "@/src/components/learn/practice/PracticeModeSettings";
 import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/learn/practice/PracticeModeWrapper";
+import MatchPairsMode from "@/src/components/learn/practice/mods/MatchPairsMode";
 import WordBuildingMode from "@/src/components/learn/practice/mods/WordBuildingMode";
-import WordPairsMode from "@/src/components/learn/practice/mods/WordPairsMode";
 import WordsOverview from "@/src/components/learn/practice/mods/WordsOverview";
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -32,7 +32,7 @@ const PracticeModeComponents: Record<
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
   [ExtraMode.PAIRS]: {
-    component: WordPairsMode,
+    component: MatchPairsMode,
     descriptionText: "Match each Russian word with its English translation",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 2,
   },

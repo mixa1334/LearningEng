@@ -1,8 +1,9 @@
 import { usePractice } from "@/src/hooks/usePractice";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
+import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
 import { useAppTheme } from "../../common/ThemeProvider";
 
 export type PracticeModeChildProps = {
@@ -17,42 +18,57 @@ interface PracticeModeWrapperProps {
 export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, children }: PracticeModeWrapperProps) {
   const { triggerScroll } = useAutoScroll();
   const theme = useAppTheme();
-
   const { words, loadNextPracticeSet, resetPracticeSet } = usePractice();
 
-  const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
-
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [childTextMessage, setChildTextMessage] = useState("");
-
   const [isSetEnded, setIsSetEnded] = useState(false);
-
   const [isOverLoadedSession, setIsOverLoadedSession] = useState(false);
 
+  const performTransition = useCallback(
+    async (action: () => void) => {
+      setIsTransitioning(true);
+      action();
+      setTimeout(() => {
+        setIsTransitioning(false);
+        triggerScroll();
+      }, 300);
+    },
+    [triggerScroll]
+  );
+
+  const handleEndCurrentSet = useCallback((endMessage: string) => {
+    setIsSetEnded(true);
+    setChildTextMessage(endMessage);
+    setIsOverLoadedSession(true);
+  }, []);
+
   const resetPracticeSession = () => {
-    resetPracticeSet();
-    setIsSetEnded(false);
-    triggerScroll();
+    performTransition(() => {
+      resetPracticeSet();
+      setIsSetEnded(false);
+    });
   };
 
   const loadMoreWordsToLearn = () => {
-    loadNextPracticeSet();
-    setIsSetEnded(false);
-    triggerScroll();
+    performTransition(() => {
+      loadNextPracticeSet();
+      setIsSetEnded(false);
+    });
   };
 
-  if (noWordsToReview) {
+  if (isTransitioning) {
+    return <LoadingContentSpinner />;
+  }
+
+  const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
+  if (noWordsToReview && !isSetEnded) {
     return (
       <View style={styles.centered}>
         <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>No words to practice</Text>
         {isOverLoadedSession && (
-          <Button
-            mode="contained-tonal"
-            onPress={resetPracticeSession}
-            style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-            textColor={theme.colors.primaryContainer}
-            icon="restart"
-          >
-            Reset session
+          <Button mode="contained-tonal" onPress={resetPracticeSession} icon="restart">
+            Start over
           </Button>
         )}
       </View>
@@ -63,28 +79,16 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
     return (
       <View style={styles.centered}>
         <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
-
-        <View style={styles.buttonsRow}>
-          <Button
-            mode="contained-tonal"
-            onPress={loadMoreWordsToLearn}
-            style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-            textColor={theme.colors.primaryContainer}
-            icon="play"
-          >
-            Continue
-          </Button>
-        </View>
+        <Button mode="contained-tonal" onPress={loadMoreWordsToLearn} icon="play">
+          Continue
+        </Button>
       </View>
     );
   }
 
   return React.cloneElement(children, {
-    onEndCurrentSet: (endMessage) => {
-      setIsSetEnded(true);
-      setChildTextMessage(endMessage);
-      setIsOverLoadedSession(true);
-    },
+    onEndCurrentSet: handleEndCurrentSet,
+    key: `set-${words.length}-${words[0]?.id || "init"}`,
   });
 }
 
@@ -117,6 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    gap: 12,
   },
   infoText: {
     fontSize: 16,
