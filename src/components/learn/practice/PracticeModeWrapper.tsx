@@ -112,29 +112,6 @@ const styles = StyleSheet.create({
   btn: {
     borderRadius: 8,
   },
-  buttonsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 12,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  topRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  topRowLabel: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
   centered: {
     flex: 1,
     justifyContent: "center",
@@ -152,41 +129,5 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",
-  },
-  sessionContent: {
-    flex: 1,
-  },
-  progressCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-  },
-  section: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-  },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  reviewBtn: {
-    marginTop: 12,
-    borderRadius: 8,
-  },
-  endBtn: {
-    borderRadius: 8,
   },
 });

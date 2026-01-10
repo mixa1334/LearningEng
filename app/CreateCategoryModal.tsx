@@ -45,10 +45,6 @@ export default function CreateCategoryModal() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
   subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
-  emojiButton: { marginTop: 10, borderRadius: 999 },
-  emojiInner: { flexDirection: "row", alignItems: "center", gap: 8 },
-  emojiEmoji: { fontSize: 20 },
-  emojiLabel: { fontSize: 14, fontWeight: "500" },
   actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
   emojiPickerContainer: { marginTop: 10, marginBottom: 14 },
 });

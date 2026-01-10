@@ -179,28 +179,4 @@ const styles = StyleSheet.create({
   historyCard: {
     borderRadius: 8,
   },
-  dialogHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 8,
-    paddingTop: 4,
-  },
-  dialogTranslationText: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 12,
-  },
-  sectionLabel: {
-    marginVertical: 8,
-    fontWeight: "600",
-  },
-  categorySelector: {
-    marginBottom: 4,
-    borderRadius: 8,
-  },
-  dialogActions: {
-    justifyContent: "center",
-    paddingBottom: 8,
-  },
 });

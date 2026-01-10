@@ -240,11 +240,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     alignItems: "center",
   },
-  btnFullWidth: {
-    maxWidth: "100%",
-    marginHorizontal: 0,
-    marginVertical: 6,
-  },
   btnText: {
     fontWeight: "600",
     fontSize: 15,

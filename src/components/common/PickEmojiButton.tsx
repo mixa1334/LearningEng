@@ -67,8 +67,4 @@ const styles = StyleSheet.create({
   emojiEmoji: {
     fontSize: 20,
   },
-  emojiLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
 });

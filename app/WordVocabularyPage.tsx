@@ -83,10 +83,6 @@ export default function WordVocabularyPage() {
 }
 
 const styles = StyleSheet.create({
-  categorySelectorText: {
-    fontSize: 13,
-    fontWeight: "600",
-  },
   container: { flex: 1 },
   navbar: {
     position: "absolute",
@@ -102,10 +98,6 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 20,
     zIndex: 100,
     gap: SPACING_MD,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
   },
   searchContainer: {
     flexDirection: "row",

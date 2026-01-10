@@ -75,15 +75,6 @@ export default function ExpandedCard({
 }
 
 const styles = StyleSheet.create({
-  settingRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 8,
-  },
-  settingBtn: {
-    marginVertical: 6,
-  },
   card: {
     borderRadius: 20,
     padding: SPACING_XL,
@@ -100,17 +91,5 @@ const styles = StyleSheet.create({
   },
   expandIcon: {
     fontSize: 16,
-  },
-  item: {
-    marginBottom: 10,
-  },
-  itemTitle: {
-    fontSize: 13,
-    fontWeight: "600",
-    marginBottom: 2,
-  },
-  itemText: {
-    fontSize: 13,
-    fontWeight: "400",
   },
 });

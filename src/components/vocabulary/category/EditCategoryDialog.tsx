@@ -103,22 +103,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  editableField: {
-    marginVertical: 6,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    overflow: "hidden",
-  },
-  editableLabel: {
-    fontSize: 12,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  editableValue: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
   title: {
     fontWeight: "700",
   },

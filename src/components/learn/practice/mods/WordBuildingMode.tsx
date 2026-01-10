@@ -202,31 +202,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  topRowLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 24,
-  },
-  infoText: {
-    fontSize: 16,
-    fontWeight: "500",
-    textAlign: "center",
-    marginBottom: 12,
-  },
   sessionContent: {
     flex: 1,
   },
@@ -243,15 +218,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
     width: "100%",
-  },
-  progressCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 10,
   },
   wordHeader: {
     paddingVertical: 10,
@@ -306,16 +272,5 @@ const styles = StyleSheet.create({
   letterTileText: {
     fontSize: 18,
     fontWeight: "700",
-  },
-  progressRow: {
-    marginTop: 16,
-    alignItems: "center",
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  endBtn: {
-    borderRadius: 8,
   },
 });

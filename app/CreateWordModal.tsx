@@ -62,10 +62,6 @@ export default function CreateWordModal() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
   subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
-  categoryButton: { marginTop: 4, borderRadius: 999 },
-  categoryInner: { flexDirection: "row", alignItems: "center", gap: 8 },
-  categoryEmoji: { fontSize: 18 },
-  categoryLabel: { fontSize: 14 },
   actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
   categoryPickerContainer: { marginTop: 10, marginBottom: 14, paddingHorizontal: 8 },
 });
