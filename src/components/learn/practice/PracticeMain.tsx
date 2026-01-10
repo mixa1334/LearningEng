@@ -6,8 +6,8 @@ import WordsOverview from "@/src/components/learn/practice/mods/WordsOverview";
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { Button, SegmentedButtons } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
 import { useAppTheme } from "../../common/ThemeProvider";
@@ -58,6 +58,26 @@ export default function PracticeMain() {
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
   const ActiveModeComponent = PracticeModeComponents[activeExtraMode].component;
+
+  const mainOpacity = useRef(new Animated.Value(0)).current;
+  const mainTranslateY = useRef(new Animated.Value(8)).current;
+
+  useEffect(() => {
+    mainOpacity.setValue(0);
+    mainTranslateY.setValue(8);
+    Animated.parallel([
+      Animated.timing(mainOpacity, {
+        toValue: 1,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+      Animated.spring(mainTranslateY, {
+        toValue: 0,
+        useNativeDriver: true,
+        friction: 7,
+      }),
+    ]).start();
+  }, [activeExtraMode, isSessionStarted, isSettingsVisible, mainOpacity, mainTranslateY]);
 
   const handleModeChange = (newMode: ExtraMode) => {
     setIsSessionStarted(false);
@@ -147,13 +167,13 @@ export default function PracticeMain() {
     }
     return (
       <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>
+        <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
           {PracticeModeComponents[activeExtraMode].descriptionText}
         </Text>
         <Button
           mode="contained-tonal"
           onPress={handleSessionStart}
-          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
+          style={[styles.reviewBtn, { backgroundColor: theme.colors.primary }]}
           textColor={theme.colors.onPrimary}
           icon="play"
         >
@@ -167,7 +187,9 @@ export default function PracticeMain() {
     <View>
       {renderHeaderSection()}
 
-      {renderMainSection()}
+      <Animated.View style={{ opacity: mainOpacity, transform: [{ translateY: mainTranslateY }] }}>
+        {renderMainSection()}
+      </Animated.View>
     </View>
   );
 }

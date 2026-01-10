@@ -179,7 +179,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     borderRadius: 20,
     alignSelf: "center",
-    marginVertical: 16,
     padding: 20,
   },
   content: {

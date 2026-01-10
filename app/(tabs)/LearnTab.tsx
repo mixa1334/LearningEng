@@ -15,7 +15,7 @@ export default function LearnTab() {
 
         <LearningMainMode />
 
-        <View style={{ marginTop: SPACING_XXL * 2 }}>
+        <View style={{ marginTop: SPACING_XXL * 3 }}>
           <ContentDivider name="Practicing" />
         </View>
 

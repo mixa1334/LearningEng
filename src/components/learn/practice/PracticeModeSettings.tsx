@@ -101,11 +101,11 @@ export default function PracticeModeSettings() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    paddingHorizontal: 40,
     paddingTop: 60,
-    paddingBottom: 10,
-    borderRadius: 12,
-    marginTop: 5,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    borderRadius: 16,
+    marginTop: 8,
     gap: 16,
   },
   rowContainer: {

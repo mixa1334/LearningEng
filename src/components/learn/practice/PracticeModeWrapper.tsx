@@ -58,16 +58,26 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   };
 
   if (isTransitioning) {
-    return <LoadingContentSpinner />;
+    return (
+      <View style={{ paddingTop: 60 }}>
+        <LoadingContentSpinner />
+      </View>
+    );
   }
 
   const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
   if (noWordsToReview && !isSetEnded) {
     return (
-      <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>No words to practice</Text>
+      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" }]}>
+        <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>No words to practice</Text>
         {isOverLoadedSession && (
-          <Button mode="contained-tonal" onPress={resetPracticeSession} icon="restart">
+          <Button
+            mode="contained-tonal"
+            onPress={resetPracticeSession}
+            icon="restart"
+            style={[styles.btn, { backgroundColor: theme.colors.primary }]}
+            textColor={theme.colors.onPrimary}
+          >
             Start over
           </Button>
         )}
@@ -77,9 +87,15 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
 
   if (isSetEnded) {
     return (
-      <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
-        <Button mode="contained-tonal" onPress={loadMoreWordsToLearn} icon="play">
+      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" }]}>
+        <Text style={[styles.resultText, { color: theme.colors.onSurface }]}>{childTextMessage}</Text>
+        <Button
+          mode="contained-tonal"
+          onPress={loadMoreWordsToLearn}
+          icon="play"
+          style={[styles.btn, { backgroundColor: theme.colors.primary }]}
+          textColor={theme.colors.onPrimary}
+        >
           Continue
         </Button>
       </View>
@@ -93,6 +109,9 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
 }
 
 const styles = StyleSheet.create({
+  btn: {
+    borderRadius: 8,
+  },
   buttonsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
