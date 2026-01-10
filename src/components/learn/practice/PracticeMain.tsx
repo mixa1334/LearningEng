@@ -166,7 +166,7 @@ export default function PracticeMain() {
       );
     }
     return (
-      <View style={styles.centered}>
+      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant }]}>
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
           {PracticeModeComponents[activeExtraMode].descriptionText}
         </Text>
@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    borderRadius: 20,
   },
   infoText: {
     fontSize: 16,
