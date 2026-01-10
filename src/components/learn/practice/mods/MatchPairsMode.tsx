@@ -118,7 +118,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
         style={({ pressed }) => [
           styles.plate,
           {
-            backgroundColor: colors.surfaceVariant,
+            backgroundColor: colors.onSurfaceVariant,
             borderColor: colors.outline,
           },
           pressed &&
@@ -144,9 +144,12 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
         <Text
           style={[
             styles.plateText,
-            { color: colors.onSurface },
+            { color: colors.surface },
             (isCorrectPair || isIncorrectPair) && {
               color: colors.onAcceptReject,
+            },
+            isSelected && {
+              color: colors.onPrimaryContainer,
             },
           ]}
         >
@@ -161,9 +164,9 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
   const size = Math.min(ruPlates.length, engPlates.length, VISIBLE_PAIRS);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-        <View style={[styles.headerRow, { backgroundColor: theme.colors.surfaceVariant }]}>
+    <View style={styles.container}>
+      <View style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <View style={styles.headerRow}>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>RU words</Text>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>EN words</Text>
         </View>
