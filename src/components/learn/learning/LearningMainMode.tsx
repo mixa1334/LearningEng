@@ -156,8 +156,7 @@ export default function LearningMainMode() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
     paddingTop: 10,
   },
   tabHeader: {
@@ -190,17 +189,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   content: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   completeMsg: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
     gap: 15,
-    marginTop: 10,
     borderRadius: 20,
     width: "100%",
   },
