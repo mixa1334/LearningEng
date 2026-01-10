@@ -82,7 +82,7 @@ export default function PracticeModeSettings() {
           </Button>
           <ValuePickerDialog
             entityTitle="practice limit"
-            description="Choose a practice limit"
+            description="Choose a practice limit for each practice session (1 session = 1 set of words)"
             visible={isLimitPickerVisible}
             onClose={() => setIsLimitPickerVisible(false)}
             options={practiceLimitLabels}
