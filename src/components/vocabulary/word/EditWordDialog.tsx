@@ -25,7 +25,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   };
 
   const setWordRu = (text: string) => {
-    setWordToEdit({ ...wordToEdit, word_ru: text });  
+    setWordToEdit({ ...wordToEdit, word_ru: text });
   };
 
   const setWordTextExample = (text: string) => {
@@ -63,22 +63,16 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
               Tap a field to quickly update any part of the word.
             </Text>
 
-            <TouchableTextInput
-              label="English word"
-              initialValue={wordToEdit.word_en}
-              onChange={setWordEn}
-            />
-            <TouchableTextInput
-              label="Russian word"
-              initialValue={wordToEdit.word_ru}
-              onChange={setWordRu}
-            />
+            <TouchableTextInput label="English word" initialValue={wordToEdit.word_en} onChange={setWordEn} />
+            <TouchableTextInput label="Russian word" initialValue={wordToEdit.word_ru} onChange={setWordRu} />
             <TouchableTextInput
               label="Text example (optional)"
               initialValue={wordToEdit.text_example}
               onChange={setWordTextExample}
             />
-            <PickCategoryButton category={wordToEdit.category} onSelectCategory={selectCategory} />
+            <View style={styles.categoryPickerContainer}>
+              <PickCategoryButton category={wordToEdit.category} onSelectCategory={selectCategory} />
+            </View>
           </View>
 
           <View style={styles.actions}>
@@ -145,5 +139,10 @@ const styles = StyleSheet.create({
   },
   destructiveButton: {
     marginRight: 8,
+  },
+  categoryPickerContainer: {
+    marginTop: 10,
+    marginBottom: 14,
+    paddingHorizontal: 8,
   },
 });

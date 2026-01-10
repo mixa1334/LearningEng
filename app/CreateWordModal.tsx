@@ -42,7 +42,9 @@ export default function CreateWordModal() {
       <FieldTextInput label="Russian word" initialValue={newWordRu} onChangeText={setNewWordRu} />
       <FieldTextInput label="Text example (optional)" initialValue={newWordTextExample} onChangeText={setNewWordTextExample} />
 
-      <PickCategoryButton category={selectedCategory} onSelectCategory={selectCategory} />
+      <View style={styles.categoryPickerContainer}>
+        <PickCategoryButton category={selectedCategory} onSelectCategory={selectCategory} />
+      </View>
 
       <Button
         mode="contained"
@@ -64,5 +66,6 @@ const styles = StyleSheet.create({
   categoryInner: { flexDirection: "row", alignItems: "center", gap: 8 },
   categoryEmoji: { fontSize: 18 },
   categoryLabel: { fontSize: 14 },
-  actionButton: { marginTop: 20 },
+  actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
+  categoryPickerContainer: { marginTop: 10, marginBottom: 14, paddingHorizontal: 8 },
 });

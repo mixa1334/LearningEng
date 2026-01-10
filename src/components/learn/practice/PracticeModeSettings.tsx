@@ -9,10 +9,10 @@ import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
 
 const practiceLimitLabels = [
-  { value: 5, label: "5" },
-  { value: 10, label: "10" },
-  { value: 20, label: "20" },
-  { value: 50, label: "50" },
+  { value: 5, key: "5", label: "5 words per session" },
+  { value: 10, key: "10", label: "10 words per session" },
+  { value: 20, key: "20", label: "20 words per session" },
+  { value: 50, key: "50", label: "50 words per session" },
 ];
 
 export default function PracticeModeSettings() {
@@ -62,12 +62,12 @@ export default function PracticeModeSettings() {
           accessibilityLabel="Reset criteria"
           style={styles.resetButton}
         />
-        <View style={styles.switcherContainer}>
+        <View style={styles.rowContainer}>
           <Text style={[styles.label, { color: theme.colors.onSurface }]}>Only user words</Text>
           <Switch value={wordType === EntityType.useradd} onValueChange={handleSwitchWordType} />
         </View>
 
-        <View style={styles.limitContainer}>
+        <View style={styles.rowContainer}>
           <Text style={[styles.label, { color: theme.colors.onSurface }]}>Word limit</Text>
           <Button
             mode="contained-tonal"
@@ -78,22 +78,21 @@ export default function PracticeModeSettings() {
             icon="chevron-down"
             textColor={theme.colors.onSecondary}
           >
-            <Text style={[styles.limitValue]}>{practiceLimit}</Text>
+            <Text style={[styles.label, { color: theme.colors.onSecondary }]}>{practiceLimit}</Text>
           </Button>
           <ValuePickerDialog
             entityTitle="practice limit"
             description="Choose a practice limit"
             visible={isLimitPickerVisible}
             onClose={() => setIsLimitPickerVisible(false)}
-            options={practiceLimitLabels.map((label) => ({
-              value: label.value,
-              key: label.value.toString(),
-              label: label.label,
-            }))}
+            options={practiceLimitLabels}
             onSelectOption={handleSelectLimit}
           />
         </View>
+        <View style={styles.rowContainer}>
+          <Text style={[styles.label, { color: theme.colors.onSurface }]}>Category</Text>
           <PickCategoryButton category={category} onSelectCategory={setCategory} />
+        </View>
       </View>
     </Animated.View>
   );
@@ -109,13 +108,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     gap: 16,
   },
-  switcherContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  limitContainer: {
+  rowContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -124,10 +117,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "500",
-  },
-  limitValue: {
-    fontSize: 16,
-    fontWeight: "600",
   },
   resetButton: {
     position: "absolute",
