@@ -1,6 +1,5 @@
 import { usePractice } from "@/src/hooks/usePractice";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
 import WordCard from "../../WordCard";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
@@ -47,16 +46,5 @@ export default function WordsOverview({ onEndCurrentSet }: PracticeModeChildProp
 
   if (index >= words.length || hasFinished) return null;
 
-  return (
-    <View style={styles.container}>
-      <WordCard word={words[index]} accept={accept} acceptBtnName="Know" reject={reject} rejectBtnName="Don't know" />
-    </View>
-  );
+  return <WordCard word={words[index]} accept={accept} acceptBtnName="Know" reject={reject} rejectBtnName="Don't know" />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-});
