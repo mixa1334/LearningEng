@@ -2,7 +2,9 @@ import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
 import * as Haptics from "expo-haptics";
 import React, { useRef, useState } from "react";
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
+import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
 import WordCard from "../WordCard";
 
@@ -12,7 +14,7 @@ export default function LearningMainMode() {
   const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } = useLearningDailySet();
   const [isLearnTab, setIsLearnTab] = useState(true);
   const { markWordReviewed, markWordNotReviewed, startLearnNewWord, markWordCompletelyLearned } = useLearnUtil();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const word = isLearnTab ? learnWord : reviewWord;
   const accept = isLearnTab ? markWordCompletelyLearned : markWordReviewed;
@@ -74,6 +76,7 @@ export default function LearningMainMode() {
             backgroundColor: theme.colors.surfaceVariant,
             borderColor: theme.colors.outline,
           },
+          getCardShadow(theme),
         ]}
         onLayout={(e) => setTabHeaderWidth(e.nativeEvent.layout.width)}
       >
@@ -136,7 +139,13 @@ export default function LearningMainMode() {
 
       <Animated.View style={[styles.content, { opacity: contentOpacity }]}>
         {word === undefined ? (
-          <View style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant }]}>
+          <View
+            style={[
+              styles.completeMsg,
+              { backgroundColor: theme.colors.surfaceVariant },
+              getCardShadow(theme),
+            ]}
+          >
             <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
               {isLearnTab ? "You've completed daily set!" : "No words to review, come back later!"}
             </Text>
@@ -169,7 +178,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 16,
     position: "relative",
-    overflow: "hidden",
   },
   tabButton: {
     flex: 1,

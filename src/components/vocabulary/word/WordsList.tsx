@@ -3,11 +3,13 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
+import { useAppTheme } from "../../common/ThemeProvider";
 import EditWordDialog from "./EditWordDialog";
 
 export default function WordsList() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { words } = useVocabulary();
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
@@ -36,6 +38,7 @@ export default function WordsList() {
                 backgroundColor: theme.colors.surfaceVariant,
                 borderColor: theme.colors.outlineVariant,
               },
+              getCardShadow(theme),
             ]}
             onPress={() => openEditWordModal(item)}
           >
@@ -70,7 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     marginVertical: 8,
     paddingVertical: 8,
-    overflow: "hidden",
   },
   itemContent: {
     flexDirection: "row",

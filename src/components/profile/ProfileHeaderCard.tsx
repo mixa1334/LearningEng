@@ -4,11 +4,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { IconButton, Text, TextInput, useTheme } from "react-native-paper";
+import { IconButton, Text, TextInput } from "react-native-paper";
+import { getCardShadow } from "../common/cardShadow";
+import { useAppTheme } from "../common/ThemeProvider";
 
 export default function ProfileHeaderCard() {
   const { name, streak, changeName } = useUserData();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [editableName, setEditableName] = useState(false);
 
   const toggleEditableName = () => {
@@ -23,6 +25,7 @@ export default function ProfileHeaderCard() {
         {
           backgroundColor: theme.colors.primaryContainer,
         },
+        getCardShadow(theme),
       ]}
     >
       {editableName ? (

@@ -1,14 +1,9 @@
 import { Word } from "@/src/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { useAppTheme } from "../common/ThemeProvider";
+import { getCardShadow } from "../common/cardShadow";
 
 interface WordCardProps {
   readonly word: Word;
@@ -80,6 +75,7 @@ export default function WordCard({
           minWidth: cardWidth,
           minHeight: cardHeight,
         },
+        getCardShadow(theme),
       ]}
     >
       <View style={styles.content}>

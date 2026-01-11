@@ -1,7 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "./cardShadow";
+import { useAppTheme } from "./ThemeProvider";
 
 interface TouchableCardProps {
   readonly icon: keyof typeof Ionicons.glyphMap;
@@ -11,11 +13,15 @@ interface TouchableCardProps {
 }
 
 export function TouchableCard({ icon, title, description, onPress }: TouchableCardProps) {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}
+      style={[
+        styles.card,
+        { backgroundColor: theme.colors.surfaceVariant },
+        getCardShadow(theme),
+      ]}
       activeOpacity={0.8}
       onPress={onPress}
     >

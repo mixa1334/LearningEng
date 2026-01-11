@@ -1,3 +1,4 @@
+import { getCardShadow } from "@/src/components/common/cardShadow";
 import { usePractice } from "@/src/hooks/usePractice";
 import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -68,7 +69,13 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
   if (noWordsToReview && !isSetEnded) {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" }]}>
+      <View
+        style={[
+          styles.centered,
+          { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" },
+          getCardShadow(theme),
+        ]}
+      >
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>No words to practice</Text>
         {isOverLoadedSession && (
           <Button
@@ -87,7 +94,13 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
 
   if (isSetEnded) {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" }]}>
+      <View
+        style={[
+          styles.centered,
+          { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" },
+          getCardShadow(theme),
+        ]}
+      >
         <Text style={[styles.resultText, { color: theme.colors.onSurface }]}>{childTextMessage}</Text>
         <Button
           mode="contained-tonal"

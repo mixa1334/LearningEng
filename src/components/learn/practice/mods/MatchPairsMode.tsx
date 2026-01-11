@@ -1,3 +1,4 @@
+import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
@@ -165,7 +166,13 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
 
   return (
     <View style={styles.container}>
-      <View style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.surfaceVariant },
+          getCardShadow(theme),
+        ]}
+      >
         <View style={styles.headerRow}>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>RU words</Text>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>EN words</Text>
@@ -194,11 +201,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     marginVertical: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
   },
   headerRow: {
     flexDirection: "row",

@@ -4,6 +4,7 @@ import * as Haptics from "expo-haptics";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { Button, IconButton, Switch } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
@@ -49,7 +50,13 @@ export default function PracticeModeSettings() {
 
   return (
     <Animated.View style={{ transform: [{ translateY: slideAnim }], opacity: opacityAnim }}>
-      <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.surfaceVariant },
+          getCardShadow(theme),
+        ]}
+      >
         <IconButton
           icon="refresh"
           onPress={() => {

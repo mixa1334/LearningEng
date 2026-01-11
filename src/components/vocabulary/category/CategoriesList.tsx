@@ -3,11 +3,13 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
+import { useAppTheme } from "../../common/ThemeProvider";
 import EditCategoryDialog from "./EditCategoryDialog";
 
 export default function CategoriesList() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { userCategories } = useVocabulary();
 
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
@@ -40,6 +42,7 @@ export default function CategoriesList() {
                 backgroundColor: theme.colors.surfaceVariant,
                 borderColor: theme.colors.outlineVariant,
               },
+              getCardShadow(theme),
             ]}
             onPress={() => openEditCategoryModal(item)}
           >
@@ -66,7 +69,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     marginVertical: 8,
     paddingVertical: 8,
-    overflow: "hidden",
   },
   itemMain: {
     flex: 1,

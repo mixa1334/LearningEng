@@ -2,7 +2,9 @@ import { SPACING_XL } from "@/src/resources/constants/layout";
 import { getDailyQuote, Quote } from "@/src/service/dailyQuoteService";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../common/cardShadow";
+import { useAppTheme } from "../common/ThemeProvider";
 
 const DEFAULT_QUOTE: Quote = {
   q: "loading...",
@@ -11,7 +13,7 @@ const DEFAULT_QUOTE: Quote = {
 };
 
 export default function QuoteCard() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [quote, setQuote] = useState<Quote>(DEFAULT_QUOTE);
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export default function QuoteCard() {
         {
           backgroundColor: theme.colors.tertiary,
         },
+        getCardShadow(theme),
       ]}
     >
       <Text

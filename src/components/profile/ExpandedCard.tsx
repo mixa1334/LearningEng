@@ -2,8 +2,10 @@ import { SPACING_XL } from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../common/cardShadow";
 import { useAutoScroll } from "../common/AutoScrollContext";
+import { useAppTheme } from "../common/ThemeProvider";
 
 interface ExpandedCardProps {
   readonly title: string;
@@ -21,7 +23,7 @@ export default function ExpandedCard({
   icon,
 }: ExpandedCardProps) {
   const { triggerScroll } = useAutoScroll();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -35,7 +37,11 @@ export default function ExpandedCard({
     <TouchableOpacity
       activeOpacity={touchableOpacity}
       onPress={toggleExpanded}
-      style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}
+      style={[
+        styles.card,
+        { backgroundColor: theme.colors.surfaceVariant },
+        getCardShadow(theme),
+      ]}
     >
       <View>
         <View style={[styles.headerRow, { marginBottom: expanded ? 16 : 0 }]}>

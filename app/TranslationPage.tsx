@@ -1,4 +1,6 @@
 import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import { getCardShadow } from "@/src/components/common/cardShadow";
+import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { SPACING_MD, SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
@@ -8,10 +10,10 @@ import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Button, Card, IconButton, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 
 export default function TranslationPage() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const router = useRouter();
   const { currentTranslation, translations, status, translateWord, clearTranslations } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
@@ -63,7 +65,13 @@ export default function TranslationPage() {
         },
       ]}
     >
-      <Card style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+      <Card
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.primary },
+          getCardShadow(theme),
+        ]}
+      >
         <Card.Title
           titleStyle={{ color: theme.colors.onPrimary }}
           title={language === Language.ENGLISH ? "English → Russian" : "Russian → English"}
@@ -124,7 +132,13 @@ export default function TranslationPage() {
         data={translations}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Card style={[styles.historyCard, { backgroundColor: theme.colors.surfaceVariant }]}>
+          <Card
+            style={[
+              styles.historyCard,
+              { backgroundColor: theme.colors.surfaceVariant },
+              getCardShadow(theme),
+            ]}
+          >
             <Card.Content
               style={{
                 flexDirection: "row",
@@ -160,7 +174,6 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 12,
-    elevation: 3,
     marginBottom: 12,
   },
   input: {

@@ -10,6 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { Button, SegmentedButtons } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
+import { getCardShadow } from "../../common/cardShadow";
 import { useAppTheme } from "../../common/ThemeProvider";
 
 export enum ExtraMode {
@@ -105,7 +106,13 @@ export default function PracticeMain() {
   const renderHeaderSection = () => {
     if (isSessionStarted) {
       return (
-        <View style={[styles.topRow, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <View
+          style={[
+            styles.topRow,
+            { backgroundColor: theme.colors.surfaceVariant },
+            getCardShadow(theme),
+          ]}
+        >
           <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>{activeExtraMode} session</Text>
           <Button
             mode="contained-tonal"
@@ -121,7 +128,13 @@ export default function PracticeMain() {
     }
 
     return (
-      <View style={[styles.topRow, { backgroundColor: theme.colors.surfaceVariant }]}>
+      <View
+        style={[
+          styles.topRow,
+          { backgroundColor: theme.colors.surfaceVariant },
+          getCardShadow(theme),
+        ]}
+      >
         <Pressable
           onPress={handleSettingsToggler}
           style={({ pressed }) => [
@@ -166,7 +179,13 @@ export default function PracticeMain() {
       );
     }
     return (
-      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant }]}>
+      <View
+        style={[
+          styles.centered,
+          { backgroundColor: theme.colors.surfaceVariant },
+          getCardShadow(theme),
+        ]}
+      >
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
           {PracticeModeComponents[activeExtraMode].descriptionText}
         </Text>

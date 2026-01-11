@@ -5,6 +5,7 @@ import * as Haptics from "expo-haptics";
 import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../common/ThemeProvider";
+import { getCardShadow } from "../../../common/cardShadow";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 type LetterTile = {
@@ -113,8 +114,14 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.sessionContent}>
-        <View style={[styles.modeCard, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <View style={styles.sessionContent}>
+          <View
+            style={[
+              styles.modeCard,
+              { backgroundColor: theme.colors.surfaceVariant },
+              getCardShadow(theme),
+            ]}
+          >
           <View style={styles.wordHeader}>
             <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>RU word</Text>
             <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurfaceVariant }]}>{words[currentIndex].word_ru}</Text>
@@ -216,11 +223,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 16,
     padding: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
   },
   wordHeader: {
     flexDirection: "row",
