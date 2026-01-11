@@ -2,14 +2,22 @@ import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../common/cardShadow";
+import { useAppTheme } from "../common/ThemeProvider";
 
 export default function ProgressCard() {
   const { lastLearningDate, learnedToday, reviewedToday } = useUserData();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: theme.colors.surfaceVariant },
+        getCardShadow(theme),
+      ]}
+    >
       <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
         Progress
       </Text>

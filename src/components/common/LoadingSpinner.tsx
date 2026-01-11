@@ -18,7 +18,7 @@ export default function LoadingSpinner() {
           { color: theme.colors.primary },
         ]}
       >
-        LearnEnglish
+        Learn English
       </Text>
       <Text
         style={[

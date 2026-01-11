@@ -1,19 +1,26 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { IconButton, Text, useTheme } from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
+import { getCardShadow } from "../common/cardShadow";
+import { useAppTheme } from "../common/ThemeProvider";
 
 export default function DailyGoalCard() {
   const { dailyGoal, dailyGoalAchieve, changeGoal } = useUserData();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const backgroundColor = dailyGoalAchieve ? theme.colors.primary : theme.colors.surfaceVariant;
   const textColor = dailyGoalAchieve ? theme.colors.onPrimary : theme.colors.onSurface;
 
-  const increaseGoal = () => changeGoal(dailyGoal + 1);
+  const increaseGoal = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    changeGoal(dailyGoal + 1);
+  };
   const decreaseGoal = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const newDailyGoal = dailyGoal - 1;
     if (newDailyGoal > 0) {
       changeGoal(newDailyGoal);
@@ -22,7 +29,11 @@ export default function DailyGoalCard() {
 
   return (
     <View
-      style={[styles.card, { backgroundColor: backgroundColor }]}
+      style={[
+        styles.card,
+        { backgroundColor: backgroundColor },
+        getCardShadow(theme),
+      ]}
     >
       <View style={styles.titleRow}>
         <Text style={[styles.sectionTitle, { color: textColor }]}>

@@ -1,17 +1,21 @@
 import { Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text, TouchableRipple, useTheme } from "react-native-paper";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
+import { useAppTheme } from "../../common/ThemeProvider";
 import EditWordDialog from "./EditWordDialog";
 
 export default function WordsList() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { words } = useVocabulary();
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
 
   const openEditWordModal = (word: Word) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setWordToEdit(word);
     setShowEditWordModal(true);
   };
@@ -19,26 +23,23 @@ export default function WordsList() {
   return (
     <>
       {showEditWordModal && wordToEdit && (
-        <EditWordDialog
-          visible={showEditWordModal}
-          exit={() => setShowEditWordModal(false)}
-          word={wordToEdit}
-        />
+        <EditWordDialog visible={showEditWordModal} exit={() => setShowEditWordModal(false)} word={wordToEdit} />
       )}
 
       <View style={styles.listContent}>
         {words.map((item) => (
-          <TouchableRipple
+          <Pressable
             key={item.id.toString()}
-            style={[
+            style={({ pressed }) => [
               styles.itemRow,
               {
+                opacity: pressed ? 0.8 : 1,
+                transform: [{ scale: pressed ? 0.97 : 1 }],
                 backgroundColor: theme.colors.surfaceVariant,
                 borderColor: theme.colors.outlineVariant,
               },
+              getCardShadow(theme),
             ]}
-            borderless={false}
-            rippleColor={theme.colors.outlineVariant}
             onPress={() => openEditWordModal(item)}
           >
             <View style={styles.itemContent}>
@@ -47,27 +48,15 @@ export default function WordsList() {
               </View>
 
               <View style={styles.wordTexts}>
-                <Text
-                  style={[
-                    styles.wordPrimary,
-                    { color: theme.colors.onSurface },
-                  ]}
-                  numberOfLines={1}
-                >
+                <Text style={[styles.wordPrimary, { color: theme.colors.onSurface }]} numberOfLines={1}>
                   {item.word_en}
                 </Text>
-                <Text
-                  style={[
-                    styles.wordSecondary,
-                    { color: theme.colors.onSurfaceVariant },
-                  ]}
-                  numberOfLines={1}
-                >
+                <Text style={[styles.wordSecondary, { color: theme.colors.onSurfaceVariant }]} numberOfLines={1}>
                   {item.word_ru}
                 </Text>
               </View>
             </View>
-          </TouchableRipple>
+          </Pressable>
         ))}
       </View>
     </>
@@ -82,15 +71,8 @@ const styles = StyleSheet.create({
   },
   itemRow: {
     borderRadius: 18,
-    marginVertical: 6,
-    borderWidth: StyleSheet.hairlineWidth,
-    overflow: "hidden",
-    // subtle shadow for card-like look
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 1,
+    marginVertical: 8,
+    paddingVertical: 8,
   },
   itemContent: {
     flexDirection: "row",

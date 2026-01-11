@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useAppTheme } from "../common/ThemeProvider";
+import { getCardShadow } from "../common/cardShadow";
 
 interface LearningErrorStateProps {
   readonly error: string;
@@ -11,11 +12,17 @@ export default function LearningErrorState({
   error,
   onRetry,
 }: LearningErrorStateProps) {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return (
     <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
-      <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.surface },
+          getCardShadow(theme),
+        ]}
+      >
         <View style={styles.content}>
           <Text style={[styles.errorText, { color: theme.colors.error }]}>
             Error: {error}
@@ -39,11 +46,6 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
     overflow: "hidden",
   },
   content: {

@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 
-export default function CreateWordModal() {
+export default function CreateWordPage() {
   const router = useRouter();
   const { addWord } = useVocabulary();
   const [newWordEn, setNewWordEn] = useState("");
@@ -42,7 +42,9 @@ export default function CreateWordModal() {
       <FieldTextInput label="Russian word" initialValue={newWordRu} onChangeText={setNewWordRu} />
       <FieldTextInput label="Text example (optional)" initialValue={newWordTextExample} onChangeText={setNewWordTextExample} />
 
-      <PickCategoryButton category={selectedCategory} onSelectCategory={selectCategory} />
+      <View style={styles.categoryPickerContainer}>
+        <PickCategoryButton category={selectedCategory} onSelectCategory={selectCategory} />
+      </View>
 
       <Button
         mode="contained"
@@ -60,9 +62,8 @@ export default function CreateWordModal() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
   subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
-  categoryButton: { marginTop: 4, borderRadius: 999 },
-  categoryInner: { flexDirection: "row", alignItems: "center", gap: 8 },
-  categoryEmoji: { fontSize: 18 },
-  categoryLabel: { fontSize: 14 },
-  actionButton: { marginTop: 20 },
+  actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
+  categoryPickerContainer: { marginTop: 10, marginBottom: 14, paddingHorizontal: 8 },
 });
+
+

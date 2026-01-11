@@ -1,14 +1,16 @@
 {
   "expo": {
-    "name": "LearningEng",
-    "slug": "LearningEng",
-    "version": "1.0.0",
+    "name": "Pocket Eng",
+    "slug": "pocket-eng",
+    "version": "2.0.6",
     "orientation": "portrait",
-    "scheme": "learningeng",
+    "scheme": "pocketeng",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kmsprod.pocketeng",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
@@ -16,7 +18,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.mishanyawww.LearningEng"
+      "package": "com.kmsprod.pocketeng",
+      "versionCode": 1
     },
     "web": {
       "output": "static"
@@ -32,8 +35,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4fa5c5cf-ffc3-459f-860b-299a723f2e1b"
+        "projectId": "93fde987-54de-46a4-91d1-6e346974b3bb"
       }
-    }
+    },
+    "owner": "mishanyawww"
   }
 }

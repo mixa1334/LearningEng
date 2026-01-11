@@ -1,35 +1,41 @@
-import { Category } from "../entity/types";
+import { Category, EntityType } from "../entity/types";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   loadNextPracticeSetThunk,
+  resetCriteriaAction,
   resetPracticeSetThunk,
-  setNewCategory,
-  setOnlyUserAdded,
+  setNewCategoryAction,
+  setPracticeLimitAction,
+  setWordTypeAction,
 } from "../store/slice/practiceSlice";
 
 export function usePractice() {
   const dispatch = useAppDispatch();
-  const { category, onlyUserAddedWords, words } = useAppSelector(
-    (s) => s.practice
-  );
+  const { category, wordType, practiceLimit, words } = useAppSelector((s) => s.practice);
 
-  const setCategory = (category?: Category) =>
-    dispatch(setNewCategory(category));
-  const setOnlyUserWords = (onlyUserAddedWords: boolean) => {
-    dispatch(setOnlyUserAdded(onlyUserAddedWords));
+  const setCategory = (category?: Category) => dispatch(setNewCategoryAction(category));
+  const setWordType = (wordType?: EntityType) => {
+    dispatch(setWordTypeAction(wordType));
+  };
+  const setPracticeLimit = (practiceLimit: number) => {
+    dispatch(setPracticeLimitAction(practiceLimit));
   };
 
-  const loadNextSet = () => dispatch(loadNextPracticeSetThunk());
+  const resetCriteria = () => dispatch(resetCriteriaAction());
+  const loadNextPracticeSet = () => dispatch(loadNextPracticeSetThunk());
 
-  const resetSet = () => dispatch(resetPracticeSetThunk());
+  const resetPracticeSet = () => dispatch(resetPracticeSetThunk());
 
   return {
     category,
-    onlyUserAddedWords,
+    wordType,
+    practiceLimit,
     words,
     setCategory,
-    setOnlyUserWords,
-    loadNextSet,
-    resetSet,
+    setWordType,
+    setPracticeLimit,
+    loadNextPracticeSet,
+    resetPracticeSet,
+    resetCriteria,
   };
 }

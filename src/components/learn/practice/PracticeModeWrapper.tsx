@@ -1,178 +1,136 @@
+import { getCardShadow } from "@/src/components/common/cardShadow";
 import { usePractice } from "@/src/hooks/usePractice";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
+import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
 import { useAppTheme } from "../../common/ThemeProvider";
 
 export type PracticeModeChildProps = {
-  onEndCurrentSet?: (endMessage: string) => void;
-  onEndSession?: (endMessage: string) => void;
+  readonly onEndCurrentSet?: (endMessage: string) => void;
 };
 
 interface PracticeModeWrapperProps {
-  readonly descriptionText: string;
   readonly practiceWordsPoolLengthRule: (wordsPoolLength: number) => boolean;
   readonly children: React.ReactElement<PracticeModeChildProps>;
 }
 
-export default function PracticeModeWrapper(props: PracticeModeWrapperProps) {
+export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, children }: PracticeModeWrapperProps) {
   const { triggerScroll } = useAutoScroll();
   const theme = useAppTheme();
+  const { words, loadNextPracticeSet, resetPracticeSet } = usePractice();
 
-  const { words, loadNextSet, resetSet } = usePractice();
-
-  const noWordsToReview = !props.practiceWordsPoolLengthRule(words.length);
-
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [childTextMessage, setChildTextMessage] = useState("");
-
-  const [isStarted, setIsStarted] = useState(false);
   const [isSetEnded, setIsSetEnded] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isOverLoadedSession, setIsOverLoadedSession] = useState(false);
 
-  useEffect(() => {
-    resetProgress();
-  }, [props.children]);
+  const performTransition = useCallback(
+    async (action: () => void) => {
+      setIsTransitioning(true);
+      action();
+      setTimeout(() => {
+        setIsTransitioning(false);
+        triggerScroll();
+      }, 300);
+    },
+    [triggerScroll]
+  );
 
-  const resetProgress = () => {
-    setIsStarted(false);
-    setIsCompleted(false);
-    setIsSetEnded(false);
-    setChildTextMessage("");
-    if (noWordsToReview) {
-      resetSet();
-    }
-  };
+  const handleEndCurrentSet = useCallback((endMessage: string) => {
+    setIsSetEnded(true);
+    setChildTextMessage(endMessage);
+    setIsOverLoadedSession(true);
+  }, []);
 
-  const startSession = () => {
-    resetProgress();
-    if (noWordsToReview) return;
-    setIsStarted(true);
-    triggerScroll();
-  };
-
-  const endSession = () => {
-    setIsCompleted(true);
+  const resetPracticeSession = () => {
+    performTransition(() => {
+      resetPracticeSet();
+      setIsSetEnded(false);
+    });
   };
 
   const loadMoreWordsToLearn = () => {
-    loadNextSet();
-    setIsSetEnded(false);
-    triggerScroll();
+    performTransition(() => {
+      loadNextPracticeSet();
+      setIsSetEnded(false);
+    });
   };
 
-  if (noWordsToReview && !isStarted) {
+  if (isTransitioning) {
     return (
-      <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>No words to practice</Text>
+      <View style={{ paddingTop: 60 }}>
+        <LoadingContentSpinner />
       </View>
     );
   }
 
-  if (isCompleted || noWordsToReview) {
+  const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
+  if (noWordsToReview && !isSetEnded) {
     return (
-      <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>{childTextMessage}</Text>
-        <Button
-          mode="contained-tonal"
-          onPress={startSession}
-          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-          textColor={theme.colors.onPrimary}
-          icon="restart"
-        >
-          Start again
-        </Button>
-      </View>
-    );
-  }
-
-  if (!isStarted) {
-    return (
-      <View style={styles.centered}>
-        <Text style={[styles.infoText, { color: theme.colors.onSecondaryContainer }]}>{props.descriptionText}</Text>
-        <Button
-          mode="contained-tonal"
-          onPress={startSession}
-          style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-          textColor={theme.colors.onPrimary}
-          icon="play"
-        >
-          Start
-        </Button>
+      <View
+        style={[
+          styles.centered,
+          { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" },
+          getCardShadow(theme),
+        ]}
+      >
+        <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>No words to practice</Text>
+        {isOverLoadedSession && (
+          <Button
+            mode="contained-tonal"
+            onPress={resetPracticeSession}
+            icon="restart"
+            style={[styles.btn, { backgroundColor: theme.colors.primary }]}
+            textColor={theme.colors.onPrimary}
+          >
+            Start over
+          </Button>
+        )}
       </View>
     );
   }
 
   if (isSetEnded) {
     return (
-      <View style={styles.centered}>
-        <Text style={[styles.resultText, { color: theme.colors.onSecondaryContainer }]}>You have finished current set</Text>
-
-        <View style={styles.buttonsRow}>
-          <Button
-            mode="contained-tonal"
-            onPress={endSession}
-            style={[styles.reviewBtn, { backgroundColor: theme.colors.reject }]}
-            textColor={theme.colors.onAcceptReject}
-            icon="flag-checkered"
-          >
-            End
-          </Button>
-          <Button
-            mode="contained-tonal"
-            onPress={loadMoreWordsToLearn}
-            style={[styles.reviewBtn, { backgroundColor: theme.colors.onPrimaryContainer }]}
-            textColor={theme.colors.primaryContainer}
-            icon="play"
-          >
-            Continue
-          </Button>
-        </View>
+      <View
+        style={[
+          styles.centered,
+          { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" },
+          getCardShadow(theme),
+        ]}
+      >
+        <Text style={[styles.resultText, { color: theme.colors.onSurface }]}>{childTextMessage}</Text>
+        <Button
+          mode="contained-tonal"
+          onPress={loadMoreWordsToLearn}
+          icon="play"
+          style={[styles.btn, { backgroundColor: theme.colors.primary }]}
+          textColor={theme.colors.onPrimary}
+        >
+          Continue
+        </Button>
       </View>
     );
   }
 
-  return React.cloneElement(props.children, {
-    onEndCurrentSet: (endMessage) => {
-      setIsSetEnded(true);
-      setChildTextMessage(endMessage);
-    },
-    onEndSession: (endMessage) => {
-      setIsCompleted(true);
-      setChildTextMessage(endMessage);
-    },
+  return React.cloneElement(children, {
+    onEndCurrentSet: handleEndCurrentSet,
+    key: `set-${words.length}-${words[0]?.id || "init"}`,
   });
 }
 
 const styles = StyleSheet.create({
-  buttonsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 12,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  topRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  topRowLabel: {
-    fontSize: 15,
-    fontWeight: "600",
+  btn: {
+    borderRadius: 8,
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    gap: 12,
   },
   infoText: {
     fontSize: 16,
@@ -184,41 +142,5 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",
-  },
-  sessionContent: {
-    flex: 1,
-  },
-  progressCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-  },
-  section: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-  },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  reviewBtn: {
-    marginTop: 12,
-    borderRadius: 8,
-  },
-  endBtn: {
-    borderRadius: 8,
   },
 });

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text, TextInput, TouchableRipple } from "react-native-paper";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Text, TextInput } from "react-native-paper";
 import { useAppTheme } from "./ThemeProvider";
 
 interface TouchableTextInputProps {
@@ -47,10 +47,9 @@ export default function TouchableTextInput({ label, initialValue, onChange, onBl
           onBlur={handleBlur}
         />
       ) : (
-        <TouchableRipple
+        <TouchableOpacity
           style={[styles.editableField, { backgroundColor: theme.colors.secondary }]}
-          borderless={false}
-          rippleColor={theme.colors.onSecondary}
+          activeOpacity={0.8}
           onPress={handlePress}
         >
           <View>
@@ -59,7 +58,7 @@ export default function TouchableTextInput({ label, initialValue, onChange, onBl
               {initialValue || "Tap to enter"}
             </Text>
           </View>
-        </TouchableRipple>
+        </TouchableOpacity>
       )}
     </>
   );
@@ -69,13 +68,14 @@ const styles = StyleSheet.create({
   input: {
     marginVertical: 8,
     borderRadius: 12,
+    width: "100%",
   },
   editableField: {
     marginVertical: 6,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    overflow: "hidden",
+    width: "100%",
   },
   editableLabel: {
     fontSize: 12,

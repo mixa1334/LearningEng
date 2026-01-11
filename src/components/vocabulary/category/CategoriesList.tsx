@@ -1,42 +1,49 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
+import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text, TouchableRipple, useTheme } from "react-native-paper";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
+import { useAppTheme } from "../../common/ThemeProvider";
 import EditCategoryDialog from "./EditCategoryDialog";
 
 export default function CategoriesList() {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { userCategories } = useVocabulary();
 
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | undefined>(undefined);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   const openEditCategoryModal = (category: Category) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCategoryToEdit(category);
     setShowEditCategoryModal(true);
   };
 
   return (
     <>
-      <EditCategoryDialog
-        visible={showEditCategoryModal && categoryToEdit !== undefined}
-        exit={() => setShowEditCategoryModal(false)}
-        category={categoryToEdit}
-      />
+      {showEditCategoryModal && categoryToEdit && (
+        <EditCategoryDialog
+          visible={showEditCategoryModal}
+          exit={() => setShowEditCategoryModal(false)}
+          category={categoryToEdit}
+        />
+      )}
       <View style={styles.listContent}>
         {userCategories.map((item) => (
-          <TouchableRipple
+          <Pressable
             key={item.id.toString()}
-            style={[
+            style={({ pressed }) => [
               styles.itemRow,
               {
+                opacity: pressed ? 0.8 : 1,
+                transform: [{ scale: pressed ? 0.97 : 1 }],
                 backgroundColor: theme.colors.surfaceVariant,
                 borderColor: theme.colors.outlineVariant,
               },
+              getCardShadow(theme),
             ]}
-            borderless={false}
-            rippleColor={theme.colors.outlineVariant}
             onPress={() => openEditCategoryModal(item)}
           >
             <View style={styles.itemContent}>
@@ -46,7 +53,7 @@ export default function CategoriesList() {
                 </Text>
               </View>
             </View>
-          </TouchableRipple>
+          </Pressable>
         ))}
       </View>
     </>
@@ -55,21 +62,13 @@ export default function CategoriesList() {
 
 const styles = StyleSheet.create({
   listContent: {
-    backgroundColor: "transparent",
     paddingBottom: 4,
     paddingHorizontal: 4,
   },
   itemRow: {
     borderRadius: 18,
-    marginVertical: 6,
-    borderWidth: StyleSheet.hairlineWidth,
-    overflow: "hidden",
-    // subtle shadow for card-like look
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 1,
+    marginVertical: 8,
+    paddingVertical: 8,
   },
   itemMain: {
     flex: 1,
