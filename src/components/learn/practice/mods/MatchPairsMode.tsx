@@ -14,6 +14,7 @@ type WordTextPlate = {
   text: string;
   wordId: number;
   isEnglish: boolean;
+  isComplete: boolean;
 };
 
 const toWordTextPlate = (word: Word, isEnglish: boolean): WordTextPlate => {
@@ -21,6 +22,7 @@ const toWordTextPlate = (word: Word, isEnglish: boolean): WordTextPlate => {
     text: isEnglish ? word.word_en : word.word_ru,
     wordId: word.id,
     isEnglish,
+    isComplete: false,
   };
 };
 
@@ -39,6 +41,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
   const [engPlates, setEngPlates] = useState(() =>
     shuffleArray(remainingPool.slice(0, VISIBLE_PAIRS).map((w) => toWordTextPlate(w, true)))
   );
+  const [platesRemainingCount, setPlatesRemainingCount] = useState(engPlates.length);
 
   const [selectedPlate, setSelectedPlate] = useState<WordTextPlate | null>(null);
   const [pairMatch, setPairMatch] = useState<{ ruPlate: WordTextPlate; engPlate: WordTextPlate; isCorrect: boolean } | null>(
@@ -46,10 +49,12 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
   );
 
   useEffect(() => {
+    if (platesRemainingCount > 0) return;
     const visiblePool = remainingPool.slice(0, VISIBLE_PAIRS);
+    setPlatesRemainingCount(visiblePool.length);
     setRuPlates(shuffleArray(visiblePool.map((w) => toWordTextPlate(w, false))));
     setEngPlates(shuffleArray(visiblePool.map((w) => toWordTextPlate(w, true))));
-  }, [remainingPool]);
+  }, [remainingPool, platesRemainingCount]);
 
   useEffect(() => {
     if (!hasFinished && (ruPlates.length === 0 || engPlates.length === 0)) {
@@ -62,6 +67,15 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
     if (pairMatch === null) return;
     const timeout = setTimeout(() => {
       if (pairMatch.isCorrect) {
+        const mapRuleForCompletedPlates = (plate: WordTextPlate) => {
+          if (plate.wordId === pairMatch.ruPlate.wordId && plate.wordId === pairMatch.engPlate.wordId) {
+            return { ...plate, isComplete: true };
+          }
+          return plate;
+        };
+        setRuPlates((prev) => prev.map(mapRuleForCompletedPlates));
+        setEngPlates((prev) => prev.map(mapRuleForCompletedPlates));
+        setPlatesRemainingCount((prev) => prev - 1);
         setRemainingPool((prev) => prev.filter((w) => w.id !== pairMatch.ruPlate.wordId && w.id !== pairMatch.engPlate.wordId));
       } else {
         setMistakesCount((prev) => prev + 1);
@@ -110,6 +124,15 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
     const isInPair = !!pairMatch && (isRuPair || isEngPair);
     const isCorrectPair = isInPair && pairMatch?.isCorrect;
     const isIncorrectPair = isInPair && pairMatch && !pairMatch.isCorrect;
+    const isComplete = plate.isComplete;
+
+    if (isComplete) {
+      return (
+        <View style={[styles.plate, { backgroundColor: colors.surfaceVariant, borderColor: colors.outline }]}>
+          <Text style={[styles.plateText, { color: colors.surfaceVariant }]}>{plate.text}</Text>
+        </View>
+      );
+    }
 
     return (
       <Pressable
@@ -166,13 +189,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: theme.colors.surfaceVariant },
-          getCardShadow(theme),
-        ]}
-      >
+      <View style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
         <View style={styles.headerRow}>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>RU words</Text>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>EN words</Text>
