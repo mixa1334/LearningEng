@@ -3,7 +3,7 @@ import PickCategoryButton from "@/src/components/vocabulary/category/PickCategor
 import WordsList from "@/src/components/vocabulary/word/WordsList";
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { SPACING_LG, SPACING_MD, SPACING_SM } from "@/src/resources/constants/layout";
+import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { WordCriteria } from "@/src/service/wordService";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -72,7 +72,7 @@ export default function WordsPage() {
         contentContainerStyle={{
           // 60 is the height of the navbar
           paddingTop: SPACING_MD + 60,
-          paddingBottom: insets.bottom,
+          paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
           paddingHorizontal: SPACING_LG,
         }}
       >
