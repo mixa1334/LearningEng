@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import WordCard from "../../WordCard";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
-export default function WordsOverview({ onEndCurrentSet }: PracticeModeChildProps) {
+export default function QuickOverview({ onEndCurrentSet }: PracticeModeChildProps) {
   const { words } = usePractice();
 
   const [hasFinished, setHasFinished] = useState(false);

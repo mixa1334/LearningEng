@@ -1,8 +1,8 @@
+import BuildingFromCharsMode from "@/src/components/learn/practice/mods/BuildingFromCharsMode";
+import MatchPairsMode from "@/src/components/learn/practice/mods/MatchPairsMode";
+import QuickOverview from "@/src/components/learn/practice/mods/QuickOverview";
 import PracticeModeSettings from "@/src/components/learn/practice/PracticeModeSettings";
 import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/learn/practice/PracticeModeWrapper";
-import MatchPairsMode from "@/src/components/learn/practice/mods/MatchPairsMode";
-import WordBuildingMode from "@/src/components/learn/practice/mods/WordBuildingMode";
-import WordsOverview from "@/src/components/learn/practice/mods/WordsOverview";
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -28,7 +28,7 @@ const PracticeModeComponents: Record<
   }
 > = {
   [ExtraMode.OVERVIEW]: {
-    component: WordsOverview,
+    component: QuickOverview,
     descriptionText: "Review your vocabulary words one by one and mark the ones you know",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
@@ -38,7 +38,7 @@ const PracticeModeComponents: Record<
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 2,
   },
   [ExtraMode.BUILDER]: {
-    component: WordBuildingMode,
+    component: BuildingFromCharsMode,
     descriptionText: "Build the English word by picking letters in the correct order",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
