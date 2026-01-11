@@ -109,7 +109,7 @@ export default function PracticeMain() {
         <View
           style={[
             styles.topRow,
-            { backgroundColor: theme.colors.surfaceVariant },
+            { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outline },
             getCardShadow(theme),
           ]}
         >
@@ -131,7 +131,7 @@ export default function PracticeMain() {
       <View
         style={[
           styles.topRow,
-          { backgroundColor: theme.colors.surfaceVariant },
+          { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outline },
           getCardShadow(theme),
         ]}
       >
@@ -179,13 +179,7 @@ export default function PracticeMain() {
       );
     }
     return (
-      <View
-        style={[
-          styles.centered,
-          { backgroundColor: theme.colors.surfaceVariant },
-          getCardShadow(theme),
-        ]}
-      >
+      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
           {PracticeModeComponents[activeExtraMode].descriptionText}
         </Text>
@@ -227,7 +221,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 12,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 16,
+    borderWidth: 1,
     marginBottom: 16,
     gap: 10,
   },
