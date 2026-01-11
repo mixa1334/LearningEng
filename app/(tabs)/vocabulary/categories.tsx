@@ -12,7 +12,7 @@ export default function CategoriesPage() {
       style={{ flex: 1 }}
       contentContainerStyle={{
         paddingTop: SPACING_MD,
-        paddingBottom: insets.bottom + SPACING_MD + TAB_BAR_BASE_HEIGHT,
+        paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
         paddingHorizontal: SPACING_LG,
       }}
     >

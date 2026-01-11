@@ -3,7 +3,7 @@ import LoadingSpinner from "@/src/components/common/LoadingSpinner";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { SPACING_MD, SPACING_XL, SPACING_XXL } from "@/src/resources/constants/layout";
+import { SPACING_XL, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TranslationPage() {
   const theme = useAppTheme();
@@ -18,6 +19,7 @@ export default function TranslationPage() {
   const { currentTranslation, translations, status, translateWord, clearTranslations } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
+  const insets = useSafeAreaInsets();
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = SPACING_XXL;
@@ -59,7 +61,7 @@ export default function TranslationPage() {
         styles.container,
         {
           paddingTop: pageTopPadding,
-          paddingBottom: SPACING_MD,
+          paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
           paddingHorizontal: pageHorizontalPadding,
         },
       ]}
