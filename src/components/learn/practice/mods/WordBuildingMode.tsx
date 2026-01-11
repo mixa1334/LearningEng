@@ -1,4 +1,7 @@
+import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { usePractice } from "@/src/hooks/usePractice";
+import { shuffleArray } from "@/src/util/arrayHelper";
+import * as Haptics from "expo-haptics";
 import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../common/ThemeProvider";
@@ -11,15 +14,6 @@ type LetterTile = {
 
 const HIGHLIGHT_DELAY = 500;
 
-function shuffleArray<T>(items: readonly T[]): T[] {
-  const array = [...items];
-  for (let i = array.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
 function buildLetterPool(word: string): LetterTile[] {
   const chars = word.split("");
   const tiles: LetterTile[] = chars.map((char, index) => ({
@@ -31,7 +25,10 @@ function buildLetterPool(word: string): LetterTile[] {
 
 export default function WordBuildingMode(props: PracticeModeChildProps) {
   const theme = useAppTheme();
+  const { triggerScroll } = useAutoScroll();
   const { words } = usePractice();
+
+  const [hasFinished, setHasFinished] = useState(words.length === 0);
 
   const [withoutMistakesCount, setWithoutMistakesCount] = useState(0);
 
@@ -39,13 +36,15 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
   const [madeMistakeOnWord, setMadeMistakeOnWord] = useState(false);
 
-  const [letterPool, setLetterPool] = useState<LetterTile[]>(buildLetterPool(words[0].word_en.trim()));
+  const initialWord = words[0]?.word_en?.toUpperCase()?.trim?.() ?? "";
+  const [letterPool, setLetterPool] = useState<LetterTile[]>(initialWord ? buildLetterPool(initialWord) : []);
   const [usedLetterIds, setUsedLetterIds] = useState<number[]>([]);
   const [incorrectLetterId, setIncorrectLetterId] = useState<number | null>(null);
   const [isWordHighlighted, setIsWordHighlighted] = useState(false);
 
   const moveToNextWord = () => {
-    setWithoutMistakesCount((prev) => prev + (madeMistakeOnWord ? 0 : 1));
+    const newWithoutMistakesCount = withoutMistakesCount + (madeMistakeOnWord ? 0 : 1);
+    setWithoutMistakesCount(newWithoutMistakesCount);
     setIsWordHighlighted(false);
     setIncorrectLetterId(null);
     setUsedLetterIds([]);
@@ -53,12 +52,14 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
     const nextIndex = currentIndex + 1;
     if (nextIndex >= words.length) {
-      props.onEndCurrentSet?.(`You solved ${withoutMistakesCount} / ${words.length} words without mistakes`);
+      setHasFinished(true);
+      props.onEndCurrentSet?.(`You solved ${newWithoutMistakesCount} / ${words.length} words without mistakes`);
       return;
     }
     const nextWord = words[nextIndex];
-    setLetterPool(buildLetterPool(nextWord.word_en.trim()));
+    setLetterPool(buildLetterPool(nextWord.word_en.toUpperCase().trim()));
     setCurrentIndex(nextIndex);
+    triggerScroll();
   };
 
   const handleSelectLetter = (tile: LetterTile) => {
@@ -81,6 +82,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
       if (newUsed.length === words[currentIndex].word_en.length) {
         setIsWordHighlighted(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         const timeout = setTimeout(() => {
           moveToNextWord();
         }, HIGHLIGHT_DELAY);
@@ -92,6 +94,7 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
 
     setMadeMistakeOnWord(true);
     setIncorrectLetterId(tile.id);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     const timeout = setTimeout(() => {
       setIncorrectLetterId(null);
     }, HIGHLIGHT_DELAY);
@@ -104,131 +107,133 @@ export default function WordBuildingMode(props: PracticeModeChildProps) {
     return orderedTiles;
   }, [letterPool, usedLetterIds]);
 
-  const wordsLeft = words.length - currentIndex - (isWordHighlighted ? 0 : 1);
+  if (hasFinished || words.length === 0) return null;
 
-  const renderLetterBoxes = () => {
-    const length = words[currentIndex].word_en.length;
+  const length = words[currentIndex].word_en.length;
 
-    return (
-      <View style={styles.letterBoxesRow}>
-        {Array.from({ length }).map((_, index) => {
-          const filledTile = selectedLetters[index];
-          const isFilled = !!filledTile;
-
-          return (
-            <View
-              key={`box-${index}`}
-              style={[
-                styles.letterBox,
-                {
-                  borderColor: theme.colors.outline,
-                  backgroundColor: theme.colors.surfaceVariant,
-                },
-                isFilled && {
-                  backgroundColor: theme.colors.primaryContainer,
-                  borderColor: theme.colors.primary,
-                },
-                isWordHighlighted && {
-                  backgroundColor: "#4CAF50",
-                  borderColor: theme.colors.primary,
-                },
-              ]}
-            >
-              <Text style={[styles.letterBoxText, { color: theme.colors.onSurface }]}>{filledTile ? filledTile.char : ""}</Text>
-            </View>
-          );
-        })}
-      </View>
-    );
-  };
-
-  const renderLetterPool = () => {
-    return (
-      <View style={styles.letterPool}>
-        {letterPool.map((tile) => {
-          const isUsed = usedLetterIds.includes(tile.id);
-          const isIncorrect = incorrectLetterId === tile.id;
-
-          return (
-            <TouchableOpacity
-              key={tile.id}
-              style={[
-                styles.letterTile,
-                {
-                  backgroundColor: theme.colors.surfaceVariant,
-                  borderColor: theme.colors.outline,
-                },
-                isUsed && {
-                  opacity: 0.2,
-                },
-                isIncorrect && {
-                  backgroundColor: theme.colors.error,
-                  borderColor: theme.colors.error,
-                },
-              ]}
-              disabled={isUsed}
-              onPress={() => handleSelectLetter(tile)}
-            >
-              <Text style={[styles.letterTileText, { color: theme.colors.onSurfaceVariant }]}>{tile.char}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    );
-  };
-
-  const renderContent = () => {
-    return (
+  return (
+    <View style={styles.container}>
       <View style={styles.sessionContent}>
-        <View style={[styles.modeCard, { backgroundColor: theme.colors.primary }]}>
-          <View style={[styles.wordHeader, { backgroundColor: theme.colors.surfaceVariant }]}>
-            <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurface }]}>Russian word</Text>
-            <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurface }]}>{words[currentIndex].word_ru}</Text>
+        <View style={[styles.modeCard, { backgroundColor: theme.colors.surfaceVariant }]}>
+          <View style={styles.wordHeader}>
+            <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>RU word</Text>
+            <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurfaceVariant }]}>{words[currentIndex].word_ru}</Text>
           </View>
 
-          {renderLetterBoxes()}
+          <View style={styles.letterBoxesRow}>
+            {Array.from({ length }).map((_, index) => {
+              const filledTile = selectedLetters[index];
+              const isFilled = !!filledTile;
 
-          {renderLetterPool()}
+              return (
+                <View
+                  key={`box-${index}`}
+                  style={[
+                    styles.letterBox,
+                    {
+                      borderColor: theme.colors.outline,
+                      backgroundColor: theme.colors.onSurfaceVariant,
+                    },
+                    isFilled && {
+                      backgroundColor: theme.colors.primaryContainer,
+                      borderColor: theme.colors.primary,
+                    },
+                    isWordHighlighted && {
+                      backgroundColor: theme.colors.accept,
+                      borderColor: theme.colors.accept,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.letterBoxText,
+                      { color: theme.colors.surface },
+                      isWordHighlighted && { color: theme.colors.onAcceptReject },
+                      isFilled && { color: theme.colors.onPrimaryContainer },
+                    ]}
+                  >
+                    {filledTile ? filledTile.char : ""}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+
+          <View style={styles.letterPool}>
+            {letterPool.map((tile) => {
+              const isUsed = usedLetterIds.includes(tile.id);
+              const isIncorrect = incorrectLetterId === tile.id;
+
+              return (
+                <TouchableOpacity
+                  key={tile.id}
+                  style={[
+                    styles.letterTile,
+                    {
+                      backgroundColor: theme.colors.onSurfaceVariant,
+                      borderColor: theme.colors.outline,
+                    },
+                    isUsed && {
+                      opacity: 0.3,
+                    },
+                    isIncorrect && {
+                      backgroundColor: theme.colors.reject,
+                      borderColor: theme.colors.reject,
+                    },
+                  ]}
+                  disabled={isUsed}
+                  onPress={() => handleSelectLetter(tile)}
+                >
+                  <Text
+                    style={[
+                      styles.letterTileText,
+                      { color: theme.colors.surface },
+                      isIncorrect && { color: theme.colors.onAcceptReject },
+                    ]}
+                  >
+                    {tile.char}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
       </View>
-    );
-  };
-
-  return <View style={styles.container}>{renderContent()}</View>;
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 2,
   },
   sessionContent: {
     flex: 1,
   },
   modeCard: {
-    alignItems: "center",
-    justifyContent: "flex-start",
+    flex: 1,
     borderRadius: 20,
-    alignSelf: "center",
     marginVertical: 16,
-    padding: 20,
+    padding: 10,
     shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
     elevation: 4,
-    width: "100%",
   },
   wordHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     borderRadius: 12,
     marginBottom: 16,
   },
   wordHeaderLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    marginBottom: 4,
+    fontSize: 14,
+    fontWeight: "600",
   },
   wordHeaderValue: {
     fontSize: 20,
@@ -258,7 +263,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     gap: 8,
-    marginTop: 8,
+    marginVertical: 8,
   },
   letterTile: {
     minWidth: 40,
