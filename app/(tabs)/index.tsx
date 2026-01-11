@@ -7,7 +7,7 @@ import { SPACING_XXL } from "@/src/resources/constants/layout";
 import React from "react";
 import { View } from "react-native";
 
-export default function LearnTab() {
+export default function LearnPage() {
   return (
     <AutoScrollProvider>
       <AnimatedScrollView headerTitle="Learn & Practice">

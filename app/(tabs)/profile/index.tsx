@@ -10,7 +10,7 @@ import SettingsCard from "@/src/components/profile/SettingsCard";
 import { useUserData } from "@/src/hooks/useUserData";
 import React from "react";
 
-export default function ProfileTab() {
+export default function ProfilePage() {
   const { name } = useUserData();
 
   return (

@@ -1,5 +1,5 @@
-import LoadingSpinner from "@/src/components/common/LoadingSpinner";
 import { getCardShadow } from "@/src/components/common/cardShadow";
+import LoadingSpinner from "@/src/components/common/LoadingSpinner";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
@@ -40,7 +40,7 @@ export default function TranslationPage() {
 
   const openWordFromTranslationModal = (translation: Translation) => {
     router.push({
-      pathname: "/WordFromTranslationModal",
+      pathname: "./save-translation",
       params: {
         translation_id: translation.id.toString(),
         word_en: translation.word_en,
@@ -58,7 +58,6 @@ export default function TranslationPage() {
       style={[
         styles.container,
         {
-          backgroundColor: theme.colors.background,
           paddingTop: pageTopPadding,
           paddingBottom: SPACING_MD,
           paddingHorizontal: pageHorizontalPadding,
@@ -80,8 +79,6 @@ export default function TranslationPage() {
         <Card.Content>
           <TextInput
             mode="flat"
-            // underlineColor="transparent"
-            // activeUnderlineColor="transparent"
             placeholder={language === Language.ENGLISH ? "Enter English word" : "Enter Russian word"}
             value={wordToTranslate}
             onChangeText={setWordToTranslate}
@@ -136,7 +133,6 @@ export default function TranslationPage() {
             style={[
               styles.historyCard,
               { backgroundColor: theme.colors.surfaceVariant },
-              getCardShadow(theme),
             ]}
           >
             <Card.Content
@@ -193,3 +189,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 });
+
+

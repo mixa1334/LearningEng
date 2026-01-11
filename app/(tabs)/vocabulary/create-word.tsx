@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 
-export default function CreateWordModal() {
+export default function CreateWordPage() {
   const router = useRouter();
   const { addWord } = useVocabulary();
   const [newWordEn, setNewWordEn] = useState("");
@@ -65,3 +65,5 @@ const styles = StyleSheet.create({
   actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
   categoryPickerContainer: { marginTop: 10, marginBottom: 14, paddingHorizontal: 8 },
 });
+
+

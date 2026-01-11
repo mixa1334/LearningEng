@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 
-export default function CreateCategoryModal() {
+export default function CreateCategoryPage() {
   const router = useRouter();
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -48,3 +48,5 @@ const styles = StyleSheet.create({
   actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
   emojiPickerContainer: { marginTop: 10, marginBottom: 14 },
 });
+
+

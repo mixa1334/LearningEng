@@ -64,6 +64,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -86,7 +87,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="VocabularyTab"
+        name="vocabulary"
         options={{
           title: "Vocabulary",
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
@@ -94,7 +95,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="LearnTab"
+        name="index"
         options={{
           title: "Learn & Review Words",
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
@@ -102,7 +103,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="ProfileTab"
+        name="profile"
         options={{
           title: "Profile",
           tabBarButton: (props) => <CustomTabBarButton {...props} />,

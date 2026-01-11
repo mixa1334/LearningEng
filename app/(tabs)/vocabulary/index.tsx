@@ -4,11 +4,11 @@ import { TouchableCard } from "@/src/components/common/TouchableCard";
 import { useRouter } from "expo-router";
 import React from "react";
 
-export default function VocabularyTab() {
+export default function VocabularyPage() {
   const router = useRouter();
-  const navigateToCategory = () => router.push("/CategoryVocabularyPage");
-  const navigateToWord = () => router.push("/WordVocabularyPage");
-  const navigateToTranslation = () => router.push("/TranslationPage");
+  const navigateToCategory = () => router.push("/(tabs)/vocabulary/categories");
+  const navigateToWord = () => router.push("/(tabs)/vocabulary/words");
+  const navigateToTranslation = () => router.push("/(tabs)/vocabulary/translation");
 
   return (
     <AutoScrollProvider>

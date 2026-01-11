@@ -12,7 +12,7 @@ import { ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function WordVocabularyPage() {
+export default function WordsPage() {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
 
@@ -68,7 +68,7 @@ export default function WordVocabularyPage() {
       </View>
 
       <ScrollView
-        style={{ flex: 1, backgroundColor: theme.colors.background }}
+        style={{ flex: 1 }}
         contentContainerStyle={{
           // 60 is the height of the navbar
           paddingTop: SPACING_MD + 60,
@@ -113,3 +113,5 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 });
+
+
