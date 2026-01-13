@@ -70,7 +70,9 @@ export async function createBackupFileAndShare(): Promise<void> {
 
   const json = JSON.stringify(payload);
 
-  const fileName = `${BACKUP_FILE_PREFIX}-${new Date().toLocaleDateString()}.json`;
+  // Use an Android-safe file name (avoid characters like "/" from toLocaleDateString)
+  const datePart = new Date().toISOString().slice(0, 10); // e.g. "2026-01-13"
+  const fileName = `${BACKUP_FILE_PREFIX}-${datePart}.json`;
   const directory = Paths.cache ?? Paths.document;
   const file = new File(directory, fileName);
   file.write(json);
