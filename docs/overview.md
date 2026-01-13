@@ -1,6 +1,6 @@
 ## Overview
 
-**LearningEng** is a mobile app that helps you grow and review your English vocabulary through structured daily sessions, category-based word management, and an English–Russian translation helper.
+**Pocket English** is a mobile app that helps you grow and review your English vocabulary through structured daily sessions, category-based word management, and an English–Russian translation helper.
 
 This document gives a high-level overview aimed at new contributors or future-you who returns to the project after a break.
 

@@ -1,21 +1,20 @@
 import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
-import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import * as Haptics from "expo-haptics";
+import React, { useRef, useState } from "react";
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
+import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
 import WordCard from "../WordCard";
 
+const TAB_GAP = 15;
+
 export default function LearningMainMode() {
-  const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } =
-    useLearningDailySet();
+  const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } = useLearningDailySet();
   const [isLearnTab, setIsLearnTab] = useState(true);
-  const {
-    markWordReviewed,
-    markWordNotReviewed,
-    startLearnNewWord,
-    markWordCompletelyLearned,
-  } = useLearnUtil();
-  const theme = useTheme();
+  const { markWordReviewed, markWordNotReviewed, startLearnNewWord, markWordCompletelyLearned } = useLearnUtil();
+  const theme = useAppTheme();
 
   const word = isLearnTab ? learnWord : reviewWord;
   const accept = isLearnTab ? markWordCompletelyLearned : markWordReviewed;
@@ -23,8 +22,46 @@ export default function LearningMainMode() {
   const acceptLabel = isLearnTab ? "I know" : "I remember";
   const rejectLabel = isLearnTab ? "Start learn" : "Show late";
 
-  const handleSelectLearn = () => setIsLearnTab(true);
-  const handleSelectReview = () => setIsLearnTab(false);
+  const contentOpacity = useRef(new Animated.Value(1)).current;
+  const tabPosition = useRef(new Animated.Value(0)).current; // 0 = Learn, 1 = Review
+  const [tabHeaderWidth, setTabHeaderWidth] = useState(0);
+
+  const innerTabWidth = Math.max(0, tabHeaderWidth - 8); // horizontal padding (4 * 2)
+  const tabWidth = innerTabWidth > 0 ? (innerTabWidth - TAB_GAP) / 2 : 0;
+
+  const switchTab = (nextIsLearn: boolean) => {
+    if (nextIsLearn === isLearnTab) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    const nextPos = nextIsLearn ? 0 : 1;
+
+    Animated.parallel([
+      Animated.timing(contentOpacity, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(tabPosition, {
+        toValue: nextPos,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setIsLearnTab(nextIsLearn);
+      Animated.timing(contentOpacity, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const handleSelectLearn = () => {
+    switchTab(true);
+  };
+  const handleSelectReview = () => {
+    switchTab(false);
+  };
 
   if (error) {
     return <LearningErrorState error={error} onRetry={reloadDailySet} />;
@@ -35,17 +72,36 @@ export default function LearningMainMode() {
       <View
         style={[
           styles.tabHeader,
-          { backgroundColor: theme.colors.primaryContainer },
+          {
+            backgroundColor: theme.colors.surfaceVariant,
+            borderColor: theme.colors.outline,
+          },
+          getCardShadow(theme),
         ]}
+        onLayout={(e) => setTabHeaderWidth(e.nativeEvent.layout.width)}
       >
+        {tabWidth > 0 && (
+          <Animated.View
+            style={[
+              styles.tabIndicator,
+              {
+                width: tabWidth,
+                backgroundColor: theme.colors.primary,
+                transform: [
+                  {
+                    translateX: tabPosition.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, tabWidth + TAB_GAP],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          />
+        )}
         <TouchableOpacity
           style={[
             styles.tabButton,
-            {
-              backgroundColor: isLearnTab
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            },
           ]}
           onPress={handleSelectLearn}
         >
@@ -53,10 +109,8 @@ export default function LearningMainMode() {
             style={[
               styles.tabLabel,
               {
-                color: isLearnTab
-                  ? theme.colors.onPrimary
-                  : theme.colors.onSecondary,
-                fontWeight: isLearnTab ? "600" : "400",
+                color: isLearnTab ? theme.colors.onPrimary : theme.colors.onSurfaceVariant,
+                fontWeight: isLearnTab ? "700" : "500",
               },
             ]}
           >
@@ -66,11 +120,6 @@ export default function LearningMainMode() {
         <TouchableOpacity
           style={[
             styles.tabButton,
-            {
-              backgroundColor: isLearnTab
-                ? theme.colors.secondary
-                : theme.colors.primary,
-            },
           ]}
           onPress={handleSelectReview}
         >
@@ -78,10 +127,8 @@ export default function LearningMainMode() {
             style={[
               styles.tabLabel,
               {
-                color: isLearnTab
-                  ? theme.colors.onSecondary
-                  : theme.colors.onPrimary,
-                fontWeight: isLearnTab ? "400" : "600",
+                color: isLearnTab ? theme.colors.onSurfaceVariant : theme.colors.onPrimary,
+                fontWeight: isLearnTab ? "500" : "700",
               },
             ]}
           >
@@ -90,54 +137,59 @@ export default function LearningMainMode() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
+      <Animated.View style={[styles.content, { opacity: contentOpacity }]}>
         {word === undefined ? (
-          <View style={[styles.completeMsg, { backgroundColor: theme.colors.primaryContainer }]}>
-            <Text
-              style={[styles.emptyText, { color: theme.colors.onBackground }]}
-            >
+          <View
+            style={[
+              styles.completeMsg,
+              { backgroundColor: theme.colors.surfaceVariant },
+              getCardShadow(theme),
+            ]}
+          >
+            <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
               {isLearnTab ? "You've completed daily set!" : "No words to review, come back later!"}
             </Text>
             {isLearnTab && (
-              <Button
-                buttonColor={theme.colors.primary}
-                textColor={theme.colors.onPrimary}
-                onPress={loadExtraDailySet}
-              >
+              <Button buttonColor={theme.colors.primary} textColor={theme.colors.onPrimary} onPress={loadExtraDailySet}>
                 Load more words
               </Button>
             )}
           </View>
         ) : (
-          <WordCard
-            word={word}
-            accept={accept}
-            acceptBtnName={acceptLabel}
-            reject={reject}
-            rejectBtnName={rejectLabel}
-          />
+          <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
         )}
-      </View>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    elevation: 4,
-    overflow: "hidden",
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   tabHeader: {
     flexDirection: "row",
     justifyContent: "center",
-    padding: 7,
-    gap: 15,
+    padding: 4,
+    gap: TAB_GAP,
     borderRadius: 100,
+    borderWidth: 1,
+    alignSelf: "center",
+    marginBottom: 16,
+    position: "relative",
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: "center",
+    borderRadius: 30,
+  },
+  tabIndicator: {
+    position: "absolute",
+    top: 4,
+    bottom: 4,
+    left: 4,
     borderRadius: 30,
   },
   tabLabel: {
@@ -145,17 +197,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   content: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   completeMsg: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
     gap: 15,
-    marginTop: 10,
     borderRadius: 20,
     width: "100%",
   },

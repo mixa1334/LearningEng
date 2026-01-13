@@ -119,6 +119,11 @@ const SELECT_WORDS = `SELECT
 
 const INSERT_WORD = `INSERT INTO words (word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
+export async function deleteAllUserWords(): Promise<boolean> {
+  const deletedRows = await getDbInstance().runAsync("DELETE FROM words WHERE type = 'user_added'");
+  return deletedRows.changes > 0;
+}
+
 export async function resetWordLearningProgress(): Promise<void> {
   await getDbInstance().runAsync("UPDATE words SET learned = 0, priority = 0, next_review = datetime('now')");
 }

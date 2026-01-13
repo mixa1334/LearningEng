@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 
-export default function CreateCategoryModal() {
+export default function CreateCategoryPage() {
   const router = useRouter();
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -27,7 +27,9 @@ export default function CreateCategoryModal() {
     <View style={styles.container}>
       <Text style={styles.subtitle}>Group your words with a name and emoji for quick scanning.</Text>
       <FieldTextInput label="Category name" initialValue={newCategoryName} onChangeText={setNewCategoryName} />
-      <PickEmojiButton emoji={newCategoryEmoji} onSelectEmoji={setNewCategoryEmoji} />
+      <View style={styles.emojiPickerContainer}>
+        <PickEmojiButton emoji={newCategoryEmoji} onSelectEmoji={setNewCategoryEmoji} />
+      </View>
       <Button
         mode="contained"
         icon="plus"
@@ -43,10 +45,8 @@ export default function CreateCategoryModal() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "flex-start" },
   subtitle: { marginBottom: 12, fontSize: 13, opacity: 0.8 },
-  emojiPickerContainer: { height: 250, marginTop: 10 },
-  emojiButton: { marginTop: 10, borderRadius: 999 },
-  emojiInner: { flexDirection: "row", alignItems: "center", gap: 8 },
-  emojiEmoji: { fontSize: 20 },
-  emojiLabel: { fontSize: 14, fontWeight: "500" },
-  actionButton: { marginTop: 20 },
+  actionButton: { marginTop: 20, width: "50%", alignSelf: "center" },
+  emojiPickerContainer: { marginTop: 10, marginBottom: 14 },
 });
+
+

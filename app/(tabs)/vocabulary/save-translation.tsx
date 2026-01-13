@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 
-export default function WordFromTranslationModal() {
+export default function SaveTranslationPage() {
   const router = useRouter();
   const { translation_id, word_en, word_ru } = useLocalSearchParams<{
     translation_id: string;
@@ -80,3 +80,5 @@ const styles = StyleSheet.create({
   },
   actionButton: { marginTop: 20 },
 });
+
+

@@ -1,7 +1,7 @@
 
-## LearningEng – English Vocabulary & Translation Trainer
+## Pocket English – English Vocabulary & Translation Trainer
 
-LearningEng is a mobile app built with Expo and React Native to help you systematically grow and review your English vocabulary.  
+Pocket English is a mobile app built with Expo and React Native to help you systematically grow and review your English vocabulary.  
 It provides structured learning sessions, category-based word management, daily goals, and an English–Russian translation helper – all backed by persistent storage and progress tracking.
 
 ---
@@ -96,24 +96,28 @@ Then:
 In `package.json`:
 
 - **`npm run start`**: Start the Expo dev server.
+- **`npm run web`**: Start the app in a web browser.
 - **`npm run android`**: Start the app directly on an Android emulator/device.
 - **`npm run ios`**: Start the app directly on an iOS simulator/device (macOS only).
 - **`npm run lint`**: Run ESLint checks.
-- **`npm run reset-project`**: Run the custom reset script in `scripts/reset-project.js`.
+- **`npm run reset-project`**: Run the custom reset script (for cleaning and re-initializing the project).
 
 ---
 
 ## Project structure (high level)
 
 - **`app/`**: Screens and navigation (Expo Router).
-  - `index.tsx` – redirects into the main tab layout.
-  - `(tabs)/` – bottom tab screens:
-    - `ProfileTab.tsx` – profile, progress, daily goal, settings.
-    - `LearnTab.tsx` – learning/review flows for your daily word set.
-    - `VocabularyTab.tsx` – entry point to categories, words, and translation.
-  - `CategoryVocabularyPage.tsx` – manage categories.
-  - `WordVocabularyPage.tsx` – manage words.
-  - `TranslationPage.tsx` – English–Russian translation page.
+  - `_layout.tsx` – root layout that wires up navigation, theming, SQLite, and Redux.
+  - `(tabs)/_layout.tsx` – bottom tab layout with three main tabs:
+    - `vocabulary` – vocabulary navigation stack.
+    - `index` – **Learn & Review Words** tab (learn + practice flows).
+    - `profile` – profile, progress, daily goal, FAQ, quotes, settings.
+  - `(tabs)/vocabulary/` – vocabulary sub-screens:
+    - `index.tsx` – entry point for vocabulary actions.
+    - `categories.tsx` – manage categories.
+    - `words.tsx` – manage words.
+    - `translation.tsx` – English–Russian translation helper.
+    - `create-category.tsx`, `create-word.tsx`, `save-translation.tsx` – helper screens for specific flows.
 
 - **`src/`**: Main application code (logic, UI, data access).
   - `components/` – reusable UI components.
@@ -141,5 +145,6 @@ In `package.json`:
 
 ## License
 
-This project is licensed under the **MIT License**.  
-See the `LICENSE` file for full license text.
+This project is licensed under a custom **Pocket English Non-Commercial License**.  
+In short: the source code is available for personal, educational, and community use, but **commercial use is not allowed** without a separate commercial license from the authors.  
+See the `LICENSE` file for the full legal text.

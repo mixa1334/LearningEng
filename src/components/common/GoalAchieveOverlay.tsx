@@ -2,20 +2,20 @@ import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_LG, SPACING_XL } from "@/src/resources/constants/layout";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useAppTheme } from "./ThemeProvider";
 
 export function GoalAchieveOverlay() {
   const theme = useAppTheme();
-  const { width, height } = useWindowDimensions();
-  const { name, dailyGoalAchieve } = useUserData();
+  const { name, showBanner, hideGoalAchieveBanner } = useUserData();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (dailyGoalAchieve) {
+    if (showBanner) {
       setVisible(true);
+      hideGoalAchieveBanner();
     }
-  }, [dailyGoalAchieve]);
+  }, [showBanner, hideGoalAchieveBanner]);
 
   if (!visible) return null;
 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     letterSpacing: 0.5,
   },
-  congratsTextBody  : {
+  congratsTextBody: {
     fontSize: 20,
     fontWeight: "600",
     marginBottom: SPACING_LG,

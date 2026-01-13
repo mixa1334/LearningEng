@@ -1,6 +1,6 @@
-## LearningEng Documentation
+## Pocket English Documentation
 
-Welcome to the documentation for **LearningEng** – an English vocabulary & translation trainer built with Expo and React Native.
+Welcome to the documentation for **Pocket English** – an English vocabulary & translation trainer built with Expo and React Native.
 
 ### Contents
 

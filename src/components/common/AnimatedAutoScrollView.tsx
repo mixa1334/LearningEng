@@ -58,8 +58,8 @@ export default function AnimatedAutoScrollView({
           transform: [{ translateY: headerTranslateY }],
           opacity: headerOpacity,
           zIndex: 10,
-          borderBottomWidth: 2,
-          borderBottomColor: theme.colors.primary,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.colors.onBackground,
         }}
       >
         <BlurView
@@ -73,7 +73,7 @@ export default function AnimatedAutoScrollView({
         />
         <Text
           style={{
-            color: theme.colors.onPrimaryContainer,
+            color: theme.colors.onBackground,
             fontSize: 18,
             fontWeight: "600",
           }}

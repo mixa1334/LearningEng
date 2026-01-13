@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
@@ -9,7 +10,7 @@ interface PickEmojiButtonProps {
   readonly onSelectEmoji: (emoji: string) => void;
 }
 
-export default function PickEmojiButton({ emoji = "🙂", onSelectEmoji }: PickEmojiButtonProps) {
+export default function PickEmojiButton({ emoji, onSelectEmoji }: PickEmojiButtonProps) {
   const theme = useAppTheme();
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -30,17 +31,19 @@ export default function PickEmojiButton({ emoji = "🙂", onSelectEmoji }: PickE
           mode="contained-tonal"
           onPress={() => setShowEmojiPicker(true)}
           style={[
-            styles.emojiButton,
             {
               backgroundColor: theme.colors.secondary,
             },
           ]}
           contentStyle={styles.emojiButtonContent}
         >
-          <View style={styles.emojiInner}>
-            <Text style={styles.emojiEmoji}>{emoji}</Text>
-            <Text style={[styles.emojiLabel, { color: theme.colors.onSecondary }]}>Change</Text>
-          </View>
+          {emoji ? (
+            <View style={styles.emojiContainer}>
+              <Text style={styles.emojiEmoji}>{emoji}</Text>
+            </View>
+          ) : (
+            <MaterialIcons name="emoji-emotions" size={20} color={theme.colors.onSecondary} />
+          )}
         </Button>
       )}
     </>
@@ -51,25 +54,17 @@ const styles = StyleSheet.create({
   emojiPickerContainer: {
     height: 250,
     margin: 10,
-  },
-  emojiButton: {
-    marginTop: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 999,
+    width: "100%",
   },
   emojiButtonContent: {
-    justifyContent: "center",
+    width: "100%",
   },
-  emojiInner: {
+  emojiContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    justifyContent: "center",
   },
   emojiEmoji: {
     fontSize: 20,
-  },
-  emojiLabel: {
-    fontSize: 14,
-    fontWeight: "500",
   },
 });

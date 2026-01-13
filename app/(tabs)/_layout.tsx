@@ -1,31 +1,44 @@
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
-import {
-  SAFE_AREA_MIN_BOTTOM,
-  TAB_BAR_BASE_HEIGHT,
-  TAB_BAR_BOTTOM_INSET_MULTIPLIER,
-  TAB_BAR_HORIZONTAL_MARGIN,
-} from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
+import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
+import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import React from "react";
-import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { GestureResponderEvent, Pressable, View } from "react-native";
 
 interface IconProps {
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
   readonly focused: boolean;
 }
 
+function CustomTabBarButton(props: BottomTabBarButtonProps) {
+  const handlePress = (event: GestureResponderEvent) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    props.onPress?.(event);
+  };
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      style={({ pressed }) => [
+        props.style,
+        {
+          opacity: pressed ? 0.7 : 1,
+          transform: [{ scale: pressed ? 0.95 : 1 }],
+        },
+      ]}
+    >
+      {props.children}
+    </Pressable>
+  );
+}
+
 function TabIcon({ iconName, focused }: IconProps) {
   const theme = useAppTheme();
 
-  const backgroundColor = focused
-    ? theme.colors.primary
-    : theme.colors.primaryContainer;
-  const iconColor = focused
-    ? theme.colors.onPrimary
-    : theme.colors.onPrimaryContainer;
+  const backgroundColor = focused ? theme.colors.onBackground : theme.colors.background;
+  const iconColor = focused ? theme.colors.background : theme.colors.onBackground;
 
   const iconSize = 24;
   const containerSize = 40;
@@ -48,37 +61,25 @@ function TabIcon({ iconName, focused }: IconProps) {
 
 export default function TabLayout() {
   const theme = useAppTheme();
-  const insets = useSafeAreaInsets();
-
-  const bottomInset = Math.max(insets.bottom, SAFE_AREA_MIN_BOTTOM);
-  const tabBarHeight =
-    TAB_BAR_BASE_HEIGHT + bottomInset * TAB_BAR_BOTTOM_INSET_MULTIPLIER;
-  const tabBarRadius = tabBarHeight / 2;
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
+        tabBarShowLabel: false,
         tabBarStyle: {
           display: "flex",
           flexDirection: "row",
-          alignItems: "center",
-          alignContent: "center",
+          paddingTop: 10,
           borderTopWidth: 0,
           position: "absolute",
-          marginHorizontal: TAB_BAR_HORIZONTAL_MARGIN * 3,
-          marginBottom: bottomInset,
-          height: tabBarHeight,
-          elevation: 0,
         },
         tabBarBackground: () => (
           <BlurView
-            intensity={70}
+            intensity={100}
             tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
             style={{
               flex: 1,
-              borderRadius: tabBarRadius,
-              boxShadow: theme.colors.shadow,
-              overflow: "hidden",
             }}
           />
         ),
@@ -86,30 +87,27 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="VocabularyTab"
+        name="vocabulary"
         options={{
           title: "Vocabulary",
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="book" focused={focused} />
-          ),
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
+          tabBarIcon: ({ focused }) => <TabIcon iconName="book" focused={focused} />,
         }}
       />
       <Tabs.Screen
-        name="LearnTab"
+        name="index"
         options={{
           title: "Learn & Review Words",
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="school" focused={focused} />
-          ),
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
+          tabBarIcon: ({ focused }) => <TabIcon iconName="school" focused={focused} />,
         }}
       />
       <Tabs.Screen
-        name="ProfileTab"
+        name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ focused }) => (
-            <TabIcon iconName="person" focused={focused} />
-          ),
+          tabBarButton: (props) => <CustomTabBarButton {...props} />,
+          tabBarIcon: ({ focused }) => <TabIcon iconName="person" focused={focused} />,
         }}
       />
     </Tabs>

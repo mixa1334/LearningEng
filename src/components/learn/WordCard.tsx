@@ -1,14 +1,9 @@
 import { Word } from "@/src/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { useAppTheme } from "../common/ThemeProvider";
+import { getCardShadow } from "../common/cardShadow";
 
 interface WordCardProps {
   readonly word: Word;
@@ -76,50 +71,51 @@ export default function WordCard({
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.primary,
+          backgroundColor: theme.colors.surfaceVariant,
           minWidth: cardWidth,
           minHeight: cardHeight,
         },
+        getCardShadow(theme),
       ]}
     >
       <View style={styles.content}>
         <Text
           style={[
             styles.category,
-            { color: theme.colors.onPrimary },
+            { color: theme.colors.onSurfaceVariant },
           ]}
         >
           {word.category.icon} {word.category.name}
         </Text>
-        <Text style={[styles.word, { color: theme.colors.onPrimary }]}>
+        <Text style={[styles.word, { color: theme.colors.onSurface }]}>
           {questionText}
         </Text>
 
         {showTranslation ? (
           <Text
-            style={[styles.translation, { color: theme.colors.onPrimary }]}
+            style={[styles.translation, { color: theme.colors.onSurface }]}
             numberOfLines={3}
           >
             {answerText}
           </Text>
         ) : (
           <TouchableOpacity
-            style={[styles.eyeBtn, { backgroundColor: theme.colors.primaryContainer }]}
+            style={[styles.eyeBtn, { backgroundColor: theme.colors.surface }]}
             onPress={handleShowTranslation}
           >
             <Ionicons
               name="eye-outline"
               size={22}
-              color={theme.colors.primary}
+              color={theme.colors.onSurface}
             />
-            <Text style={[styles.eyeText, { color: theme.colors.primary }]}>
+            <Text style={[styles.eyeText, { color: theme.colors.onSurface }]}>
               Show translation
             </Text>
           </TouchableOpacity>
         )}
 
         <Text
-          style={[styles.example, { color: theme.colors.onPrimary }]}
+          style={[styles.example, { color: theme.colors.onSurfaceVariant }]}
           numberOfLines={3}
         >
           {word.text_example}
@@ -132,7 +128,11 @@ export default function WordCard({
             style={[styles.btnBase, { backgroundColor: theme.colors.accept }]}
             onPress={handleContinue}
           >
-            <Text style={styles.btnText} numberOfLines={1} adjustsFontSizeToFit>
+            <Text
+              style={[styles.btnText, { color: theme.colors.onAcceptReject }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
               Continue
             </Text>
           </TouchableOpacity>
@@ -175,14 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     borderRadius: 20,
     alignSelf: "center",
-    marginVertical: 16,
     padding: 20,
-    // depth
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
   },
   content: {
     flex: 1,
@@ -242,16 +235,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 6,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  btnFullWidth: {
-    maxWidth: "100%",
-    marginHorizontal: 0,
-    marginVertical: 6,
   },
   btnText: {
     fontWeight: "600",
