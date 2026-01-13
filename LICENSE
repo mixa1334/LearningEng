@@ -1,23 +1,55 @@
-MIT License
+Pocket English Non-Commercial License
 
-Copyright (c) 2025 LearningEng contributors
+Copyright (c) 2025-2026 Pocket English authors
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The software and files in this repository (the "Software") are made available
+in source form for personal, educational, and community use, but **not** for
+commercial use, unless you obtain a separate commercial license from the
+copyright holders.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. GRANT OF LICENSE
+   Subject to the terms of this license, you are granted a worldwide,
+   non-exclusive, non-transferable, royalty-free license to:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+   a. Use, copy, and modify the Software for personal, educational,
+      and other non-commercial purposes.
+   b. Distribute the Software and your modifications (for example,
+      forks on GitHub) for non-commercial purposes, provided that
+      you:
+      - include this license text and the copyright notice above; and
+      - clearly indicate any changes you have made.
 
+2. NON-COMMERCIAL USE ONLY
+   "Commercial use" means use of the Software, in whole or in part,
+   in any product or service that is sold, licensed for a fee,
+   monetized (including via ads, subscriptions, or in-app purchases),
+   or used to provide a paid service.
 
+   You may NOT:
+   a. Sell, rent, lease, or otherwise monetize the Software or any
+      derivative works based on it.
+   b. Distribute the Software or derivative works through app stores
+      (such as Google Play or the App Store) or similar commercial
+      platforms without a separate commercial license.
+
+3. TRADEMARKS AND BRANDING
+   This license does not grant any rights in the names, logos, or
+   trademarks associated with "Pocket English" or its authors.
+   You may not use the "Pocket English" name or related branding to
+   market your own product or service without prior written consent.
+
+4. OWNERSHIP
+   The copyright holders retain all right, title, and interest in
+   and to the Software. No rights are granted except as expressly
+   set forth in this license.
+
+5. DISCLAIMER OF WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
