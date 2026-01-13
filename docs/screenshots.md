@@ -1,6 +1,6 @@
 ## Screenshots & UI gallery
 
-Use this document to showcase the most important screens of **LearningEng**.
+Use this document to showcase the most important screens of **Pocket English**.
 
 ### Suggested screenshots
 

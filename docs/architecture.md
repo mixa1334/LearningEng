@@ -1,6 +1,6 @@
 ## Architecture
 
-This document describes the high-level architecture of **LearningEng** and how the main folders fit together.
+This document describes the high-level architecture of **Pocket English** and how the main folders fit together.
 
 ### Top-level folders
 
