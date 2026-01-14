@@ -63,6 +63,7 @@ export default function TranslationPage() {
           paddingTop: pageTopPadding,
           paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
           paddingHorizontal: pageHorizontalPadding,
+          backgroundColor: theme.colors.background,
         },
       ]}
     >

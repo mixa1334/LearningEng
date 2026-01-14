@@ -35,7 +35,7 @@ export default function WordsPage() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View
         style={[
           styles.navbar,

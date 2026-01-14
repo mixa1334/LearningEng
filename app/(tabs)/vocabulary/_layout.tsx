@@ -1,25 +1,30 @@
 import { Stack, useRouter } from "expo-router";
 import React from "react";
-import { IconButton, MD3Theme, useTheme } from "react-native-paper";
+import { IconButton, useTheme } from "react-native-paper";
 
 export default function VocabularyLayout() {
   const theme = useTheme();
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerStyle: { backgroundColor: theme.colors.surfaceVariant },
+        headerTintColor: theme.colors.onBackground,
+        headerBackTitle: "Back",
+        contentStyle: { backgroundColor: theme.colors.background },
+      }}
+    >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="translation"
         options={{
           title: "Translation",
-          ...getHeaderOptions(theme),
         }}
       />
       <Stack.Screen
         name="words"
         options={{
           title: "Words",
-          ...getHeaderOptions(theme),
           headerRight: () => <CreateButton route="./create-word" />,
         }}
       />
@@ -27,7 +32,6 @@ export default function VocabularyLayout() {
         name="categories"
         options={{
           title: "Categories",
-          ...getHeaderOptions(theme),
           headerRight: () => <CreateButton route="./create-category" />,
         }}
       />
@@ -36,7 +40,6 @@ export default function VocabularyLayout() {
         options={{
           presentation: "modal",
           title: "Create Category",
-          ...getHeaderOptions(theme),
           headerLeft: () => <BackButton />,
         }}
       />
@@ -45,7 +48,6 @@ export default function VocabularyLayout() {
         options={{
           presentation: "modal",
           title: "Create Word",
-          ...getHeaderOptions(theme),
           headerLeft: () => <BackButton />,
         }}
       />
@@ -54,7 +56,6 @@ export default function VocabularyLayout() {
         options={{
           presentation: "modal",
           title: "Save to Vocabulary",
-          ...getHeaderOptions(theme),
           headerLeft: () => <BackButton />,
         }}
       />
@@ -103,12 +104,3 @@ function CreateButton({ route }: CreateButtonProps) {
     />
   );
 }
-
-const getHeaderOptions = (theme: MD3Theme) => {
-  return {
-    headerStyle: { backgroundColor: theme.colors.surfaceVariant },
-    headerTintColor: theme.colors.onBackground,
-    headerBackTitle: "Back",
-    contentStyle: { backgroundColor: theme.colors.background },
-  };
-};

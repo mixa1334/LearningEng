@@ -5,7 +5,7 @@ import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import React from "react";
-import { GestureResponderEvent, Pressable, View } from "react-native";
+import { GestureResponderEvent, Platform, Pressable, View } from "react-native";
 
 interface IconProps {
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
@@ -74,15 +74,23 @@ export default function TabLayout() {
           borderTopWidth: 0,
           position: "absolute",
         },
-        tabBarBackground: () => (
-          <BlurView
-            intensity={100}
-            tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
-            style={{
-              flex: 1,
-            }}
-          />
-        ),
+        tabBarBackground: () =>
+          Platform.OS === "ios" ? (
+            <BlurView
+              intensity={100}
+              tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
+              style={{
+                flex: 1,
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: theme.colors.surface,
+              }}
+            />
+          ),
         headerShown: false,
       }}
     >
