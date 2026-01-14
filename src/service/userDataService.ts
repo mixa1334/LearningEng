@@ -4,32 +4,34 @@ import { THEMES, UserData } from "../entity/types";
 import {
   ALL_USER_DATA_KEYS,
   DEFAULT_USER_DATA,
-  retrieveAllUserFields,
-  retrieveUserField,
-  setUserField,
+  getAllUserProps,
+  getMultipleUserProps,
+  getUserProp,
+  setMultipleUserProps,
+  setUserProp,
   USER_DATA_KEYS,
 } from "../storage/userDataStorageHelper";
 import { trimTextForSaving } from "../util/stringHelper";
 
 export async function getUserTheme(): Promise<THEMES> {
-  return retrieveUserField(USER_DATA_KEYS.THEME);
+  return getUserProp(USER_DATA_KEYS.THEME);
 }
 
 export async function setUserTheme(theme: THEMES): Promise<THEMES> {
-  const oldTheme = retrieveUserField(USER_DATA_KEYS.THEME);
+  const oldTheme = await getUserProp(USER_DATA_KEYS.THEME);
   if (oldTheme !== theme) {
-    setUserField(USER_DATA_KEYS.THEME, theme);
+    setUserProp(USER_DATA_KEYS.THEME, theme);
   }
   return oldTheme;
 }
 
 export async function changeName(name: string): Promise<string> {
-  const oldName = retrieveUserField(USER_DATA_KEYS.NAME);
+  const oldName = await getUserProp(USER_DATA_KEYS.NAME);
   const trimmedName = trimTextForSaving(name);
   if (oldName !== trimmedName) {
-    setUserField(USER_DATA_KEYS.NAME, trimmedName);
+    setUserProp(USER_DATA_KEYS.NAME, trimmedName);
   }
-  return oldName;
+  return trimmedName;
 }
 
 export async function resetUserData(): Promise<UserData> {
@@ -43,23 +45,23 @@ export async function changeDailyGoal(newDailyGoal: number): Promise<{
   dailyGoalAchieve: boolean;
 }> {
   const dailyGoal = Math.max(1, newDailyGoal);
-  const learnedToday = retrieveUserField(USER_DATA_KEYS.LEARNED_TODAY);
-  let streak = retrieveUserField(USER_DATA_KEYS.STREAK);
-  let dailyGoalAchieve = retrieveUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE);
+  let { learnedToday, streak, dailyGoalAchieve } = await getMultipleUserProps([
+    USER_DATA_KEYS.LEARNED_TODAY,
+    USER_DATA_KEYS.STREAK,
+    USER_DATA_KEYS.DAILY_GOAL_ACHIEVE,
+  ]);
+  let newProps = [[USER_DATA_KEYS.DAILY_GOAL, dailyGoal]] as [USER_DATA_KEYS, UserData[USER_DATA_KEYS]][];
+
   if (!dailyGoalAchieve && dailyGoal <= learnedToday) {
     streak++;
-    setUserField(USER_DATA_KEYS.STREAK, streak);
     dailyGoalAchieve = true;
-    setUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, dailyGoalAchieve);
+    newProps.push([USER_DATA_KEYS.STREAK, streak], [USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, dailyGoalAchieve]);
   } else if (dailyGoalAchieve && dailyGoal > learnedToday) {
     dailyGoalAchieve = false;
-    setUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, dailyGoalAchieve);
-    if (streak > 0) {
-      streak--;
-      setUserField(USER_DATA_KEYS.STREAK, streak);
-    }
+    streak = Math.max(0, streak - 1);
+    newProps.push([USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, dailyGoalAchieve], [USER_DATA_KEYS.STREAK, streak]);
   }
-  setUserField(USER_DATA_KEYS.DAILY_GOAL, dailyGoal);
+  setMultipleUserProps(newProps);
   return { dailyGoal, streak, dailyGoalAchieve };
 }
 
@@ -71,62 +73,70 @@ export async function updateAfterLearningWord(): Promise<{
   dailyGoalAchieve: boolean;
 }> {
   const todayDate = getCurrentDate();
-  let learnedToday = retrieveUserField(USER_DATA_KEYS.LEARNED_TODAY);
-  let totalLearnedWords = retrieveUserField(USER_DATA_KEYS.TOTAL_LEARNED_WORDS);
-  let streak = retrieveUserField(USER_DATA_KEYS.STREAK);
-  let lastLearningDate = retrieveUserField(USER_DATA_KEYS.LAST_LEARNING_DATE);
-  const dailyGoal = retrieveUserField(USER_DATA_KEYS.DAILY_GOAL);
-  let dailyGoalAchieve = retrieveUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE);
+
+  let { learnedToday, totalLearnedWords, streak, lastLearningDate, dailyGoal, dailyGoalAchieve } = await getMultipleUserProps([
+    USER_DATA_KEYS.LEARNED_TODAY,
+    USER_DATA_KEYS.TOTAL_LEARNED_WORDS,
+    USER_DATA_KEYS.STREAK,
+    USER_DATA_KEYS.LAST_LEARNING_DATE,
+    USER_DATA_KEYS.DAILY_GOAL,
+    USER_DATA_KEYS.DAILY_GOAL_ACHIEVE,
+  ]);
 
   learnedToday++;
   totalLearnedWords++;
+  let newProps = [
+    [USER_DATA_KEYS.LEARNED_TODAY, learnedToday],
+    [USER_DATA_KEYS.TOTAL_LEARNED_WORDS, totalLearnedWords],
+  ] as [USER_DATA_KEYS, UserData[USER_DATA_KEYS]][];
+
   if (lastLearningDate !== todayDate) {
     lastLearningDate = todayDate;
-    setUserField(USER_DATA_KEYS.LAST_LEARNING_DATE, lastLearningDate);
+    newProps.push([USER_DATA_KEYS.LAST_LEARNING_DATE, lastLearningDate]);
   }
-  if (!dailyGoalAchieve && dailyGoal === learnedToday) {
+  if (!dailyGoalAchieve && dailyGoal <= learnedToday) {
     dailyGoalAchieve = true;
-    setUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, dailyGoalAchieve);
     streak++;
-    setUserField(USER_DATA_KEYS.STREAK, streak);
+    newProps.push([USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, dailyGoalAchieve], [USER_DATA_KEYS.STREAK, streak]);
   }
-  setUserField(USER_DATA_KEYS.LEARNED_TODAY, learnedToday);
-  setUserField(USER_DATA_KEYS.TOTAL_LEARNED_WORDS, totalLearnedWords);
+  setMultipleUserProps(newProps);
   return { learnedToday, totalLearnedWords, streak, lastLearningDate, dailyGoalAchieve };
 }
 
 export async function updateAfterReviewingWord(): Promise<{
   reviewedToday: number;
 }> {
-  let reviewedToday = retrieveUserField(USER_DATA_KEYS.REVIEWED_TODAY);
+  let reviewedToday = await getUserProp(USER_DATA_KEYS.REVIEWED_TODAY);
   reviewedToday++;
-  setUserField(USER_DATA_KEYS.REVIEWED_TODAY, reviewedToday);
+  setUserProp(USER_DATA_KEYS.REVIEWED_TODAY, reviewedToday);
   return { reviewedToday };
 }
 
 export async function loadUserData(): Promise<UserData> {
-  const userData = await retrieveAllUserFields();
+  const userProps = await getAllUserProps();
   const today = getCurrentDate();
   const yesterday = getCurrentDate(DateShifts.yesterday);
-  if (userData.lastLearningDate !== today) {
-    resetUserDailyProgress(userData);
-    if (userData.lastLearningDate !== yesterday && userData.lastLearningDate !== today) {
-      resetUserStreak(userData);
+  if (userProps.lastLearningDate !== today) {
+    resetUserDailyProgress(userProps);
+    if (userProps.lastLearningDate !== yesterday && userProps.lastLearningDate !== today) {
+      resetUserStreak(userProps);
     }
   }
-  return userData;
+  return userProps;
 }
 
 function resetUserDailyProgress(userData: UserData) {
   userData.dailyGoalAchieve = false;
-  setUserField(USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, userData.dailyGoalAchieve);
   userData.learnedToday = 0;
-  setUserField(USER_DATA_KEYS.LEARNED_TODAY, userData.learnedToday);
   userData.reviewedToday = 0;
-  setUserField(USER_DATA_KEYS.REVIEWED_TODAY, userData.reviewedToday);
+  setMultipleUserProps([
+    [USER_DATA_KEYS.DAILY_GOAL_ACHIEVE, userData.dailyGoalAchieve],
+    [USER_DATA_KEYS.LEARNED_TODAY, userData.learnedToday],
+    [USER_DATA_KEYS.REVIEWED_TODAY, userData.reviewedToday],
+  ]);
 }
 
 function resetUserStreak(userData: UserData) {
   userData.streak = 0;
-  setUserField(USER_DATA_KEYS.STREAK, userData.streak);
+  setUserProp(USER_DATA_KEYS.STREAK, userData.streak);
 }
