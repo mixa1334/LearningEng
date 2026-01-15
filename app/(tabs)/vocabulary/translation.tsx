@@ -5,6 +5,7 @@ import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { SPACING_XL, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
+import { sendUserError } from "@/src/util/userAlerts";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
@@ -16,7 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TranslationPage() {
   const theme = useAppTheme();
   const router = useRouter();
-  const { currentTranslation, translations, status, translateWord, clearTranslations } = useTranslation();
+  const { currentTranslation, translations, status, error, translateWord, clearTranslations, resetError } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
@@ -55,6 +56,10 @@ export default function TranslationPage() {
     return <LoadingSpinner />;
   }
 
+  if (status === StateType.failed) {
+    sendUserError(error || "Unknown error", () => resetError());
+  }
+
   return (
     <View
       style={[
@@ -67,13 +72,7 @@ export default function TranslationPage() {
         },
       ]}
     >
-      <Card
-        style={[
-          styles.card,
-          { backgroundColor: theme.colors.primary },
-          getCardShadow(theme),
-        ]}
-      >
+      <Card style={[styles.card, { backgroundColor: theme.colors.primary }, getCardShadow(theme)]}>
         <Card.Title
           titleStyle={{ color: theme.colors.onPrimary }}
           title={language === Language.ENGLISH ? "English → Russian" : "Russian → English"}
@@ -132,12 +131,7 @@ export default function TranslationPage() {
         data={translations}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Card
-            style={[
-              styles.historyCard,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
-          >
+          <Card style={[styles.historyCard, { backgroundColor: theme.colors.surfaceVariant }]}>
             <Card.Content
               style={{
                 flexDirection: "row",
@@ -192,5 +186,3 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 });
-
-
