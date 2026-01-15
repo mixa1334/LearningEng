@@ -1,7 +1,7 @@
 import TouchableTextInput from "@/src/components/common/TouchableTextInput";
 import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import sendUserImportantConfirmation from "@/src/util/userConfirmations";
+import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";

@@ -6,7 +6,7 @@ import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
-import sendUserImportantConfirmation from "@/src/util/userConfirmations";
+import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import ExpandedCard from "./ExpandedCard";
 
 export default function ResetProgressCard() {

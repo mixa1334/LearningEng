@@ -1,6 +1,6 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import sendUserImportantConfirmation from "@/src/util/userConfirmations";
+import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
