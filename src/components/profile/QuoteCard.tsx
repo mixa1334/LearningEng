@@ -1,86 +1,76 @@
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import { getDailyQuote, Quote } from "@/src/service/dailyQuoteService";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native"; // Added ActivityIndicator
+import { IconButton, Text } from "react-native-paper";
 import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
 
-const DEFAULT_QUOTE: Quote = {
-  q: "loading...",
-  a: "loading...",
-  h: "loading...",
-};
-
 export default function QuoteCard() {
   const theme = useAppTheme();
-  const [quote, setQuote] = useState<Quote>(DEFAULT_QUOTE);
+  const [quote, setQuote] = useState<Quote | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  useEffect(() => {
-    getDailyQuote().then((quote) => {
-      setQuote(quote);
-    });
+  const reloadQuote = useCallback(async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      const data = await getDailyQuote();
+      setQuote(data);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : "Unable to load quote";
+      console.error(msg);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  return (
-    <View
-      style={[
-        styles.card,
-        {
-          backgroundColor: theme.colors.tertiary,
-        },
-        getCardShadow(theme),
-      ]}
-    >
-      <Text
-        style={[
-          styles.label,
-          {
-            color: theme.colors.onTertiary,
-          },
-        ]}
-      >
-        Today&apos;s thought
-      </Text>
+  useEffect(() => {
+    reloadQuote();
+  }, [reloadQuote]);
 
-      <Text
-        style={[
-          styles.quote,
-          {
-            color: theme.colors.onTertiary,
-          },
-        ]}
-      >
-        “{quote.q}”
-      </Text>
+  const renderContent = () => {
+    if (isLoading && !quote) {
+      return <ActivityIndicator color={theme.colors.onTertiary} style={styles.loader} />;
+    }
 
-      <Text
-        style={[
-          styles.author,
-          {
-            color: theme.colors.onTertiary,
-          },
-        ]}
-      >
-        — {quote.a}
-      </Text>
-    </View>
-  );
+    if (isError) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={[styles.quote, { color: theme.colors.onTertiary }]}>Error loading quote</Text>
+          <IconButton icon="refresh" onPress={reloadQuote} iconColor={theme.colors.onTertiary} />
+        </View>
+      );
+    }
+
+    if (!quote) return null;
+
+    return (
+      <>
+        <Text style={[styles.label, { color: theme.colors.onTertiary }]}>Today&apos;s thought</Text>
+        <Text selectable style={[styles.quote, { color: theme.colors.onTertiary }]}>
+          “{quote.q}”
+        </Text>
+        <Text style={[styles.author, { color: theme.colors.onTertiary }]}>— {quote.a}</Text>
+      </>
+    );
+  };
+
+  return <View style={[styles.card, { backgroundColor: theme.colors.tertiary }, getCardShadow(theme)]}>{renderContent()}</View>;
 }
 
 const styles = StyleSheet.create({
   card: {
     borderRadius: 28,
-    paddingVertical: SPACING_XL,
-    paddingHorizontal: SPACING_XL,
+    padding: SPACING_XL,
     marginBottom: SPACING_XL,
   },
   label: {
     fontSize: 12,
     fontWeight: "600",
-    opacity: 0.9,
     textTransform: "uppercase",
-    marginBottom: 8,
   },
   quote: {
     fontSize: 18,
@@ -93,6 +83,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "500",
     textAlign: "right",
-    opacity: 0.9,
+  },
+  loader: {
+    marginVertical: 20,
+  },
+  errorContainer: {
+    marginVertical: 10,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 });

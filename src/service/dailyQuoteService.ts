@@ -6,12 +6,6 @@ export interface Quote {
   h: string;
 }
 
-const errorResponse: Quote = {
-  q: "Unable to load",
-  a: "Unable to load",
-  h: "Unable to load",
-};
-
 const QUOTE_URL = "https://zenquotes.io/api";
 
 const api = axios.create({
@@ -19,7 +13,7 @@ const api = axios.create({
   timeout: 5000,
 });
 
-// Requests are restricted by IP to 5 per 30 second period by default.
+// Requests are restricted by IP: 5 requests per 30 second period by default.
 export async function getDailyQuote(): Promise<Quote> {
   return api
     .get<Quote[]>("/today")
@@ -28,9 +22,13 @@ export async function getDailyQuote(): Promise<Quote> {
       if (data.length > 0) {
         return data[0];
       }
-      return errorResponse;
+      const msg = "No quote found";
+      console.error(msg);
+      throw new Error(msg);
     })
     .catch(() => {
-      return errorResponse;
+      const msg = "Unable to load quote";
+      console.error(msg);
+      throw new Error(msg);
     });
 }
