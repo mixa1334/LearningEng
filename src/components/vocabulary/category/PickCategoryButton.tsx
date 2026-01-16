@@ -14,21 +14,10 @@ interface PickCategoryButtonProps {
   readonly onClose?: () => void;
 }
 
-export default function PickCategoryButton({
-  category,
-  onSelectCategory,
-  onClose,
-  truncateLength,
-}: PickCategoryButtonProps) {
+export default function PickCategoryButton({ category, onSelectCategory, onClose, truncateLength }: PickCategoryButtonProps) {
   const theme = useTheme();
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const { text } = useLanguageContext();
-
-  const getCategoryName = () => {
-    if (!category) return text("vocabulary_category_default_label");
-    if (!truncateLength) return category.name;
-    return truncate(category.name, truncateLength);
-  };
 
   const handleSelectCategory = (category: Category) => {
     onSelectCategory(category);
@@ -39,6 +28,12 @@ export default function PickCategoryButton({
     onClose?.();
     setShowCategoryPicker(false);
   };
+
+  const categoryName = (function () {
+    if (!category) return text("vocabulary_category_default_label");
+    if (!truncateLength) return category.name;
+    return truncate(category.name, truncateLength);
+  })();
 
   return (
     <>
@@ -54,17 +49,11 @@ export default function PickCategoryButton({
         contentStyle={styles.categorySelectorButtonContent}
       >
         <View style={styles.categorySelectorContent}>
-          {category?.icon && (
-            <Text style={styles.categoryEmoji}>{category.icon}</Text>
-          )}
-          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondary }]}>{getCategoryName()}</Text>
+          {category && <Text style={styles.categoryEmoji}>{category.icon}</Text>}
+          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondary }]}>{categoryName}</Text>
         </View>
       </Button>
-      <CategoryPicker
-        visible={showCategoryPicker}
-        onClose={handleClose}
-        onSelectCategory={handleSelectCategory}
-      />
+      <CategoryPicker visible={showCategoryPicker} onClose={handleClose} onSelectCategory={handleSelectCategory} />
     </>
   );
 }

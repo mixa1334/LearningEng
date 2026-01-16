@@ -23,16 +23,16 @@ export default function VocabularyPage() {
           onPress={navigateToCategory}
         />
         <TouchableCard
-          icon="book-outline"
-          title={text("vocabulary_index_words_title")}
-          description={text("vocabulary_index_words_description")}
-          onPress={navigateToWord}
-        />
-        <TouchableCard
           icon="language-outline"
           title={text("vocabulary_index_translation_title")}
           description={text("vocabulary_index_translation_description")}
           onPress={navigateToTranslation}
+        />
+        <TouchableCard
+          icon="book-outline"
+          title={text("vocabulary_index_words_title")}
+          description={text("vocabulary_index_words_description")}
+          onPress={navigateToWord}
         />
       </AnimatedScrollView>
     </AutoScrollProvider>
