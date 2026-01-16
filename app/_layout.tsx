@@ -20,7 +20,7 @@ function AppContent() {
   return (
     <>
       <GoalAchieveOverlay />
-      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false}/>
       <Stack initialRouteName="(tabs)">
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
