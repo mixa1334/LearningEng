@@ -1,6 +1,6 @@
 import { useThemeContext } from "@/src/components/common/ThemeProvider";
 import { SPACING_MD } from "@/src/resources/constants/layout";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, IconButton, Switch, Text } from "react-native-paper";
 
@@ -24,13 +24,10 @@ export default function SettingsCard() {
   const { text, changeLanguage, isReady } = useLanguageContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const languageOptions = useMemo(
-    () => [
-      { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
-      { value: SupportedLocales.RUSSIAN, key: SupportedLocales.RUSSIAN, label: text("language_russian_label") },
-    ],
-    [text]
-  );
+  const languageOptions = [
+    { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
+    { value: SupportedLocales.RUSSIAN, key: SupportedLocales.RUSSIAN, label: text("language_russian_label") },
+  ];
 
   if (!isReady) {
     return <LoadingScreenSpinner />;

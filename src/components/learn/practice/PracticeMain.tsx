@@ -6,7 +6,7 @@ import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/le
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { Button, SegmentedButtons } from "react-native-paper";
 
@@ -63,14 +63,11 @@ export default function PracticeMain() {
       ? "practice_pairs_title"
       : "practice_builder_title";
 
-  const extraModeLabels = useMemo(
-    () => [
+  const extraModeLabels =[
       { value: ExtraMode.OVERVIEW, label: text("practice_overview_title") },
       { value: ExtraMode.PAIRS, label: text("practice_pairs_title") },
       { value: ExtraMode.BUILDER, label: text("practice_builder_title") },
-    ],
-    [text]
-  );
+    ];
 
   const mainOpacity = useRef(new Animated.Value(0)).current;
   const mainTranslateY = useRef(new Animated.Value(8)).current;
