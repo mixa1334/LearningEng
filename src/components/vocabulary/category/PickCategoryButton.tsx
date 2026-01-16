@@ -3,6 +3,8 @@ import { truncate } from "@/src/util/stringHelper";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { CategoryPicker } from "../category/CategoryPicker";
 
 interface PickCategoryButtonProps {
@@ -20,9 +22,10 @@ export default function PickCategoryButton({
 }: PickCategoryButtonProps) {
   const theme = useTheme();
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
+  const { text } = useLanguageContext();
 
   const getCategoryName = () => {
-    if (!category) return "Category";
+    if (!category) return text("vocabulary_category_default_label");
     if (!truncateLength) return category.name;
     return truncate(category.name, truncateLength);
   };

@@ -1,3 +1,4 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
@@ -61,6 +62,7 @@ function TabIcon({ iconName, focused }: IconProps) {
 
 export default function TabLayout() {
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   return (
     <Tabs
@@ -97,7 +99,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="vocabulary"
         options={{
-          title: "Vocabulary",
+          title: text("vocabulary_tab_title"),
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
           tabBarIcon: ({ focused }) => <TabIcon iconName="book" focused={focused} />,
         }}
@@ -105,7 +107,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Learn & Review Words",
+          title: text("tabs_learn_title"),
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
           tabBarIcon: ({ focused }) => <TabIcon iconName="school" focused={focused} />,
         }}
@@ -113,7 +115,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: text("tabs_profile_title"),
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
           tabBarIcon: ({ focused }) => <TabIcon iconName="person" focused={focused} />,
         }}

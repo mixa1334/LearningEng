@@ -4,6 +4,8 @@ import { BlurView } from "expo-blur";
 import React from "react";
 import { Animated, Platform, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { useLanguageContext } from "./LanguageProvider";
 import { useAppTheme } from "./ThemeProvider";
 
 interface AnimatedAutoScrollViewProps {
@@ -14,6 +16,7 @@ interface AnimatedAutoScrollViewProps {
 export default function AnimatedAutoScrollView({ children, headerTitle }: AnimatedAutoScrollViewProps) {
   const insets = useSafeAreaInsets();
   const theme = useAppTheme();
+  const { text, isReady } = useLanguageContext();
   const { scrollViewRef } = useAutoScroll();
 
   const HEADER_HEIGHT = insets.top + SPACING_XXL;
@@ -34,6 +37,8 @@ export default function AnimatedAutoScrollView({ children, headerTitle }: Animat
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
+
+  const resolvedTitle = headerTitle ?? (isReady ? text("app_name") : "LearningEng");
 
   return (
     <View style={{ flex: 1 }}>
@@ -76,7 +81,7 @@ export default function AnimatedAutoScrollView({ children, headerTitle }: Animat
             fontWeight: "600",
           }}
         >
-          {headerTitle ?? "LearningEng"}
+          {resolvedTitle}
         </Text>
       </Animated.View>
 

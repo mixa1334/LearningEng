@@ -1,6 +1,8 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { useMemo } from "react";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 
 interface CategoryPickerProps {
@@ -11,6 +13,7 @@ interface CategoryPickerProps {
 
 export function CategoryPicker({ visible, onClose, onSelectCategory }: CategoryPickerProps) {
   const { userCategories, preloadedCategories } = useVocabulary();
+  const { text } = useLanguageContext();
 
   const options = useMemo(() => {
     const allCategories = [...userCategories, ...preloadedCategories];
@@ -23,8 +26,8 @@ export function CategoryPicker({ visible, onClose, onSelectCategory }: CategoryP
 
   return (
     <ValuePickerDialog
-      entityTitle="category"
-      description="Choose a category to assign. You can change it later."
+      entityTitle={text("vocabulary_category_picker_title")}
+      description={text("vocabulary_category_picker_description")}
       visible={visible}
       onClose={onClose}
       options={options}

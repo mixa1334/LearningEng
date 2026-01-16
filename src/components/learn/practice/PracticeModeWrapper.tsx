@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
 import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 
 export type PracticeModeChildProps = {
@@ -25,6 +26,7 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   const [childTextMessage, setChildTextMessage] = useState("");
   const [isSetEnded, setIsSetEnded] = useState(false);
   const [isOverLoadedSession, setIsOverLoadedSession] = useState(false);
+  const { text } = useLanguageContext();
 
   const performTransition = useCallback(
     async (action: () => void) => {
@@ -76,7 +78,9 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
           getCardShadow(theme),
         ]}
       >
-        <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>No words to practice</Text>
+        <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
+          {text("practice_no_words_message")}
+        </Text>
         {isOverLoadedSession && (
           <Button
             mode="contained-tonal"
@@ -85,7 +89,7 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
             style={[styles.btn, { backgroundColor: theme.colors.primary }]}
             textColor={theme.colors.onPrimary}
           >
-            Start over
+            {text("practice_start_over_button")}
           </Button>
         )}
       </View>
@@ -109,7 +113,7 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
           style={[styles.btn, { backgroundColor: theme.colors.primary }]}
           textColor={theme.colors.onPrimary}
         >
-          Continue
+          {text("practice_continue_button")}
         </Button>
       </View>
     );

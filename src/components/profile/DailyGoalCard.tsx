@@ -5,12 +5,15 @@ import * as Haptics from "expo-haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text } from "react-native-paper";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
 
 export default function DailyGoalCard() {
   const { dailyGoal, dailyGoalAchieve, changeGoal } = useUserData();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   const backgroundColor = dailyGoalAchieve ? theme.colors.primary : theme.colors.surfaceVariant;
   const textColor = dailyGoalAchieve ? theme.colors.onPrimary : theme.colors.onSurface;
@@ -37,7 +40,7 @@ export default function DailyGoalCard() {
     >
       <View style={styles.titleRow}>
         <Text style={[styles.sectionTitle, { color: textColor }]}>
-          Daily goal
+          {text("profile_daily_goal_title")}
         </Text>
         {dailyGoalAchieve && (
           <Ionicons name="star" size={20} color="gold" />
@@ -54,7 +57,7 @@ export default function DailyGoalCard() {
           onPress={decreaseGoal}
         />
         <Text style={[styles.goalText, { color: textColor }]}>
-          {dailyGoal} words / day
+          {text("profile_daily_goal_value", { count: dailyGoal })}
         </Text>
         <IconButton
           icon="plus"

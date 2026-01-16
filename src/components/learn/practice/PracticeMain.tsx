@@ -6,59 +6,71 @@ import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/le
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { Button, SegmentedButtons } from "react-native-paper";
+
 import { useAutoScroll } from "../../common/AutoScrollContext";
 import { getCardShadow } from "../../common/cardShadow";
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 
 export enum ExtraMode {
-  OVERVIEW = "Quick Overview",
-  PAIRS = "Word Pairs",
-  BUILDER = "Word Builder",
+  OVERVIEW = "OVERVIEW",
+  PAIRS = "PAIRS",
+  BUILDER = "BUILDER",
 }
 
 const PracticeModeComponents: Record<
   ExtraMode,
   {
     component: React.ComponentType<PracticeModeChildProps>;
-    descriptionText: string;
+    descriptionTextKey: string;
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => boolean;
   }
 > = {
   [ExtraMode.OVERVIEW]: {
     component: QuickOverview,
-    descriptionText: "Review your vocabulary words one by one and mark the ones you know",
+    descriptionTextKey: "practice_overview_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
   [ExtraMode.PAIRS]: {
     component: MatchPairsMode,
-    descriptionText: "Match each Russian word with its English translation",
+    descriptionTextKey: "practice_pairs_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 2,
   },
   [ExtraMode.BUILDER]: {
     component: BuildingFromCharsMode,
-    descriptionText: "Build the English word by picking letters in the correct order",
+    descriptionTextKey: "practice_builder_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
 };
-
-export const extraModeLabels = [
-  { value: ExtraMode.OVERVIEW, label: "Review" },
-  { value: ExtraMode.PAIRS, label: "Pairs" },
-  { value: ExtraMode.BUILDER, label: "Builder" },
-];
 
 export default function PracticeMain() {
   const { triggerScroll } = useAutoScroll();
   const { resetPracticeSet } = usePractice();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
   const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(ExtraMode.OVERVIEW);
   const [isSessionStarted, setIsSessionStarted] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
   const ActiveModeComponent = PracticeModeComponents[activeExtraMode].component;
+  const activeModeTitleKey =
+    activeExtraMode === ExtraMode.OVERVIEW
+      ? "practice_overview_title"
+      : activeExtraMode === ExtraMode.PAIRS
+      ? "practice_pairs_title"
+      : "practice_builder_title";
+
+  const extraModeLabels = useMemo(
+    () => [
+      { value: ExtraMode.OVERVIEW, label: text("practice_overview_title") },
+      { value: ExtraMode.PAIRS, label: text("practice_pairs_title") },
+      { value: ExtraMode.BUILDER, label: text("practice_builder_title") },
+    ],
+    [text]
+  );
 
   const mainOpacity = useRef(new Animated.Value(0)).current;
   const mainTranslateY = useRef(new Animated.Value(8)).current;
@@ -113,7 +125,7 @@ export default function PracticeMain() {
             getCardShadow(theme),
           ]}
         >
-          <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>{activeExtraMode} session</Text>
+          <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>{text(activeModeTitleKey)}</Text>
           <Button
             mode="contained-tonal"
             onPress={handleSessionEnd}
@@ -121,7 +133,7 @@ export default function PracticeMain() {
             textColor={theme.colors.onAcceptReject}
             icon="flag-checkered"
           >
-            End
+            {text("practice_end_button")}
           </Button>
         </View>
       );
@@ -181,7 +193,7 @@ export default function PracticeMain() {
     return (
       <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
-          {PracticeModeComponents[activeExtraMode].descriptionText}
+          {text(PracticeModeComponents[activeExtraMode].descriptionTextKey)}
         </Text>
         <Button
           mode="contained-tonal"
@@ -190,7 +202,7 @@ export default function PracticeMain() {
           textColor={theme.colors.onPrimary}
           icon="play"
         >
-          Start
+          {text("practice_start_button")}
         </Button>
       </View>
     );

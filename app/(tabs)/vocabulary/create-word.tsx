@@ -1,3 +1,4 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import FieldTextInput from "@/src/components/common/FieldTextInput";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import { Category } from "@/src/entity/types";
@@ -9,6 +10,7 @@ import { Button, Text } from "react-native-paper";
 
 export default function CreateWordPage() {
   const router = useRouter();
+  const { text } = useLanguageContext();
   const { addWord } = useVocabulary();
   const [newWordEn, setNewWordEn] = useState("");
   const [newWordRu, setNewWordRu] = useState("");
@@ -36,11 +38,23 @@ export default function CreateWordPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>Fill in the details of your new vocabulary item.</Text>
+      <Text style={styles.subtitle}>{text("vocabulary_create_word_subtitle")}</Text>
 
-      <FieldTextInput label="English word" initialValue={newWordEn} onChangeText={setNewWordEn} />
-      <FieldTextInput label="Russian word" initialValue={newWordRu} onChangeText={setNewWordRu} />
-      <FieldTextInput label="Text example (optional)" initialValue={newWordTextExample} onChangeText={setNewWordTextExample} />
+      <FieldTextInput
+        label={text("vocabulary_english_word_label")}
+        initialValue={newWordEn}
+        onChangeText={setNewWordEn}
+      />
+      <FieldTextInput
+        label={text("vocabulary_russian_word_label")}
+        initialValue={newWordRu}
+        onChangeText={setNewWordRu}
+      />
+      <FieldTextInput
+        label={text("vocabulary_text_example_label")}
+        initialValue={newWordTextExample}
+        onChangeText={setNewWordTextExample}
+      />
 
       <View style={styles.categoryPickerContainer}>
         <PickCategoryButton category={selectedCategory} onSelectCategory={selectCategory} />
@@ -53,7 +67,7 @@ export default function CreateWordPage() {
         style={styles.actionButton}
         disabled={!newWordEn || !newWordRu || !selectedCategory}
       >
-        Save
+        {text("vocabulary_create_word_save_button")}
       </Button>
     </View>
   );

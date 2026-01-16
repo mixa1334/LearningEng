@@ -1,5 +1,6 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { getCardShadow } from "@/src/components/common/cardShadow";
-import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
@@ -17,7 +18,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TranslationPage() {
   const theme = useAppTheme();
   const router = useRouter();
-  const { currentTranslation, translations, status, error, translateWord, clearTranslations, resetError } = useTranslation();
+  const { text } = useLanguageContext();
+  const { currentTranslation, translations, status, error, translateWord, clearTranslations, resetError } =
+    useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
@@ -53,11 +56,11 @@ export default function TranslationPage() {
   };
 
   if (status === StateType.loading) {
-    return <LoadingSpinner />;
+    return <LoadingScreenSpinner />;
   }
 
   if (status === StateType.failed) {
-    sendUserError(error || "Unknown error", () => resetError());
+    sendUserError(error || text("translation_error_unknown"), () => resetError());
   }
 
   return (
@@ -75,13 +78,23 @@ export default function TranslationPage() {
       <Card style={[styles.card, { backgroundColor: theme.colors.primary }, getCardShadow(theme)]}>
         <Card.Title
           titleStyle={{ color: theme.colors.onPrimary }}
-          title={language === Language.ENGLISH ? "English → Russian" : "Russian → English"}
-          left={(props) => <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onPrimary} />}
+          title={
+            language === Language.ENGLISH
+              ? text("translation_card_title_en_ru")
+              : text("translation_card_title_ru_en")
+          }
+          left={(props) => (
+            <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onPrimary} />
+          )}
         />
         <Card.Content>
           <TextInput
             mode="flat"
-            placeholder={language === Language.ENGLISH ? "Enter English word" : "Enter Russian word"}
+            placeholder={
+              language === Language.ENGLISH
+                ? text("translation_placeholder_en")
+                : text("translation_placeholder_ru")
+            }
             value={wordToTranslate}
             onChangeText={setWordToTranslate}
             style={[styles.input, { backgroundColor: theme.colors.secondaryContainer, borderRadius: 8 }]}
@@ -111,10 +124,16 @@ export default function TranslationPage() {
             containerColor={theme.colors.onPrimary}
             iconColor={theme.colors.primary}
             size={24}
-            accessibilityLabel="Switch Languages"
+            accessibilityLabel={text("translation_switch_accessibility")}
           />
-          <Button mode="contained" icon="translate" onPress={translate} buttonColor="#81c784" textColor="#1b5e20">
-            Translate
+          <Button
+            mode="contained"
+            icon="translate"
+            onPress={translate}
+            buttonColor="#81c784"
+            textColor="#1b5e20"
+          >
+            {text("translation_translate_button")}
           </Button>
           <IconButton
             icon="delete"
@@ -122,7 +141,7 @@ export default function TranslationPage() {
             containerColor={theme.colors.error}
             iconColor={theme.colors.onError}
             size={24}
-            accessibilityLabel="Clear history"
+            accessibilityLabel={text("translation_clear_history_accessibility")}
           />
         </Card.Actions>
       </Card>
@@ -148,7 +167,7 @@ export default function TranslationPage() {
                 containerColor="#81c784"
                 iconColor="#1b5e20"
                 size={24}
-                accessibilityLabel="Add to vocabulary"
+                accessibilityLabel={text("translation_add_to_vocabulary_accessibility")}
               />
             </Card.Content>
           </Card>

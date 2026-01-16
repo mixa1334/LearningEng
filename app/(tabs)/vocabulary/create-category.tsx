@@ -1,3 +1,4 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import FieldTextInput from "@/src/components/common/FieldTextInput";
 import PickEmojiButton from "@/src/components/common/PickEmojiButton";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
@@ -8,6 +9,7 @@ import { Button, Text } from "react-native-paper";
 
 export default function CreateCategoryPage() {
   const router = useRouter();
+  const { text } = useLanguageContext();
   const { addCategory } = useVocabulary();
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryEmoji, setNewCategoryEmoji] = useState<string | undefined>(undefined);
@@ -25,8 +27,12 @@ export default function CreateCategoryPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>Group your words with a name and emoji for quick scanning.</Text>
-      <FieldTextInput label="Category name" initialValue={newCategoryName} onChangeText={setNewCategoryName} />
+      <Text style={styles.subtitle}>{text("vocabulary_create_category_subtitle")}</Text>
+      <FieldTextInput
+        label={text("vocabulary_create_category_name_label")}
+        initialValue={newCategoryName}
+        onChangeText={setNewCategoryName}
+      />
       <View style={styles.emojiPickerContainer}>
         <PickEmojiButton emoji={newCategoryEmoji} onSelectEmoji={setNewCategoryEmoji} />
       </View>
@@ -37,7 +43,7 @@ export default function CreateCategoryPage() {
         style={styles.actionButton}
         disabled={!newCategoryName || !newCategoryEmoji}
       >
-        Save
+        {text("vocabulary_create_category_save_button")}
       </Button>
     </View>
   );

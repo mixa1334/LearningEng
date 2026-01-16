@@ -3,10 +3,13 @@ import { SPACING_LG, SPACING_XL } from "@/src/resources/constants/layout";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
+import { useLanguageContext } from "./LanguageProvider";
 import { useAppTheme } from "./ThemeProvider";
 
 export function GoalAchieveOverlay() {
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
   const { name, showBanner, hideGoalAchieveBanner } = useUserData();
   const [visible, setVisible] = useState(false);
 
@@ -24,9 +27,11 @@ export function GoalAchieveOverlay() {
       <View style={styles.content}>
         <Text style={[styles.congratsTextTitle, { color: theme.colors.onBackground }]}>{name}</Text>
         <Text style={[styles.congratsTextBody, { color: theme.colors.onBackground }]}>
-          You have achieved your daily learning goal!
+          {text("goal_overlay_body")}
         </Text>
-        <Text style={[styles.congratsTextFooter, { color: theme.colors.onBackground }]}>You did it! You&apos;re amazing!</Text>
+        <Text style={[styles.congratsTextFooter, { color: theme.colors.onBackground }]}>
+          {text("goal_overlay_footer")}
+        </Text>
       </View>
       <LottieView
         source={require("@/assets/animations/confetti_daily_goal.json")}

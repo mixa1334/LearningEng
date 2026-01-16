@@ -4,21 +4,24 @@ import * as Haptics from "expo-haptics";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { Button, IconButton, Switch } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { getCardShadow } from "../../common/cardShadow";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
 
 const practiceLimitLabels = [
-  { value: 5, key: "5", label: "5 words per session" },
-  { value: 10, key: "10", label: "10 words per session" },
-  { value: 20, key: "20", label: "20 words per session" },
-  { value: 50, key: "50", label: "50 words per session" },
+  { value: 5, key: "5", label: "5" },
+  { value: 10, key: "10", label: "10" },
+  { value: 20, key: "20", label: "20" },
+  { value: 50, key: "50", label: "50" },
 ];
 
 export default function PracticeModeSettings() {
   const { category, wordType, practiceLimit, setCategory, setWordType, setPracticeLimit, resetCriteria } = usePractice();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   const [isLimitPickerVisible, setIsLimitPickerVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(-16)).current;
@@ -66,16 +69,20 @@ export default function PracticeModeSettings() {
           iconColor={theme.colors.onError}
           containerColor={theme.colors.error}
           size={18}
-          accessibilityLabel="Reset criteria"
+          accessibilityLabel={text("practice_reset_criteria_accessibility")}
           style={styles.resetButton}
         />
         <View style={styles.rowContainer}>
-          <Text style={[styles.label, { color: theme.colors.onSurface }]}>Only user words</Text>
+          <Text style={[styles.label, { color: theme.colors.onSurface }]}>
+            {text("practice_label_only_user_words")}
+          </Text>
           <Switch value={wordType === EntityType.useradd} onValueChange={handleSwitchWordType} />
         </View>
 
         <View style={styles.rowContainer}>
-          <Text style={[styles.label, { color: theme.colors.onSurface }]}>Word limit</Text>
+          <Text style={[styles.label, { color: theme.colors.onSurface }]}>
+            {text("practice_label_word_limit")}
+          </Text>
           <Button
             mode="contained-tonal"
             onPress={() => setIsLimitPickerVisible(true)}
@@ -88,8 +95,8 @@ export default function PracticeModeSettings() {
             <Text style={[styles.label, { color: theme.colors.onSecondary }]}>{practiceLimit}</Text>
           </Button>
           <ValuePickerDialog
-            entityTitle="practice limit"
-            description="Choose a practice limit for each practice session (1 session = 1 set of words)"
+            entityTitle={text("practice_limit_title")}
+            description={text("practice_limit_description")}
             visible={isLimitPickerVisible}
             onClose={() => setIsLimitPickerVisible(false)}
             options={practiceLimitLabels}
@@ -97,7 +104,9 @@ export default function PracticeModeSettings() {
           />
         </View>
         <View style={styles.rowContainer}>
-          <Text style={[styles.label, { color: theme.colors.onSurface }]}>Category</Text>
+          <Text style={[styles.label, { color: theme.colors.onSurface }]}>
+            {text("practice_label_category")}
+          </Text>
           <PickCategoryButton category={category} onSelectCategory={setCategory} />
         </View>
       </View>

@@ -6,6 +6,8 @@ import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import PickCategoryButton from "../category/PickCategoryButton";
 
 interface EditWordDialogProps {
@@ -19,6 +21,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   useEffect(() => setWordToEdit(word), [word]);
   const { editWord, removeWord } = useVocabulary();
   const [wordToEdit, setWordToEdit] = useState(word);
+  const { text } = useLanguageContext();
 
   const setWordEn = (text: string) => {
     setWordToEdit({ ...wordToEdit, word_en: text });
@@ -34,7 +37,10 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
   const handleDeleteWord = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this word?", () => {
+    sendUserImportantConfirmation(
+      text("common_action_permanent_title"),
+      text("vocabulary_delete_word_confirm_message"),
+      () => {
       removeWord(wordToEdit);
       exit();
     });
@@ -54,19 +60,29 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
       <View style={styles.backdrop}>
         <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
           <View style={styles.headerContainer}>
-            <Text style={[styles.title, { color: theme.colors.onBackground }]}>Edit word</Text>
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+              {text("vocabulary_edit_word_title")}
+            </Text>
             <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
           </View>
 
           <View>
             <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
-              Tap a field to quickly update any part of the word.
+              {text("vocabulary_edit_word_subtitle")}
             </Text>
 
-            <TouchableTextInput label="English word" initialValue={wordToEdit.word_en} onChange={setWordEn} />
-            <TouchableTextInput label="Russian word" initialValue={wordToEdit.word_ru} onChange={setWordRu} />
             <TouchableTextInput
-              label="Text example (optional)"
+              label={text("vocabulary_english_word_label")}
+              initialValue={wordToEdit.word_en}
+              onChange={setWordEn}
+            />
+            <TouchableTextInput
+              label={text("vocabulary_russian_word_label")}
+              initialValue={wordToEdit.word_ru}
+              onChange={setWordRu}
+            />
+            <TouchableTextInput
+              label={text("vocabulary_text_example_label")}
               initialValue={wordToEdit.text_example}
               onChange={setWordTextExample}
             />
@@ -83,7 +99,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
               style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
               onPress={handleDeleteWord}
             >
-              Delete
+              {text("vocabulary_edit_word_delete_button")}
             </Button>
             <Button
               mode="contained"
@@ -92,7 +108,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
               textColor={theme.colors.onPrimary}
               onPress={handleEditWord}
             >
-              Update
+              {text("vocabulary_edit_word_update_button")}
             </Button>
           </View>
         </View>

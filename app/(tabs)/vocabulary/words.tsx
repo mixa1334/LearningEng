@@ -1,3 +1,4 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import WordsList from "@/src/components/vocabulary/word/WordsList";
@@ -15,6 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function WordsPage() {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
+  const { text } = useLanguageContext();
 
   const { criteriaDto, updateWordCriteria } = useVocabulary();
 
@@ -51,14 +53,14 @@ export default function WordsPage() {
           iconColor={theme.colors.onError}
           containerColor={theme.colors.error}
           size={18}
-          accessibilityLabel="Clear search"
+          accessibilityLabel={text("vocabulary_clear_search_accessibility")}
         />
         <PickCategoryButton category={selectedCategory} onSelectCategory={setSelectedCategory} truncateLength={7} />
 
         <View style={[styles.searchContainer, { backgroundColor: theme.colors.surface }]}>
           <Ionicons name="search" size={18} color={theme.colors.onSurface} />
           <TextInput
-            placeholder="Search text..."
+            placeholder={text("vocabulary_search_placeholder")}
             value={searchPattern}
             onChangeText={setSearchPattern}
             style={[styles.searchInput, { color: theme.colors.onSurface }]}

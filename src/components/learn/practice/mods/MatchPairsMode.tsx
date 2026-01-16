@@ -6,6 +6,8 @@ import { shuffleArray } from "@/src/util/arrayHelper";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
+import { useLanguageContext } from "../../../common/LanguageProvider";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 const VISIBLE_PAIRS = 5;
 const HIGHLIGHT_DELAY = 400;
@@ -29,6 +31,7 @@ const toWordTextPlate = (word: Word, isEnglish: boolean): WordTextPlate => {
 export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildProps) {
   const { words } = usePractice();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
@@ -59,9 +62,14 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
   useEffect(() => {
     if (!hasFinished && (ruPlates.length === 0 || engPlates.length === 0)) {
       setHasFinished(true);
-      onEndCurrentSet?.(`You made ${mistakesCount} mistakes while solving ${words.length} pairs`);
+      onEndCurrentSet?.(
+        text("practice_pairs_end_message", {
+          mistakes: mistakesCount,
+          total: words.length,
+        })
+      );
     }
-  }, [ruPlates, engPlates, mistakesCount, words.length, onEndCurrentSet, hasFinished]);
+  }, [ruPlates, engPlates, mistakesCount, words.length, onEndCurrentSet, hasFinished, text]);
 
   useEffect(() => {
     if (pairMatch === null) return;
@@ -191,8 +199,12 @@ export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildPro
     <View style={styles.container}>
       <View style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
         <View style={styles.headerRow}>
-          <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>RU words</Text>
-          <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>EN words</Text>
+          <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>
+            {text("practice_pairs_ru_label")}
+          </Text>
+          <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>
+            {text("practice_pairs_en_label")}
+          </Text>
         </View>
 
         <View style={styles.rows}>

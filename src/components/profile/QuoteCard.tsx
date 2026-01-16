@@ -3,11 +3,14 @@ import { getDailyQuote, Quote } from "@/src/service/dailyQuoteService";
 import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native"; // Added ActivityIndicator
 import { IconButton, Text } from "react-native-paper";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
 
 export default function QuoteCard() {
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
   const [quote, setQuote] = useState<Quote | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -19,13 +22,13 @@ export default function QuoteCard() {
       const data = await getDailyQuote();
       setQuote(data);
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Unable to load quote";
+      const msg = error instanceof Error ? error.message : text("profile_quote_error_generic");
       console.error(msg);
       setIsError(true);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [text]);
 
   useEffect(() => {
     reloadQuote();
@@ -39,7 +42,7 @@ export default function QuoteCard() {
     if (isError) {
       return (
         <View style={styles.errorContainer}>
-          <Text style={[styles.quote, { color: theme.colors.onTertiary }]}>Error loading quote</Text>
+          <Text style={[styles.quote, { color: theme.colors.onTertiary }]}>{text("profile_quote_error_title")}</Text>
           <IconButton icon="refresh" onPress={reloadQuote} iconColor={theme.colors.onTertiary} />
         </View>
       );
@@ -49,7 +52,7 @@ export default function QuoteCard() {
 
     return (
       <>
-        <Text style={[styles.label, { color: theme.colors.onTertiary }]}>Today&apos;s thought</Text>
+        <Text style={[styles.label, { color: theme.colors.onTertiary }]}>{text("profile_quote_today_label")}</Text>
         <Text selectable style={[styles.quote, { color: theme.colors.onTertiary }]}>
           “{quote.q}”
         </Text>
@@ -71,6 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     textTransform: "uppercase",
+    marginBottom: 8,
   },
   quote: {
     fontSize: 18,

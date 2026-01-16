@@ -12,6 +12,19 @@ import {
   USER_DATA_KEYS,
 } from "../storage/userDataStorageHelper";
 import { trimTextForSaving } from "../util/stringHelper";
+import { SupportedLocales } from "../components/common/LanguageProvider";
+
+export async function getUserLocale(): Promise<SupportedLocales | undefined> {
+  return getUserProp(USER_DATA_KEYS.LOCALE);
+}
+
+export async function setUserLocale(locale: SupportedLocales): Promise<SupportedLocales | undefined> {
+  const oldLocale = await getUserProp(USER_DATA_KEYS.LOCALE);
+  if (oldLocale !== locale) {
+    setUserProp(USER_DATA_KEYS.LOCALE, locale);
+  }
+  return oldLocale;
+}
 
 export async function getUserTheme(): Promise<THEMES> {
   return getUserProp(USER_DATA_KEYS.THEME);

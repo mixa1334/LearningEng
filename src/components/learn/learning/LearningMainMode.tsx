@@ -3,6 +3,8 @@ import * as Haptics from "expo-haptics";
 import React, { useRef, useState } from "react";
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { getCardShadow } from "../../common/cardShadow";
 import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
@@ -15,12 +17,13 @@ export default function LearningMainMode() {
   const [isLearnTab, setIsLearnTab] = useState(true);
   const { markWordReviewed, markWordNotReviewed, startLearnNewWord, markWordCompletelyLearned } = useLearnUtil();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   const word = isLearnTab ? learnWord : reviewWord;
   const accept = isLearnTab ? markWordCompletelyLearned : markWordReviewed;
   const reject = isLearnTab ? startLearnNewWord : markWordNotReviewed;
-  const acceptLabel = isLearnTab ? "I know" : "I remember";
-  const rejectLabel = isLearnTab ? "Start learn" : "Show late";
+  const acceptLabel = isLearnTab ? text("learn_accept_label") : text("review_accept_label");
+  const rejectLabel = isLearnTab ? text("learn_reject_label") : text("review_reject_label");
 
   const contentOpacity = useRef(new Animated.Value(1)).current;
   const tabPosition = useRef(new Animated.Value(0)).current; // 0 = Learn, 1 = Review
@@ -114,7 +117,7 @@ export default function LearningMainMode() {
               },
             ]}
           >
-            Learn
+            {text("learn_tab_label")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -132,7 +135,7 @@ export default function LearningMainMode() {
               },
             ]}
           >
-            Review
+            {text("review_tab_label")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -147,11 +150,11 @@ export default function LearningMainMode() {
             ]}
           >
             <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-              {isLearnTab ? "You've completed daily set!" : "No words to review, come back later!"}
+              {isLearnTab ? text("learn_complete_message") : text("review_no_words_message")}
             </Text>
             {isLearnTab && (
               <Button buttonColor={theme.colors.primary} textColor={theme.colors.onPrimary} onPress={loadExtraDailySet}>
-                Load more words
+                {text("learn_load_more_words_button")}
               </Button>
             )}
           </View>

@@ -2,8 +2,15 @@ import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
-export default function LoadingSpinner() {
+import { useLanguageContext } from "./LanguageProvider";
+
+export default function LoadingScreenSpinner() {
   const theme = useTheme();
+  const { text, isReady } = useLanguageContext();
+
+  const title = isReady ? text("loading_title") : "Learn English";
+  const tagline = isReady ? text("loading_tagline") : "Expand your vocabulary every day";
+  const preparing = isReady ? text("loading_preparing") : "Preparing your learning journey...";
 
   return (
     <View
@@ -18,7 +25,7 @@ export default function LoadingSpinner() {
           { color: theme.colors.primary },
         ]}
       >
-        Learn English
+        {title}
       </Text>
       <Text
         style={[
@@ -26,7 +33,7 @@ export default function LoadingSpinner() {
           { color: theme.colors.onBackground },
         ]}
       >
-        Expand your vocabulary every day
+        {tagline}
       </Text>
       <ActivityIndicator
         size="large"
@@ -39,7 +46,7 @@ export default function LoadingSpinner() {
           { color: theme.colors.onBackground },
         ]}
       >
-        Preparing your learning journey...
+        {preparing}
       </Text>
     </View>
   );

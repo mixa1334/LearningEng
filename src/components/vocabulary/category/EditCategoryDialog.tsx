@@ -5,6 +5,8 @@ import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import PickEmojiButton from "../../common/PickEmojiButton";
 import TouchableTextInput from "../../common/TouchableTextInput";
 
@@ -17,6 +19,7 @@ interface EditCategoryDialogProps {
 export default function EditCategoryDialog({ visible, exit, category }: EditCategoryDialogProps) {
   const theme = useTheme();
   const { editCategory, removeCategory } = useVocabulary();
+  const { text } = useLanguageContext();
   const [categoryToEdit, setCategoryToEdit] = useState(category);
   useEffect(() => setCategoryToEdit(category), [category]);
 
@@ -35,10 +38,14 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 
   const handleDeleteCategory = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to delete this category?", () => {
-      removeCategory(categoryToEdit); 
-      exit();
-    });
+    sendUserImportantConfirmation(
+      text("common_action_permanent_title"),
+      text("vocabulary_delete_category_confirm_message"),
+      () => {
+        removeCategory(categoryToEdit);
+        exit();
+      }
+    );
   };
 
   return (
@@ -46,11 +53,17 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
       <View style={styles.backdrop}>
         <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
           <View style={styles.headerContainer}>
-            <Text style={[styles.title, { color: theme.colors.onBackground }]}>Edit category</Text>
+            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+              {text("vocabulary_edit_category_title")}
+            </Text>
             <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
           </View>
           <View style={styles.form}>
-            <TouchableTextInput label="Category name" initialValue={categoryToEdit?.name} onChange={setCategoryName} />
+            <TouchableTextInput
+              label={text("vocabulary_edit_category_name_label")}
+              initialValue={categoryToEdit?.name}
+              onChange={setCategoryName}
+            />
 
             <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
           </View>
@@ -63,7 +76,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               style={{ backgroundColor: theme.colors.error }}
               onPress={handleDeleteCategory}
             >
-              Delete
+              {text("vocabulary_edit_category_delete_button")}
             </Button>
             <Button
               mode="contained"
@@ -72,7 +85,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               style={{ backgroundColor: theme.colors.primary }}
               onPress={handleEditCategory}
             >
-              Update
+              {text("vocabulary_edit_category_update_button")}
             </Button>
           </View>
         </View>

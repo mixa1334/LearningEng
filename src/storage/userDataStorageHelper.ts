@@ -11,6 +11,7 @@ export enum USER_DATA_KEYS {
   DAILY_GOAL = "dailyGoal",
   DAILY_GOAL_ACHIEVE = "dailyGoalAchieve",
   THEME = "theme",
+  LOCALE = "locale",
 }
 
 export const ALL_USER_DATA_KEYS = Object.values(USER_DATA_KEYS) as string[];
@@ -25,6 +26,7 @@ export const DEFAULT_USER_DATA: UserData = {
   dailyGoal: 5,
   dailyGoalAchieve: false,
   theme: THEMES.LIGHT,
+  locale: undefined,
 };
 
 function mapStorageValueToUserData<K extends USER_DATA_KEYS>(key: K, value: string | null): UserData[K] {

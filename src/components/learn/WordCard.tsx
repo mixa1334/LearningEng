@@ -2,6 +2,8 @@ import { Word } from "@/src/entity/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme } from "../common/ThemeProvider";
 import { getCardShadow } from "../common/cardShadow";
 
@@ -26,6 +28,7 @@ export default function WordCard({
   const [isEnglishPrimary, setIsEnglishPrimary] = useState(true);
   const theme = useAppTheme();
   const { width, height } = useWindowDimensions();
+  const { text } = useLanguageContext();
 
   useEffect(() => {
     setShowTranslation(false);
@@ -109,7 +112,7 @@ export default function WordCard({
               color={theme.colors.onSurface}
             />
             <Text style={[styles.eyeText, { color: theme.colors.onSurface }]}>
-              Show translation
+              {text("word_show_translation")}
             </Text>
           </TouchableOpacity>
         )}
@@ -133,7 +136,7 @@ export default function WordCard({
               numberOfLines={1}
               adjustsFontSizeToFit
             >
-              Continue
+              {text("word_continue_button")}
             </Text>
           </TouchableOpacity>
         ) : (

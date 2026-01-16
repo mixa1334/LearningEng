@@ -1,16 +1,18 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { IconButton, useTheme } from "react-native-paper";
 
 export default function VocabularyLayout() {
   const theme = useTheme();
+  const { text } = useLanguageContext();
 
   return (
     <Stack
       screenOptions={{
         headerStyle: { backgroundColor: theme.colors.surfaceVariant },
         headerTintColor: theme.colors.onBackground,
-        headerBackTitle: "Back",
+        headerBackTitle: text("nav_back_title"),
         contentStyle: { backgroundColor: theme.colors.background },
       }}
     >
@@ -18,20 +20,20 @@ export default function VocabularyLayout() {
       <Stack.Screen
         name="translation"
         options={{
-          title: "Translation",
+          title: text("nav_translation_title"),
         }}
       />
       <Stack.Screen
         name="words"
         options={{
-          title: "Words",
+          title: text("nav_words_title"),
           headerRight: () => <CreateButton route="./create-word" />,
         }}
       />
       <Stack.Screen
         name="categories"
         options={{
-          title: "Categories",
+          title: text("nav_categories_title"),
           headerRight: () => <CreateButton route="./create-category" />,
         }}
       />
@@ -39,7 +41,7 @@ export default function VocabularyLayout() {
         name="create-category"
         options={{
           presentation: "modal",
-          title: "Create Category",
+          title: text("nav_create_category_title"),
           headerLeft: () => <BackButton />,
         }}
       />
@@ -47,7 +49,7 @@ export default function VocabularyLayout() {
         name="create-word"
         options={{
           presentation: "modal",
-          title: "Create Word",
+          title: text("nav_create_word_title"),
           headerLeft: () => <BackButton />,
         }}
       />
@@ -55,7 +57,7 @@ export default function VocabularyLayout() {
         name="save-translation"
         options={{
           presentation: "modal",
-          title: "Save to Vocabulary",
+          title: text("nav_save_translation_title"),
           headerLeft: () => <BackButton />,
         }}
       />
@@ -65,6 +67,7 @@ export default function VocabularyLayout() {
 
 function BackButton() {
   const theme = useTheme();
+  const { text } = useLanguageContext();
   const router = useRouter();
 
   const handleBack = () => {
@@ -77,7 +80,7 @@ function BackButton() {
       onPress={handleBack}
       iconColor={theme.colors.onBackground}
       size={24}
-      accessibilityLabel="Back"
+      accessibilityLabel={text("nav_back_accessibility")}
     />
   );
 }
@@ -88,6 +91,7 @@ interface CreateButtonProps {
 
 function CreateButton({ route }: CreateButtonProps) {
   const theme = useTheme();
+  const { text } = useLanguageContext();
   const router = useRouter();
 
   const handleCreate = () => {
@@ -100,7 +104,7 @@ function CreateButton({ route }: CreateButtonProps) {
       onPress={handleCreate}
       iconColor={theme.colors.onBackground}
       size={24}
-      accessibilityLabel="Create"
+      accessibilityLabel={text("nav_create_accessibility")}
     />
   );
 }
