@@ -1,5 +1,6 @@
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
+import { TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
@@ -72,9 +73,10 @@ export default function TabLayout() {
         tabBarStyle: {
           display: "flex",
           flexDirection: "row",
-          paddingTop: 10,
+          paddingTop: "5%",
           borderTopWidth: 0,
           position: "absolute",
+          height: TAB_BAR_BASE_HEIGHT,
         },
         tabBarBackground: () =>
           Platform.OS === "ios" ? (

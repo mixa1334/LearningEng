@@ -6,48 +6,14 @@ import { useLanguageContext } from "./LanguageProvider";
 
 export default function LoadingScreenSpinner() {
   const theme = useTheme();
-  const { text, isReady } = useLanguageContext();
-
-  const title = isReady ? text("loading_title") : "Learn English";
-  const tagline = isReady ? text("loading_tagline") : "Expand your vocabulary every day";
-  const preparing = isReady ? text("loading_preparing") : "Preparing your learning journey...";
+  const { text } = useLanguageContext();
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: theme.colors.background },
-      ]}
-    >
-      <Text
-        style={[
-          styles.appName,
-          { color: theme.colors.primary },
-        ]}
-      >
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.tagline,
-          { color: theme.colors.onBackground },
-        ]}
-      >
-        {tagline}
-      </Text>
-      <ActivityIndicator
-        size="large"
-        color={theme.colors.secondary}
-        style={styles.spinner}
-      />
-      <Text
-        style={[
-          styles.loadingText,
-          { color: theme.colors.onBackground },
-        ]}
-      >
-        {preparing}
-      </Text>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Text style={[styles.appName, { color: theme.colors.primary }]}>{text("loading_title")}</Text>
+      <Text style={[styles.tagline, { color: theme.colors.onBackground }]}>{text("loading_tagline")}</Text>
+      <ActivityIndicator size="large" color={theme.colors.secondary} style={styles.spinner} />
+      <Text style={[styles.loadingText, { color: theme.colors.onBackground }]}>{text("loading_preparing")}</Text>
     </View>
   );
 }
@@ -65,6 +31,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: 1.5,
     textTransform: "uppercase",
+    textAlign: "center",
   },
   tagline: {
     fontSize: 16,
@@ -81,5 +48,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginTop: 8,
     opacity: 0.8,
+    textAlign: "center",
   },
 });

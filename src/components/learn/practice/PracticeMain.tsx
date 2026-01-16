@@ -6,8 +6,8 @@ import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/le
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import React, { useEffect, useRef, useState } from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Button, SegmentedButtons } from "react-native-paper";
 
 import { useAutoScroll } from "../../common/AutoScrollContext";
@@ -25,22 +25,26 @@ const PracticeModeComponents: Record<
   ExtraMode,
   {
     component: React.ComponentType<PracticeModeChildProps>;
+    titleTextKey: string;
     descriptionTextKey: string;
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => boolean;
   }
 > = {
   [ExtraMode.OVERVIEW]: {
     component: QuickOverview,
+    titleTextKey: "practice_overview_title",
     descriptionTextKey: "practice_overview_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
   [ExtraMode.PAIRS]: {
     component: MatchPairsMode,
+    titleTextKey: "practice_pairs_title",
     descriptionTextKey: "practice_pairs_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 2,
   },
   [ExtraMode.BUILDER]: {
     component: BuildingFromCharsMode,
+    titleTextKey: "practice_builder_title",
     descriptionTextKey: "practice_builder_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
@@ -56,43 +60,19 @@ export default function PracticeMain() {
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
   const ActiveModeComponent = PracticeModeComponents[activeExtraMode].component;
-  const activeModeTitleKey =
-    activeExtraMode === ExtraMode.OVERVIEW
-      ? "practice_overview_title"
-      : activeExtraMode === ExtraMode.PAIRS
-      ? "practice_pairs_title"
-      : "practice_builder_title";
+  const activeModeTitleKey = PracticeModeComponents[activeExtraMode].titleTextKey;
 
-  const extraModeLabels =[
-      { value: ExtraMode.OVERVIEW, label: text("practice_overview_title") },
-      { value: ExtraMode.PAIRS, label: text("practice_pairs_title") },
-      { value: ExtraMode.BUILDER, label: text("practice_builder_title") },
-    ];
-
-  const mainOpacity = useRef(new Animated.Value(0)).current;
-  const mainTranslateY = useRef(new Animated.Value(8)).current;
-
-  useEffect(() => {
-    mainOpacity.setValue(0);
-    mainTranslateY.setValue(8);
-    Animated.parallel([
-      Animated.timing(mainOpacity, {
-        toValue: 1,
-        duration: 180,
-        useNativeDriver: true,
-      }),
-      Animated.spring(mainTranslateY, {
-        toValue: 0,
-        useNativeDriver: true,
-        friction: 7,
-      }),
-    ]).start();
-  }, [activeExtraMode, isSessionStarted, isSettingsVisible, mainOpacity, mainTranslateY]);
+  const extraModeLabels = [
+    { value: ExtraMode.OVERVIEW, label: text("practice_overview_title") },
+    { value: ExtraMode.PAIRS, label: text("practice_pairs_title") },
+    { value: ExtraMode.BUILDER, label: text("practice_builder_title") },
+  ];
 
   const handleModeChange = (newMode: ExtraMode) => {
     setIsSessionStarted(false);
     resetPracticeSet();
     setActiveExtraMode(newMode);
+    setIsSettingsVisible(false);
   };
 
   const handleSessionStart = () => {
@@ -209,9 +189,7 @@ export default function PracticeMain() {
     <View>
       {renderHeaderSection()}
 
-      <Animated.View style={{ opacity: mainOpacity, transform: [{ translateY: mainTranslateY }] }}>
-        {renderMainSection()}
-      </Animated.View>
+      {renderMainSection()}
     </View>
   );
 }

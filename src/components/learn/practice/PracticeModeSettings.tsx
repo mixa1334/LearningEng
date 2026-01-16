@@ -1,12 +1,12 @@
 import { EntityType } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import * as Haptics from "expo-haptics";
-import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { Button, IconButton, Switch } from "react-native-paper";
 
-import { useLanguageContext } from "../../common/LanguageProvider";
 import { getCardShadow } from "../../common/cardShadow";
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
@@ -24,8 +24,6 @@ export default function PracticeModeSettings() {
   const { text } = useLanguageContext();
 
   const [isLimitPickerVisible, setIsLimitPickerVisible] = useState(false);
-  const slideAnim = useRef(new Animated.Value(-16)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
 
   const handleSwitchWordType = () => {
     const userAddedWordsOnly = wordType === EntityType.useradd ? undefined : EntityType.useradd;
@@ -37,80 +35,52 @@ export default function PracticeModeSettings() {
     setIsLimitPickerVisible(false);
   };
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [opacityAnim, slideAnim]);
-
   return (
-    <Animated.View style={{ transform: [{ translateY: slideAnim }], opacity: opacityAnim }}>
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.surfaceVariant },
-          getCardShadow(theme),
-        ]}
-      >
-        <IconButton
-          icon="refresh"
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-            resetCriteria();
-          }}
-          iconColor={theme.colors.onError}
-          containerColor={theme.colors.error}
-          size={18}
-          accessibilityLabel={text("practice_reset_criteria_accessibility")}
-          style={styles.resetButton}
-        />
-        <View style={styles.rowContainer}>
-          <Text style={[styles.label, { color: theme.colors.onSurface }]}>
-            {text("practice_label_only_user_words")}
-          </Text>
-          <Switch value={wordType === EntityType.useradd} onValueChange={handleSwitchWordType} />
-        </View>
-
-        <View style={styles.rowContainer}>
-          <Text style={[styles.label, { color: theme.colors.onSurface }]}>
-            {text("practice_label_word_limit")}
-          </Text>
-          <Button
-            mode="contained-tonal"
-            onPress={() => setIsLimitPickerVisible(true)}
-            compact
-            style={{ borderRadius: 999, backgroundColor: theme.colors.secondary }}
-            contentStyle={{ paddingHorizontal: 5 }}
-            icon="chevron-down"
-            textColor={theme.colors.onSecondary}
-          >
-            <Text style={[styles.label, { color: theme.colors.onSecondary }]}>{practiceLimit}</Text>
-          </Button>
-          <ValuePickerDialog
-            entityTitle={text("practice_limit_title")}
-            description={text("practice_limit_description")}
-            visible={isLimitPickerVisible}
-            onClose={() => setIsLimitPickerVisible(false)}
-            options={practiceLimitLabels}
-            onSelectOption={handleSelectLimit}
-          />
-        </View>
-        <View style={styles.rowContainer}>
-          <Text style={[styles.label, { color: theme.colors.onSurface }]}>
-            {text("practice_label_category")}
-          </Text>
-          <PickCategoryButton category={category} onSelectCategory={setCategory} />
-        </View>
+    <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
+      <IconButton
+        icon="refresh"
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+          resetCriteria();
+        }}
+        iconColor={theme.colors.onError}
+        containerColor={theme.colors.error}
+        size={18}
+        accessibilityLabel={text("practice_reset_criteria_accessibility")}
+        style={styles.resetButton}
+      />
+      <View style={styles.rowContainer}>
+        <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_only_user_words")}</Text>
+        <Switch value={wordType === EntityType.useradd} onValueChange={handleSwitchWordType} />
       </View>
-    </Animated.View>
+
+      <View style={styles.rowContainer}>
+        <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_word_limit")}</Text>
+        <Button
+          mode="contained-tonal"
+          onPress={() => setIsLimitPickerVisible(true)}
+          compact
+          style={{ borderRadius: 999, backgroundColor: theme.colors.secondary }}
+          contentStyle={{ paddingHorizontal: 5 }}
+          icon="chevron-down"
+          textColor={theme.colors.onSecondary}
+        >
+          <Text style={[styles.label, { color: theme.colors.onSecondary }]}>{practiceLimit}</Text>
+        </Button>
+        <ValuePickerDialog
+          entityTitle={text("practice_limit_title")}
+          description={text("practice_limit_description")}
+          visible={isLimitPickerVisible}
+          onClose={() => setIsLimitPickerVisible(false)}
+          options={practiceLimitLabels}
+          onSelectOption={handleSelectLimit}
+        />
+      </View>
+      <View style={styles.rowContainer}>
+        <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_category")}</Text>
+        <PickCategoryButton category={category} onSelectCategory={setCategory} />
+      </View>
+    </View>
   );
 }
 

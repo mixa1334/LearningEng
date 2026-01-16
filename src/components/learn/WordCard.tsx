@@ -40,8 +40,8 @@ export default function WordCard({
   const questionText = isEnglishPrimary ? word.word_en : word.word_ru;
   const answerText = isEnglishPrimary ? word.word_ru : word.word_en;
 
-  const cardWidth = width * 0.8;
-  const cardHeight = height * 0.4;
+  const cardWidth = width * 0.2;
+  const cardHeight = height * 0.3;
 
   const handleShowTranslation = () => setShowTranslation(true);
 
@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   },
   btnBase: {
     flex: 1,
+    height: "100%",
     paddingVertical: 12,
     paddingHorizontal: 14,
     borderRadius: 10,
@@ -241,6 +242,6 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontWeight: "600",
-    fontSize: 15,
+    fontSize: 16,
   },
 });

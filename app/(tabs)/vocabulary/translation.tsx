@@ -1,5 +1,5 @@
-import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { getCardShadow } from "@/src/components/common/cardShadow";
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
@@ -19,8 +19,7 @@ export default function TranslationPage() {
   const theme = useAppTheme();
   const router = useRouter();
   const { text } = useLanguageContext();
-  const { currentTranslation, translations, status, error, translateWord, clearTranslations, resetError } =
-    useTranslation();
+  const { currentTranslation, translations, status, error, translateWord, clearTranslations, resetError } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
@@ -78,23 +77,13 @@ export default function TranslationPage() {
       <Card style={[styles.card, { backgroundColor: theme.colors.primary }, getCardShadow(theme)]}>
         <Card.Title
           titleStyle={{ color: theme.colors.onPrimary }}
-          title={
-            language === Language.ENGLISH
-              ? text("translation_card_title_en_ru")
-              : text("translation_card_title_ru_en")
-          }
-          left={(props) => (
-            <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onPrimary} />
-          )}
+          title={language === Language.ENGLISH ? text("translation_card_title_en_ru") : text("translation_card_title_ru_en")}
+          left={(props) => <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onPrimary} />}
         />
         <Card.Content>
           <TextInput
             mode="flat"
-            placeholder={
-              language === Language.ENGLISH
-                ? text("translation_placeholder_en")
-                : text("translation_placeholder_ru")
-            }
+            placeholder={language === Language.ENGLISH ? text("translation_placeholder_en") : text("translation_placeholder_ru")}
             value={wordToTranslate}
             onChangeText={setWordToTranslate}
             style={[styles.input, { backgroundColor: theme.colors.secondaryContainer, borderRadius: 8 }]}
@@ -126,13 +115,7 @@ export default function TranslationPage() {
             size={24}
             accessibilityLabel={text("translation_switch_accessibility")}
           />
-          <Button
-            mode="contained"
-            icon="translate"
-            onPress={translate}
-            buttonColor="#81c784"
-            textColor="#1b5e20"
-          >
+          <Button mode="contained" icon="translate" onPress={translate} buttonColor="#81c784" textColor="#1b5e20">
             {text("translation_translate_button")}
           </Button>
           <IconButton
@@ -173,7 +156,7 @@ export default function TranslationPage() {
           </Card>
         )}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        contentContainerStyle={{ marginTop: 24 }}
+        contentContainerStyle={{ marginBottom: TAB_BAR_BASE_HEIGHT }}
         showsVerticalScrollIndicator={false}
       />
     </View>
