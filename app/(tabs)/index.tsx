@@ -18,7 +18,7 @@ export default function LearnPage() {
 
         <LearningMainMode />
 
-        <View style={{ marginTop: SPACING_XXL * 3 }}>
+        <View style={{ marginTop: SPACING_XXL * 1.5 }}>
           <ContentDivider name={text("review_tab_label")} />
         </View>
 
