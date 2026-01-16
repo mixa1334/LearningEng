@@ -20,7 +20,7 @@ function AppContent() {
   return (
     <>
       <GoalAchieveOverlay />
-      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false}/>
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false} />
       <Stack initialRouteName="(tabs)">
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
@@ -33,7 +33,11 @@ function AppInitializer() {
 
   return (
     <SafeAreaProvider>
-      <AppContent />
+      <ThemeProvider>
+        <LanguageProvider>
+          <AppContent />
+        </LanguageProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
@@ -41,15 +45,11 @@ function AppInitializer() {
 export default function RootLayout() {
   return (
     <Suspense fallback={<LoadingScreenSpinner />}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense={true}>
-            <ReduxProvider store={store}>
-              <AppInitializer />
-            </ReduxProvider>
-          </SQLiteProvider>
-        </LanguageProvider>
-      </ThemeProvider>
+      <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense={true}>
+        <ReduxProvider store={store}>
+          <AppInitializer />
+        </ReduxProvider>
+      </SQLiteProvider>
     </Suspense>
   );
 }

@@ -73,10 +73,10 @@ export async function getAllUserProps(): Promise<UserData> {
   return result;
 }
 
-export function setUserProp<K extends USER_DATA_KEYS>(key: K, value: UserData[K]) {
-  Storage.setItem(key, String(value));
+export async function setUserProp<K extends USER_DATA_KEYS>(key: K, value: UserData[K]) {
+  await Storage.setItem(key, String(value));
 }
 
-export function setMultipleUserProps<K extends USER_DATA_KEYS>(fields: [K, UserData[K]][]) {
-  Storage.multiSet(fields.map(([key, value]) => [key, String(value)]));
+export async function setMultipleUserProps<K extends USER_DATA_KEYS>(fields: [K, UserData[K]][]) {
+  await Storage.multiSet(fields.map(([key, value]) => [key, String(value)]));
 }
