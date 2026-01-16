@@ -1,11 +1,11 @@
 import { getDbInstance } from "@/src/database/db";
 import type { UserData } from "@/src/entity/types";
 import {
-  ALL_USER_DATA_KEYS,
   USER_DATA_KEYS,
-  retrieveAllUserFields,
-  setUserField,
+  getAllUserProps,
+  setMultipleUserProps
 } from "@/src/storage/userDataStorageHelper";
+import { getCurrentDate } from "@/src/util/dateHelper";
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
@@ -38,13 +38,13 @@ type BackupFileV1 = {
   }[];
 };
 
-const BACKUP_FILE_PREFIX = "learningeng-backup";
+const BACKUP_FILE_PREFIX = "pocket-english-backup";
 
 export async function createBackupFileAndShare(): Promise<void> {
   const db = getDbInstance();
 
 
-  const userData = await retrieveAllUserFields();
+  const userData = await getAllUserProps();
 
 
   const categories = await db.getAllAsync<BackupFileV1["categories"][number]>(
@@ -70,8 +70,7 @@ export async function createBackupFileAndShare(): Promise<void> {
 
   const json = JSON.stringify(payload);
 
-  // Use an Android-safe file name (avoid characters like "/" from toLocaleDateString)
-  const datePart = new Date().toISOString().slice(0, 10); // e.g. "2026-01-13"
+  const datePart = getCurrentDate();
   const fileName = `${BACKUP_FILE_PREFIX}-${datePart}.json`;
   const directory = Paths.cache ?? Paths.document;
   const file = new File(directory, fileName);
@@ -109,15 +108,8 @@ export async function restoreFromBackupFileUri(fileUri: string): Promise<void> {
   if (!userData || !Array.isArray(categories) || !Array.isArray(words) || !Array.isArray(translations)) {
     throw new Error("Selected file is missing required backup fields.");
   }
-
-
-  for (const key of ALL_USER_DATA_KEYS) {
-    const enumKey = key as USER_DATA_KEYS;
-    const value = (userData as any)[enumKey];
-    if (value !== undefined) {
-      setUserField(enumKey, value);
-    }
-  }
+  
+  setMultipleUserProps(Object.entries(userData) as [USER_DATA_KEYS, UserData[USER_DATA_KEYS]][]);
 
 
   await db.withExclusiveTransactionAsync(async (tx) => {
@@ -138,6 +130,7 @@ export async function restoreFromBackupFileUri(fileUri: string): Promise<void> {
 
 
     for (const w of words) {
+
       await tx.runAsync(
         "INSERT INTO words (id, word_en, word_ru, type, learned, category_id, next_review, priority, text_example) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
         [
