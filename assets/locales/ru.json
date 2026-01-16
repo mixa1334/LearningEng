@@ -1,6 +1,6 @@
 {
   "language": "Язык",
-  "language_title": "Русский язык",
+  "language_title": "Язык системы: {{language}}",
   "language_description": "Выберите язык, который вы хотите использовать",
   "language_english_label": "Английский",
   "language_russian_label": "Русский",
@@ -21,7 +21,7 @@
 
   "settings_title": "Настройки",
   "settings_dark_theme": "Тёмная тема",
-  "settings_backup_button": "Резервная копия",
+  "settings_backup_button": "Копировать",
   "settings_restore_button": "Восстановить",
   "settings_backup_failed_title": "Не удалось создать копию",
   "settings_backup_failed_message": "Не удалось создать файл резервной копии. Пожалуйста, попробуйте ещё раз.",

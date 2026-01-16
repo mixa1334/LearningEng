@@ -40,7 +40,7 @@ export function ValuePickerDialog<T>({
           <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>{description}</Text>
           <FlatList
             showsVerticalScrollIndicator={false}
-            style={{ height: SCREEN_HEIGHT_0_5 }}
+            style={{ maxHeight: SCREEN_HEIGHT_0_5 }}
             data={options}
             keyExtractor={(item) => item.key}
             renderItem={({ item }) => (
@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10,
   },
   title: {
     fontWeight: "700",
@@ -87,6 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 13,
     opacity: 0.8,
+    paddingHorizontal: 10,
   },
   categoryBtn: {
     marginVertical: 4,

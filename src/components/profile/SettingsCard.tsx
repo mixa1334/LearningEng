@@ -21,7 +21,7 @@ export default function SettingsCard() {
   const dispatch = useAppDispatch();
   const { isDark, toggleTheme } = useThemeContext();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
-  const { text, changeLanguage, isReady } = useLanguageContext();
+  const { text, changeLanguage, isReady, locale } = useLanguageContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const languageOptions = [
@@ -97,7 +97,7 @@ export default function SettingsCard() {
           <Switch value={isDark} onValueChange={toggleTheme} disabled={isProcessing} />
         </View>
         <View style={styles.switcherSettingRow}>
-          <Text>{text("language_title")}</Text>
+          <Text>{text("language_title", { language: locale })}</Text>
           <IconButton icon="chevron-down" onPress={() => setIsLanguagePickerVisible(true)} />
           <ValuePickerDialog
             entityTitle={text("language")}

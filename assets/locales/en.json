@@ -1,6 +1,6 @@
 {
   "language": "Language",
-  "language_title": "English language",
+  "language_title": "System language: {{language}}",
   "language_description": "Select the language you want to use",
   "language_english_label": "English",
   "language_russian_label": "Russian",
