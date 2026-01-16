@@ -78,7 +78,7 @@ export default function PracticeModeSettings() {
       </View>
       <View style={styles.rowContainer}>
         <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_category")}</Text>
-        <PickCategoryButton category={category} onSelectCategory={setCategory} />
+        <PickCategoryButton category={category} onSelectCategory={setCategory} truncateLength={15}/>
       </View>
     </View>
   );
