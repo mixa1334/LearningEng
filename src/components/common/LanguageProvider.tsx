@@ -1,10 +1,11 @@
-import { translations } from "@/assets/locales/translations";
+import en from "@/assets/locales/en.json";
+import ru from "@/assets/locales/ru.json";
 import { getUserLocale, setUserLocale } from "@/src/service/userDataService";
 import * as Localization from "expo-localization";
 import { I18n } from "i18n-js";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-const i18n = new I18n(translations);
+const i18n = new I18n({ ru, en });
 i18n.enableFallback = true;
 
 export enum SupportedLocales {

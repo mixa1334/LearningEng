@@ -1,0 +1,189 @@
+{
+  "language": "Language",
+  "language_title": "English language",
+  "language_description": "Select the language you want to use",
+  "language_english_label": "English",
+  "language_russian_label": "Russian",
+
+  "app_name": "LearningEng",
+
+  "loading_title": "Learn English",
+  "loading_tagline": "Expand your vocabulary every day",
+  "loading_preparing": "Preparing your learning journey...",
+
+  "common_action_permanent_title": "ACTION IS PERMANENT",
+
+  "value_picker_select_title": "Select {{entityTitle}}",
+  "value_picker_close_accessibility": "Close {{entityTitle}} picker",
+
+  "goal_overlay_body": "You have achieved your daily learning goal!",
+  "goal_overlay_footer": "You did it! You're amazing!",
+
+  "settings_title": "Settings",
+  "settings_dark_theme": "Dark Theme",
+  "settings_backup_button": "Backup",
+  "settings_restore_button": "Restore",
+  "settings_backup_failed_title": "Backup failed",
+  "settings_backup_failed_message": "Could not create backup file. Please try again.",
+  "settings_restore_completed_title": "Restore completed",
+  "settings_restore_completed_message": "Your data has been restored successfully.",
+  "settings_restore_failed_title": "Restore failed",
+  "settings_restore_failed_message": "Could not restore from the selected file.",
+
+  "reset_title": "Reset",
+  "reset_user_data_confirm_message": "Are you sure you want to reset your entire user data & statistics?",
+  "reset_user_data_success": "User data & statistics have been reset successfully.",
+  "reset_user_data_button": "Reset user data & statistics",
+  "reset_vocabulary_stats_confirm_message": "Are you sure you want to reset your entire vocabulary statistics?",
+  "reset_vocabulary_stats_success": "User vocabulary statistics have been reset successfully.",
+  "reset_vocabulary_stats_button": "Reset vocabulary statistics",
+  "reset_remove_vocabulary_confirm_message": "Are you sure you want to REMOVE your entire VOCABULARY (all words & categories)?",
+  "reset_remove_vocabulary_success": "User vocabulary (words & categories) has been removed successfully.",
+  "reset_remove_vocabulary_button": "Remove user words & categories",
+
+  "profile_streak_text": "{{count}} days in a row",
+
+  "profile_daily_goal_title": "Daily goal",
+  "profile_daily_goal_value": "{{count}} words / day",
+
+  "profile_progress_title": "Progress",
+  "profile_progress_last_learning": "Last learning",
+  "profile_progress_learned_today": "Learned today",
+  "profile_progress_reviewed_today": "Reviewed today",
+
+  "profile_quote_error_generic": "Unable to load quote",
+  "profile_quote_error_title": "Error loading quote",
+  "profile_quote_today_label": "Today's thought",
+
+  "faq_title": "FAQ",
+  "faq_personal_dashboard_title": "Personal dashboard",
+  "faq_personal_dashboard_body": "See your streak, daily goal, overall progress, and a motivational quote on the profile screen so you always know how you are doing.",
+  "faq_daily_learning_title": "Daily learning & review",
+  "faq_daily_learning_body": "Get a fresh set of words to learn and review every day on the Learn tab, and practice more with quick review, word‑pairs, and build‑the‑word training modes.",
+  "faq_vocabulary_title": "Vocabulary & categories",
+  "faq_vocabulary_body": "Create your own categories with icons, add new words at any time, and manage a personal dictionary that tracks your learning progress.",
+  "faq_translation_title": "Translation & history",
+  "faq_translation_body": "Translate words English ↔ Russian, keep a searchable history of your lookups, clear it when you want, and save useful translations straight into your vocabulary with a chosen category.",
+  "faq_backup_title": "Backup & restore",
+  "faq_backup_body": "From Settings you can export all your data (goals, vocabulary, categories, and translations) to a backup file and restore it later if you switch or reset devices.",
+  "faq_theme_title": "Theme & data reset",
+  "faq_theme_body": "Switch between light and dark themes, reset statistics, or reset vocabulary progress from the Settings dialog when you want a fresh start.",
+
+  "learn_tab_label": "Learn",
+  "review_tab_label": "Review",
+  "learn_accept_label": "I know",
+  "review_accept_label": "I remember",
+  "learn_reject_label": "Start learn",
+  "review_reject_label": "Show late",
+  "learn_complete_message": "You've completed daily set!",
+  "review_no_words_message": "No words to review, come back later!",
+  "learn_load_more_words_button": "Load more words",
+
+  "learn_error_message": "Error: {{error}}",
+  "learn_retry_button": "Retry",
+
+  "word_show_translation": "Show translation",
+  "word_continue_button": "Continue",
+
+  "practice_overview_title": "Review",
+  "practice_overview_description": "Review your vocabulary words one by one and mark the ones you know",
+  "practice_pairs_title": "Pairs",
+  "practice_pairs_description": "Match each Russian word with its English translation",
+  "practice_builder_title": "Builder",
+  "practice_builder_description": "Build the English word by picking letters in the correct order",
+  "practice_header_session": "{{mode}} session",
+  "practice_end_button": "End",
+  "practice_start_button": "Start",
+
+  "practice_label_only_user_words": "Only user words",
+  "practice_label_word_limit": "Word limit",
+  "practice_label_category": "Category",
+  "practice_limit_title": "practice limit",
+  "practice_limit_description": "Choose a practice limit for each practice session (1 session = 1 set of words)",
+  "practice_reset_criteria_accessibility": "Reset criteria",
+
+  "practice_no_words_message": "No words to practice",
+  "practice_start_over_button": "Start over",
+  "practice_continue_button": "Continue",
+
+  "practice_builder_ru_label": "RU word",
+  "practice_builder_end_message": "You solved {{correct}} / {{total}} words without mistakes",
+
+  "practice_pairs_ru_label": "RU words",
+  "practice_pairs_en_label": "EN words",
+  "practice_pairs_end_message": "You made {{mistakes}} mistakes while solving {{total}} pairs",
+
+  "practice_quick_overview_accept": "Know",
+  "practice_quick_overview_reject": "Don't know",
+  "practice_quick_overview_end_message": "You remembered {{accepted}} of {{totalReviewed}} words ({{percentage}}%)",
+
+  "vocabulary_header_title": "Vocabulary",
+  "vocabulary_tab_title": "Vocabulary",
+
+  "vocabulary_index_categories_title": "Categories",
+  "vocabulary_index_categories_description": "Manage your categories! Create, edit, remove!",
+  "vocabulary_index_words_title": "Words",
+  "vocabulary_index_words_description": "Manage your words! Create, edit, remove!",
+  "vocabulary_index_translation_title": "Translation",
+  "vocabulary_index_translation_description": "Translate words freely between English and Russian!",
+
+  "vocabulary_words_header_title": "Words",
+  "vocabulary_categories_header_title": "Categories",
+  "vocabulary_translation_header_title": "Translation",
+
+  "vocabulary_clear_search_accessibility": "Clear search",
+  "vocabulary_search_placeholder": "Search text...",
+
+  "vocabulary_edit_category_title": "Edit category",
+  "vocabulary_edit_category_name_label": "Category name",
+  "vocabulary_delete_category_confirm_message": "Are you sure you want to delete this category?",
+  "vocabulary_edit_category_delete_button": "Delete",
+  "vocabulary_edit_category_update_button": "Update",
+
+  "vocabulary_category_default_label": "Category",
+  "vocabulary_category_picker_title": "category",
+  "vocabulary_category_picker_description": "Choose a category to assign. You can change it later.",
+
+  "vocabulary_edit_word_title": "Edit word",
+  "vocabulary_edit_word_subtitle": "Tap a field to quickly update any part of the word.",
+  "vocabulary_delete_word_confirm_message": "Are you sure you want to delete this word?",
+  "vocabulary_edit_word_delete_button": "Delete",
+  "vocabulary_edit_word_update_button": "Update",
+  "vocabulary_english_word_label": "English word",
+  "vocabulary_russian_word_label": "Russian word",
+  "vocabulary_text_example_label": "Text example (optional)",
+
+  "vocabulary_create_word_subtitle": "Fill in the details of your new vocabulary item.",
+  "vocabulary_create_word_save_button": "Save",
+
+  "vocabulary_create_category_subtitle": "Group your words with a name and emoji for quick scanning.",
+  "vocabulary_create_category_name_label": "Category name",
+  "vocabulary_create_category_save_button": "Save",
+
+  "vocabulary_save_translation_subtitle": "Choose a category for this translation and save it to your vocabulary.",
+  "vocabulary_save_translation_section_label": "Category",
+  "vocabulary_save_translation_save_button": "Save",
+
+  "translation_error_unknown": "Unknown error",
+  "translation_card_title_en_ru": "English \u2192 Russian",
+  "translation_card_title_ru_en": "Russian \u2192 English",
+  "translation_placeholder_en": "Enter English word",
+  "translation_placeholder_ru": "Enter Russian word",
+  "translation_switch_accessibility": "Switch Languages",
+  "translation_translate_button": "Translate",
+  "translation_clear_history_accessibility": "Clear history",
+  "translation_add_to_vocabulary_accessibility": "Add to vocabulary",
+
+  "tabs_learn_title": "Learn & Review Words",
+  "tabs_profile_title": "Profile",
+
+  "nav_back_title": "Back",
+  "nav_back_accessibility": "Back",
+  "nav_create_accessibility": "Create",
+  "nav_translation_title": "Translation",
+  "nav_words_title": "Words",
+  "nav_categories_title": "Categories",
+  "nav_create_category_title": "Create Category",
+  "nav_create_word_title": "Create Word",
+  "nav_save_translation_title": "Save to Vocabulary"
+}
