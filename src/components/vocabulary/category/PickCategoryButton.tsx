@@ -31,13 +31,13 @@ export default function PickCategoryButton({
   };
 
   const handleSelectCategory = (category: Category) => {
-    setShowCategoryPicker(false);
     onSelectCategory(category);
+    setShowCategoryPicker(false);
   };
 
   const handleClose = () => {
-    setShowCategoryPicker(false);
     onClose?.();
+    setShowCategoryPicker(false);
   };
 
   return (
