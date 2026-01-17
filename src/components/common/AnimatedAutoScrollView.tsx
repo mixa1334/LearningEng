@@ -1,13 +1,11 @@
 import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
-import {
-  SPACING_MD,
-  SPACING_XXL,
-  TAB_BAR_BASE_HEIGHT,
-} from "@/src/resources/constants/layout";
+import { SPACING_MD, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { BlurView } from "expo-blur";
 import React from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import { Animated, Platform, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { useLanguageContext } from "./LanguageProvider";
 import { useAppTheme } from "./ThemeProvider";
 
 interface AnimatedAutoScrollViewProps {
@@ -15,19 +13,16 @@ interface AnimatedAutoScrollViewProps {
   readonly headerTitle?: string;
 }
 
-export default function AnimatedAutoScrollView({
-  children,
-  headerTitle,
-}: AnimatedAutoScrollViewProps) {
+export default function AnimatedAutoScrollView({ children, headerTitle }: AnimatedAutoScrollViewProps) {
   const insets = useSafeAreaInsets();
   const theme = useAppTheme();
+  const { text, isReady } = useLanguageContext();
   const { scrollViewRef } = useAutoScroll();
 
   const HEADER_HEIGHT = insets.top + SPACING_XXL;
   const contentHorizontalPadding = SPACING_MD;
   const contentTopPadding = insets.top * 1.5;
-  const contentBottomPadding =
-    insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
+  const contentBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
@@ -42,6 +37,8 @@ export default function AnimatedAutoScrollView({
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
+
+  const resolvedTitle = headerTitle ?? (isReady ? text("app_name") : "LearningEng");
 
   return (
     <View style={{ flex: 1 }}>
@@ -58,19 +55,25 @@ export default function AnimatedAutoScrollView({
           transform: [{ translateY: headerTranslateY }],
           opacity: headerOpacity,
           zIndex: 10,
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.onBackground,
+          ...(Platform.OS === "ios" && { borderBottomWidth: 1, borderBottomColor: theme.colors.onBackground }),
         }}
       >
-        <BlurView
-          intensity={70}
-          tint={
-            theme.dark
-              ? "systemUltraThinMaterialDark"
-              : "systemUltraThinMaterialLight"
-          }
-          style={StyleSheet.absoluteFill}
-        />
+        {Platform.OS === "ios" ? (
+          <BlurView
+            intensity={70}
+            tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
+            style={StyleSheet.absoluteFill}
+          />
+        ) : (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: theme.colors.surface,
+              },
+            ]}
+          />
+        )}
         <Text
           style={{
             color: theme.colors.onBackground,
@@ -78,7 +81,7 @@ export default function AnimatedAutoScrollView({
             fontWeight: "600",
           }}
         >
-          {headerTitle ?? "LearningEng"}
+          {resolvedTitle}
         </Text>
       </Animated.View>
 
@@ -94,10 +97,7 @@ export default function AnimatedAutoScrollView({
         }}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: false }
-        )}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
       >
         {children}
       </Animated.ScrollView>

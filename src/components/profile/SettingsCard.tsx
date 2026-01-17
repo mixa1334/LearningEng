@@ -2,7 +2,7 @@ import { useThemeContext } from "@/src/components/common/ThemeProvider";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { Button, Switch, Text } from "react-native-paper";
+import { Button, IconButton, Switch, Text } from "react-native-paper";
 
 import { createBackupFileAndShare, restoreFromBackupFileUri } from "@/src/service/backupService";
 import { useAppDispatch } from "@/src/store";
@@ -12,12 +12,26 @@ import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
+import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
+import LoadingScreenSpinner from "../common/LoadingScreenSpinner";
+import { ValuePickerDialog } from "../common/ValuePickerDialog";
 import ExpandedCard from "./ExpandedCard";
 
 export default function SettingsCard() {
   const dispatch = useAppDispatch();
   const { isDark, toggleTheme } = useThemeContext();
+  const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
+  const { text, changeLanguage, isReady, locale } = useLanguageContext();
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const languageOptions = [
+    { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
+    { value: SupportedLocales.RUSSIAN, key: SupportedLocales.RUSSIAN, label: text("language_russian_label") },
+  ];
+
+  if (!isReady) {
+    return <LoadingScreenSpinner />;
+  }
 
   const handleBackup = async () => {
     try {
@@ -25,7 +39,7 @@ export default function SettingsCard() {
       await createBackupFileAndShare();
     } catch (e) {
       console.error(e);
-      Alert.alert("Backup failed", "Could not create backup file. Please try again.");
+      Alert.alert(text("settings_backup_failed_title"), text("settings_backup_failed_message"));
     } finally {
       setIsProcessing(false);
     }
@@ -58,28 +72,48 @@ export default function SettingsCard() {
           ])
         );
 
-      Alert.alert("Restore completed", "Your data has been restored successfully.");
+      Alert.alert(text("settings_restore_completed_title"), text("settings_restore_completed_message"));
     } catch (e) {
       console.error(e);
-      Alert.alert("Restore failed", e instanceof Error ? e.message : "Could not restore from the selected file.");
+      Alert.alert(
+        text("settings_restore_failed_title"),
+        e instanceof Error ? e.message : text("settings_restore_failed_message")
+      );
     } finally {
       setIsProcessing(false);
     }
   };
 
+  const handleChangeLanguage = (locale: SupportedLocales) => {
+    setIsLanguagePickerVisible(false);
+    changeLanguage(locale);
+  };
+
   return (
-    <ExpandedCard title="Settings" icon="settings" autoScroll={true} touchableOpacity={1}>
+    <ExpandedCard title={text("settings_title")} icon="settings" autoScroll={true} touchableOpacity={1}>
       <View style={{ marginTop: SPACING_MD }}>
-        <View style={styles.themeSettingRow}>
-          <Text>Dark Theme</Text>
+        <View style={styles.switcherSettingRow}>
+          <Text>{text("settings_dark_theme")}</Text>
           <Switch value={isDark} onValueChange={toggleTheme} disabled={isProcessing} />
+        </View>
+        <View style={styles.switcherSettingRow}>
+          <Text>{text("language_title", { language: locale })}</Text>
+          <IconButton icon="chevron-down" onPress={() => setIsLanguagePickerVisible(true)} />
+          <ValuePickerDialog
+            entityTitle={text("language")}
+            description={text("language_description")}
+            visible={isLanguagePickerVisible}
+            onClose={() => setIsLanguagePickerVisible(false)}
+            options={languageOptions}
+            onSelectOption={handleChangeLanguage}
+          />
         </View>
         <View style={styles.backupRestoreRow}>
           <Button mode="contained" style={styles.settingBtn} onPress={handleBackup} disabled={isProcessing}>
-            Backup
+            {text("settings_backup_button")}
           </Button>
           <Button mode="contained" style={styles.settingBtn} onPress={handleRestore} disabled={isProcessing}>
-            Restore
+            {text("settings_restore_button")}
           </Button>
         </View>
       </View>
@@ -88,7 +122,7 @@ export default function SettingsCard() {
 }
 
 const styles = StyleSheet.create({
-  themeSettingRow: {
+  switcherSettingRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

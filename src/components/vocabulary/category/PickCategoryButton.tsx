@@ -3,6 +3,8 @@ import { truncate } from "@/src/util/stringHelper";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { CategoryPicker } from "../category/CategoryPicker";
 
 interface PickCategoryButtonProps {
@@ -12,30 +14,26 @@ interface PickCategoryButtonProps {
   readonly onClose?: () => void;
 }
 
-export default function PickCategoryButton({
-  category,
-  onSelectCategory,
-  onClose,
-  truncateLength,
-}: PickCategoryButtonProps) {
+export default function PickCategoryButton({ category, onSelectCategory, onClose, truncateLength }: PickCategoryButtonProps) {
   const theme = useTheme();
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
-
-  const getCategoryName = () => {
-    if (!category) return "Category";
-    if (!truncateLength) return category.name;
-    return truncate(category.name, truncateLength);
-  };
+  const { text } = useLanguageContext();
 
   const handleSelectCategory = (category: Category) => {
-    setShowCategoryPicker(false);
     onSelectCategory(category);
+    setShowCategoryPicker(false);
   };
 
   const handleClose = () => {
-    setShowCategoryPicker(false);
     onClose?.();
+    setShowCategoryPicker(false);
   };
+
+  const categoryName = (function () {
+    if (!category) return text("vocabulary_category_default_label");
+    if (!truncateLength) return category.name;
+    return truncate(category.name, truncateLength);
+  })();
 
   return (
     <>
@@ -51,17 +49,11 @@ export default function PickCategoryButton({
         contentStyle={styles.categorySelectorButtonContent}
       >
         <View style={styles.categorySelectorContent}>
-          {category?.icon && (
-            <Text style={styles.categoryEmoji}>{category.icon}</Text>
-          )}
-          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondary }]}>{getCategoryName()}</Text>
+          {category && <Text style={styles.categoryEmoji}>{category.icon}</Text>}
+          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondary }]}>{categoryName}</Text>
         </View>
       </Button>
-      <CategoryPicker
-        visible={showCategoryPicker}
-        onClose={handleClose}
-        onSelectCategory={handleSelectCategory}
-      />
+      <CategoryPicker visible={showCategoryPicker} onClose={handleClose} onSelectCategory={handleSelectCategory} />
     </>
   );
 }

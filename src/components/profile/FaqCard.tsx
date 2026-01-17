@@ -1,87 +1,68 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import ExpandedCard from "./ExpandedCard";
 
 export default function FaqCard() {
   const theme = useTheme();
+  const { text } = useLanguageContext();
 
   return (
-    <ExpandedCard title="FAQ" icon="help" autoScroll={false} touchableOpacity={0.7}>
+    <ExpandedCard title={text("faq_title")} icon="help" autoScroll={false} touchableOpacity={0.7}>
       <View>
         <View style={styles.item}>
-          <Text
-            style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Personal dashboard
+          <Text style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}>
+            {text("faq_personal_dashboard_title")}
           </Text>
           <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-            See your streak, daily goal, overall progress, and a motivational
-            quote on the profile screen so you always know how you are doing.
+            {text("faq_personal_dashboard_body")}
           </Text>
         </View>
 
         <View style={styles.item}>
-          <Text
-            style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Daily learning & review
+          <Text style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}>
+            {text("faq_daily_learning_title")}
           </Text>
           <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-            Get a fresh set of words to learn and review every day on the Learn
-            tab, and practice more with quick review, word‑pairs, and
-            build‑the‑word training modes.
+            {text("faq_daily_learning_body")}
           </Text>
         </View>
 
         <View style={styles.item}>
-          <Text
-            style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Vocabulary & categories
+          <Text style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}>
+            {text("faq_vocabulary_title")}
           </Text>
           <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-            Create your own categories with icons, add new words at any time,
-            and manage a personal dictionary that tracks your learning progress.
+            {text("faq_vocabulary_body")}
           </Text>
         </View>
 
         <View style={styles.item}>
-          <Text
-            style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Translation & history
+          <Text style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}>
+            {text("faq_translation_title")}
           </Text>
           <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-            Translate words English ↔ Russian, keep a searchable history of your
-            lookups, clear it when you want, and save useful translations
-            straight into your vocabulary with a chosen category.
+            {text("faq_translation_body")}
           </Text>
         </View>
 
         <View style={styles.item}>
-          <Text
-            style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Backup & restore
+          <Text style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}>
+            {text("faq_backup_title")}
           </Text>
           <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-            From Settings you can export all your data (goals, vocabulary,
-            categories, and translations) to a backup file and restore it later
-            if you switch or reset devices.
+            {text("faq_backup_body")}
           </Text>
         </View>
 
         <View style={styles.item}>
-          <Text
-            style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}
-          >
-            Theme & data reset
+          <Text style={[styles.itemTitle, { color: theme.colors.onSurfaceVariant }]}>
+            {text("faq_theme_title")}
           </Text>
           <Text style={[styles.itemText, { color: theme.colors.onSurface }]}>
-            Switch between light and dark themes, reset statistics, or reset
-            vocabulary progress from the Settings dialog when you want a fresh
-            start.
+            {text("faq_theme_body")}
           </Text>
         </View>
       </View>

@@ -5,12 +5,15 @@ import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, TextInput } from "react-native-paper";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
 
 export default function ProfileHeaderCard() {
   const { name, streak, changeName } = useUserData();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
   const [editableName, setEditableName] = useState(false);
 
   const toggleEditableName = () => {
@@ -78,7 +81,7 @@ export default function ProfileHeaderCard() {
             { color: theme.colors.onPrimaryContainer },
           ]}
         >
-          {streak} days in a row
+          {text("profile_streak_text", { count: streak })}
         </Text>
       </View>
     </View>

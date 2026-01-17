@@ -1,5 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme } from "../common/ThemeProvider";
 import { getCardShadow } from "../common/cardShadow";
 
@@ -13,6 +15,7 @@ export default function LearningErrorState({
   onRetry,
 }: LearningErrorStateProps) {
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   return (
     <View style={[styles.page, { backgroundColor: theme.colors.background }]}>
@@ -25,11 +28,11 @@ export default function LearningErrorState({
       >
         <View style={styles.content}>
           <Text style={[styles.errorText, { color: theme.colors.error }]}>
-            Error: {error}
+            {text("learn_error_message", { error })}
           </Text>
           <TouchableOpacity onPress={onRetry}>
             <Text style={[styles.retryText, { color: theme.colors.primary }]}>
-              Retry
+              {text("learn_retry_button")}
             </Text>
           </TouchableOpacity>
         </View>

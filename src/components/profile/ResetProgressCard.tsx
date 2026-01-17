@@ -6,40 +6,54 @@ import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
-import sendUserImportantConfirmation from "@/src/util/userConfirmations";
+import { useLanguageContext } from "../common/LanguageProvider";
+import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import ExpandedCard from "./ExpandedCard";
 
 export default function ResetProgressCard() {
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   const { resetUserStats, resetWordsProgress, removeUserVocabulary } = useUserData();
 
   const handleResetUserStats = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to reset your entire user data & statistics?", () => {
-      resetUserStats();
-      Alert.alert("User data & statistics have been reset successfully.");
-    });
+    sendUserImportantConfirmation(
+      text("common_action_permanent_title"),
+      text("reset_user_data_confirm_message"),
+      () => {
+        resetUserStats();
+        Alert.alert(text("reset_user_data_success"));
+      }
+    );
   };
 
   const handleResetVocabularyProgress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to reset your entire vocabulary statistics?", () => {
-      resetWordsProgress();
-      Alert.alert("User vocabulary statistics have been reset successfully.");
-    });
+    sendUserImportantConfirmation(
+      text("common_action_permanent_title"),
+      text("reset_vocabulary_stats_confirm_message"),
+      () => {
+        resetWordsProgress();
+        Alert.alert(text("reset_vocabulary_stats_success"));
+      }
+    );
   };
 
   const handleRemoveUserVocabulary = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    sendUserImportantConfirmation("ACTION IS PERMANENT", "Are you sure you want to REMOVE your entire VOCABULARY (all words & categories)?", () => {
-      removeUserVocabulary();
-      Alert.alert("User vocabulary (words & categories) has been removed successfully.");
-    });
+    sendUserImportantConfirmation(
+      text("common_action_permanent_title"),
+      text("reset_remove_vocabulary_confirm_message"),
+      () => {
+        removeUserVocabulary();
+        Alert.alert(text("reset_remove_vocabulary_success"));
+      }
+    );
   };
 
   return (
-    <ExpandedCard title="Reset" icon="close" autoScroll={true} touchableOpacity={1}>
+    <ExpandedCard title={text("reset_title")} icon="close" autoScroll={true} touchableOpacity={1}>
       <View style={[styles.resetSettingsRow, { marginTop: SPACING_MD }]}>
         <Button
           mode="contained"
@@ -47,7 +61,7 @@ export default function ResetProgressCard() {
           labelStyle={[styles.resetButton, { color: theme.colors.onError }]}
           onPress={handleResetUserStats}
         >
-          Reset user data & statistics
+          {text("reset_user_data_button")}
         </Button>
         <Button
           mode="contained"
@@ -55,7 +69,7 @@ export default function ResetProgressCard() {
           labelStyle={[styles.resetButton, { color: theme.colors.onError }]}
           onPress={handleResetVocabularyProgress}
         >
-          Reset vocabulary statistics
+          {text("reset_vocabulary_stats_button")}
         </Button>
         <Button
           mode="contained"
@@ -63,7 +77,7 @@ export default function ResetProgressCard() {
           labelStyle={[styles.resetButton, { color: theme.colors.onAcceptReject }]}
           onPress={handleRemoveUserVocabulary}
         >
-          Remove user words & categories
+          {text("reset_remove_vocabulary_button")}
         </Button>
       </View>
     </ExpandedCard>

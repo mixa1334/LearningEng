@@ -2,7 +2,7 @@ import axios from "axios";
 import { getDbInstance } from "../database/db";
 import { NewTranslationDto } from "../dto/NewTranslationDto";
 import { Language, Translation } from "../entity/types";
-import { rowToTranslation } from "../mapper/typesMapper";
+import { getCurrentDateTime } from "../util/dateHelper";
 import { trimTextForSaving } from "../util/stringHelper";
 
 // 5000 chars per day free (for anonymous use)
@@ -13,25 +13,32 @@ const api = axios.create({
   timeout: 5000,
 });
 
-const translate = async (text: string, language: Language): Promise<string> => {
-  const toLanguage = language === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH;
-  const response = await api
-    .get("/get", { params: { q: text, langpair: `${language}|${toLanguage}` } })
-    .then((response) => response.data.responseData.translatedText)
-    .catch(() => "Unable to translate");
-  return response.length > 20 ? response.slice(0, 20) + "…" : response;
-};
-
-export async function translateAndSaveWord(text: string, language: Language): Promise<Translation> {
+export async function translateWord(text: string, language: Language): Promise<Translation> {
   const trimmedText = trimTextForSaving(text);
   const translatedText = await translate(trimmedText, language);
   const newTranslation =
-    language === Language.ENGLISH ? { word_en: trimmedText, word_ru: translatedText } : { word_en: translatedText, word_ru: trimmedText };
+    language === Language.ENGLISH
+      ? { word_en: trimmedText, word_ru: translatedText }
+      : { word_en: translatedText, word_ru: trimmedText };
   return saveTranslation(newTranslation);
 }
 
-export async function saveTranslation(newTranslation: NewTranslationDto): Promise<Translation> {
-  const translationDate = new Date().toISOString();
+async function translate(text: string, language: Language): Promise<string> {
+  const toLanguage = language === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH;
+  return api
+    .get("/get", { params: { q: text, langpair: `${language}|${toLanguage}` } })
+    .then((response) => {
+      const translatedText = response.data.responseData.translatedText;
+      return translatedText.length > 20 ? translatedText.slice(0, 20) + "…" : translatedText;
+    })
+    .catch(() => {
+      console.error("Translation API is not available");
+      throw new Error("Unable to translate word");
+    });
+}
+
+async function saveTranslation(newTranslation: NewTranslationDto): Promise<Translation> {
+  const translationDate = getCurrentDateTime();
   const insertedRow = await getDbInstance().runAsync(
     `INSERT INTO translations (word_en, word_ru, translation_date) VALUES (?, ?, ?)`,
     [newTranslation.word_en, newTranslation.word_ru, translationDate]
@@ -45,8 +52,7 @@ export async function saveTranslation(newTranslation: NewTranslationDto): Promis
 }
 
 export async function getTranslations(): Promise<Translation[]> {
-  const rows = await getDbInstance().getAllAsync<any>(`SELECT * FROM translations ORDER BY translation_date DESC`);
-  return rows.map(rowToTranslation);
+  return await getDbInstance().getAllAsync<Translation>(`SELECT * FROM translations ORDER BY translation_date DESC`);
 }
 
 export async function removeTranslation(translationToDeleteId: number): Promise<boolean> {

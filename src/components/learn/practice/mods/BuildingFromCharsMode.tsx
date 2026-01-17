@@ -4,6 +4,8 @@ import { shuffleArray } from "@/src/util/arrayHelper";
 import * as Haptics from "expo-haptics";
 import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import { useLanguageContext } from "../../../common/LanguageProvider";
 import { useAppTheme } from "../../../common/ThemeProvider";
 import { getCardShadow } from "../../../common/cardShadow";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
@@ -28,6 +30,7 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
   const theme = useAppTheme();
   const { triggerScroll } = useAutoScroll();
   const { words } = usePractice();
+  const { text } = useLanguageContext();
 
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
@@ -54,7 +57,12 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
     const nextIndex = currentIndex + 1;
     if (nextIndex >= words.length) {
       setHasFinished(true);
-      props.onEndCurrentSet?.(`You solved ${newWithoutMistakesCount} / ${words.length} words without mistakes`);
+      props.onEndCurrentSet?.(
+        text("practice_builder_end_message", {
+          correct: newWithoutMistakesCount,
+          total: words.length,
+        })
+      );
       return;
     }
     const nextWord = words[nextIndex];
@@ -123,7 +131,9 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
             ]}
           >
           <View style={styles.wordHeader}>
-            <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>RU word</Text>
+            <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>
+              {text("practice_builder_ru_label")}
+            </Text>
             <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurfaceVariant }]}>{words[currentIndex].word_ru}</Text>
           </View>
 

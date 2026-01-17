@@ -4,7 +4,8 @@ import { reloadPracticeThunk } from "@/src/store/slice/practiceSlice";
 import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
-
+import * as NavigationBar from 'expo-navigation-bar';
+import { Platform } from "react-native";
 type BootstrapStatus = "idle" | "pending" | "success" | "error";
 
 let settingsStatus: BootstrapStatus = "idle";
@@ -14,7 +15,9 @@ let settingsError: unknown;
 function loadSettingsOnce(dispatch: AppDispatch) {
   if (!settingsPromise) {
     settingsStatus = "pending";
-
+    if(Platform.OS === 'android') {
+      NavigationBar.setVisibilityAsync('hidden');
+    }
 
     settingsPromise = dispatch(loadUserDataThunk())
       .unwrap()

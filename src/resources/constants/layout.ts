@@ -11,7 +11,7 @@ export const SPACING_XXL = 32;
 export const SAFE_AREA_MIN_BOTTOM = SPACING_SM;
 
 export const TAB_BAR_HORIZONTAL_MARGIN = SPACING_MD;
-export const TAB_BAR_BASE_HEIGHT = 56;
+export const TAB_BAR_BASE_HEIGHT = 80;
 export const TAB_BAR_BOTTOM_INSET_MULTIPLIER = 0.25;
 
 export const SCREEN_HEIGHT_0_1 = Dimensions.get("window").height * 0.1;

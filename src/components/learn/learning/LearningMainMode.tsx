@@ -1,8 +1,11 @@
 import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
 import * as Haptics from "expo-haptics";
-import React, { useRef, useState } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
+
+import { useLanguageContext } from "../../common/LanguageProvider";
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { getCardShadow } from "../../common/cardShadow";
 import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
@@ -15,45 +18,40 @@ export default function LearningMainMode() {
   const [isLearnTab, setIsLearnTab] = useState(true);
   const { markWordReviewed, markWordNotReviewed, startLearnNewWord, markWordCompletelyLearned } = useLearnUtil();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   const word = isLearnTab ? learnWord : reviewWord;
   const accept = isLearnTab ? markWordCompletelyLearned : markWordReviewed;
   const reject = isLearnTab ? startLearnNewWord : markWordNotReviewed;
-  const acceptLabel = isLearnTab ? "I know" : "I remember";
-  const rejectLabel = isLearnTab ? "Start learn" : "Show late";
+  const acceptLabel = isLearnTab ? text("learn_accept_label") : text("review_accept_label");
+  const rejectLabel = isLearnTab ? text("learn_reject_label") : text("review_reject_label");
 
-  const contentOpacity = useRef(new Animated.Value(1)).current;
-  const tabPosition = useRef(new Animated.Value(0)).current; // 0 = Learn, 1 = Review
+  const tabPosition = useSharedValue(0); // 0 = Learn, 1 = Review
   const [tabHeaderWidth, setTabHeaderWidth] = useState(0);
 
   const innerTabWidth = Math.max(0, tabHeaderWidth - 8); // horizontal padding (4 * 2)
   const tabWidth = innerTabWidth > 0 ? (innerTabWidth - TAB_GAP) / 2 : 0;
 
+  const tabIndicatorAnimatedStyle = useAnimatedStyle(() => {
+    if (tabWidth <= 0) {
+      return {};
+    }
+
+    return {
+      transform: [
+        {
+          translateX: interpolate(tabPosition.value, [0, 1], [0, tabWidth + TAB_GAP]),
+        },
+      ],
+    };
+  });
+
   const switchTab = (nextIsLearn: boolean) => {
     if (nextIsLearn === isLearnTab) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
     const nextPos = nextIsLearn ? 0 : 1;
-
-    Animated.parallel([
-      Animated.timing(contentOpacity, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(tabPosition, {
-        toValue: nextPos,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setIsLearnTab(nextIsLearn);
-      Animated.timing(contentOpacity, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      }).start();
-    });
+    setIsLearnTab(nextIsLearn);
+    tabPosition.value = withTiming(nextPos, { duration: 200 });
   };
 
   const handleSelectLearn = () => {
@@ -87,24 +85,12 @@ export default function LearningMainMode() {
               {
                 width: tabWidth,
                 backgroundColor: theme.colors.primary,
-                transform: [
-                  {
-                    translateX: tabPosition.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, tabWidth + TAB_GAP],
-                    }),
-                  },
-                ],
               },
+              tabIndicatorAnimatedStyle,
             ]}
           />
         )}
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-          ]}
-          onPress={handleSelectLearn}
-        >
+        <TouchableOpacity style={[styles.tabButton]} onPress={handleSelectLearn}>
           <Text
             style={[
               styles.tabLabel,
@@ -114,15 +100,10 @@ export default function LearningMainMode() {
               },
             ]}
           >
-            Learn
+            {text("learn_tab_label")}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-          ]}
-          onPress={handleSelectReview}
-        >
+        <TouchableOpacity style={[styles.tabButton]} onPress={handleSelectReview}>
           <Text
             style={[
               styles.tabLabel,
@@ -132,33 +113,27 @@ export default function LearningMainMode() {
               },
             ]}
           >
-            Review
+            {text("review_tab_label")}
           </Text>
         </TouchableOpacity>
       </View>
 
-      <Animated.View style={[styles.content, { opacity: contentOpacity }]}>
+      <View style={styles.content}>
         {word === undefined ? (
-          <View
-            style={[
-              styles.completeMsg,
-              { backgroundColor: theme.colors.surfaceVariant },
-              getCardShadow(theme),
-            ]}
-          >
+          <View style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
             <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-              {isLearnTab ? "You've completed daily set!" : "No words to review, come back later!"}
+              {isLearnTab ? text("learn_complete_message") : text("review_no_words_message")}
             </Text>
             {isLearnTab && (
               <Button buttonColor={theme.colors.primary} textColor={theme.colors.onPrimary} onPress={loadExtraDailySet}>
-                Load more words
+                {text("learn_load_more_words_button")}
               </Button>
             )}
           </View>
         ) : (
           <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
         )}
-      </Animated.View>
+      </View>
     </View>
   );
 }

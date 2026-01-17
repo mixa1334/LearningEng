@@ -1,11 +1,13 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
+import { TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import React from "react";
-import { GestureResponderEvent, Pressable, View } from "react-native";
+import { GestureResponderEvent, Platform, Pressable, View } from "react-native";
 
 interface IconProps {
   readonly iconName: keyof typeof MaterialIcons.glyphMap;
@@ -61,6 +63,7 @@ function TabIcon({ iconName, focused }: IconProps) {
 
 export default function TabLayout() {
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   return (
     <Tabs
@@ -70,26 +73,35 @@ export default function TabLayout() {
         tabBarStyle: {
           display: "flex",
           flexDirection: "row",
-          paddingTop: 10,
+          paddingTop: "5%",
           borderTopWidth: 0,
           position: "absolute",
+          height: TAB_BAR_BASE_HEIGHT,
         },
-        tabBarBackground: () => (
-          <BlurView
-            intensity={100}
-            tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
-            style={{
-              flex: 1,
-            }}
-          />
-        ),
+        tabBarBackground: () =>
+          Platform.OS === "ios" ? (
+            <BlurView
+              intensity={100}
+              tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
+              style={{
+                flex: 1,
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: theme.colors.surface,
+              }}
+            />
+          ),
         headerShown: false,
       }}
     >
       <Tabs.Screen
         name="vocabulary"
         options={{
-          title: "Vocabulary",
+          title: text("vocabulary_tab_title"),
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
           tabBarIcon: ({ focused }) => <TabIcon iconName="book" focused={focused} />,
         }}
@@ -97,7 +109,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Learn & Review Words",
+          title: text("tabs_learn_title"),
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
           tabBarIcon: ({ focused }) => <TabIcon iconName="school" focused={focused} />,
         }}
@@ -105,7 +117,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: text("tabs_profile_title"),
           tabBarButton: (props) => <CustomTabBarButton {...props} />,
           tabBarIcon: ({ focused }) => <TabIcon iconName="person" focused={focused} />,
         }}

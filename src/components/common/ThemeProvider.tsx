@@ -1,19 +1,7 @@
 import { THEMES } from "@/src/entity/types";
 import { getUserTheme, setUserTheme } from "@/src/service/userDataService";
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  MD3DarkTheme,
-  MD3LightTheme,
-  PaperProvider,
-  useTheme,
-} from "react-native-paper";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider, useTheme } from "react-native-paper";
 
 const lightTheme = {
   ...MD3LightTheme,
@@ -55,11 +43,7 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useThemeContext = () => useContext(ThemeContext);
 
-export function ThemeProvider({
-  children,
-}: {
-  readonly children: React.ReactNode;
-}) {
+export function ThemeProvider({ children }: { readonly children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -70,10 +54,12 @@ export function ThemeProvider({
   }, []);
 
   const toggleTheme = useCallback(async () => {
-    const newValue = !isDark;
-    setIsDark(newValue);
-    await setUserTheme(newValue ? THEMES.DARK : THEMES.LIGHT);
-  }, [isDark]);
+    setIsDark((prev) => {
+      const newIsDark = !prev;
+      setUserTheme(newIsDark ? THEMES.DARK : THEMES.LIGHT);
+      return newIsDark;
+    });
+  }, []);
 
   const theme = isDark ? darkTheme : lightTheme;
 

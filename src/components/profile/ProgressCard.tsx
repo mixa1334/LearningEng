@@ -3,12 +3,15 @@ import { SPACING_XL } from "@/src/resources/constants/layout";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+
+import { useLanguageContext } from "../common/LanguageProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
 
 export default function ProgressCard() {
   const { lastLearningDate, learnedToday, reviewedToday } = useUserData();
   const theme = useAppTheme();
+  const { text } = useLanguageContext();
 
   return (
     <View
@@ -19,13 +22,13 @@ export default function ProgressCard() {
       ]}
     >
       <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
-        Progress
+        {text("profile_progress_title")}
       </Text>
       <View style={styles.row}>
         <Text
           style={[styles.label, { color: theme.colors.onSurfaceVariant }]}
         >
-          Last learning
+          {text("profile_progress_last_learning")}
         </Text>
         <Text style={[styles.value, { color: theme.colors.onSurface }]}>
           {lastLearningDate || "—"}
@@ -35,7 +38,7 @@ export default function ProgressCard() {
         <Text
           style={[styles.label, { color: theme.colors.onSurfaceVariant }]}
         >
-          Learned today
+          {text("profile_progress_learned_today")}
         </Text>
         <Text style={[styles.value, { color: theme.colors.onSurface }]}>
           {learnedToday}
@@ -45,7 +48,7 @@ export default function ProgressCard() {
         <Text
           style={[styles.label, { color: theme.colors.onSurfaceVariant }]}
         >
-          Reviewed today
+          {text("profile_progress_reviewed_today")}
         </Text>
         <Text style={[styles.value, { color: theme.colors.onSurface }]}>
           {reviewedToday}

@@ -1,5 +1,6 @@
 import { GoalAchieveOverlay } from "@/src/components/common/GoalAchieveOverlay";
-import LoadingSpinner from "@/src/components/common/LoadingSpinner";
+import { LanguageProvider } from "@/src/components/common/LanguageProvider";
+import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { runMigrations } from "@/src/database/migrations";
 import { useBootstrapSettings } from "@/src/hooks/useBootstrapSettings";
@@ -13,13 +14,14 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
-function AppContent() {
+function AppInitializer() {
+  useBootstrapSettings();
   const theme = useTheme();
 
   return (
     <>
       <GoalAchieveOverlay />
-      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false} />
       <Stack initialRouteName="(tabs)">
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
@@ -27,28 +29,18 @@ function AppContent() {
   );
 }
 
-function AppInitializer() {
-  useBootstrapSettings();
-
-  return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <AppContent />
-      </ThemeProvider>
-    </SafeAreaProvider>
-  );
-}
-
 export default function RootLayout() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <SQLiteProvider
-        databaseName="EnglishLearningApp.db"
-        onInit={runMigrations}
-        useSuspense={true}
-      >
+    <Suspense fallback={<LoadingScreenSpinner />}>
+      <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense={true}>
         <ReduxProvider store={store}>
-          <AppInitializer />
+          <SafeAreaProvider>
+            <ThemeProvider>
+              <LanguageProvider>
+                <AppInitializer />
+              </LanguageProvider>
+            </ThemeProvider>
+          </SafeAreaProvider>
         </ReduxProvider>
       </SQLiteProvider>
     </Suspense>

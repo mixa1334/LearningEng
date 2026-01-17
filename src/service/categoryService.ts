@@ -2,7 +2,6 @@ import { Category, EntityType } from "@/src/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";
-import { rowToCategory } from "../mapper/typesMapper";
 import { trimTextForSaving } from "../util/stringHelper";
 
 // db always has preloaded category with id 1!!!!!! (if migration have been run successfully)
@@ -55,22 +54,20 @@ export async function addNewCategory(
 }
 
 export async function getAllCategories(limit: number): Promise<Category[]> {
-  const rows = await getDbInstance().getAllAsync<any>(
+  return getDbInstance().getAllAsync<Category>(
     `SELECT id, name, type, icon
     FROM categories LIMIT ?`,
     [limit]
   );
-  return rows.map(rowToCategory);
 }
 
 export async function getCategoriesByType(categoryType: EntityType): Promise<Category[]> {
-  const rows = await getDbInstance().getAllAsync<any>(
+  return getDbInstance().getAllAsync<Category>(
     `SELECT id, name, type, icon
     FROM categories
     WHERE type = ?`,
     [categoryType]
   );
-  return rows.map(rowToCategory);
 }
 
 export async function deleteUserCategory(category: Category): Promise<boolean> {

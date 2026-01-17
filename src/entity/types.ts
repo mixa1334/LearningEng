@@ -1,3 +1,5 @@
+import { SupportedLocales } from "../components/common/LanguageProvider";
+
 export enum THEMES {
   LIGHT = "light",
   DARK = "dark",
@@ -37,6 +39,7 @@ export type UserData = {
   dailyGoal: number;
   dailyGoalAchieve: boolean;
   theme: THEMES;
+  locale: SupportedLocales | undefined;
 };
 
 export enum Language {

@@ -1,3 +1,4 @@
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import { Category } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
@@ -9,6 +10,7 @@ import { Button, Text } from "react-native-paper";
 
 export default function SaveTranslationPage() {
   const router = useRouter();
+  const { text } = useLanguageContext();
   const { translation_id, word_en, word_ru } = useLocalSearchParams<{
     translation_id: string;
     word_en: string;
@@ -18,9 +20,7 @@ export default function SaveTranslationPage() {
   const { addWord } = useVocabulary();
   const { removeTranslation } = useTranslation();
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(
-    undefined
-  );
+  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
 
   const handleSaveToVocabulary = () => {
     if (!selectedCategory) return;
@@ -37,18 +37,15 @@ export default function SaveTranslationPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.subtitle}>
-        Choose a category for this translation and save it to your vocabulary.
+        {text("vocabulary_save_translation_subtitle")}
       </Text>
 
       <Text style={styles.translationText}>
         {word_en} - {word_ru}
       </Text>
 
-      <Text style={styles.sectionLabel}>Category</Text>
-      <PickCategoryButton
-        category={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-      />
+      <Text style={styles.sectionLabel}>{text("vocabulary_save_translation_section_label")}</Text>
+      <PickCategoryButton category={selectedCategory} onSelectCategory={setSelectedCategory} />
 
       <Button
         mode="contained"
@@ -57,7 +54,7 @@ export default function SaveTranslationPage() {
         style={styles.actionButton}
         disabled={!selectedCategory}
       >
-        Save
+        {text("vocabulary_save_translation_save_button")}
       </Button>
     </View>
   );
