@@ -14,18 +14,26 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
+function AppContent() {
+  const theme = useTheme();
+  return (
+    <>
+      <GoalAchieveOverlay />
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+      <Stack initialRouteName="(tabs)">
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </>
+  );
+}
+
 function AppInitializer() {
   useBootstrapSettings();
-  const theme = useTheme();
 
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <GoalAchieveOverlay />
-        <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false} />
-        <Stack initialRouteName="(tabs)">
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
+        <AppContent />
       </LanguageProvider>
     </ThemeProvider>
   );
