@@ -19,13 +19,15 @@ function AppInitializer() {
   const theme = useTheme();
 
   return (
-    <>
-      <GoalAchieveOverlay />
-      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false} />
-      <Stack initialRouteName="(tabs)">
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </>
+    <ThemeProvider>
+      <LanguageProvider>
+        <GoalAchieveOverlay />
+        <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false} />
+        <Stack initialRouteName="(tabs)">
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 
@@ -35,11 +37,7 @@ export default function RootLayout() {
       <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense={true}>
         <ReduxProvider store={store}>
           <SafeAreaProvider>
-            <ThemeProvider>
-              <LanguageProvider>
-                <AppInitializer />
-              </LanguageProvider>
-            </ThemeProvider>
+            <AppInitializer />
           </SafeAreaProvider>
         </ReduxProvider>
       </SQLiteProvider>

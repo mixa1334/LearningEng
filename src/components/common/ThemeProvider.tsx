@@ -27,6 +27,47 @@ const darkTheme = {
   },
 };
 
+const hihikTheme = {
+  ...MD3DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    primary: "#FF5C6B",
+    onPrimary: "#1A0004",
+    primaryContainer: "#55000F",
+    onPrimaryContainer: "#FFE6EA",
+
+    secondary: "#FF6B81",
+    onSecondary: "#200008",
+    secondaryContainer: "#3A000E",
+    onSecondaryContainer: "#FFD6DF",
+
+    tertiary: "#FF8FA3",
+    onTertiary: "#24000A",
+    tertiaryContainer: "#420012",
+    onTertiaryContainer: "#FFE0E7",
+
+    background: "#080103",
+    onBackground: "#FFE6EA",
+
+    surface: "#1B0509",
+    onSurface: "#FFD6DF",
+    surfaceVariant: "#341018",
+    onSurfaceVariant: "#FFBECF",
+
+    outline: "#FF9FB1",
+    outlineVariant: "#7F4E5A",
+
+    error: "#FF4B5C",
+    onError: "#1A0004",
+
+    accept: "#FF6B81",
+    reject: "#FF4B5C",
+    onAcceptReject: "#FFFFFF",
+    text: "#FFD6DF",
+    shadow: "0 0 18px 0 rgba(255, 75, 92, 0.45)",
+  },
+};
+
 export type AppTheme = typeof lightTheme;
 
 export const useAppTheme = () => useTheme<AppTheme>();
@@ -34,17 +75,22 @@ export const useAppTheme = () => useTheme<AppTheme>();
 type ThemeContextType = {
   isDark: boolean;
   toggleTheme: () => void;
+  isHihik: boolean;
+  toggleHihikTheme: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
   toggleTheme: () => {},
+  isHihik: false,
+  toggleHihikTheme: () => {},
 });
 
 export const useThemeContext = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }: { readonly children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
+  const [isHihik, setIsHihik] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -61,14 +107,24 @@ export function ThemeProvider({ children }: { readonly children: React.ReactNode
     });
   }, []);
 
-  const theme = isDark ? darkTheme : lightTheme;
+  const toggleHihikTheme = useCallback(async () => {
+    setIsHihik((prev) => !prev);
+  }, []);
+
+  let theme = isDark ? darkTheme : lightTheme;
+
+  if (isHihik) {
+    theme = hihikTheme;
+  }
 
   const contextValue = useMemo(
     () => ({
       isDark,
       toggleTheme,
+      isHihik,
+      toggleHihikTheme,
     }),
-    [isDark, toggleTheme]
+    [isDark, toggleTheme, toggleHihikTheme, isHihik]
   );
 
   return (

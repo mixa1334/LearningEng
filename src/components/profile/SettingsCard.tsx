@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, IconButton, Switch, Text } from "react-native-paper";
 
+import { useUserData } from "@/src/hooks/useUserData";
 import { createBackupFileAndShare, restoreFromBackupFileUri } from "@/src/service/backupService";
 import { useAppDispatch } from "@/src/store";
 import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
@@ -12,6 +13,7 @@ import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
+import LottieView from "lottie-react-native";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
 import LoadingScreenSpinner from "../common/LoadingScreenSpinner";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
@@ -19,7 +21,8 @@ import ExpandedCard from "./ExpandedCard";
 
 export default function SettingsCard() {
   const dispatch = useAppDispatch();
-  const { isDark, toggleTheme } = useThemeContext();
+  const { name } = useUserData();
+  const { isDark, toggleTheme, toggleHihikTheme, isHihik } = useThemeContext();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
   const { text, changeLanguage, isReady, locale } = useLanguageContext();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -28,6 +31,8 @@ export default function SettingsCard() {
     { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
     { value: SupportedLocales.RUSSIAN, key: SupportedLocales.RUSSIAN, label: text("language_russian_label") },
   ];
+
+  const hihikUser = name.toLowerCase().includes("hihik");
 
   if (!isReady) {
     return <LoadingScreenSpinner />;
@@ -96,6 +101,18 @@ export default function SettingsCard() {
           <Text>{text("settings_dark_theme")}</Text>
           <Switch value={isDark} onValueChange={toggleTheme} disabled={isProcessing} />
         </View>
+        {hihikUser && (
+          <View style={styles.switcherSettingRow}>
+            <LottieView
+              source={require("@/assets/animations/like.json")}
+              autoPlay
+              loop={true}
+              resizeMode="contain"
+              style={styles.likeAnimation}
+            />
+            <Switch value={isHihik} onValueChange={toggleHihikTheme} disabled={isProcessing} />
+          </View>
+        )}
         <View style={styles.switcherSettingRow}>
           <Text>{text("language_title", { language: locale })}</Text>
           <IconButton icon="chevron-down" onPress={() => setIsLanguagePickerVisible(true)} />
@@ -139,5 +156,9 @@ const styles = StyleSheet.create({
   settingBtn: {
     marginVertical: 8,
     width: "50%",
+  },
+  likeAnimation: {
+    width: 50,
+    height: 50,
   },
 });

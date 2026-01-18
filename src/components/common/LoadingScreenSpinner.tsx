@@ -1,7 +1,8 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
+import LottieView from "lottie-react-native";
 import { useLanguageContext } from "./LanguageProvider";
 
 export default function LoadingScreenSpinner() {
@@ -12,7 +13,14 @@ export default function LoadingScreenSpinner() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text style={[styles.appName, { color: theme.colors.primary }]}>{text("loading_title")}</Text>
       <Text style={[styles.tagline, { color: theme.colors.onBackground }]}>{text("loading_tagline")}</Text>
-      <ActivityIndicator size="large" color={theme.colors.secondary} style={styles.spinner} />
+      <LottieView
+        source={require("@/assets/animations/book_stack.json")}
+        autoPlay
+        loop={true}
+        style={styles.bookStack}
+        speed={5}
+        resizeMode="contain"
+      />
       <Text style={[styles.loadingText, { color: theme.colors.onBackground }]}>{text("loading_preparing")}</Text>
     </View>
   );
@@ -40,8 +48,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 12,
   },
-  spinner: {
-    marginTop: 8,
+  bookStack: {
+    width: 150,
+    height: 150,
   },
   loadingText: {
     fontSize: 14,
