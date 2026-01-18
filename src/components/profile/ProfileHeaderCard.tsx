@@ -75,7 +75,7 @@ export default function ProfileHeaderCard() {
             variant="headlineSmall"
             style={[isHihik ? styles.hihikText : styles.name, { color: theme.colors.onPrimaryContainer }]}
           >
-            {truncate(name, 10)}
+            {truncate(name, isHihik ? 8 : 20)}
           </Text>
           <IconButton
             icon="pencil"
