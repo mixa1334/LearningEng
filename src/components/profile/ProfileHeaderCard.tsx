@@ -13,7 +13,7 @@ import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
 
 export default function ProfileHeaderCard() {
-  const { name, streak, changeName } = useUserData();
+  const { name, streak, changeName, dailyGoalAchieve } = useUserData();
   const { isHihik } = useThemeContext();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
@@ -87,7 +87,17 @@ export default function ProfileHeaderCard() {
       )}
 
       <View style={styles.streakRow}>
-        <Ionicons name="flame" size={28} color={theme.colors.primary} />
+        {dailyGoalAchieve ? (
+          <LottieView
+            source={isHihik ? require("@/assets/animations/like.json") : require("@/assets/animations/streak_fire.json")}
+            autoPlay
+            loop={true}
+            resizeMode="contain"
+            style={styles.streakFireAnimation}
+          />
+        ) : (
+          <Ionicons name="flame" size={28} color={theme.colors.primary} />
+        )}
         <Text style={[styles.streakText, { color: theme.colors.onPrimaryContainer }]}>
           {text("profile_streak_text", { count: streak })}
         </Text>
@@ -140,5 +150,9 @@ const styles = StyleSheet.create({
     fontFamily: "Iowan Old Style",
     fontSize: 32,
     fontWeight: "800",
+  },
+  streakFireAnimation: {
+    width: 45,
+    height: 45,
   },
 });
