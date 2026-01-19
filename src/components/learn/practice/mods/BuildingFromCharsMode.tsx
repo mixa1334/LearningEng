@@ -2,7 +2,7 @@ import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/arrayHelper";
 import * as Haptics from "expo-haptics";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useLanguageContext } from "../../../common/LanguageProvider";
@@ -20,7 +20,7 @@ const HIGHLIGHT_DELAY = 500;
 function buildLetterPool(word: string): LetterTile[] {
   const chars = word.split("");
   const tiles: LetterTile[] = chars.map((char, index) => ({
-    id: index + 1,
+    id: index,
     char,
   }));
   return shuffleArray(tiles);
@@ -35,27 +35,27 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
   const [withoutMistakesCount, setWithoutMistakesCount] = useState(0);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [madeMistakeOnWord, setMadeMistakeOnWord] = useState(false);
 
-  const initialWord = words[0]?.word_en?.toUpperCase()?.trim?.() ?? "";
-  const [letterPool, setLetterPool] = useState<LetterTile[]>(initialWord ? buildLetterPool(initialWord) : []);
-  const [usedLetterIds, setUsedLetterIds] = useState<number[]>([]);
+  const [word, setWord] = useState(words[currentWordIndex].word_en.toUpperCase());
+  const [letterPool, setLetterPool] = useState<LetterTile[]>(buildLetterPool(word));
+  const [usedLetters, setUsedLetters] = useState<LetterTile[]>([]);
+  const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
   const [incorrectLetterId, setIncorrectLetterId] = useState<number | null>(null);
   const [isWordHighlighted, setIsWordHighlighted] = useState(false);
 
   const moveToNextWord = () => {
     const newWithoutMistakesCount = withoutMistakesCount + (madeMistakeOnWord ? 0 : 1);
     setWithoutMistakesCount(newWithoutMistakesCount);
+    setUsedLetters([]);
     setIsWordHighlighted(false);
     setIncorrectLetterId(null);
-    setUsedLetterIds([]);
     setMadeMistakeOnWord(false);
+    setCurrentLetterIndex(0);
 
-    const nextIndex = currentIndex + 1;
-    if (nextIndex >= words.length) {
+    const nextWordIndex = currentWordIndex + 1;
+    if (nextWordIndex >= words.length) {
       setHasFinished(true);
       props.onEndCurrentSet?.(
         text("practice_builder_end_message", {
@@ -65,44 +65,16 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
       );
       return;
     }
-    const nextWord = words[nextIndex];
-    setLetterPool(buildLetterPool(nextWord.word_en.toUpperCase().trim()));
-    setCurrentIndex(nextIndex);
+    const nextWord = words[nextWordIndex].word_en.toUpperCase();
+    setWord(nextWord);
+    setLetterPool(buildLetterPool(nextWord));
+    setCurrentWordIndex(nextWordIndex);
     triggerScroll();
   };
 
-  const handleSelectLetter = (tile: LetterTile) => {
-    if (isWordHighlighted) return;
-    if (usedLetterIds.includes(tile.id)) return;
-
-    const pickedCount = usedLetterIds.length;
-    const expectedChar = words[currentIndex].word_en[pickedCount];
-
-    if (!expectedChar) {
-      return;
-    }
-
-    const pickedChar = tile.char;
-
-    if (pickedChar.toLowerCase() === expectedChar.toLowerCase()) {
-      const newUsed = [...usedLetterIds, tile.id];
-      setUsedLetterIds(newUsed);
-      setIncorrectLetterId(null);
-
-      if (newUsed.length === words[currentIndex].word_en.length) {
-        setIsWordHighlighted(true);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        const timeout = setTimeout(() => {
-          moveToNextWord();
-        }, HIGHLIGHT_DELAY);
-        return () => clearTimeout(timeout);
-      }
-
-      return;
-    }
-
+  const handleIncorrectPick = (id: number) => {
     setMadeMistakeOnWord(true);
-    setIncorrectLetterId(tile.id);
+    setIncorrectLetterId(id);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     const timeout = setTimeout(() => {
       setIncorrectLetterId(null);
@@ -110,37 +82,49 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
     return () => clearTimeout(timeout);
   };
 
-  const selectedLetters = useMemo(() => {
-    const usedSet = new Set(usedLetterIds);
-    const orderedTiles = letterPool.filter((tile) => usedSet.has(tile.id)).sort((a, b) => a.id - b.id);
-    return orderedTiles;
-  }, [letterPool, usedLetterIds]);
+  const handleCorrectPick = (tile: LetterTile) => {
+    setIncorrectLetterId(null);
+    setUsedLetters(prev => [...prev, tile]);
+
+    const newLetterIndex = currentLetterIndex + 1;
+    setCurrentLetterIndex(newLetterIndex);
+    if (newLetterIndex === word.length) {
+      setIsWordHighlighted(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      const timeout = setTimeout(() => {
+        moveToNextWord();
+      }, HIGHLIGHT_DELAY);
+      return () => clearTimeout(timeout);
+    }
+  };
+
+  const handleSelectLetter = (tile: LetterTile) => {
+    if (isWordHighlighted) return;
+    return tile.char === word[currentLetterIndex] ? handleCorrectPick(tile) : handleIncorrectPick(tile.id);
+  };
 
   if (hasFinished || words.length === 0) return null;
 
-  const length = words[currentIndex].word_en.length;
-
   return (
     <View style={styles.container}>
-        <View style={styles.sessionContent}>
-          <View
-            style={[
-              styles.modeCard,
-              { backgroundColor: theme.colors.surfaceVariant },
-              getCardShadow(theme),
-            ]}
-          >
+      <View style={styles.sessionContent}>
+        <View
+          style={[
+            styles.modeCard,
+            { backgroundColor: theme.colors.surfaceVariant },
+            getCardShadow(theme),
+          ]}
+        >
           <View style={styles.wordHeader}>
             <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>
               {text("practice_builder_ru_label")}
             </Text>
-            <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurfaceVariant }]}>{words[currentIndex].word_ru}</Text>
+            <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurfaceVariant }]}>{words[currentWordIndex].word_ru}</Text>
           </View>
 
           <View style={styles.letterBoxesRow}>
-            {Array.from({ length }).map((_, index) => {
-              const filledTile = selectedLetters[index];
-              const isFilled = !!filledTile;
+            {[...word].map((char, index) => {
+              const isFilled = index < currentLetterIndex;
 
               return (
                 <View
@@ -169,7 +153,7 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
                       isFilled && { color: theme.colors.onPrimaryContainer },
                     ]}
                   >
-                    {filledTile ? filledTile.char : ""}
+                    {isFilled ? char : ""}
                   </Text>
                 </View>
               );
@@ -178,7 +162,7 @@ export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
 
           <View style={styles.letterPool}>
             {letterPool.map((tile) => {
-              const isUsed = usedLetterIds.includes(tile.id);
+              const isUsed = usedLetters.includes(tile);
               const isIncorrect = incorrectLetterId === tile.id;
 
               return (
