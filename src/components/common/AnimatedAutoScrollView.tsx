@@ -22,7 +22,7 @@ export default function AnimatedAutoScrollView({ children, headerTitle }: Animat
   const HEADER_HEIGHT = insets.top + SPACING_XXL;
   const contentHorizontalPadding = SPACING_MD;
   const contentTopPadding = insets.top * 1.5;
-  const contentBottomPadding = insets.bottom + SPACING_XXL + TAB_BAR_BASE_HEIGHT;
+  const contentBottomPadding = SPACING_XXL + TAB_BAR_BASE_HEIGHT + (Platform.OS === "android" ? insets.bottom : 0);
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
 
