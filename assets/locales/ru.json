@@ -85,6 +85,10 @@
   "word_show_translation": "Показать перевод",
   "word_continue_button": "Продолжить",
 
+  "practice_mode_title": "Режим практики",
+  "practice_mode_description": "Выберите режим практики, который вы хотите использовать",
+  "practice_pick_english_title": "Выберите слово",
+  "practice_pick_english_description": "Выберите правильный английский перевод слова из предложенных вариантов",
   "practice_overview_title": "Обзор",
   "practice_overview_description": "Просматривайте слова из словаря по одному и отмечайте те, которые вы знаете",
   "practice_pairs_title": "Пары",
@@ -105,6 +109,8 @@
   "practice_no_words_message": "Нет слов для практики",
   "practice_start_over_button": "Начать заново",
   "practice_continue_button": "Продолжить",
+
+  "practice_pick_english_end_message": "Вы допустили {{mistakes}} ошибок при выборе правильного английского перевода",
 
   "practice_builder_ru_label": "Русское слово",
   "practice_builder_end_message": "Вы собрали {{correct}} из {{total}} слов без ошибок",

@@ -85,6 +85,11 @@
   "word_show_translation": "Show translation",
   "word_continue_button": "Continue",
 
+  "practice_mode_title": "Practice mode",
+  "practice_mode_description": "Choose the practice mode you want to use",
+
+  "practice_pick_english_title": "Pick the word",
+  "practice_pick_english_description": "Pick the correct English translation of the word from the given options",
   "practice_overview_title": "Review",
   "practice_overview_description": "Review your vocabulary words one by one and mark the ones you know",
   "practice_pairs_title": "Pairs",
@@ -105,6 +110,8 @@
   "practice_no_words_message": "No words to practice",
   "practice_start_over_button": "Start over",
   "practice_continue_button": "Continue",
+
+  "practice_pick_english_end_message": "You made {{mistakes}} mistakes while picking the correct English translation",
 
   "practice_builder_ru_label": "RU word",
   "practice_builder_end_message": "You solved {{correct}} / {{total}} words without mistakes",

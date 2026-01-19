@@ -8,17 +8,20 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Button, SegmentedButtons } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 import { useAutoScroll } from "../../common/AutoScrollContext";
 import { getCardShadow } from "../../common/cardShadow";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
+import { ValuePickerDialog } from "../../common/ValuePickerDialog";
+import PickCorrectEnglishWordMode from "./mods/PickCorrectEnglishWordMode";
 
 export enum ExtraMode {
   OVERVIEW = "OVERVIEW",
   PAIRS = "PAIRS",
   BUILDER = "BUILDER",
+  PICK_ENGLISH = "PICK_ENGLISH",
 }
 
 const PracticeModeComponents: Record<
@@ -48,6 +51,12 @@ const PracticeModeComponents: Record<
     descriptionTextKey: "practice_builder_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
+  [ExtraMode.PICK_ENGLISH]: {
+    component: PickCorrectEnglishWordMode,
+    titleTextKey: "practice_pick_english_title",
+    descriptionTextKey: "practice_pick_english_description",
+    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
+  },
 };
 
 export default function PracticeMain() {
@@ -58,22 +67,28 @@ export default function PracticeMain() {
   const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(ExtraMode.OVERVIEW);
   const [isSessionStarted, setIsSessionStarted] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const [isModeMenuVisible, setIsModeMenuVisible] = useState(false);
 
   const ActiveModeComponent = PracticeModeComponents[activeExtraMode].component;
   const activeModeTitleKey = PracticeModeComponents[activeExtraMode].titleTextKey;
 
   const extraModeLabels = [
-    { value: ExtraMode.OVERVIEW, label: text("practice_overview_title") },
-    { value: ExtraMode.PAIRS, label: text("practice_pairs_title") },
-    { value: ExtraMode.BUILDER, label: text("practice_builder_title") },
+    { value: ExtraMode.OVERVIEW, key: ExtraMode.OVERVIEW, label: text("practice_overview_title") },
+    { value: ExtraMode.PAIRS, key: ExtraMode.PAIRS, label: text("practice_pairs_title") },
+    { value: ExtraMode.BUILDER, key: ExtraMode.BUILDER, label: text("practice_builder_title") },
+    { value: ExtraMode.PICK_ENGLISH, key: ExtraMode.PICK_ENGLISH, label: text("practice_pick_english_title") },
   ];
 
   const handleModeChange = (newMode: ExtraMode) => {
+    setIsModeMenuVisible(false);
     setIsSessionStarted(false);
     resetPracticeSet();
     setActiveExtraMode(newMode);
     setIsSettingsVisible(false);
   };
+
+  const activeModeLabel =
+    extraModeLabels.find((mode) => mode.value === activeExtraMode)?.label ?? "";
 
   const handleSessionStart = () => {
     setIsSessionStarted(true);
@@ -138,20 +153,40 @@ export default function PracticeMain() {
           <MaterialIcons name="settings" size={24} color={isSettingsVisible ? theme.colors.onError : theme.colors.onSurface} />
         </Pressable>
 
-        <SegmentedButtons
-          style={styles.segmentedButtons}
-          value={activeExtraMode}
-          onValueChange={handleModeChange}
-          buttons={extraModeLabels.map((btn) => ({
-            ...btn,
-            style: {
-              backgroundColor: btn.value === activeExtraMode ? theme.colors.secondary : theme.colors.surface,
-            },
-            labelStyle: {
-              color: btn.value === activeExtraMode ? theme.colors.onSecondary : theme.colors.onSurface,
-            },
-          }))}
-        />
+        <View style={styles.modeDropdownContainer}>
+          <Pressable
+            onPress={() => setIsModeMenuVisible(true)}
+            style={({ pressed }) => [
+              styles.modeDropdownHeader,
+              {
+                backgroundColor: theme.colors.surface,
+                borderColor: theme.colors.outline,
+                opacity: pressed ? 0.9 : 1,
+                transform: [{ scale: pressed ? 0.97 : 1 }],
+              },
+            ]}
+          >
+            <Text
+              style={[styles.modeDropdownLabel, { color: theme.colors.onSurface }]}
+              numberOfLines={1}
+            >
+              {activeModeLabel}
+            </Text>
+            <MaterialIcons
+              name={"expand-more"}
+              size={22}
+              color={theme.colors.onSurface}
+            />
+          </Pressable>
+          <ValuePickerDialog
+            entityTitle={text("practice_mode_title")}
+            description={text("practice_mode_description")}
+            visible={isModeMenuVisible}
+            onClose={() => setIsModeMenuVisible(false)}
+            options={extraModeLabels}
+            onSelectOption={handleModeChange}
+          />
+        </View>
       </View>
     );
   };
@@ -213,11 +248,31 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 10,
   },
-  segmentedButtons: {
+  modeDropdownContainer: {
     flexGrow: 1,
     flexShrink: 1,
     width: "100%",
     marginTop: 8,
+  },
+  modeDropdownHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  modeDropdownLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "500",
+    marginRight: 8,
+  },
+  modeDropdownMenu: {
+    marginTop: 6,
+    borderRadius: 12,
+    overflow: "hidden",
   },
   centered: {
     flex: 1,
