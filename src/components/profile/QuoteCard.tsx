@@ -1,11 +1,12 @@
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import { getDailyQuote, Quote } from "@/src/service/dailyQuoteService";
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native"; // Added ActivityIndicator
+import { StyleSheet, View } from "react-native"; // Added ActivityIndicator
 import { IconButton, Text } from "react-native-paper";
 
-import { useLanguageContext } from "../common/LanguageProvider";
 import { getCardShadow } from "../common/cardShadow";
+import { useLanguageContext } from "../common/LanguageProvider";
+import { LoadingContentSpinner } from "../common/LoadingContentSpinner";
 import { useAppTheme } from "../common/ThemeProvider";
 
 export default function QuoteCard() {
@@ -36,7 +37,7 @@ export default function QuoteCard() {
 
   const renderContent = () => {
     if (isLoading && !quote) {
-      return <ActivityIndicator color={theme.colors.onTertiary} style={styles.loader} />;
+      return <LoadingContentSpinner />;
     }
 
     if (isError) {

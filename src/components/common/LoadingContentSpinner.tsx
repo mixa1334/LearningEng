@@ -1,10 +1,17 @@
+import LottieView from "lottie-react-native";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
 
 export const LoadingContentSpinner = () => (
   <View style={styles.centered}>
-    <ActivityIndicator animating={true} size="large" />
+    
+    <LottieView
+      source={require("@/assets/animations/loading_animation.json")}
+      autoPlay
+      loop={true}
+      resizeMode="contain"
+      style={styles.loadingAnimation}
+    />
   </View>
 );
 
@@ -13,5 +20,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  loadingAnimation: {
+    width: 200,
+    height: 100,
   },
 });
