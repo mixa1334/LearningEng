@@ -27,7 +27,7 @@ const darkTheme = {
   },
 };
 
-const hihikTheme = {
+const hihikDarkTheme = {
   ...MD3DarkTheme,
   colors: {
     ...MD3DarkTheme.colors,
@@ -65,6 +65,47 @@ const hihikTheme = {
     onAcceptReject: "#FFFFFF",
     text: "#FFD6DF",
     shadow: "0 0 18px 0 rgba(255, 75, 92, 0.45)",
+  },
+};
+
+const hihikLightTheme = {
+  ...MD3LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: "#FF5C6B",
+    onPrimary: "#FFFFFF",
+    primaryContainer: "#FFE6EA",
+    onPrimaryContainer: "#3A0010",
+
+    secondary: "#FF6B81",
+    onSecondary: "#FFFFFF",
+    secondaryContainer: "#FFD6DF",
+    onSecondaryContainer: "#3A0010",
+
+    tertiary: "#FF8FA3",
+    onTertiary: "#FFFFFF",
+    tertiaryContainer: "#FFE0E7",
+    onTertiaryContainer: "#3A0010",
+
+    background: "#FFF8F9",
+    onBackground: "#1F0006",
+
+    surface: "#FFEDEF",
+    onSurface: "#1F0006",
+    surfaceVariant: "#FFD6DF",
+    onSurfaceVariant: "#3A0010",
+
+    outline: "#C73F50",
+    outlineVariant: "#F49AA9",
+
+    error: "#FF4B5C",
+    onError: "#FFFFFF",
+
+    accept: "#FF6B81",
+    reject: "#FF4B5C",
+    onAcceptReject: "#FFFFFF",
+    text: "#3A0010",
+    shadow: "0 0 18px 0 rgba(255, 92, 107, 0.35)",
   },
 };
 
@@ -112,9 +153,8 @@ export function ThemeProvider({ children }: { readonly children: React.ReactNode
   }, []);
 
   let theme = isDark ? darkTheme : lightTheme;
-
   if (isHihik) {
-    theme = hihikTheme;
+    theme = isDark ? hihikDarkTheme : hihikLightTheme;
   }
 
   const contextValue = useMemo(
