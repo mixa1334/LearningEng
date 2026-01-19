@@ -26,7 +26,7 @@ function buildLetterPool(word: string): LetterTile[] {
   return shuffleArray(tiles);
 }
 
-export default function BuildingFromCharsMode(props: PracticeModeChildProps) {
+export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildProps>) {
   const theme = useAppTheme();
   const { triggerScroll } = useAutoScroll();
   const { words } = usePractice();

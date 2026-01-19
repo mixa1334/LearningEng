@@ -41,12 +41,9 @@ export default function PickCorrectEnglishWordMode(
     const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
 
     const moveToNextWord = () => {
-        setMadeMistake(prev => {
-            if (prev) {
-                setMistakesCount(prev => prev + 1);
-            }
-            return false;
-        });
+        const mistakes = madeMistake ? mistakesCount + 1 : mistakesCount;
+        setMadeMistake(false);
+        setMistakesCount(mistakes);
         setIsCorrect(false);
         setIsIncorrect(false);
         const newWordIndex = currentWordIndex + 1;
@@ -54,9 +51,10 @@ export default function PickCorrectEnglishWordMode(
             setHasFinished(true);
             props.onEndCurrentSet?.(
                 text("practice_pick_english_end_message", {
-                    mistakes: mistakesCount,
+                    mistakes: mistakes,
                 })
             );
+            return;
         }
         setCurrentWordIndex(newWordIndex);
         setOptions(buildOptions(words, words[newWordIndex]));

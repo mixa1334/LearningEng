@@ -5,7 +5,7 @@ import { useLanguageContext } from "../../../common/LanguageProvider";
 import WordCard from "../../WordCard";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
-export default function QuickOverview({ onEndCurrentSet }: PracticeModeChildProps) {
+export default function QuickOverview({ onEndCurrentSet }: Readonly<PracticeModeChildProps>) {
   const { words } = usePractice();
   const { text } = useLanguageContext();
 
