@@ -56,7 +56,9 @@ export async function addNewCategory(
 export async function getAllCategories(limit: number): Promise<Category[]> {
   return getDbInstance().getAllAsync<Category>(
     `SELECT id, name, type, icon
-    FROM categories LIMIT ?`,
+    FROM categories
+    ORDER BY id DESC
+    LIMIT ?`,
     [limit]
   );
 }
@@ -65,7 +67,8 @@ export async function getCategoriesByType(categoryType: EntityType): Promise<Cat
   return getDbInstance().getAllAsync<Category>(
     `SELECT id, name, type, icon
     FROM categories
-    WHERE type = ?`,
+    WHERE type = ?
+    ORDER BY id DESC`,
     [categoryType]
   );
 }
