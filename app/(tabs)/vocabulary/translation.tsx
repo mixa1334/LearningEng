@@ -4,14 +4,14 @@ import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { SPACING_XL, SPACING_XXL, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import { SPACING_XL, SPACING_XXL, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
 import { sendUserError } from "@/src/util/userAlerts";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, Platform, StyleSheet, View } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -26,6 +26,7 @@ export default function TranslationPage() {
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = SPACING_XXL;
+  const pageBottomPadding = (Platform.OS === "android" ? insets.bottom : SPACING_XXS) + TAB_BAR_BASE_HEIGHT;
 
   const switchLanguages = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
@@ -68,7 +69,7 @@ export default function TranslationPage() {
         styles.container,
         {
           paddingTop: pageTopPadding,
-          paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
+          paddingBottom: pageBottomPadding,
           paddingHorizontal: pageHorizontalPadding,
           backgroundColor: theme.colors.background,
         },
