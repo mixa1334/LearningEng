@@ -1,4 +1,4 @@
-import { useThemeContext } from "@/src/components/common/ThemeProvider";
+import { useAppTheme, useThemeContext } from "@/src/components/common/ThemeProvider";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
@@ -13,6 +13,7 @@ import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
+import * as Haptics from "expo-haptics";
 import LottieView from "lottie-react-native";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
 import LoadingScreenSpinner from "../common/LoadingScreenSpinner";
@@ -26,6 +27,7 @@ export default function SettingsCard() {
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
   const { text, changeLanguage, isReady, locale } = useLanguageContext();
   const [isProcessing, setIsProcessing] = useState(false);
+  const theme = useAppTheme();
 
   const languageOptions = [
     { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
@@ -94,6 +96,11 @@ export default function SettingsCard() {
     changeLanguage(locale);
   };
 
+  const handlePickLanguage = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setIsLanguagePickerVisible(true)
+  };
+
   return (
     <ExpandedCard title={text("settings_title")} icon="settings" autoScroll={true} touchableOpacity={1}>
       <View style={{ marginTop: SPACING_MD }}>
@@ -115,7 +122,8 @@ export default function SettingsCard() {
         )}
         <View style={styles.switcherSettingRow}>
           <Text>{text("language_title", { language: locale })}</Text>
-          <IconButton icon="chevron-down" onPress={() => setIsLanguagePickerVisible(true)} />
+          <IconButton style={{ backgroundColor: theme.colors.primary }}
+            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} />
           <ValuePickerDialog
             entityTitle={text("language")}
             description={text("language_description")}
