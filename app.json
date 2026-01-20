@@ -7,7 +7,7 @@
     "scheme": "pocketeng",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "icon": "./assets/images/app_icon_splash.png",
+    "icon": "./assets/images/app_pocket.png",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kmsprod.pocketeng",
@@ -34,13 +34,13 @@
         "expo-splash-screen",
         {
           "ios": {
-            "backgroundColor": "#ffffff",
-            "image": "./assets/images/app_icon_splash.png",
+            "backgroundColor": "#0c7cff",
+            "image": "./assets/images/app_pocket.png",
             "resizeMode": "cover"
           },
           "android": {
             "backgroundColor": "#0c7cff",
-            "image": "./assets/images/app_icon_splash.png",
+            "image": "./assets/images/app_pocket.png",
             "imageWidth": 150
           }
         }
