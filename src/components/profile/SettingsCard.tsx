@@ -16,7 +16,6 @@ import * as DocumentPicker from "expo-document-picker";
 import * as Haptics from "expo-haptics";
 import LottieView from "lottie-react-native";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
-import LoadingScreenSpinner from "../common/LoadingScreenSpinner";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
 import ExpandedCard from "./ExpandedCard";
 
@@ -25,7 +24,7 @@ export default function SettingsCard() {
   const { name } = useUserData();
   const { isDark, toggleTheme, toggleHihikTheme, isHihik } = useThemeContext();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
-  const { text, changeLanguage, isReady, locale } = useLanguageContext();
+  const { text, changeLanguage, locale } = useLanguageContext();
   const [isProcessing, setIsProcessing] = useState(false);
   const theme = useAppTheme();
 
@@ -35,10 +34,6 @@ export default function SettingsCard() {
   ];
 
   const hihikUser = name.toLowerCase().includes("hihik");
-
-  if (!isReady) {
-    return <LoadingScreenSpinner />;
-  }
 
   const handleBackup = async () => {
     try {
@@ -122,8 +117,8 @@ export default function SettingsCard() {
         )}
         <View style={styles.switcherSettingRow}>
           <Text>{text("language_title", { language: locale })}</Text>
-          <IconButton style={{ backgroundColor: theme.colors.primary }}
-            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} />
+          <IconButton style={{ backgroundColor: theme.colors.primary, opacity: isProcessing ? 0.5 : 1 }}
+            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} disabled={isProcessing}/>
           <ValuePickerDialog
             entityTitle={text("language")}
             description={text("language_description")}
