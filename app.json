@@ -1,12 +1,13 @@
 {
   "expo": {
-    "name": "Pocket Eng",
+    "name": "Pocket English",
     "slug": "pocket-eng",
-    "version": "2.3.2",
+    "version": "2.3.5",
     "orientation": "portrait",
     "scheme": "pocketeng",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "icon": "./assets/images/app_icon_splash.png",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kmsprod.pocketeng",
@@ -28,7 +29,22 @@
       "expo-router",
       "expo-sqlite",
       "expo-localization",
-      "expo-audio"
+      "expo-audio",
+      [
+        "expo-splash-screen",
+        {
+          "ios": {
+            "backgroundColor": "#ffffff",
+            "image": "./assets/images/app_icon_splash.png",
+            "resizeMode": "cover"
+          },
+          "android": {
+            "backgroundColor": "#0c7cff",
+            "image": "./assets/images/app_icon_splash.png",
+            "imageWidth": 150
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
