@@ -7,7 +7,7 @@
     "scheme": "pocketeng",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "icon": "./assets/images/app_pocket.png",
+    "icon": "./assets/images/app_pocket_rofl.png",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kmsprod.pocketeng",
@@ -34,13 +34,13 @@
         "expo-splash-screen",
         {
           "ios": {
-            "backgroundColor": "#0c7cff",
-            "image": "./assets/images/app_pocket.png",
+            "backgroundColor": "#753e9b",
+            "image": "./assets/images/app_pocket_rofl.png",
             "resizeMode": "cover"
           },
           "android": {
-            "backgroundColor": "#0c7cff",
-            "image": "./assets/images/app_pocket.png",
+            "backgroundColor": "#753e9b",
+            "image": "./assets/images/app_pocket_rofl.png",
             "imageWidth": 150
           }
         }
