@@ -151,7 +151,7 @@
   "vocabulary_edit_category_delete_button": "Delete",
   "vocabulary_edit_category_update_button": "Update",
 
-  "vocabulary_category_default_label": "Category",
+  "vocabulary_category_default_label": "All",
   "vocabulary_category_picker_title": "category",
   "vocabulary_category_picker_description": "Choose a category to assign. You can change it later.",
 
