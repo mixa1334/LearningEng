@@ -1,3 +1,4 @@
+import AudioMode from "@/src/components/learn/practice/mods/AudioMode";
 import BuildingFromCharsMode from "@/src/components/learn/practice/mods/BuildingFromCharsMode";
 import MatchPairsMode from "@/src/components/learn/practice/mods/MatchPairsMode";
 import QuickOverview from "@/src/components/learn/practice/mods/QuickOverview";
@@ -22,6 +23,7 @@ export enum ExtraMode {
   PAIRS = "PAIRS",
   BUILDER = "BUILDER",
   PICK_ENGLISH = "PICK_ENGLISH",
+  AUDIO = "AUDIO",
 }
 
 const PracticeModeComponents: Record<
@@ -57,6 +59,12 @@ const PracticeModeComponents: Record<
     descriptionTextKey: "practice_pick_english_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
   },
+  [ExtraMode.AUDIO]: {
+    component: AudioMode,
+    titleTextKey: "practice_audio_title",
+    descriptionTextKey: "practice_audio_description",
+    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
+  },
 };
 
 export default function PracticeMain() {
@@ -77,6 +85,7 @@ export default function PracticeMain() {
     { value: ExtraMode.PAIRS, key: ExtraMode.PAIRS, label: text("practice_pairs_title") },
     { value: ExtraMode.BUILDER, key: ExtraMode.BUILDER, label: text("practice_builder_title") },
     { value: ExtraMode.PICK_ENGLISH, key: ExtraMode.PICK_ENGLISH, label: text("practice_pick_english_title") },
+    { value: ExtraMode.AUDIO, key: ExtraMode.AUDIO, label: text("practice_audio_title") },
   ];
 
   const handleModeChange = (newMode: ExtraMode) => {

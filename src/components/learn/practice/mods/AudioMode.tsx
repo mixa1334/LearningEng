@@ -5,7 +5,9 @@ import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/arrayHelper";
 import * as Haptics from "expo-haptics";
-import { useState } from "react";
+import * as Speech from "expo-speech";
+import LottieView from "lottie-react-native";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
@@ -23,9 +25,7 @@ const buildOptions = (words: Word[], currentWord: Word) => {
     ];
 };
 
-export default function PickCorrectEnglishWordMode(
-    props: Readonly<PracticeModeChildProps>
-) {
+export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     const theme = useAppTheme();
     const { words } = usePractice();
     const { text } = useLanguageContext();
@@ -39,6 +39,29 @@ export default function PickCorrectEnglishWordMode(
     const [isCorrect, setIsCorrect] = useState(false);
     const [isIncorrect, setIsIncorrect] = useState(false);
     const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        playAudio();
+    }, [currentWordIndex])
+
+    const playAudio = () => {
+        if (isPlaying) {
+            Speech.stop();
+            setIsPlaying(false);
+            return;
+        }
+
+        setIsPlaying(true);
+        Speech.speak(words[currentWordIndex].word_en, {
+            language: "en",
+            pitch: 1,
+            rate: 0.3,
+            onDone: () => { setTimeout(() => setIsPlaying(false), 500); },
+            onStopped: () => setIsPlaying(false),
+            onError: () => setIsPlaying(false),
+        });
+    };
 
     const moveToNextWord = () => {
         const mistakes = madeMistake ? mistakesCount + 1 : mistakesCount;
@@ -50,7 +73,7 @@ export default function PickCorrectEnglishWordMode(
         if (newWordIndex >= words.length) {
             setHasFinished(true);
             props.onEndCurrentSet?.(
-                text("practice_pick_english_end_message", {
+                text("practice_audio_end_message", {
                     mistakes: mistakes,
                 })
             );
@@ -85,6 +108,8 @@ export default function PickCorrectEnglishWordMode(
         setSelectedOptionId(word.id);
         return word.id === words[currentWordIndex].id ? handleCorrectPick() : handleIncorrectPick();
     };
+
+    if (hasFinished || words.length === 0) return null;
 
     const renderOption = (option: Word) => {
         const isSelected = selectedOptionId === option.id;
@@ -126,13 +151,11 @@ export default function PickCorrectEnglishWordMode(
                         (isSuccess || isError) && { color: theme.colors.onAcceptReject },
                     ]}
                 >
-                    {option.word_en}
+                    {option.word_ru}
                 </Text>
             </Pressable>
         );
     };
-
-    if (hasFinished || words.length === 0) return null;
 
     return (
         <View style={styles.container}>
@@ -144,12 +167,41 @@ export default function PickCorrectEnglishWordMode(
                         getCardShadow(theme),
                     ]}
                 >
-                    <View style={styles.wordHeader}>
-                        <Text style={[styles.wordHeaderValue, { color: theme.colors.primary }]}>
-                            {words[currentWordIndex].word_ru}
-                        </Text>
-                    </View>
+                    {isPlaying ? (
+                        <LottieView
+                            source={require("@/assets/animations/playing.json")}
+                            autoPlay
+                            loop={true}
+                            speed={2}
+                            resizeMode="contain"
+                            style={styles.playAnimation}
+                        />
+                    ) : (
 
+                        <View style={styles.audioButtonContainer}>
+                            <Pressable
+                                onPress={playAudio}
+                                style={({ pressed }) => [
+                                    styles.audioButton,
+                                    {
+                                        backgroundColor: theme.colors.primary,
+                                        borderColor: theme.colors.primary,
+                                    },
+                                    pressed && {
+                                        opacity: 0.5,
+                                    },
+                                ]}
+                            >
+
+                                <Text style={[styles.audioButtonIcon, { color: theme.colors.onPrimary }]}>
+                                    ▶
+                                </Text>
+                                <Text style={[styles.audioButtonText, { color: theme.colors.onPrimary }]}>
+                                    {text("practice_audio_play_button")}
+                                </Text>
+                            </Pressable>
+                        </View>
+                    )}
                     <View style={styles.optionsContainer}>
                         {options.map(renderOption)}
                     </View>
@@ -173,27 +225,37 @@ const styles = StyleSheet.create({
         marginVertical: 16,
         padding: 10,
     },
-    wordHeader: {
-        justifyContent: "center",
+    audioButtonContainer: {
         alignItems: "center",
-        paddingVertical: 12,
-        paddingHorizontal: 12,
-        borderRadius: 12,
-        marginBottom: 20,
+        justifyContent: "center",
+        paddingVertical: 16,
     },
-    wordHeaderValue: {
-        fontSize: 28,
+    audioButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 999,
+        borderWidth: 2,
+        paddingVertical: 14,
+        paddingHorizontal: 26,
+        gap: 10,
+    },
+    audioButtonIcon: {
+        fontSize: 24,
         fontWeight: "800",
-        textAlign: "center",
+    },
+    audioButtonText: {
+        fontSize: 18,
+        fontWeight: "700",
     },
     optionsContainer: {
         flex: 1,
         justifyContent: "center",
         gap: 10,
         paddingHorizontal: 30,
+        paddingBottom: 10,
     },
     optionButton: {
-        flex: 1,
         borderRadius: 12,
         borderWidth: 1,
         paddingVertical: 10,
@@ -203,5 +265,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "600",
         textAlign: "center",
+    },
+    playAnimation: {
+        alignSelf: "center",
+        width: 100,
+        height: 100,
     },
 });

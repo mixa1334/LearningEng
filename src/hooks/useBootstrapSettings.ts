@@ -4,6 +4,7 @@ import { reloadPracticeThunk } from "@/src/store/slice/practiceSlice";
 import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
+import * as Audio from "expo-audio";
 import * as NavigationBar from 'expo-navigation-bar';
 import { Platform } from "react-native";
 type BootstrapStatus = "idle" | "pending" | "success" | "error";
@@ -15,9 +16,23 @@ let settingsError: unknown;
 function loadSettingsOnce(dispatch: AppDispatch) {
   if (!settingsPromise) {
     settingsStatus = "pending";
-    if(Platform.OS === 'android') {
+    if (Platform.OS === 'android') {
       NavigationBar.setVisibilityAsync('hidden');
     }
+
+    const configureAudio = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          playsInSilentMode: true,
+          allowsRecording: false,
+          interruptionMode: 'doNotMix',
+        });
+      } catch (error) {
+        console.error("Audio mode setup failed:", error);
+      }
+    };
+
+    configureAudio();
 
     settingsPromise = dispatch(loadUserDataThunk())
       .unwrap()
