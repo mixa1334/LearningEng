@@ -1,5 +1,6 @@
 import { THEMES } from "@/src/entity/types";
 import { getUserTheme, setUserTheme } from "@/src/service/userDataService";
+import * as Storage from "expo-sqlite/kv-store";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, useTheme } from "react-native-paper";
 
@@ -122,9 +123,9 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
-  toggleTheme: () => {},
+  toggleTheme: () => { },
   isHihik: false,
-  toggleHihikTheme: () => {},
+  toggleHihikTheme: () => { },
 });
 
 export const useThemeContext = () => useContext(ThemeContext);
@@ -137,10 +138,12 @@ export function ThemeProvider({ children }: { readonly children: React.ReactNode
     (async () => {
       const value = await getUserTheme();
       if (value === THEMES.DARK) setIsDark(true);
+      const hihikValue = await Storage.AsyncStorage.getItemAsync("isHihik");
+      if (hihikValue === "true") setIsHihik(true);
     })();
   }, []);
 
-  const toggleTheme = useCallback(async () => {
+  const toggleTheme = useCallback(() => {
     setIsDark((prev) => {
       const newIsDark = !prev;
       setUserTheme(newIsDark ? THEMES.DARK : THEMES.LIGHT);
@@ -148,8 +151,12 @@ export function ThemeProvider({ children }: { readonly children: React.ReactNode
     });
   }, []);
 
-  const toggleHihikTheme = useCallback(async () => {
-    setIsHihik((prev) => !prev);
+  const toggleHihikTheme = useCallback(() => {
+    setIsHihik((prev) => {
+      const newIsHihik = !prev;
+      Storage.AsyncStorage.setItemAsync("isHihik", newIsHihik.toString());
+      return newIsHihik;
+    });
   }, []);
 
   let theme = isDark ? darkTheme : lightTheme;
