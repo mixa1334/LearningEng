@@ -77,12 +77,21 @@ export default function ProfileHeaderCard() {
           >
             {truncate(name, isHihik ? 8 : 20)}
           </Text>
-          <IconButton
+          {!isHihik && (<IconButton
             icon="pencil"
             mode="contained"
             onPress={toggleEditableName}
             style={[styles.editBtn, { backgroundColor: theme.colors.surfaceVariant }]}
-          />
+          />)}
+          {isHihik && (
+            <LottieView
+              source={require("@/assets/animations/berry_frame.json")}
+              autoPlay
+              loop={true}
+              resizeMode="cover"
+              style={styles.berryFrame}
+            />
+          )}
         </View>
       )}
 
