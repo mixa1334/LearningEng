@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 
 export const LoadingContentSpinner = () => (
   <View style={styles.centered}>
-    
+
     <LottieView
       source={require("@/assets/animations/loading_animation.json")}
       autoPlay
@@ -17,7 +17,7 @@ export const LoadingContentSpinner = () => (
 
 const styles = StyleSheet.create({
   centered: {
-    flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },

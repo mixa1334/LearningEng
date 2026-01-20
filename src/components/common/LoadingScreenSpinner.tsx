@@ -2,8 +2,8 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
-import LottieView from "lottie-react-native";
 import { useLanguageContext } from "./LanguageProvider";
+import { LoadingContentSpinner } from "./LoadingContentSpinner";
 
 export default function LoadingScreenSpinner() {
   const theme = useTheme();
@@ -13,14 +13,7 @@ export default function LoadingScreenSpinner() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text style={[styles.appName, { color: theme.colors.primary }]}>{text("loading_title")}</Text>
       <Text style={[styles.tagline, { color: theme.colors.onBackground }]}>{text("loading_tagline")}</Text>
-      <LottieView
-        source={require("@/assets/animations/book_stack.json")}
-        autoPlay
-        loop={true}
-        style={styles.bookStack}
-        speed={5}
-        resizeMode="contain"
-      />
+      <LoadingContentSpinner />
       <Text style={[styles.loadingText, { color: theme.colors.onBackground }]}>{text("loading_preparing")}</Text>
     </View>
   );
@@ -35,6 +28,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   appName: {
+    fontFamily: "Iowan Old Style",
     fontSize: 30,
     fontWeight: "900",
     letterSpacing: 1.5,
@@ -42,6 +36,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tagline: {
+    fontFamily: "Iowan Old Style",
     fontSize: 16,
     fontWeight: "500",
     opacity: 0.7,
