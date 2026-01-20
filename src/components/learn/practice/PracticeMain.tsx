@@ -164,7 +164,10 @@ export default function PracticeMain() {
 
         <View style={styles.modeDropdownContainer}>
           <Pressable
-            onPress={() => setIsModeMenuVisible(true)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setIsModeMenuVisible(true);
+            }}
             style={({ pressed }) => [
               styles.modeDropdownHeader,
               {
