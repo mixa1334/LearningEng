@@ -21,11 +21,11 @@ export default function LoadingScreenSpinner() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999,
     justifyContent: "center",
     alignItems: "center",
     gap: 20,
-    paddingHorizontal: 24,
   },
   appName: {
     fontFamily: "Iowan Old Style",

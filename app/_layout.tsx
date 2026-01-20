@@ -1,5 +1,6 @@
 import { GoalAchieveOverlay } from "@/src/components/common/GoalAchieveOverlay";
 import { LanguageProvider } from "@/src/components/common/LanguageProvider";
+import { LoadingOverlayProvider } from "@/src/components/common/LoadingOverlayProvider";
 import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { runMigrations } from "@/src/database/migrations";
@@ -33,7 +34,9 @@ function AppInitializer() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <AppContent />
+        <LoadingOverlayProvider>
+          <AppContent />
+        </LoadingOverlayProvider>
       </LanguageProvider>
     </ThemeProvider>
   );

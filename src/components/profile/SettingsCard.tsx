@@ -16,16 +16,17 @@ import * as DocumentPicker from "expo-document-picker";
 import * as Haptics from "expo-haptics";
 import LottieView from "lottie-react-native";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
+import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
 import ExpandedCard from "./ExpandedCard";
 
 export default function SettingsCard() {
   const dispatch = useAppDispatch();
   const { name } = useUserData();
+  const { visible, show, hide } = useLoadingOverlay();
   const { isDark, toggleTheme, toggleHihikTheme, isHihik } = useThemeContext();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
   const { text, changeLanguage, locale } = useLanguageContext();
-  const [isProcessing, setIsProcessing] = useState(false);
   const theme = useAppTheme();
 
   const languageOptions = [
@@ -37,13 +38,13 @@ export default function SettingsCard() {
 
   const handleBackup = async () => {
     try {
-      setIsProcessing(true);
+      show();
       await createBackupFileAndShare();
     } catch (e) {
       console.error(e);
       Alert.alert(text("settings_backup_failed_title"), text("settings_backup_failed_message"));
     } finally {
-      setIsProcessing(false);
+      hide();
     }
   };
 
@@ -59,7 +60,7 @@ export default function SettingsCard() {
         return;
       }
 
-      setIsProcessing(true);
+      show();
       const uri = result.assets[0].uri;
       await restoreFromBackupFileUri(uri);
 
@@ -82,7 +83,7 @@ export default function SettingsCard() {
         e instanceof Error ? e.message : text("settings_restore_failed_message")
       );
     } finally {
-      setIsProcessing(false);
+      hide();
     }
   };
 
@@ -101,7 +102,7 @@ export default function SettingsCard() {
       <View style={{ marginTop: SPACING_MD }}>
         <View style={styles.switcherSettingRow}>
           <Text>{text("settings_dark_theme")}</Text>
-          <Switch value={isDark} onValueChange={toggleTheme} disabled={isProcessing} />
+          <Switch value={isDark} onValueChange={toggleTheme} />
         </View>
         {hihikUser && (
           <View style={styles.switcherSettingRow}>
@@ -112,13 +113,13 @@ export default function SettingsCard() {
               resizeMode="contain"
               style={styles.likeAnimation}
             />
-            <Switch value={isHihik} onValueChange={toggleHihikTheme} disabled={isProcessing} />
+            <Switch value={isHihik} onValueChange={toggleHihikTheme} />
           </View>
         )}
         <View style={styles.switcherSettingRow}>
           <Text>{text("language_title", { language: locale })}</Text>
-          <IconButton style={{ backgroundColor: theme.colors.primary, opacity: isProcessing ? 0.5 : 1 }}
-            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} disabled={isProcessing}/>
+          <IconButton style={{ backgroundColor: theme.colors.primary }}
+            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} />
           <ValuePickerDialog
             entityTitle={text("language")}
             description={text("language_description")}
@@ -129,10 +130,10 @@ export default function SettingsCard() {
           />
         </View>
         <View style={styles.backupRestoreRow}>
-          <Button mode="contained" style={styles.settingBtn} onPress={handleBackup} disabled={isProcessing}>
+          <Button mode="contained" style={styles.settingBtn} onPress={handleBackup}>
             {text("settings_backup_button")}
           </Button>
-          <Button mode="contained" style={styles.settingBtn} onPress={handleRestore} disabled={isProcessing}>
+          <Button mode="contained" style={styles.settingBtn} onPress={handleRestore}>
             {text("settings_restore_button")}
           </Button>
         </View>
