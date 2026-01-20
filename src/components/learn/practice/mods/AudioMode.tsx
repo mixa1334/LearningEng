@@ -4,6 +4,7 @@ import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/arrayHelper";
+import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";
@@ -167,18 +168,19 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
                         getCardShadow(theme),
                     ]}
                 >
-                    {isPlaying ? (
-                        <LottieView
-                            source={require("@/assets/animations/playing.json")}
-                            autoPlay
-                            loop={true}
-                            speed={2}
-                            resizeMode="contain"
-                            style={styles.playAnimation}
-                        />
-                    ) : (
 
-                        <View style={styles.audioButtonContainer}>
+                    <View style={styles.audioButtonContainer}>
+                        {isPlaying ? (
+                            <LottieView
+                                source={require("@/assets/animations/playing.json")}
+                                autoPlay
+                                loop={true}
+                                speed={2}
+                                resizeMode="contain"
+                                style={styles.playAnimation}
+                            />
+                        ) : (
+
                             <Pressable
                                 onPress={playAudio}
                                 style={({ pressed }) => [
@@ -192,16 +194,14 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
                                     },
                                 ]}
                             >
-
-                                <Text style={[styles.audioButtonIcon, { color: theme.colors.onPrimary }]}>
-                                    ▶
-                                </Text>
+                                <MaterialIcons name="play-arrow" size={24} color={theme.colors.onPrimary} />
                                 <Text style={[styles.audioButtonText, { color: theme.colors.onPrimary }]}>
                                     {text("practice_audio_play_button")}
                                 </Text>
                             </Pressable>
-                        </View>
-                    )}
+                        )}
+                    </View>
+
                     <View style={styles.optionsContainer}>
                         {options.map(renderOption)}
                     </View>
@@ -228,7 +228,8 @@ const styles = StyleSheet.create({
     audioButtonContainer: {
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 16,
+        marginVertical: 16,
+        maxHeight: 50,
     },
     audioButton: {
         flexDirection: "row",
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 999,
         borderWidth: 2,
-        paddingVertical: 14,
+        paddingVertical: 10,
         paddingHorizontal: 26,
         gap: 10,
     },
