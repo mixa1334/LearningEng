@@ -39,8 +39,8 @@ function CustomTabBarButton(props: BottomTabBarButtonProps) {
 function TabIcon({ iconName, focused }: IconProps) {
   const theme = useAppTheme();
 
-  const backgroundColor = focused ? theme.colors.onBackground : theme.colors.background;
-  const iconColor = focused ? theme.colors.background : theme.colors.onBackground;
+  const backgroundColor = focused ? theme.colors.onSurface : theme.colors.surface;
+  const iconColor = focused ? theme.colors.surface : theme.colors.onSurface;
 
   const iconSize = 24;
   const containerSize = 40;
