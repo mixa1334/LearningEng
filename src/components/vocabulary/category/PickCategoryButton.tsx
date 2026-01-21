@@ -36,7 +36,7 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
   })();
 
   return (
-    <>
+    <View>
       <Button
         mode="contained-tonal"
         style={[
@@ -49,12 +49,12 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
         contentStyle={styles.categorySelectorButtonContent}
       >
         <View style={styles.categorySelectorContent}>
-          {category && <Text style={styles.categoryEmoji}>{category.icon}</Text>}
+          <Text style={styles.categoryEmoji}>{category?.icon}</Text>
           <Text style={[styles.categoryLabel, { color: theme.colors.onSecondary }]}>{categoryName}</Text>
         </View>
       </Button>
       <CategoryPicker visible={showCategoryPicker} onClose={handleClose} onSelectCategory={handleSelectCategory} />
-    </>
+    </View>
   );
 }
 

@@ -85,6 +85,13 @@
   "word_show_translation": "Show translation",
   "word_continue_button": "Continue",
 
+  "practice_mode_title": "Practice mode",
+  "practice_mode_description": "Choose the practice mode you want to use",
+
+  "practice_pick_english_title": "Pick translation",
+  "practice_pick_english_description": "Pick the correct English translation of the word from the given options",
+  "practice_audio_title": "Listening",
+  "practice_audio_description": "Listen to the English word and pick the correct Russian translation",
   "practice_overview_title": "Review",
   "practice_overview_description": "Review your vocabulary words one by one and mark the ones you know",
   "practice_pairs_title": "Pairs",
@@ -94,6 +101,7 @@
   "practice_header_session": "{{mode}} session",
   "practice_end_button": "End",
   "practice_start_button": "Start",
+  "practice_audio_play_button": "Play",
 
   "practice_label_only_user_words": "Only user words",
   "practice_label_word_limit": "Word limit",
@@ -105,6 +113,9 @@
   "practice_no_words_message": "No words to practice",
   "practice_start_over_button": "Start over",
   "practice_continue_button": "Continue",
+
+  "practice_pick_english_end_message": "You made {{mistakes}} mistakes while picking the correct English translation",
+  "practice_audio_end_message": "You made {{mistakes}} mistakes while picking the correct Russian translation",
 
   "practice_builder_ru_label": "RU word",
   "practice_builder_end_message": "You solved {{correct}} / {{total}} words without mistakes",
@@ -140,7 +151,7 @@
   "vocabulary_edit_category_delete_button": "Delete",
   "vocabulary_edit_category_update_button": "Update",
 
-  "vocabulary_category_default_label": "Category",
+  "vocabulary_category_default_label": "All",
   "vocabulary_category_picker_title": "category",
   "vocabulary_category_picker_description": "Choose a category to assign. You can change it later.",
 

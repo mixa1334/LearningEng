@@ -85,6 +85,12 @@
   "word_show_translation": "Показать перевод",
   "word_continue_button": "Продолжить",
 
+  "practice_mode_title": "Режим практики",
+  "practice_mode_description": "Выберите режим практики, который вы хотите использовать",
+  "practice_pick_english_title": "Выбери перевод",
+  "practice_pick_english_description": "Выберите правильный английский перевод слова из предложенных вариантов",
+  "practice_audio_title": "Прослушивание",
+  "practice_audio_description": "Прослушайте английское слово и выберите правильный перевод на русском",
   "practice_overview_title": "Обзор",
   "practice_overview_description": "Просматривайте слова из словаря по одному и отмечайте те, которые вы знаете",
   "practice_pairs_title": "Пары",
@@ -94,8 +100,9 @@
   "practice_header_session": "Сессия: {{mode}}",
   "practice_end_button": "Завершить",
   "practice_start_button": "Начать",
+  "practice_audio_play_button": "Воспроизвести",
 
-  "practice_label_only_user_words": "Только пользовательские слова",
+  "practice_label_only_user_words": "Только свои слова",
   "practice_label_word_limit": "Лимит слов",
   "practice_label_category": "Категория",
   "practice_limit_title": "лимит практики",
@@ -105,6 +112,9 @@
   "practice_no_words_message": "Нет слов для практики",
   "practice_start_over_button": "Начать заново",
   "practice_continue_button": "Продолжить",
+
+  "practice_pick_english_end_message": "Вы допустили {{mistakes}} ошибок при выборе правильного английского перевода",
+  "practice_audio_end_message": "Вы допустили {{mistakes}} ошибок при выборе правильного русского перевода",
 
   "practice_builder_ru_label": "Русское слово",
   "practice_builder_end_message": "Вы собрали {{correct}} из {{total}} слов без ошибок",
@@ -140,7 +150,7 @@
   "vocabulary_edit_category_delete_button": "Удалить",
   "vocabulary_edit_category_update_button": "Обновить",
 
-  "vocabulary_category_default_label": "Категория",
+  "vocabulary_category_default_label": "Все",
   "vocabulary_category_picker_title": "категорию",
   "vocabulary_category_picker_description": "Выберите категорию для привязки. Вы сможете изменить её позже.",
 

@@ -28,7 +28,7 @@ const toWordTextPlate = (word: Word, isEnglish: boolean): WordTextPlate => {
   };
 };
 
-export default function MatchPairsMode({ onEndCurrentSet }: PracticeModeChildProps) {
+export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeModeChildProps>) {
   const { words } = usePractice();
   const theme = useAppTheme();
   const { text } = useLanguageContext();

@@ -1,17 +1,18 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_XL } from "@/src/resources/constants/layout";
-import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 
-import { useLanguageContext } from "../common/LanguageProvider";
+import LottieView from "lottie-react-native";
 import { getCardShadow } from "../common/cardShadow";
-import { useAppTheme } from "../common/ThemeProvider";
+import { useLanguageContext } from "../common/LanguageProvider";
+import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
 
 export default function DailyGoalCard() {
   const { dailyGoal, dailyGoalAchieve, changeGoal } = useUserData();
+  const { isHihik } = useThemeContext();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
 
@@ -31,41 +32,31 @@ export default function DailyGoalCard() {
   };
 
   return (
-    <View
-      style={[
-        styles.card,
-        { backgroundColor: backgroundColor },
-        getCardShadow(theme),
-      ]}
-    >
+    <View style={[styles.card, { backgroundColor: backgroundColor }, getCardShadow(theme)]}>
       <View style={styles.titleRow}>
-        <Text style={[styles.sectionTitle, { color: textColor }]}>
-          {text("profile_daily_goal_title")}
-        </Text>
+        <Text style={[styles.sectionTitle, { color: textColor }]}>{text("profile_daily_goal_title")}</Text>
         {dailyGoalAchieve && (
-          <Ionicons name="star" size={20} color="gold" />
+          <LottieView
+            source={isHihik ? require("@/assets/animations/teddy.json") : require("@/assets/animations/trophy_achieved.json")}
+            autoPlay
+            loop={true}
+            resizeMode="contain"
+            style={styles.trophyAchieved}
+          />
         )}
       </View>
       <View style={styles.row}>
         <IconButton
           icon="minus"
           mode="contained"
-          style={[
-            styles.roundBtn,
-            { backgroundColor: theme.colors.background },
-          ]}
+          style={[styles.roundBtn, { backgroundColor: theme.colors.background }]}
           onPress={decreaseGoal}
         />
-        <Text style={[styles.goalText, { color: textColor }]}>
-          {text("profile_daily_goal_value", { count: dailyGoal })}
-        </Text>
+        <Text style={[styles.goalText, { color: textColor }]}>{text("profile_daily_goal_value", { count: dailyGoal })}</Text>
         <IconButton
           icon="plus"
           mode="contained"
-          style={[
-            styles.roundBtn,
-            { backgroundColor: theme.colors.background },
-          ]}
+          style={[styles.roundBtn, { backgroundColor: theme.colors.background }]}
           onPress={increaseGoal}
         />
       </View>
@@ -103,5 +94,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     fontSize: 16,
     fontWeight: "600",
+  },
+  trophyAchieved: {
+    width: 50,
+    height: 50,
   },
 });

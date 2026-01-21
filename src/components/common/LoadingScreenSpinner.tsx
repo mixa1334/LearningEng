@@ -1,8 +1,9 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "./LanguageProvider";
+import { LoadingContentSpinner } from "./LoadingContentSpinner";
 
 export default function LoadingScreenSpinner() {
   const theme = useTheme();
@@ -12,7 +13,7 @@ export default function LoadingScreenSpinner() {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text style={[styles.appName, { color: theme.colors.primary }]}>{text("loading_title")}</Text>
       <Text style={[styles.tagline, { color: theme.colors.onBackground }]}>{text("loading_tagline")}</Text>
-      <ActivityIndicator size="large" color={theme.colors.secondary} style={styles.spinner} />
+      <LoadingContentSpinner />
       <Text style={[styles.loadingText, { color: theme.colors.onBackground }]}>{text("loading_preparing")}</Text>
     </View>
   );
@@ -20,13 +21,14 @@ export default function LoadingScreenSpinner() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999,
     justifyContent: "center",
     alignItems: "center",
     gap: 20,
-    paddingHorizontal: 24,
   },
   appName: {
+    fontFamily: "Iowan Old Style",
     fontSize: 30,
     fontWeight: "900",
     letterSpacing: 1.5,
@@ -34,14 +36,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   tagline: {
+    fontFamily: "Iowan Old Style",
     fontSize: 16,
     fontWeight: "500",
     opacity: 0.7,
     textAlign: "center",
     marginBottom: 12,
   },
-  spinner: {
-    marginTop: 8,
+  bookStack: {
+    width: 150,
+    height: 150,
   },
   loadingText: {
     fontSize: 14,

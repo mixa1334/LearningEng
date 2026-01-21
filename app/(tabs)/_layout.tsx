@@ -9,60 +9,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { GestureResponderEvent, Platform, Pressable, View } from "react-native";
 
-interface IconProps {
-  readonly iconName: keyof typeof MaterialIcons.glyphMap;
-  readonly focused: boolean;
-}
-
-function CustomTabBarButton(props: BottomTabBarButtonProps) {
-  const handlePress = (event: GestureResponderEvent) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    props.onPress?.(event);
-  };
-
-  return (
-    <Pressable
-      onPress={handlePress}
-      style={({ pressed }) => [
-        props.style,
-        {
-          opacity: pressed ? 0.7 : 1,
-          transform: [{ scale: pressed ? 0.95 : 1 }],
-        },
-      ]}
-    >
-      {props.children}
-    </Pressable>
-  );
-}
-
-function TabIcon({ iconName, focused }: IconProps) {
-  const theme = useAppTheme();
-
-  const backgroundColor = focused ? theme.colors.onBackground : theme.colors.background;
-  const iconColor = focused ? theme.colors.background : theme.colors.onBackground;
-
-  const iconSize = 24;
-  const containerSize = 40;
-
-  return (
-    <View
-      style={{
-        width: containerSize,
-        height: containerSize,
-        borderRadius: containerSize / 2,
-        backgroundColor: backgroundColor,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <MaterialIcons name={iconName} size={iconSize} color={iconColor} />
-    </View>
-  );
-}
-
 export default function TabLayout() {
-  const theme = useAppTheme();
   const { text } = useLanguageContext();
 
   return (
@@ -78,23 +25,7 @@ export default function TabLayout() {
           position: "absolute",
           height: TAB_BAR_BASE_HEIGHT,
         },
-        tabBarBackground: () =>
-          Platform.OS === "ios" ? (
-            <BlurView
-              intensity={100}
-              tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
-              style={{
-                flex: 1,
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: theme.colors.surface,
-              }}
-            />
-          ),
+        tabBarBackground: () => <TabBarBackground />,
         headerShown: false,
       }}
     >
@@ -123,5 +54,73 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+  );
+}
+
+function TabBarBackground() {
+  const theme = useAppTheme();
+
+  if (Platform.OS === "ios") {
+    return (<BlurView
+      intensity={100}
+      tint={theme.dark ? "systemUltraThinMaterialDark" : "systemUltraThinMaterialLight"}
+      style={{
+        flex: 1,
+      }}
+    />);
+  }
+
+  return <View style={{ flex: 1, backgroundColor: theme.colors.surface }} />;
+}
+
+function CustomTabBarButton(props: BottomTabBarButtonProps) {
+  
+  const handlePress = (event: GestureResponderEvent) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    props.onPress?.(event);
+  };
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      style={({ pressed }) => [
+        props.style,
+        {
+          opacity: pressed ? 0.7 : 1,
+          transform: [{ scale: pressed ? 0.95 : 1 }],
+        },
+      ]}
+    >
+      {props.children}
+    </Pressable>
+  );
+}
+
+interface IconProps {
+  readonly iconName: keyof typeof MaterialIcons.glyphMap;
+  readonly focused: boolean;
+}
+
+function TabIcon({ iconName, focused }: IconProps) {
+  const theme = useAppTheme();
+
+  const backgroundColor = focused ? theme.colors.onSurface : theme.colors.surface;
+  const iconColor = focused ? theme.colors.surface : theme.colors.onSurface;
+
+  const containerSize = 40;
+
+  return (
+    <View
+      style={{
+        width: containerSize,
+        height: containerSize,
+        borderRadius: containerSize / 2,
+        backgroundColor: backgroundColor,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <MaterialIcons name={iconName} size={24} color={iconColor} />
+    </View>
   );
 }

@@ -6,19 +6,29 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, TextInput } from "react-native-paper";
 
-import { useLanguageContext } from "../common/LanguageProvider";
+import { truncate } from "@/src/util/stringHelper";
+import LottieView from "lottie-react-native";
 import { getCardShadow } from "../common/cardShadow";
-import { useAppTheme } from "../common/ThemeProvider";
+import { useLanguageContext } from "../common/LanguageProvider";
+import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
 
 export default function ProfileHeaderCard() {
-  const { name, streak, changeName } = useUserData();
+  const { name, streak, changeName, dailyGoalAchieve } = useUserData();
+  const { isHihik } = useThemeContext();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
   const [editableName, setEditableName] = useState(false);
+  const [nameInput, setNameInput] = useState<string>(name);
 
   const toggleEditableName = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setEditableName((prev) => !prev);
+    setEditableName((prev) => {
+      if (prev) {
+        changeName(nameInput.trim());
+        return false;
+      }
+      return true;
+    });
   };
 
   return (
@@ -35,8 +45,8 @@ export default function ProfileHeaderCard() {
         <View style={styles.nameRow}>
           <TextInput
             mode="flat"
-            value={name}
-            onChangeText={changeName}
+            value={nameInput}
+            onChangeText={setNameInput}
             onBlur={toggleEditableName}
             autoFocus
             style={styles.nameInput}
@@ -47,40 +57,57 @@ export default function ProfileHeaderCard() {
             icon="check"
             mode="contained"
             onPress={toggleEditableName}
-            style={[
-              styles.editBtn,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
+            style={[styles.editBtn, { backgroundColor: theme.colors.surfaceVariant }]}
           />
         </View>
       ) : (
         <View style={styles.nameRow}>
+          {isHihik && (
+            <LottieView
+              source={require("@/assets/animations/berry_frame.json")}
+              autoPlay
+              loop={true}
+              resizeMode="cover"
+              style={styles.berryFrame}
+            />
+          )}
           <Text
             variant="headlineSmall"
-            style={[styles.name, { color: theme.colors.onPrimaryContainer }]}
+            style={[isHihik ? styles.hihikText : styles.name, { color: theme.colors.onPrimaryContainer }]}
           >
-            {name}
+            {truncate(name, isHihik ? 8 : 20)}
           </Text>
-          <IconButton
+          {!isHihik && (<IconButton
             icon="pencil"
             mode="contained"
             onPress={toggleEditableName}
-            style={[
-              styles.editBtn,
-              { backgroundColor: theme.colors.surfaceVariant },
-            ]}
-          />
+            style={[styles.editBtn, { backgroundColor: theme.colors.surfaceVariant }]}
+          />)}
+          {isHihik && (
+            <LottieView
+              source={require("@/assets/animations/berry_frame.json")}
+              autoPlay
+              loop={true}
+              resizeMode="cover"
+              style={styles.berryFrame}
+            />
+          )}
         </View>
       )}
 
       <View style={styles.streakRow}>
-        <Ionicons name="flame" size={28} color={theme.colors.primary} />
-        <Text
-          style={[
-            styles.streakText,
-            { color: theme.colors.onPrimaryContainer },
-          ]}
-        >
+        {dailyGoalAchieve ? (
+          <LottieView
+            source={isHihik ? require("@/assets/animations/like.json") : require("@/assets/animations/streak_fire.json")}
+            autoPlay
+            loop={true}
+            resizeMode="contain"
+            style={styles.streakFireAnimation}
+          />
+        ) : (
+          <Ionicons name="flame" size={28} color={theme.colors.primary} />
+        )}
+        <Text style={[styles.streakText, { color: theme.colors.onPrimaryContainer }]}>
           {text("profile_streak_text", { count: streak })}
         </Text>
       </View>
@@ -124,6 +151,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  berryFrame: {
+    width: 100,
+    height: 100,
+  },
+  hihikText: {
+    fontFamily: "Iowan Old Style",
+    fontSize: 32,
+    fontWeight: "800",
+  },
+  streakFireAnimation: {
+    width: 45,
+    height: 45,
+  },
 });
-
-

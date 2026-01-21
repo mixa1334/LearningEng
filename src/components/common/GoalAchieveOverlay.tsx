@@ -5,9 +5,10 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { useLanguageContext } from "./LanguageProvider";
-import { useAppTheme } from "./ThemeProvider";
+import { useAppTheme, useThemeContext } from "./ThemeProvider";
 
 export function GoalAchieveOverlay() {
+  const { isHihik } = useThemeContext();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
   const { name, showBanner, hideGoalAchieveBanner } = useUserData();
@@ -22,16 +23,23 @@ export function GoalAchieveOverlay() {
 
   if (!visible) return null;
 
+  const trophyAnimation = isHihik
+    ? require("@/assets/animations/teddy.json")
+    : require("@/assets/animations/trophy_achieved.json");
+
   return (
-    <View style={[styles.overlay, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.overlay, { backgroundColor: isHihik ? theme.colors.primary : theme.colors.background }]}>
       <View style={styles.content}>
-        <Text style={[styles.congratsTextTitle, { color: theme.colors.onBackground }]}>{name}</Text>
-        <Text style={[styles.congratsTextBody, { color: theme.colors.onBackground }]}>
+        <Text style={[styles.congratsTextTitle, { color: isHihik ? theme.colors.onPrimary : theme.colors.onBackground }]}>
+          {name}
+        </Text>
+        <Text style={[styles.congratsTextBody, { color: isHihik ? theme.colors.onPrimary : theme.colors.onBackground }]}>
           {text("goal_overlay_body")}
         </Text>
-        <Text style={[styles.congratsTextFooter, { color: theme.colors.onBackground }]}>
+        <Text style={[styles.congratsTextFooter, { color: isHihik ? theme.colors.onPrimary : theme.colors.onBackground }]}>
           {text("goal_overlay_footer")}
         </Text>
+        <LottieView source={trophyAnimation} autoPlay loop={true} resizeMode="contain" style={styles.trophyAchieved} />
       </View>
       <LottieView
         source={require("@/assets/animations/confetti_daily_goal.json")}
@@ -76,5 +84,9 @@ const styles = StyleSheet.create({
     marginBottom: SPACING_LG,
     textAlign: "center",
     letterSpacing: 0.5,
+  },
+  trophyAchieved: {
+    width: 150,
+    height: 150,
   },
 });

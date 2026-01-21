@@ -1,5 +1,6 @@
 import { GoalAchieveOverlay } from "@/src/components/common/GoalAchieveOverlay";
 import { LanguageProvider } from "@/src/components/common/LanguageProvider";
+import { LoadingOverlayProvider } from "@/src/components/common/LoadingOverlayProvider";
 import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { runMigrations } from "@/src/database/migrations";
@@ -14,18 +15,30 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
-function AppInitializer() {
-  useBootstrapSettings();
+function AppContent() {
   const theme = useTheme();
-
   return (
     <>
       <GoalAchieveOverlay />
-      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} hidden={false} />
+      <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
       <Stack initialRouteName="(tabs)">
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </>
+  );
+}
+
+function AppInitializer() {
+  useBootstrapSettings();
+
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <LoadingOverlayProvider>
+          <AppContent />
+        </LoadingOverlayProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 
@@ -35,11 +48,7 @@ export default function RootLayout() {
       <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense={true}>
         <ReduxProvider store={store}>
           <SafeAreaProvider>
-            <ThemeProvider>
-              <LanguageProvider>
-                <AppInitializer />
-              </LanguageProvider>
-            </ThemeProvider>
+            <AppInitializer />
           </SafeAreaProvider>
         </ReduxProvider>
       </SQLiteProvider>

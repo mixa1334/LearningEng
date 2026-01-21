@@ -1,9 +1,10 @@
-import { useThemeContext } from "@/src/components/common/ThemeProvider";
+import { useAppTheme, useThemeContext } from "@/src/components/common/ThemeProvider";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, IconButton, Switch, Text } from "react-native-paper";
 
+import { useUserData } from "@/src/hooks/useUserData";
 import { createBackupFileAndShare, restoreFromBackupFileUri } from "@/src/service/backupService";
 import { useAppDispatch } from "@/src/store";
 import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
@@ -12,36 +13,38 @@ import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
+import * as Haptics from "expo-haptics";
+import LottieView from "lottie-react-native";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
-import LoadingScreenSpinner from "../common/LoadingScreenSpinner";
+import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
 import ExpandedCard from "./ExpandedCard";
 
 export default function SettingsCard() {
   const dispatch = useAppDispatch();
-  const { isDark, toggleTheme } = useThemeContext();
+  const { name } = useUserData();
+  const { visible, show, hide } = useLoadingOverlay();
+  const { isDark, toggleTheme, toggleHihikTheme, isHihik } = useThemeContext();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
-  const { text, changeLanguage, isReady, locale } = useLanguageContext();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { text, changeLanguage, locale } = useLanguageContext();
+  const theme = useAppTheme();
 
   const languageOptions = [
     { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
     { value: SupportedLocales.RUSSIAN, key: SupportedLocales.RUSSIAN, label: text("language_russian_label") },
   ];
 
-  if (!isReady) {
-    return <LoadingScreenSpinner />;
-  }
+  const hihikUser = name.toLowerCase().includes("hihik");
 
   const handleBackup = async () => {
     try {
-      setIsProcessing(true);
+      show();
       await createBackupFileAndShare();
     } catch (e) {
       console.error(e);
       Alert.alert(text("settings_backup_failed_title"), text("settings_backup_failed_message"));
     } finally {
-      setIsProcessing(false);
+      hide();
     }
   };
 
@@ -57,7 +60,7 @@ export default function SettingsCard() {
         return;
       }
 
-      setIsProcessing(true);
+      show();
       const uri = result.assets[0].uri;
       await restoreFromBackupFileUri(uri);
 
@@ -80,7 +83,7 @@ export default function SettingsCard() {
         e instanceof Error ? e.message : text("settings_restore_failed_message")
       );
     } finally {
-      setIsProcessing(false);
+      hide();
     }
   };
 
@@ -89,16 +92,34 @@ export default function SettingsCard() {
     changeLanguage(locale);
   };
 
+  const handlePickLanguage = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setIsLanguagePickerVisible(true)
+  };
+
   return (
     <ExpandedCard title={text("settings_title")} icon="settings" autoScroll={true} touchableOpacity={1}>
       <View style={{ marginTop: SPACING_MD }}>
         <View style={styles.switcherSettingRow}>
           <Text>{text("settings_dark_theme")}</Text>
-          <Switch value={isDark} onValueChange={toggleTheme} disabled={isProcessing} />
+          <Switch value={isDark} onValueChange={toggleTheme} />
         </View>
+        {hihikUser && (
+          <View style={styles.switcherSettingRow}>
+            <LottieView
+              source={require("@/assets/animations/like.json")}
+              autoPlay
+              loop={true}
+              resizeMode="contain"
+              style={styles.likeAnimation}
+            />
+            <Switch value={isHihik} onValueChange={toggleHihikTheme} />
+          </View>
+        )}
         <View style={styles.switcherSettingRow}>
           <Text>{text("language_title", { language: locale })}</Text>
-          <IconButton icon="chevron-down" onPress={() => setIsLanguagePickerVisible(true)} />
+          <IconButton style={{ backgroundColor: theme.colors.primary }}
+            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} />
           <ValuePickerDialog
             entityTitle={text("language")}
             description={text("language_description")}
@@ -109,10 +130,10 @@ export default function SettingsCard() {
           />
         </View>
         <View style={styles.backupRestoreRow}>
-          <Button mode="contained" style={styles.settingBtn} onPress={handleBackup} disabled={isProcessing}>
+          <Button mode="contained" style={styles.settingBtn} onPress={handleBackup}>
             {text("settings_backup_button")}
           </Button>
-          <Button mode="contained" style={styles.settingBtn} onPress={handleRestore} disabled={isProcessing}>
+          <Button mode="contained" style={styles.settingBtn} onPress={handleRestore}>
             {text("settings_restore_button")}
           </Button>
         </View>
@@ -139,5 +160,9 @@ const styles = StyleSheet.create({
   settingBtn: {
     marginVertical: 8,
     width: "50%",
+  },
+  likeAnimation: {
+    width: 50,
+    height: 50,
   },
 });
