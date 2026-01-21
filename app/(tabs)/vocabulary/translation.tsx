@@ -1,7 +1,6 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useLoadingOverlay } from "@/src/components/common/LoadingOverlayProvider";
-import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
@@ -12,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Platform, StyleSheet, View } from "react-native";
+import { FlatList, Keyboard, Platform, StyleSheet, View } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -43,6 +42,7 @@ export default function TranslationPage() {
 
   const translate = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Keyboard.dismiss();
     show();
     translateWord(wordToTranslate, language);
     setWordToTranslate("");

@@ -1,11 +1,11 @@
 import { Word } from "@/src/entity/types";
-import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 
+import { getCardShadow } from "../common/cardShadow";
+import HiddenValue from "../common/HiddenValue";
 import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme } from "../common/ThemeProvider";
-import { getCardShadow } from "../common/cardShadow";
 
 interface WordCardProps {
   readonly word: Word;
@@ -16,18 +16,18 @@ interface WordCardProps {
 }
 
 export default function WordCard({ word, accept, acceptBtnName, reject, rejectBtnName }: WordCardProps) {
-  const [showTranslation, setShowTranslation] = useState(false);
   const [pending, setPending] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isEnglishPrimary, setIsEnglishPrimary] = useState(true);
+  const [isVisibleTranslation, setIsVisibleTranslation] = useState(false);
   const theme = useAppTheme();
   const { height } = useWindowDimensions();
   const { text } = useLanguageContext();
 
   useEffect(() => {
-    setShowTranslation(false);
     setPending(false);
     setAccepted(false);
+    setIsVisibleTranslation(false);
     setIsEnglishPrimary(Math.random() < 0.5);
   }, [word.id]);
 
@@ -36,16 +36,14 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
 
   const cardHeight = height * 0.4;
 
-  const handleShowTranslation = () => setShowTranslation(true);
-
   const handleUserInput = (action: (word: Word) => void) => {
-    if (showTranslation) {
-      setShowTranslation(false);
+    if (isVisibleTranslation) {
       setPending(false);
+      setIsVisibleTranslation(false);
       setAccepted(false);
       action(word);
     } else {
-      setShowTranslation(true);
+      setIsVisibleTranslation(true);
       setPending(true);
     }
   };
@@ -79,16 +77,7 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
         </Text>
         <Text style={[styles.word, { color: theme.colors.onSurface }]}>{questionText}</Text>
 
-        {showTranslation ? (
-          <Text style={[styles.translation, { color: theme.colors.onSurface }]} numberOfLines={3}>
-            {answerText}
-          </Text>
-        ) : (
-          <TouchableOpacity style={[styles.eyeBtn, { backgroundColor: theme.colors.surface }]} onPress={handleShowTranslation}>
-            <Ionicons name="eye-outline" size={22} color={theme.colors.onSurface} />
-            <Text style={[styles.eyeText, { color: theme.colors.onSurface }]}>{text("word_show_translation")}</Text>
-          </TouchableOpacity>
-        )}
+        <HiddenValue value={answerText} isVisible={pending} onShowCallback={() => setIsVisibleTranslation(true)} />
 
         <Text style={[styles.example, { color: theme.colors.onSurfaceVariant }]} numberOfLines={3}>
           {word.text_example}
@@ -149,31 +138,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: "center",
   },
-  translation: {
-    fontSize: 20,
-    marginBottom: 12,
-    textAlign: "center",
-    fontWeight: "600",
-  },
   example: {
     fontSize: 15,
     marginBottom: 20,
     textAlign: "center",
     fontStyle: "italic",
     lineHeight: 20,
-  },
-  eyeBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  eyeText: {
-    marginLeft: 6,
-    fontWeight: "600",
-    fontSize: 14,
   },
   bottomBar: {
     flexDirection: "row",

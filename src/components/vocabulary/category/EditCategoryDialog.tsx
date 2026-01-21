@@ -75,7 +75,6 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
             <View style={styles.actions}>
               <Button
                 mode="contained"
-                icon="delete"
                 textColor={theme.colors.onError}
                 style={{ backgroundColor: theme.colors.error }}
                 onPress={handleDeleteCategory}
@@ -84,7 +83,6 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
               </Button>
               <Button
                 mode="contained"
-                icon="content-save"
                 textColor={theme.colors.onPrimary}
                 style={{ backgroundColor: theme.colors.primary }}
                 onPress={handleEditCategory}

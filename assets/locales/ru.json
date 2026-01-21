@@ -195,5 +195,7 @@
   "nav_categories_title": "Категории",
   "nav_create_category_title": "Создать категорию",
   "nav_create_word_title": "Создать слово",
-  "nav_save_translation_title": "Сохранить в словарь"
+  "nav_save_translation_title": "Сохранить в словарь",
+
+  "touchable_text_input_tap_to_enter": "Нажмите..."
 }

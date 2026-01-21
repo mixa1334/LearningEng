@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Text, TextInput } from "react-native-paper";
+import { useLanguageContext } from "./LanguageProvider";
 import { useAppTheme } from "./ThemeProvider";
 
 interface TouchableTextInputProps {
@@ -14,6 +15,7 @@ interface TouchableTextInputProps {
 export default function TouchableTextInput({ label, initialValue, onChange, onBlur, onPress }: TouchableTextInputProps) {
   const theme = useAppTheme();
   const [isActive, setIsActive] = useState(false);
+  const { text } = useLanguageContext();
 
   const handlePress = () => {
     setIsActive(true);
@@ -54,8 +56,8 @@ export default function TouchableTextInput({ label, initialValue, onChange, onBl
         >
           <View>
             <Text style={[styles.editableLabel, { color: theme.colors.onSecondary }]}>{label}</Text>
-            <Text style={[styles.editableValue, { color: theme.colors.onSecondary }]} numberOfLines={1}>
-              {initialValue || "Tap to enter"}
+            <Text style={[styles.editableValue, { color: initialValue ? theme.colors.onSecondary : theme.colors.onSecondaryContainer }]} numberOfLines={1}>
+              {initialValue || text("touchable_text_input_tap_to_enter")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   editableValue: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "500",
   },
 });

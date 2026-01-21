@@ -1,4 +1,5 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
+import HiddenValue from "@/src/components/common/HiddenValue";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
@@ -8,7 +9,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
@@ -42,23 +43,16 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 
-    useEffect(() => {
-        playAudio();
-    }, [currentWordIndex])
-
-    const playAudio = () => {
+    const playAudio = (i: number) => {
         if (isPlaying) {
             Speech.stop();
-            setIsPlaying(false);
-            return;
         }
-
         setIsPlaying(true);
-        Speech.speak(words[currentWordIndex].word_en, {
+        Speech.speak(words[i].word_en, {
             language: "en",
             pitch: 1,
             rate: 0.3,
-            onDone: () => { setTimeout(() => setIsPlaying(false), 500); },
+            onDone: () => { setTimeout(() => setIsPlaying(false), 300); },
             onStopped: () => setIsPlaying(false),
             onError: () => setIsPlaying(false),
         });
@@ -82,6 +76,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         }
         setCurrentWordIndex(newWordIndex);
         setOptions(buildOptions(words, words[newWordIndex]));
+        playAudio(newWordIndex);
     }
 
     const handleCorrectPick = () => {
@@ -108,6 +103,11 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
 
         setSelectedOptionId(word.id);
         return word.id === words[currentWordIndex].id ? handleCorrectPick() : handleIncorrectPick();
+    };
+
+    const handlePlayAudio = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        playAudio(currentWordIndex);
     };
 
     if (hasFinished || words.length === 0) return null;
@@ -168,8 +168,9 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
                         getCardShadow(theme),
                     ]}
                 >
-
+                    <HiddenValue value={words[currentWordIndex].word_en} />
                     <View style={styles.audioButtonContainer}>
+
                         {isPlaying ? (
                             <LottieView
                                 source={require("@/assets/animations/playing.json")}
@@ -180,14 +181,13 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
                                 style={styles.playAnimation}
                             />
                         ) : (
-
                             <Pressable
-                                onPress={playAudio}
+                                onPress={handlePlayAudio}
                                 style={({ pressed }) => [
                                     styles.audioButton,
                                     {
                                         backgroundColor: theme.colors.primary,
-                                        borderColor: theme.colors.primary,
+                                        borderColor: theme.colors.onPrimary,
                                     },
                                     pressed && {
                                         opacity: 0.5,
@@ -228,8 +228,8 @@ const styles = StyleSheet.create({
     audioButtonContainer: {
         alignItems: "center",
         justifyContent: "center",
-        marginVertical: 16,
-        maxHeight: 50,
+        marginBottom: 25,
+        height: 50,
     },
     audioButton: {
         flexDirection: "row",
