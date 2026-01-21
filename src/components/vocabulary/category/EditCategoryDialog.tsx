@@ -3,7 +3,7 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -50,8 +50,8 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 
   return (
     <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
-      <View style={styles.backdrop}>
-        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
+      <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
+        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
           <View style={styles.headerContainer}>
             <Text style={[styles.title, { color: theme.colors.onBackground }]}>
               {text("vocabulary_edit_category_title")}
@@ -89,7 +89,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
             </Button>
           </View>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 }
