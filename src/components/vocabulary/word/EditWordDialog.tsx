@@ -4,7 +4,7 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -41,9 +41,9 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
       text("common_action_permanent_title"),
       text("vocabulary_delete_word_confirm_message"),
       () => {
-      removeWord(wordToEdit);
-      exit();
-    });
+        removeWord(wordToEdit);
+        exit();
+      });
   };
 
   const handleEditWord = () => {
@@ -57,8 +57,8 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
   return (
     <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
-      <View style={styles.backdrop}>
-        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
+      <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
+        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
           <View style={styles.headerContainer}>
             <Text style={[styles.title, { color: theme.colors.onBackground }]}>
               {text("vocabulary_edit_word_title")}
@@ -112,7 +112,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
             </Button>
           </View>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 }

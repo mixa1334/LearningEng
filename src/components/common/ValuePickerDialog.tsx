@@ -1,5 +1,5 @@
 import { SCREEN_HEIGHT_0_5 } from "@/src/resources/constants/layout";
-import { FlatList, Modal, StyleSheet, View } from "react-native";
+import { FlatList, Modal, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "./LanguageProvider";
@@ -31,8 +31,11 @@ export function ValuePickerDialog<T>({
 
   return (
     <Modal transparent visible={visible} animationType="none" onRequestClose={onClose}>
-      <View style={styles.backdrop}>
-        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}>
+      <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel={closeLabel} accessibilityRole="button">
+        <View
+          style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]}
+          onStartShouldSetResponder={() => true}
+        >
           <View style={styles.headerContainer}>
             <Text style={[styles.title, { color: theme.colors.onBackground }]}>{title}</Text>
             <IconButton icon="close" size={24} onPress={onClose} accessibilityLabel={closeLabel} />
@@ -56,7 +59,7 @@ export function ValuePickerDialog<T>({
             )}
           />
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 }
