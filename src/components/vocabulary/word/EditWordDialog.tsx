@@ -4,7 +4,7 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -56,63 +56,68 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   };
 
   return (
-    <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
-      <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
-        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
-          <View style={styles.headerContainer}>
-            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-              {text("vocabulary_edit_word_title")}
-            </Text>
-            <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
-          </View>
+    <Modal transparent visible={visible} animationType="none" onRequestClose={exit}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
+          <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
+            <View style={styles.headerContainer}>
+              <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+                {text("vocabulary_edit_word_title")}
+              </Text>
+              <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
+            </View>
 
-          <View>
-            <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
-              {text("vocabulary_edit_word_subtitle")}
-            </Text>
+            <View>
+              <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
+                {text("vocabulary_edit_word_subtitle")}
+              </Text>
 
-            <TouchableTextInput
-              label={text("vocabulary_english_word_label")}
-              initialValue={wordToEdit.word_en}
-              onChange={setWordEn}
-            />
-            <TouchableTextInput
-              label={text("vocabulary_russian_word_label")}
-              initialValue={wordToEdit.word_ru}
-              onChange={setWordRu}
-            />
-            <TouchableTextInput
-              label={text("vocabulary_text_example_label")}
-              initialValue={wordToEdit.text_example}
-              onChange={setWordTextExample}
-            />
-            <View style={styles.categoryPickerContainer}>
-              <PickCategoryButton category={wordToEdit.category} onSelectCategory={selectCategory} />
+              <TouchableTextInput
+                label={text("vocabulary_english_word_label")}
+                initialValue={wordToEdit.word_en}
+                onChange={setWordEn}
+              />
+              <TouchableTextInput
+                label={text("vocabulary_russian_word_label")}
+                initialValue={wordToEdit.word_ru}
+                onChange={setWordRu}
+              />
+              <TouchableTextInput
+                label={text("vocabulary_text_example_label")}
+                initialValue={wordToEdit.text_example}
+                onChange={setWordTextExample}
+              />
+              <View style={styles.categoryPickerContainer}>
+                <PickCategoryButton category={wordToEdit.category} onSelectCategory={selectCategory} />
+              </View>
+            </View>
+
+            <View style={styles.actions}>
+              <Button
+                mode="contained"
+                icon="delete"
+                textColor={theme.colors.onError}
+                style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
+                onPress={handleDeleteWord}
+              >
+                {text("vocabulary_edit_word_delete_button")}
+              </Button>
+              <Button
+                mode="contained"
+                icon="content-save"
+                style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
+                textColor={theme.colors.onPrimary}
+                onPress={handleEditWord}
+              >
+                {text("vocabulary_edit_word_update_button")}
+              </Button>
             </View>
           </View>
-
-          <View style={styles.actions}>
-            <Button
-              mode="contained"
-              icon="delete"
-              textColor={theme.colors.onError}
-              style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
-              onPress={handleDeleteWord}
-            >
-              {text("vocabulary_edit_word_delete_button")}
-            </Button>
-            <Button
-              mode="contained"
-              icon="content-save"
-              style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
-              textColor={theme.colors.onPrimary}
-              onPress={handleEditWord}
-            >
-              {text("vocabulary_edit_word_update_button")}
-            </Button>
-          </View>
-        </View>
-      </Pressable>
+        </Pressable>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
