@@ -1,3 +1,4 @@
+import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { getCardShadow } from "@/src/components/common/cardShadow";
 import HiddenValue from "@/src/components/common/HiddenValue";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
@@ -31,6 +32,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     const theme = useAppTheme();
     const { words } = usePractice();
     const { text } = useLanguageContext();
+    const { triggerScroll } = useAutoScroll();
 
     const [hasFinished, setHasFinished] = useState(words.length === 0);
 
@@ -77,6 +79,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         setCurrentWordIndex(newWordIndex);
         setOptions(buildOptions(words, words[newWordIndex]));
         playAudio(newWordIndex);
+        triggerScroll();
     }
 
     const handleCorrectPick = () => {
