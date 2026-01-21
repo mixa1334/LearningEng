@@ -98,7 +98,6 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
             <View style={styles.actions}>
               <Button
                 mode="contained"
-                icon="delete"
                 textColor={theme.colors.onError}
                 style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
                 onPress={handleDeleteWord}
@@ -107,7 +106,6 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
               </Button>
               <Button
                 mode="contained"
-                icon="content-save"
                 style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
                 textColor={theme.colors.onPrimary}
                 onPress={handleEditWord}

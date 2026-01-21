@@ -45,7 +45,7 @@ const PracticeModeComponents: Record<
     component: MatchPairsMode,
     titleTextKey: "practice_pairs_title",
     descriptionTextKey: "practice_pairs_description",
-    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 2,
+    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 4,
   },
   [ExtraMode.BUILDER]: {
     component: BuildingFromCharsMode,
@@ -57,13 +57,13 @@ const PracticeModeComponents: Record<
     component: PickCorrectEnglishWordMode,
     titleTextKey: "practice_pick_english_title",
     descriptionTextKey: "practice_pick_english_description",
-    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
+    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength > 4,
   },
   [ExtraMode.AUDIO]: {
     component: AudioMode,
     titleTextKey: "practice_audio_title",
     descriptionTextKey: "practice_audio_description",
-    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
+    practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength > 4,
   },
 };
 
