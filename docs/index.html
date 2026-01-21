@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index,follow" />
+    <title>Политика конфиденциальности</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b1220;
+        --card: rgba(255, 255, 255, 0.06);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.72);
+        --border: rgba(255, 255, 255, 0.12);
+        --accent: #7dd3fc;
+        --max: 980px;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f7f8fb;
+          --card: #ffffff;
+          --text: #0b1220;
+          --muted: #334155;
+          --border: rgba(2, 6, 23, 0.12);
+          --accent: #0284c7;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
+        line-height: 1.55;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 32px 18px 56px;
+      }
+
+      .lang-switch {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+      }
+
+      .lang-switch .brand {
+        font-weight: 650;
+        letter-spacing: -0.01em;
+      }
+
+      .lang-switch .controls {
+        display: inline-flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .lang-btn {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text);
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .lang-btn[aria-pressed="true"] {
+        border-color: color-mix(in oklab, var(--accent) 70%, var(--border));
+        background: color-mix(in oklab, var(--accent) 20%, transparent);
+      }
+      .lang-btn:focus {
+        outline: 2px solid color-mix(in oklab, var(--accent) 60%, transparent);
+        outline-offset: 2px;
+      }
+
+      header {
+        padding: 18px 18px 12px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: linear-gradient(180deg, var(--card), transparent);
+      }
+
+      h1 {
+        margin: 0 0 8px 0;
+        font-size: 28px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      section {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px;
+        background: var(--card);
+      }
+
+      h2 {
+        margin: 0 0 10px 0;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        margin: 0 0 10px 0;
+        color: var(--text);
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul {
+        margin: 8px 0 0 20px;
+        padding: 0;
+        color: var(--text);
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      .note {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 12px;
+        margin-right: 6px;
+        margin-top: 6px;
+      }
+
+      footer {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 13px;
+        padding: 12px 2px 0;
+      }
+
+      .lang {
+        display: none;
+      }
+      .lang.active {
+        display: block;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="lang-switch" role="navigation" aria-label="Language switch">
+        <div class="brand">Privacy Policy</div>
+        <div class="controls">
+          <button class="lang-btn" type="button" data-lang="ru" aria-pressed="true">Русский</button>
+          <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">English</button>
+        </div>
+      </div>
+
+      <div class="lang active" data-lang="ru" data-title="Политика конфиденциальности">
+        <header style="margin-top: 14px">
+          <h1>Политика конфиденциальности</h1>
+          <p class="subtitle">
+            Документ описывает, какие данные обрабатывает приложение для изучения английского языка (далее —
+            «Приложение»), почему это нужно и какие у вас есть права.
+          </p>
+          <p class="subtitle">
+            Дата последнего обновления: <strong>21 января 2026</strong>
+          </p>
+        </header>
+
+        <div class="grid">
+          <section>
+            <h2>1. Кто мы</h2>
+            <p>
+              Оператором данных является разработчик Приложения (далее — «Мы», «Разработчик»).
+            </p>
+            <p class="note">
+              Контакты для вопросов по конфиденциальности указаны в разделе «Контакты».
+            </p>
+          </section>
+
+          <section>
+            <h2>2. Кому подходит эта политика</h2>
+            <p>
+              Политика применяется ко всем пользователям Приложения и к обработке данных при использовании
+              функций обучения, словаря, переводов, практики и резервного копирования (если включено).
+            </p>
+          </section>
+
+          <section>
+            <h2>3. Какие данные мы обрабатываем</h2>
+            <p>
+              Приложение ориентировано на локальное хранение учебных данных. В зависимости от того, какие
+              функции вы используете, могут обрабатываться следующие категории:
+            </p>
+            <ul>
+              <li>
+                <strong>Учебные данные</strong>: добавленные вами слова/переводы, категории, заметки,
+                статистика прогресса, цели и настройки.
+              </li>
+              <li>
+                <strong>Аудиоданные с микрофона</strong>: если вы включаете упражнения, требующие записи речи
+                (например, тренировка произношения), Приложение получает доступ к микрофону для записи.
+              </li>
+              <li>
+                <strong>Файлы на устройстве</strong>: если вы используете экспорт/импорт/резервное
+                копирование, Приложение получает доступ к файловой системе для чтения/записи файлов.
+              </li>
+              <li>
+                <strong>Сетевые данные</strong>: при использовании функций, которым нужен интернет (например,
+                загрузка контента, получение цитаты/перевода, синхронизация/резервное копирование при
+                наличии), Приложение обращается к сетевым ресурсам.
+              </li>
+            </ul>
+            <p class="note">
+              Мы не требуем от вас вводить паспортные данные, банковские реквизиты или точную геолокацию для
+              базовой работы Приложения.
+            </p>
+          </section>
+
+          <section>
+            <h2>4. Разрешения и зачем они нужны</h2>
+            <p>Приложение может запрашивать системные разрешения:</p>
+            <div>
+              <span class="pill"><strong>Микрофон</strong> — запись речи</span>
+              <span class="pill"><strong>Файлы/хранилище</strong> — импорт/экспорт/backup</span>
+              <span class="pill"><strong>Интернет</strong> — сетевые функции</span>
+            </div>
+            <ul>
+              <li>
+                <strong>Микрофон</strong>: используется для записи аудио в упражнениях. Мы не включаем запись
+                «в фоне» без ваших действий в интерфейсе.
+              </li>
+              <li>
+                <strong>Доступ к файловой системе</strong>: используется для сохранения резервной копии и/или
+                восстановления данных, а также для экспорта/импорта учебных данных (например, словаря).
+              </li>
+              <li>
+                <strong>Интернет-соединение</strong>: используется для загрузки удалённых ресурсов, если вы
+                включили/используете функции, которым это необходимо.
+              </li>
+            </ul>
+            <p class="note">
+              Вы можете отозвать разрешения в настройках ОС. В этом случае часть функций может быть
+              недоступна.
+            </p>
+          </section>
+
+          <section>
+            <h2>5. Цели обработки и правовые основания</h2>
+            <p>Мы обрабатываем данные для:</p>
+            <ul>
+              <li><strong>Предоставления функций Приложения</strong> (обучение, словарь, практика).</li>
+              <li><strong>Сохранения прогресса и настроек</strong> на вашем устройстве.</li>
+              <li>
+                <strong>Экспорта/импорта/резервного копирования</strong> по вашему запросу.
+              </li>
+              <li><strong>Обеспечения работоспособности</strong> и устранения сбоев.</li>
+            </ul>
+            <p class="note">
+              Основания: исполнение пользовательского запроса/договора (оказание сервиса), ваш явный выбор
+              функций, а также законные интересы в обеспечении безопасности и стабильной работы.
+            </p>
+          </section>
+
+          <section>
+            <h2>6. Как и где хранятся данные</h2>
+            <ul>
+              <li>
+                <strong>Локально на устройстве</strong>: учебные данные и настройки обычно хранятся на вашем
+                устройстве (например, в локальной базе/хранилище приложения).
+              </li>
+              <li>
+                <strong>Резервные копии/экспорт</strong>: если вы создаёте файл резервной копии или экспорт,
+                он сохраняется в выбранном вами месте файловой системы/облака (в зависимости от того, куда
+                вы его сохраняете).
+              </li>
+            </ul>
+            <p class="note">
+              Если вы храните резервные копии в сторонних облачных сервисах (например, Google Drive), их
+              обработка регулируется политиками соответствующих сервисов.
+            </p>
+          </section>
+
+          <section>
+            <h2>7. Передача данных третьим лицам</h2>
+            <p>
+              Мы не продаём персональные данные. Передача может происходить только в объёме, необходимом
+              для работы выбранных вами функций:
+            </p>
+            <ul>
+              <li>
+                <strong>Сетевые сервисы</strong> (если используются): например, сервисы перевода/контента.
+                В таких случаях запросы могут включать введённый вами текст для получения результата.
+              </li>
+              <li>
+                <strong>Поставщики инфраструктуры</strong> (если используются): хостинг, CDN и аналогичные
+                сервисы для доставки контента.
+              </li>
+            </ul>
+            <p class="note">
+              Если в Приложении используются SDK третьих сторон (например, аналитика/краш-репорты), их
+              провайдеры могут собирать техническую информацию (модель устройства, версия ОС, события сбоя).
+              Это нужно для диагностики и улучшения стабильности.
+            </p>
+          </section>
+
+          <section>
+            <h2>8. Дети</h2>
+            <p>
+              Приложение предназначено для обучения и может использоваться разными возрастными группами.
+              Мы не собираем сознательно персональные данные детей без согласия родителей/опекунов, если
+              такое согласие требуется по применимому закону.
+            </p>
+            <p class="note">
+              Если вы считаете, что ребёнок предоставил персональные данные без надлежащего согласия —
+              напишите нам, и мы постараемся удалить такие данные.
+            </p>
+          </section>
+
+          <section>
+            <h2>9. Безопасность</h2>
+            <p>
+              Мы применяем разумные технические и организационные меры для защиты данных от несанкционированного
+              доступа, изменения и уничтожения.
+            </p>
+            <ul>
+              <li><strong>Минимизация данных</strong>: обрабатываем только то, что нужно для функций.</li>
+              <li>
+                <strong>Контроль доступа ОС</strong>: доступ к микрофону и файлам управляется разрешениями
+                устройства.
+              </li>
+            </ul>
+            <p class="note">
+              Ни один метод передачи или хранения не может гарантировать абсолютную безопасность. Пожалуйста,
+              защищайте устройство паролем/биометрией и не делитесь резервными копиями с посторонними.
+            </p>
+          </section>
+
+          <section>
+            <h2>10. Сроки хранения</h2>
+            <ul>
+              <li>
+                <strong>Локальные данные</strong>: хранятся, пока Приложение установлено и/или пока вы их не
+                удалите.
+              </li>
+              <li>
+                <strong>Файлы экспорта/backup</strong>: хранятся у вас (в выбранном месте) до вашего удаления.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>11. Ваши права и контроль</h2>
+            <p>Вы можете:</p>
+            <ul>
+              <li><strong>Удалять данные</strong>: очистить прогресс/словарь и удалить резервные копии.</li>
+              <li>
+                <strong>Экспортировать/импортировать</strong>: выгрузить учебные данные в файл и восстановить
+                их.
+              </li>
+              <li><strong>Управлять разрешениями</strong>: запретить микрофон/файлы/интернет через ОС.</li>
+            </ul>
+            <p class="note">
+              Если вам нужна помощь с удалением данных или доступом к ним — напишите нам (см. «Контакты»).
+            </p>
+          </section>
+
+          <section>
+            <h2>12. Изменения политики</h2>
+            <p>
+              Мы можем обновлять эту Политику при изменении функциональности, требований законодательства или
+              способов обработки данных. Новая версия публикуется на этой странице с обновлённой датой.
+            </p>
+          </section>
+
+          <section>
+            <h2>13. Контакты</h2>
+            <p>
+              По вопросам конфиденциальности и обработки данных свяжитесь с нами:
+            </p>
+            <ul>
+              <li><strong>Email</strong>: <em>укажите ваш контактный email</em></li>
+              <li><strong>Разработчик</strong>: <em>укажите имя/название</em></li>
+            </ul>
+            <p class="note">
+              Рекомендуется использовать тот же email, который указан в Google Play Console в разделе
+              «Контактная информация».
+            </p>
+          </section>
+        </div>
+
+        <footer>
+          <p>
+            Если вам нужна версия на английском или добавление ссылок на конкретные сторонние сервисы/SDK
+            (например, аналитика, crash reporting, облачные бэкапы), сообщите — дополним документ, чтобы он
+            точно соответствовал фактической реализации Приложения.
+          </p>
+          <p class="note">
+            Этот документ предназначен для публикации в виде веб-страницы (например, на GitHub Pages/сайте)
+            и указания ссылки в Google Play Console в поле “Privacy Policy”.
+          </p>
+        </footer>
+      </div>
+
+      <div class="lang" data-lang="en" data-title="Privacy Policy">
+        <header style="margin-top: 14px">
+          <h1>Privacy Policy</h1>
+          <p class="subtitle">
+            This document explains what data the English-learning app (the “App”) processes, why it is needed,
+            and what rights you have.
+          </p>
+          <p class="subtitle">
+            Last updated: <strong>January 21, 2026</strong>
+          </p>
+        </header>
+
+        <div class="grid">
+          <section>
+            <h2>1. Who we are</h2>
+            <p>
+              The data controller is the App developer (the “Developer”, “we”).
+            </p>
+            <p class="note">
+              Privacy contact details are provided in the “Contact” section.
+            </p>
+          </section>
+
+          <section>
+            <h2>2. Scope</h2>
+            <p>
+              This Policy applies to all App users and covers data processing when you use learning, vocabulary,
+              translations, practice features, and backups (if enabled).
+            </p>
+          </section>
+
+          <section>
+            <h2>3. What data we process</h2>
+            <p>
+              The App is designed to store learning data locally. Depending on features you use, the following
+              categories may be processed:
+            </p>
+            <ul>
+              <li>
+                <strong>Learning data</strong>: words/translations you add, categories, notes, progress statistics,
+                goals, and settings.
+              </li>
+              <li>
+                <strong>Microphone audio</strong>: if you use features that require speech recording (e.g., pronunciation
+                practice), the App accesses the microphone to record audio.
+              </li>
+              <li>
+                <strong>Device files</strong>: if you use export/import/backup, the App accesses the file system to read
+                and write files.
+              </li>
+              <li>
+                <strong>Network data</strong>: when using features that require internet (e.g., downloading content,
+                fetching a quote/translation, syncing/backups if available), the App connects to online services.
+              </li>
+            </ul>
+            <p class="note">
+              We do not require passport data, payment card data, or precise location for the App’s core functionality.
+            </p>
+          </section>
+
+          <section>
+            <h2>4. Permissions and why we need them</h2>
+            <p>The App may request system permissions:</p>
+            <div>
+              <span class="pill"><strong>Microphone</strong> — speech recording</span>
+              <span class="pill"><strong>Files/Storage</strong> — import/export/backup</span>
+              <span class="pill"><strong>Internet</strong> — online features</span>
+            </div>
+            <ul>
+              <li>
+                <strong>Microphone</strong>: used to record audio in exercises. We do not record audio in the background
+                without your explicit action in the interface.
+              </li>
+              <li>
+                <strong>File system access</strong>: used to create/restore backups and to export/import learning data
+                (for example, your vocabulary).
+              </li>
+              <li>
+                <strong>Internet connection</strong>: used to load remote resources when you use features that require it.
+              </li>
+            </ul>
+            <p class="note">
+              You can revoke permissions in your device settings. Some features may stop working after revocation.
+            </p>
+          </section>
+
+          <section>
+            <h2>5. Purposes and legal bases</h2>
+            <p>We process data to:</p>
+            <ul>
+              <li><strong>Provide App features</strong> (learning, vocabulary, practice).</li>
+              <li><strong>Save progress and settings</strong> on your device.</li>
+              <li><strong>Export/import/backup</strong> at your request.</li>
+              <li><strong>Maintain stability</strong> and fix errors.</li>
+            </ul>
+            <p class="note">
+              Legal bases: performance of the service you request (contract), your choices of features, and legitimate
+              interests in security and reliability.
+            </p>
+          </section>
+
+          <section>
+            <h2>6. Where data is stored</h2>
+            <ul>
+              <li>
+                <strong>On-device storage</strong>: learning data and settings are typically stored on your device
+                (e.g., local database/app storage).
+              </li>
+              <li>
+                <strong>Backups/exports</strong>: when you create an export or backup file, it is saved to a location you
+                choose (which may be local storage or a cloud drive, depending on where you save it).
+              </li>
+            </ul>
+            <p class="note">
+              If you store backup files in third-party cloud services (e.g., Google Drive), their processing is governed
+              by those services’ policies.
+            </p>
+          </section>
+
+          <section>
+            <h2>7. Sharing with third parties</h2>
+            <p>
+              We do not sell personal data. Sharing may occur only when necessary for features you choose:
+            </p>
+            <ul>
+              <li>
+                <strong>Online services</strong> (if used): for example, translation/content services. Requests may include
+                text you enter to produce results.
+              </li>
+              <li>
+                <strong>Infrastructure providers</strong> (if used): hosting/CDN services to deliver content.
+              </li>
+            </ul>
+            <p class="note">
+              If the App uses third-party SDKs (e.g., analytics/crash reporting), those providers may collect technical
+              information (device model, OS version, crash events) to help diagnose issues and improve stability.
+            </p>
+          </section>
+
+          <section>
+            <h2>8. Children</h2>
+            <p>
+              The App is an educational product and may be used by different age groups. We do not knowingly collect
+              children’s personal data without parental consent where required by applicable law.
+            </p>
+            <p class="note">
+              If you believe a child provided personal data without appropriate consent, contact us and we will take
+              reasonable steps to delete it.
+            </p>
+          </section>
+
+          <section>
+            <h2>9. Security</h2>
+            <p>
+              We use reasonable technical and organizational measures to protect data from unauthorized access,
+              alteration, or destruction.
+            </p>
+            <ul>
+              <li><strong>Data minimization</strong>: we process only what is needed for features.</li>
+              <li>
+                <strong>OS permission controls</strong>: access to microphone and files is controlled by your device
+                permissions.
+              </li>
+            </ul>
+            <p class="note">
+              No method of storage or transmission is 100% secure. Please protect your device and do not share backup
+              files with unauthorized parties.
+            </p>
+          </section>
+
+          <section>
+            <h2>10. Retention</h2>
+            <ul>
+              <li>
+                <strong>Local data</strong>: stored while the App is installed and/or until you delete it.
+              </li>
+              <li>
+                <strong>Export/backup files</strong>: stored in your chosen location until you delete them.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>11. Your choices and rights</h2>
+            <p>You can:</p>
+            <ul>
+              <li><strong>Delete data</strong>: reset progress/vocabulary and remove backup files.</li>
+              <li><strong>Export/import</strong>: export learning data to a file and restore it later.</li>
+              <li><strong>Manage permissions</strong>: disable microphone/files/internet via OS settings.</li>
+            </ul>
+            <p class="note">
+              If you need help with deletion or access requests, contact us (see “Contact”).
+            </p>
+          </section>
+
+          <section>
+            <h2>12. Changes to this Policy</h2>
+            <p>
+              We may update this Policy when features, legal requirements, or processing practices change. The new
+              version will be posted on this page with an updated date.
+            </p>
+          </section>
+
+          <section>
+            <h2>13. Contact</h2>
+            <p>For privacy and data processing questions, contact us:</p>
+            <ul>
+              <li><strong>Email</strong>: <em>add your contact email</em></li>
+              <li><strong>Developer</strong>: <em>add your name/company</em></li>
+            </ul>
+            <p class="note">
+              It is recommended to use the same email as in your Google Play Console “Contact details”.
+            </p>
+          </section>
+        </div>
+
+        <footer>
+          <p>
+            If you need links to specific third-party services/SDKs (e.g., analytics, crash reporting, cloud backups),
+            tell us what you use and we will tailor this policy to exactly match the App’s implementation.
+          </p>
+          <p class="note">
+            Publish this page on a website (e.g., GitHub Pages) and put its link into Google Play Console under “Privacy
+            Policy”.
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        function getLangFromUrl() {
+          try {
+            var url = new URL(window.location.href);
+            var qp = (url.searchParams.get("lang") || "").toLowerCase();
+            if (qp === "ru" || qp === "en") return qp;
+          } catch (e) {}
+          var hash = (window.location.hash || "").replace("#", "").toLowerCase();
+          if (hash === "ru" || hash === "en") return hash;
+          return null;
+        }
+
+        function preferredLang() {
+          var fromUrl = getLangFromUrl();
+          if (fromUrl) return fromUrl;
+          var stored = (localStorage.getItem("pp_lang") || "").toLowerCase();
+          if (stored === "ru" || stored === "en") return stored;
+          var nav = (navigator.language || "en").toLowerCase();
+          return nav.startsWith("ru") ? "ru" : "en";
+        }
+
+        function setLang(lang) {
+          if (lang !== "ru" && lang !== "en") lang = "en";
+
+          document.documentElement.lang = lang;
+          var blocks = document.querySelectorAll(".lang");
+          blocks.forEach(function (el) {
+            el.classList.toggle("active", el.getAttribute("data-lang") === lang);
+          });
+
+          var buttons = document.querySelectorAll(".lang-btn");
+          buttons.forEach(function (btn) {
+            var on = btn.getAttribute("data-lang") === lang;
+            btn.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+
+          var active = document.querySelector('.lang[data-lang="' + lang + '"]');
+          if (active) {
+            var title = active.getAttribute("data-title") || "";
+            if (title) document.title = title;
+          }
+
+          try {
+            localStorage.setItem("pp_lang", lang);
+          } catch (e) {}
+        }
+
+        document.querySelectorAll(".lang-btn").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            setLang(btn.getAttribute("data-lang"));
+          });
+        });
+
+        setLang(preferredLang());
+      })();
+    </script>
+  </body>
+</html>
+
+
