@@ -3,7 +3,7 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -49,47 +49,52 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   };
 
   return (
-    <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
-      <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
-        <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
-          <View style={styles.headerContainer}>
-            <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-              {text("vocabulary_edit_category_title")}
-            </Text>
-            <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
-          </View>
-          <View style={styles.form}>
-            <TouchableTextInput
-              label={text("vocabulary_edit_category_name_label")}
-              initialValue={categoryToEdit?.name}
-              onChange={setCategoryName}
-            />
+    <Modal transparent visible={visible} animationType="none" onRequestClose={exit}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
+          <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
+            <View style={styles.headerContainer}>
+              <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+                {text("vocabulary_edit_category_title")}
+              </Text>
+              <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
+            </View>
+            <View style={styles.form}>
+              <TouchableTextInput
+                label={text("vocabulary_edit_category_name_label")}
+                initialValue={categoryToEdit?.name}
+                onChange={setCategoryName}
+              />
 
-            <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
-          </View>
+              <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
+            </View>
 
-          <View style={styles.actions}>
-            <Button
-              mode="contained"
-              icon="delete"
-              textColor={theme.colors.onError}
-              style={{ backgroundColor: theme.colors.error }}
-              onPress={handleDeleteCategory}
-            >
-              {text("vocabulary_edit_category_delete_button")}
-            </Button>
-            <Button
-              mode="contained"
-              icon="content-save"
-              textColor={theme.colors.onPrimary}
-              style={{ backgroundColor: theme.colors.primary }}
-              onPress={handleEditCategory}
-            >
-              {text("vocabulary_edit_category_update_button")}
-            </Button>
+            <View style={styles.actions}>
+              <Button
+                mode="contained"
+                icon="delete"
+                textColor={theme.colors.onError}
+                style={{ backgroundColor: theme.colors.error }}
+                onPress={handleDeleteCategory}
+              >
+                {text("vocabulary_edit_category_delete_button")}
+              </Button>
+              <Button
+                mode="contained"
+                icon="content-save"
+                textColor={theme.colors.onPrimary}
+                style={{ backgroundColor: theme.colors.primary }}
+                onPress={handleEditCategory}
+              >
+                {text("vocabulary_edit_category_update_button")}
+              </Button>
+            </View>
           </View>
-        </View>
-      </Pressable>
+        </Pressable>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
