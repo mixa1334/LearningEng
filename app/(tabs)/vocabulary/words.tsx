@@ -8,8 +8,8 @@ import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/src/r
 import { WordCriteria } from "@/src/service/wordService";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { Keyboard, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -19,21 +19,28 @@ export default function WordsPage() {
   const { text } = useLanguageContext();
 
   const { criteriaDto, updateWordCriteria } = useVocabulary();
+  const [searchPattern, setSearchPattern] = useState(criteriaDto.searchPattern);
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
-  const [searchPattern, setSearchPattern] = useState("");
-
-  useEffect(() => {
+  const updateCriteria = (consumer: (criteria: WordCriteria) => void) => {
     const newCriteria = WordCriteria.fromRedux(criteriaDto);
-    newCriteria.appendCategory(selectedCategory);
-    newCriteria.appendSearchPattern(searchPattern);
+    consumer(newCriteria);
     updateWordCriteria(newCriteria);
-  }, [selectedCategory, searchPattern]);
+  };
 
   const clearSearch = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    Keyboard.dismiss();
     setSearchPattern("");
-    setSelectedCategory(undefined);
+    updateCriteria((criteria) => criteria.appendCategory(undefined).appendSearchPattern(""));
+  };
+
+  const onSelectCategory = (category: Category) => {
+    updateCriteria((criteria) => criteria.appendCategory(category));
+  };
+
+  const onTextSearch = (text: string) => {
+    setSearchPattern(text);
+    updateCriteria((criteria) => criteria.appendSearchPattern(text));
   };
 
   return (
@@ -55,14 +62,14 @@ export default function WordsPage() {
           size={18}
           accessibilityLabel={text("vocabulary_clear_search_accessibility")}
         />
-        <PickCategoryButton category={selectedCategory} onSelectCategory={setSelectedCategory} truncateLength={7} />
+        <PickCategoryButton category={criteriaDto.category} onSelectCategory={onSelectCategory} truncateLength={7} />
 
         <View style={[styles.searchContainer, { backgroundColor: theme.colors.surface }]}>
           <Ionicons name="search" size={18} color={theme.colors.onSurface} />
           <TextInput
             placeholder={text("vocabulary_search_placeholder")}
             value={searchPattern}
-            onChangeText={setSearchPattern}
+            onChangeText={onTextSearch}
             style={[styles.searchInput, { color: theme.colors.onSurface }]}
             placeholderTextColor={theme.colors.onSurface}
           />
