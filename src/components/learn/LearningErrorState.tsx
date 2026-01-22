@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 12,
-    overflow: "hidden",
   },
   content: {
     padding: 24,
