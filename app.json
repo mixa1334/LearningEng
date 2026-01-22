@@ -43,12 +43,12 @@
         "expo-splash-screen",
         {
           "ios": {
-            "backgroundColor": "#753e9b",
+            "backgroundColor": "#000000",
             "image": "./assets/images/app_pocket_rofl.png",
             "resizeMode": "cover"
           },
           "android": {
-            "backgroundColor": "#753e9b",
+            "backgroundColor": "#000000",
             "image": "./assets/images/app_pocket_rofl.png",
             "imageWidth": 150
           }
