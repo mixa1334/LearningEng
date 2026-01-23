@@ -4,9 +4,10 @@ import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useAutoScroll } from "../../common/AutoScrollContext";
-import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
 import { useLanguageContext } from "../../common/LanguageProvider";
+import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
 import { useAppTheme } from "../../common/ThemeProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 
 export type PracticeModeChildProps = {
   readonly onEndCurrentSet?: (endMessage: string) => void;
@@ -27,7 +28,8 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   const [isSetEnded, setIsSetEnded] = useState(false);
   const [isOverLoadedSession, setIsOverLoadedSession] = useState(false);
   const { text } = useLanguageContext();
-
+  const { playActionSuccess } = useSoundPlayer();
+  
   const performTransition = useCallback(
     async (action: () => void) => {
       setIsTransitioning(true);
@@ -41,10 +43,11 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   );
 
   const handleEndCurrentSet = useCallback((endMessage: string) => {
+    playActionSuccess();
     setIsSetEnded(true);
     setChildTextMessage(endMessage);
     setIsOverLoadedSession(true);
-  }, []);
+  }, [playActionSuccess]);
 
   const resetPracticeSession = () => {
     performTransition(() => {

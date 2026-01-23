@@ -21,10 +21,13 @@
 
   "settings_title": "Настройки",
   "settings_dark_theme": "Тёмная тема",
+  "settings_sound_enabled": "Системные звуки",
   "settings_backup_button": "Копировать",
   "settings_restore_button": "Восстановить",
   "settings_backup_failed_title": "Не удалось создать копию",
   "settings_backup_failed_message": "Не удалось создать файл резервной копии. Пожалуйста, попробуйте ещё раз.",
+  "settings_backup_completed_title": "Резервная копия создана",
+  "settings_backup_completed_message": "Ваши данные были успешно сохранены.",
   "settings_restore_completed_title": "Восстановление завершено",
   "settings_restore_completed_message": "Ваши данные были успешно восстановлены.",
   "settings_restore_failed_title": "Не удалось восстановить",

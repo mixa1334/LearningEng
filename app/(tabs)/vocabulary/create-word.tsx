@@ -1,5 +1,6 @@
-import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import FieldTextInput from "@/src/components/common/FieldTextInput";
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
@@ -16,9 +17,11 @@ export default function CreateWordPage() {
   const [newWordRu, setNewWordRu] = useState("");
   const [newWordTextExample, setNewWordTextExample] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
+  const { playActionSuccess } = useSoundPlayer();
 
   const handleAddWord = () => {
     if (!newWordEn || !newWordRu || !selectedCategory) return;
+    playActionSuccess();
     addWord({
       word_en: newWordEn,
       word_ru: newWordRu,

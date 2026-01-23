@@ -3,12 +3,13 @@ import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import * as Haptics from "expo-haptics";
 import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
+import { sendUserAlert, sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import { useLanguageContext } from "../common/LanguageProvider";
-import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import ExpandedCard from "./ExpandedCard";
+
 
 export default function ResetProgressCard() {
   const theme = useAppTheme();
@@ -23,7 +24,7 @@ export default function ResetProgressCard() {
       text("reset_user_data_confirm_message"),
       () => {
         resetUserStats();
-        Alert.alert(text("reset_user_data_success"));
+        sendUserAlert(text("reset_user_data_success"));
       }
     );
   };
@@ -35,7 +36,7 @@ export default function ResetProgressCard() {
       text("reset_vocabulary_stats_confirm_message"),
       () => {
         resetWordsProgress();
-        Alert.alert(text("reset_vocabulary_stats_success"));
+        sendUserAlert(text("reset_vocabulary_stats_success"));
       }
     );
   };
@@ -47,7 +48,7 @@ export default function ResetProgressCard() {
       text("reset_remove_vocabulary_confirm_message"),
       () => {
         removeUserVocabulary();
-        Alert.alert(text("reset_remove_vocabulary_success"));
+        sendUserAlert(text("reset_remove_vocabulary_success"));
       }
     );
   };

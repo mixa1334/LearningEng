@@ -2,6 +2,7 @@ import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { getCardShadow } from "@/src/components/common/cardShadow";
 import HiddenValue from "@/src/components/common/HiddenValue";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
@@ -33,7 +34,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     const { words } = usePractice();
     const { text } = useLanguageContext();
     const { triggerScroll } = useAutoScroll();
-
+    const { playAccepted, playRejected } = useSoundPlayer();
     const [hasFinished, setHasFinished] = useState(words.length === 0);
 
     const [madeMistake, setMadeMistake] = useState(false);
@@ -83,6 +84,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     }
 
     const handleCorrectPick = () => {
+        playAccepted();
         setIsCorrect(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         const timeout = setTimeout(() => {
@@ -92,6 +94,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     };
 
     const handleIncorrectPick = () => {
+        playRejected();
         setMadeMistake(true);
         setIsIncorrect(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

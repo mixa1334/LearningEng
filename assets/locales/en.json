@@ -21,10 +21,13 @@
 
   "settings_title": "Settings",
   "settings_dark_theme": "Dark Theme",
+  "settings_sound_enabled": "System sounds",
   "settings_backup_button": "Backup",
   "settings_restore_button": "Restore",
   "settings_backup_failed_title": "Backup failed",
   "settings_backup_failed_message": "Could not create backup file. Please try again.",
+  "settings_backup_completed_title": "Backup completed",
+  "settings_backup_completed_message": "Your data has been backed up successfully.",
   "settings_restore_completed_title": "Restore completed",
   "settings_restore_completed_message": "Your data has been restored successfully.",
   "settings_restore_failed_title": "Restore failed",

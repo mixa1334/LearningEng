@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "r
 import { getCardShadow } from "../common/cardShadow";
 import HiddenValue from "../common/HiddenValue";
 import { useLanguageContext } from "../common/LanguageProvider";
+import { useSoundPlayer } from "../common/SoundProvider";
 import { useAppTheme } from "../common/ThemeProvider";
 
 interface WordCardProps {
@@ -23,7 +24,8 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
   const theme = useAppTheme();
   const { height } = useWindowDimensions();
   const { text } = useLanguageContext();
-
+  const { playAccepted, playRejected } = useSoundPlayer();
+  
   useEffect(() => {
     setPending(false);
     setAccepted(false);
@@ -49,10 +51,12 @@ export default function WordCard({ word, accept, acceptBtnName, reject, rejectBt
   };
 
   const handleAccept = () => {
+    playAccepted();
     handleUserInput(accept);
     setAccepted(true);
   };
   const handleReject = () => {
+    playRejected();
     handleUserInput(reject);
     setAccepted(false);
   };

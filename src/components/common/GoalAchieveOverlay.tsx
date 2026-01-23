@@ -4,6 +4,7 @@ import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useLanguageContext } from "./LanguageProvider";
 import { useAppTheme, useThemeContext } from "./ThemeProvider";
 
@@ -13,13 +14,15 @@ export function GoalAchieveOverlay() {
   const { text } = useLanguageContext();
   const { name, showBanner, hideGoalAchieveBanner } = useUserData();
   const [visible, setVisible] = useState(false);
+  const { playGoalAchieve } = useSoundPlayer();
 
   useEffect(() => {
     if (showBanner) {
       setVisible(true);
+      playGoalAchieve();
       hideGoalAchieveBanner();
     }
-  }, [showBanner, hideGoalAchieveBanner]);
+  }, [showBanner, hideGoalAchieveBanner, playGoalAchieve]);
 
   if (!visible) return null;
 

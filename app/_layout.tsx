@@ -1,7 +1,7 @@
 import { GoalAchieveOverlay } from "@/src/components/common/GoalAchieveOverlay";
 import { LanguageProvider } from "@/src/components/common/LanguageProvider";
 import { LoadingOverlayProvider } from "@/src/components/common/LoadingOverlayProvider";
-import LoadingScreenSpinner from "@/src/components/common/LoadingScreenSpinner";
+import { SoundProvider } from "@/src/components/common/SoundProvider";
 import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { runMigrations } from "@/src/database/migrations";
 import { useBootstrapSettings } from "@/src/hooks/useBootstrapSettings";
@@ -32,19 +32,21 @@ function AppInitializer() {
   useBootstrapSettings();
 
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <LoadingOverlayProvider>
-          <AppContent />
-        </LoadingOverlayProvider>
-      </LanguageProvider>
-    </ThemeProvider>
+    <SoundProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <LoadingOverlayProvider>
+            <AppContent />
+          </LoadingOverlayProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </SoundProvider>
   );
 }
 
 export default function RootLayout() {
   return (
-    <Suspense fallback={<LoadingScreenSpinner />}>
+    <Suspense fallback={null}>
       <SQLiteProvider databaseName="EnglishLearningApp.db" onInit={runMigrations} useSuspense={true}>
         <ReduxProvider store={store}>
           <SafeAreaProvider>

@@ -7,6 +7,7 @@ import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useLanguageContext } from "../../../common/LanguageProvider";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 const VISIBLE_PAIRS = 5;
@@ -32,7 +33,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
   const { words } = usePractice();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
-
+  const { playAccepted, playRejected } = useSoundPlayer();
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
   const [mistakesCount, setMistakesCount] = useState(0);
@@ -114,8 +115,10 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
       isCorrect,
     };
     if (isCorrect) {
+      playAccepted();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } else {
+      playRejected();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     }
     setPairMatch(pair);

@@ -14,6 +14,18 @@ import {
 import { trimTextForSaving } from "../util/stringHelper";
 import { SupportedLocales } from "../components/common/LanguageProvider";
 
+export async function getUserSoundEnabled(): Promise<boolean> {
+  return getUserProp(USER_DATA_KEYS.SOUND_ENABLED);
+}
+
+export async function setUserSoundEnabled(soundEnabled: boolean): Promise<boolean> {
+  const oldSoundEnabled = await getUserProp(USER_DATA_KEYS.SOUND_ENABLED);
+  if (oldSoundEnabled !== soundEnabled) {
+    setUserProp(USER_DATA_KEYS.SOUND_ENABLED, soundEnabled);
+  }
+  return oldSoundEnabled;
+}
+
 export async function getUserLocale(): Promise<SupportedLocales | undefined> {
   return getUserProp(USER_DATA_KEYS.LOCALE);
 }

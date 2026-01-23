@@ -13,6 +13,7 @@
       "bundleIdentifier": "com.kmsprod.pocketeng",
       "buildNumber": "1",
       "infoPlist": {
+        "UIBackgroundModes": ["audio"], 
         "NSMicrophoneUsageDescription": "This app uses the microphone to record your voice for speech recognition during English lessons.",
         "NSSpeechRecognitionUsageDescription": "This app uses the microphone to record your voice for speech recognition during English lessons.",
         "ITSAppUsesNonExemptEncryption": false

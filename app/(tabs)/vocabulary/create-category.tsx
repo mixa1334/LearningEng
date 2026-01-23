@@ -1,6 +1,7 @@
-import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import FieldTextInput from "@/src/components/common/FieldTextInput";
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import PickEmojiButton from "@/src/components/common/PickEmojiButton";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -11,11 +12,13 @@ export default function CreateCategoryPage() {
   const router = useRouter();
   const { text } = useLanguageContext();
   const { addCategory } = useVocabulary();
+  const { playActionSuccess } = useSoundPlayer();
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryEmoji, setNewCategoryEmoji] = useState<string | undefined>(undefined);
 
   const handleAddCategory = () => {
     if (!newCategoryName || !newCategoryEmoji) return;
+    playActionSuccess();
     addCategory({
       name: newCategoryName,
       icon: newCategoryEmoji,

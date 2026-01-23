@@ -1,4 +1,5 @@
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import { Category } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
@@ -20,10 +21,13 @@ export default function SaveTranslationPage() {
   const { addWord } = useVocabulary();
   const { removeTranslation } = useTranslation();
 
+  const {playActionSuccess} = useSoundPlayer();
+
   const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
 
   const handleSaveToVocabulary = () => {
     if (!selectedCategory) return;
+    playActionSuccess();
     addWord({
       word_en: word_en,
       word_ru: word_ru,

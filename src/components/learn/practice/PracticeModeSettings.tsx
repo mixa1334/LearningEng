@@ -7,6 +7,7 @@ import { Button, IconButton, Switch } from "react-native-paper";
 
 import { getCardShadow } from "../../common/cardShadow";
 import { useLanguageContext } from "../../common/LanguageProvider";
+import { useSoundPlayer } from "../../common/SoundProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 import PickCategoryButton from "../../vocabulary/category/PickCategoryButton";
@@ -22,6 +23,7 @@ export default function PracticeModeSettings() {
   const { category, wordType, practiceLimit, setCategory, setWordType, setPracticeLimit, resetCriteria } = usePractice();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
+  const { playTap } = useSoundPlayer();
 
   const [isLimitPickerVisible, setIsLimitPickerVisible] = useState(false);
 
@@ -35,14 +37,17 @@ export default function PracticeModeSettings() {
     setIsLimitPickerVisible(false);
   };
 
+  const handleResetCriteria = () => {
+    playTap();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    resetCriteria();
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
       <IconButton
         icon="refresh"
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-          resetCriteria();
-        }}
+        onPress={handleResetCriteria}
         iconColor={theme.colors.onError}
         containerColor={theme.colors.error}
         size={18}

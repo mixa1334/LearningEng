@@ -1,4 +1,5 @@
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import WordsList from "@/src/components/vocabulary/word/WordsList";
@@ -17,6 +18,7 @@ export default function WordsPage() {
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
   const { text } = useLanguageContext();
+  const { playTap } = useSoundPlayer();
 
   const { criteriaDto, updateWordCriteria } = useVocabulary();
   const [searchPattern, setSearchPattern] = useState(criteriaDto.searchPattern);
@@ -30,6 +32,7 @@ export default function WordsPage() {
   const clearSearch = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     Keyboard.dismiss();
+    playTap();
     setSearchPattern("");
     updateCriteria((criteria) => criteria.appendCategory(undefined).appendSearchPattern(""));
   };

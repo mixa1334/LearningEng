@@ -17,16 +17,19 @@ import * as Haptics from "expo-haptics";
 import LottieView from "lottie-react-native";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
 import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
+import { useSoundContext, useSoundPlayer } from "../common/SoundProvider";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
 import ExpandedCard from "./ExpandedCard";
 
 export default function SettingsCard() {
   const dispatch = useAppDispatch();
   const { name } = useUserData();
-  const { visible, show, hide } = useLoadingOverlay();
+  const { show, hide } = useLoadingOverlay();
   const { isDark, toggleTheme, toggleHihikTheme, isHihik } = useThemeContext();
+  const { playActionSuccess, playRejected } = useSoundPlayer();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
   const { text, changeLanguage, locale } = useLanguageContext();
+  const { enabled, toggleEnabled} = useSoundContext();
   const theme = useAppTheme();
 
   const languageOptions = [
@@ -40,8 +43,11 @@ export default function SettingsCard() {
     try {
       show();
       await createBackupFileAndShare();
+      playActionSuccess();
+      Alert.alert(text("settings_backup_completed_title"), text("settings_backup_completed_message"));
     } catch (e) {
       console.error(e);
+      playRejected();
       Alert.alert(text("settings_backup_failed_title"), text("settings_backup_failed_message"));
     } finally {
       hide();
@@ -75,9 +81,11 @@ export default function SettingsCard() {
           ])
         );
 
+      playActionSuccess();
       Alert.alert(text("settings_restore_completed_title"), text("settings_restore_completed_message"));
     } catch (e) {
       console.error(e);
+      playRejected();
       Alert.alert(
         text("settings_restore_failed_title"),
         e instanceof Error ? e.message : text("settings_restore_failed_message")
@@ -103,6 +111,10 @@ export default function SettingsCard() {
         <View style={styles.switcherSettingRow}>
           <Text>{text("settings_dark_theme")}</Text>
           <Switch value={isDark} onValueChange={toggleTheme} />
+        </View>
+        <View style={styles.switcherSettingRow}>
+          <Text>{text("settings_sound_enabled")}</Text>
+          <Switch value={enabled} onValueChange={toggleEnabled} />
         </View>
         {hihikUser && (
           <View style={styles.switcherSettingRow}>

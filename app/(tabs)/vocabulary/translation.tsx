@@ -1,6 +1,7 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useLoadingOverlay } from "@/src/components/common/LoadingOverlayProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
@@ -24,6 +25,7 @@ export default function TranslationPage() {
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
+  const { playTap } = useSoundPlayer();
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = SPACING_XXL;
@@ -43,6 +45,7 @@ export default function TranslationPage() {
   const translate = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
+    playTap();
     show();
     translateWord(wordToTranslate, language);
     setWordToTranslate("");
@@ -54,6 +57,7 @@ export default function TranslationPage() {
   };
 
   const openWordFromTranslationModal = (translation: Translation) => {
+    playTap();
     router.push({
       pathname: "./save-translation",
       params: {
@@ -65,6 +69,7 @@ export default function TranslationPage() {
   };
 
   if (status === StateType.failed) {
+
     sendUserError(error || text("translation_error_unknown"), () => resetError());
   }
 

@@ -20,19 +20,17 @@ function loadSettingsOnce(dispatch: AppDispatch) {
       NavigationBar.setVisibilityAsync('hidden');
     }
 
-    const configureAudio = async () => {
+    (async function () {
       try {
         await Audio.setAudioModeAsync({
           playsInSilentMode: true,
           allowsRecording: false,
-          interruptionMode: 'doNotMix',
+          interruptionMode: 'mixWithOthers',
         });
       } catch (error) {
         console.error("Audio mode setup failed:", error);
       }
-    };
-
-    configureAudio();
+    })();
 
     settingsPromise = dispatch(loadUserDataThunk())
       .unwrap()

@@ -5,6 +5,7 @@ import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useLanguageContext } from "../../../common/LanguageProvider";
 import { useAppTheme } from "../../../common/ThemeProvider";
 import { getCardShadow } from "../../../common/cardShadow";
@@ -31,7 +32,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
   const { triggerScroll } = useAutoScroll();
   const { words } = usePractice();
   const { text } = useLanguageContext();
-
+  const { playAccepted, playRejected } = useSoundPlayer();
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
   const [withoutMistakesCount, setWithoutMistakesCount] = useState(0);
@@ -73,6 +74,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
   };
 
   const handleIncorrectPick = (id: number) => {
+    playRejected();
     setMadeMistakeOnWord(true);
     setIncorrectLetterId(id);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -89,6 +91,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
     const newLetterIndex = currentLetterIndex + 1;
     setCurrentLetterIndex(newLetterIndex);
     if (newLetterIndex === word.length) {
+      playAccepted();
       setIsWordHighlighted(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       const timeout = setTimeout(() => {

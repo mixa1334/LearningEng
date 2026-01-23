@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
 
-import { useLanguageContext } from "../../common/LanguageProvider";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { getCardShadow } from "../../common/cardShadow";
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
 import WordCard from "../WordCard";

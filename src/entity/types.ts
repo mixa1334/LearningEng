@@ -40,6 +40,7 @@ export type UserData = {
   dailyGoalAchieve: boolean;
   theme: THEMES;
   locale: SupportedLocales | undefined;
+  soundEnabled: boolean;
 };
 
 export enum Language {
