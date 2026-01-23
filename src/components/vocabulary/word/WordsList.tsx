@@ -1,10 +1,10 @@
 import { Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { getCardShadow } from "../../common/cardShadow";
+import { useHaptics } from "../../common/HapticsProvider";
 import { useSoundPlayer } from "../../common/SoundProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import EditWordDialog from "./EditWordDialog";
@@ -13,13 +13,14 @@ export default function WordsList() {
   const theme = useAppTheme();
   const { words } = useVocabulary();
   const { playTap } = useSoundPlayer();
+  const { lightImpact } = useHaptics();
 
   const [showEditWordModal, setShowEditWordModal] = useState(false);
   const [wordToEdit, setWordToEdit] = useState<Word | null>(null);
 
   const openEditWordModal = (word: Word) => {
     playTap();
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightImpact();
     setWordToEdit(word);
     setShowEditWordModal(true);
   };

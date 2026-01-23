@@ -6,12 +6,12 @@ import PracticeModeSettings from "@/src/components/learn/practice/PracticeModeSe
 import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/learn/practice/PracticeModeWrapper";
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 
 import { useAutoScroll } from "../../common/AutoScrollContext";
+import { useHaptics } from "../../common/HapticsProvider";
 import { getCardShadow } from "../../common/cardShadow";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
@@ -72,6 +72,7 @@ export default function PracticeMain() {
   const { resetPracticeSet } = usePractice();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
+  const { lightImpact } = useHaptics();
   const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(ExtraMode.OVERVIEW);
   const [isSessionStarted, setIsSessionStarted] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
@@ -110,7 +111,7 @@ export default function PracticeMain() {
   };
 
   const handleSettingsToggler = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightImpact();
     setIsSettingsVisible((prev) => !prev);
     resetPracticeSet();
     triggerScroll();
@@ -165,7 +166,7 @@ export default function PracticeMain() {
         <View style={styles.modeDropdownContainer}>
           <Pressable
             onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              lightImpact();
               setIsModeMenuVisible(true);
             }}
             style={({ pressed }) => [

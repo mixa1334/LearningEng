@@ -1,10 +1,10 @@
 import { useLearningDailySet, useLearnUtil } from "@/src/hooks/useLearn";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
 
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { useHaptics } from "../../common/HapticsProvider";
 import { getCardShadow } from "../../common/cardShadow";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
@@ -19,6 +19,7 @@ export default function LearningMainMode() {
   const { markWordReviewed, markWordNotReviewed, startLearnNewWord, markWordCompletelyLearned } = useLearnUtil();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
+  const { lightImpact } = useHaptics();
 
   const word = isLearnTab ? learnWord : reviewWord;
   const accept = isLearnTab ? markWordCompletelyLearned : markWordReviewed;
@@ -48,7 +49,7 @@ export default function LearningMainMode() {
 
   const switchTab = (nextIsLearn: boolean) => {
     if (nextIsLearn === isLearnTab) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightImpact();
     const nextPos = nextIsLearn ? 0 : 1;
     setIsLearnTab(nextIsLearn);
     tabPosition.value = withTiming(nextPos, { duration: 200 });

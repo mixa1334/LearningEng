@@ -1,4 +1,5 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useLoadingOverlay } from "@/src/components/common/LoadingOverlayProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
@@ -9,7 +10,6 @@ import { SPACING_XL, SPACING_XXL, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src
 import { StateType } from "@/src/store/slice/stateType";
 import { sendUserError } from "@/src/util/userAlerts";
 import { Ionicons } from "@expo/vector-icons";
-import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Keyboard, Platform, StyleSheet, View } from "react-native";
@@ -26,6 +26,7 @@ export default function TranslationPage() {
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
   const { playTap } = useSoundPlayer();
+  const { softImpact, lightImpact, mediumImpact } = useHaptics();
 
   const pageHorizontalPadding = SPACING_XL;
   const pageTopPadding = SPACING_XXL;
@@ -38,12 +39,12 @@ export default function TranslationPage() {
   }, [status, visible, hide]);
 
   const switchLanguages = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    softImpact();
     setLanguage((prev) => (prev === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH));
   };
 
   const translate = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightImpact();
     Keyboard.dismiss();
     playTap();
     show();
@@ -52,7 +53,7 @@ export default function TranslationPage() {
   };
 
   const handleClearHistory = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    mediumImpact();
     clearTranslations();
   };
 

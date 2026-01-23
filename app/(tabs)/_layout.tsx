@@ -1,10 +1,10 @@
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
-import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import React from "react";
 import { GestureResponderEvent, Platform, Pressable, View } from "react-native";
@@ -74,9 +74,10 @@ function TabBarBackground() {
 }
 
 function CustomTabBarButton(props: BottomTabBarButtonProps) {
-  
+  const { softImpact } = useHaptics();
+
   const handlePress = (event: GestureResponderEvent) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    softImpact();
     props.onPress?.(event);
   };
 

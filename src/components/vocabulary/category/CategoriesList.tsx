@@ -1,10 +1,10 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { getCardShadow } from "../../common/cardShadow";
+import { useHaptics } from "../../common/HapticsProvider";
 import { useSoundPlayer } from "../../common/SoundProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import EditCategoryDialog from "./EditCategoryDialog";
@@ -13,13 +13,14 @@ export default function CategoriesList() {
   const theme = useAppTheme();
   const { userCategories } = useVocabulary();
   const { playTap } = useSoundPlayer();
+  const { lightImpact } = useHaptics();
   
   const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   const openEditCategoryModal = (category: Category) => {
     playTap();
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightImpact();
     setCategoryToEdit(category);
     setShowEditCategoryModal(true);
   };

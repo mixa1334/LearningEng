@@ -1,5 +1,6 @@
 import { DateShifts, getCurrentDate } from "@/src/util/dateHelper";
 import Storage from "expo-sqlite/kv-store";
+import { SupportedLocales } from "../components/common/LanguageProvider";
 import { THEMES, UserData } from "../entity/types";
 import {
   ALL_USER_DATA_KEYS,
@@ -12,7 +13,18 @@ import {
   USER_DATA_KEYS,
 } from "../storage/userDataStorageHelper";
 import { trimTextForSaving } from "../util/stringHelper";
-import { SupportedLocales } from "../components/common/LanguageProvider";
+
+export async function getUserHapticsEnabled(): Promise<boolean> {
+  return getUserProp(USER_DATA_KEYS.HAPTICS_ENABLED);
+}
+
+export async function setUserHapticsEnabled(hapticsEnabled: boolean): Promise<boolean> {
+  const oldHapticsEnabled = await getUserProp(USER_DATA_KEYS.HAPTICS_ENABLED);
+  if (oldHapticsEnabled !== hapticsEnabled) {
+    setUserProp(USER_DATA_KEYS.HAPTICS_ENABLED, hapticsEnabled);
+  }
+  return oldHapticsEnabled;
+}
 
 export async function getUserSoundEnabled(): Promise<boolean> {
   return getUserProp(USER_DATA_KEYS.SOUND_ENABLED);

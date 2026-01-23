@@ -13,8 +13,8 @@ import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
-import * as Haptics from "expo-haptics";
 import LottieView from "lottie-react-native";
+import { useHaptics } from "../common/HapticsProvider";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
 import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
 import { useSoundContext, useSoundPlayer } from "../common/SoundProvider";
@@ -31,6 +31,7 @@ export default function SettingsCard() {
   const { text, changeLanguage, locale } = useLanguageContext();
   const { enabled, toggleEnabled} = useSoundContext();
   const theme = useAppTheme();
+  const { lightImpact } = useHaptics();
 
   const languageOptions = [
     { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
@@ -101,7 +102,7 @@ export default function SettingsCard() {
   };
 
   const handlePickLanguage = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    lightImpact();
     setIsLanguagePickerVisible(true)
   };
 

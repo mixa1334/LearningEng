@@ -1,4 +1,5 @@
 import FieldTextInput from "@/src/components/common/FieldTextInput";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
@@ -18,10 +19,12 @@ export default function CreateWordPage() {
   const [newWordTextExample, setNewWordTextExample] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
   const { playActionSuccess } = useSoundPlayer();
+  const { mediumImpact } = useHaptics();
 
   const handleAddWord = () => {
     if (!newWordEn || !newWordRu || !selectedCategory) return;
     playActionSuccess();
+    mediumImpact();
     addWord({
       word_en: newWordEn,
       word_ru: newWordRu,

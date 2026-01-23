@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useHaptics } from "./HapticsProvider";
 import { useLanguageContext } from "./LanguageProvider";
 import { useAppTheme } from "./ThemeProvider";
 
@@ -13,6 +13,7 @@ interface HiddenValueProps {
 
 export default function HiddenValue({ value, isVisible, onShowCallback }: HiddenValueProps) {
     const theme = useAppTheme();
+    const { lightImpact } = useHaptics();
 
     const { text } = useLanguageContext();
 
@@ -23,7 +24,7 @@ export default function HiddenValue({ value, isVisible, onShowCallback }: Hidden
     }, [value]);
 
     const handleShowText = () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        lightImpact();
         setShowText(true);
         onShowCallback?.();
     };

@@ -1,4 +1,5 @@
 import { GoalAchieveOverlay } from "@/src/components/common/GoalAchieveOverlay";
+import { HapticsProvider } from "@/src/components/common/HapticsProvider";
 import { LanguageProvider } from "@/src/components/common/LanguageProvider";
 import { LoadingOverlayProvider } from "@/src/components/common/LoadingOverlayProvider";
 import { SoundProvider } from "@/src/components/common/SoundProvider";
@@ -33,13 +34,15 @@ function AppInitializer() {
 
   return (
     <SoundProvider>
-      <ThemeProvider>
-        <LanguageProvider>
-          <LoadingOverlayProvider>
-            <AppContent />
-          </LoadingOverlayProvider>
-        </LanguageProvider>
-      </ThemeProvider>
+      <HapticsProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <LoadingOverlayProvider>
+              <AppContent />
+            </LoadingOverlayProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </HapticsProvider>
     </SoundProvider>
   );
 }

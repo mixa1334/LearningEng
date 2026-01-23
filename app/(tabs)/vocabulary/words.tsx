@@ -1,6 +1,7 @@
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import WordsList from "@/src/components/vocabulary/word/WordsList";
 import { Category } from "@/src/entity/types";
@@ -8,7 +9,6 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { SPACING_LG, SPACING_MD, SPACING_SM, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { WordCriteria } from "@/src/service/wordService";
 import { Ionicons } from "@expo/vector-icons";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Keyboard, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { IconButton } from "react-native-paper";
@@ -19,6 +19,7 @@ export default function WordsPage() {
   const insets = useSafeAreaInsets();
   const { text } = useLanguageContext();
   const { playTap } = useSoundPlayer();
+  const { softImpact } = useHaptics();
 
   const { criteriaDto, updateWordCriteria } = useVocabulary();
   const [searchPattern, setSearchPattern] = useState(criteriaDto.searchPattern);
@@ -30,7 +31,7 @@ export default function WordsPage() {
   };
 
   const clearSearch = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    softImpact();
     Keyboard.dismiss();
     playTap();
     setSearchPattern("");

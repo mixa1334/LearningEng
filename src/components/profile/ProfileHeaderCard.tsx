@@ -1,13 +1,13 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_MD, SPACING_XL } from "@/src/resources/constants/layout";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, TextInput } from "react-native-paper";
 
 import { truncate } from "@/src/util/stringHelper";
 import LottieView from "lottie-react-native";
+import { useHaptics } from "../common/HapticsProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
@@ -19,9 +19,10 @@ export default function ProfileHeaderCard() {
   const { text } = useLanguageContext();
   const [editableName, setEditableName] = useState(false);
   const [nameInput, setNameInput] = useState<string>(name);
+  const { heavyImpact } = useHaptics();
 
   const toggleEditableName = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    heavyImpact();
     setEditableName((prev) => {
       if (prev) {
         changeName(nameInput.trim());

@@ -1,11 +1,11 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_XL } from "@/src/resources/constants/layout";
-import * as Haptics from "expo-haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 
 import LottieView from "lottie-react-native";
+import { useHaptics } from "../common/HapticsProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
@@ -15,16 +15,17 @@ export default function DailyGoalCard() {
   const { isHihik } = useThemeContext();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
+  const { mediumImpact } = useHaptics();
 
   const backgroundColor = dailyGoalAchieve ? theme.colors.primary : theme.colors.surfaceVariant;
   const textColor = dailyGoalAchieve ? theme.colors.onPrimary : theme.colors.onSurface;
 
   const increaseGoal = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    mediumImpact();
     changeGoal(dailyGoal + 1);
   };
   const decreaseGoal = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    mediumImpact();
     const newDailyGoal = dailyGoal - 1;
     if (newDailyGoal > 0) {
       changeGoal(newDailyGoal);

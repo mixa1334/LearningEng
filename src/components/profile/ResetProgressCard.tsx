@@ -1,11 +1,11 @@
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_MD } from "@/src/resources/constants/layout";
-import * as Haptics from "expo-haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
+import { useHaptics } from "../common/HapticsProvider";
 import { sendUserAlert, sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import { useLanguageContext } from "../common/LanguageProvider";
 import ExpandedCard from "./ExpandedCard";
@@ -16,9 +16,10 @@ export default function ResetProgressCard() {
   const { text } = useLanguageContext();
 
   const { resetUserStats, resetWordsProgress, removeUserVocabulary } = useUserData();
+  const { heavyImpact } = useHaptics();
 
   const handleResetUserStats = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    heavyImpact();
     sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("reset_user_data_confirm_message"),
@@ -30,7 +31,7 @@ export default function ResetProgressCard() {
   };
 
   const handleResetVocabularyProgress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    heavyImpact();
     sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("reset_vocabulary_stats_confirm_message"),
@@ -42,7 +43,7 @@ export default function ResetProgressCard() {
   };
 
   const handleRemoveUserVocabulary = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    heavyImpact();
     sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("reset_remove_vocabulary_confirm_message"),

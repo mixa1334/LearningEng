@@ -1,7 +1,7 @@
 import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/arrayHelper";
-import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -32,6 +32,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
   const { triggerScroll } = useAutoScroll();
   const { words } = usePractice();
   const { text } = useLanguageContext();
+  const { successNotification, errorNotification } = useHaptics();
   const { playAccepted, playRejected } = useSoundPlayer();
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
@@ -77,7 +78,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
     playRejected();
     setMadeMistakeOnWord(true);
     setIncorrectLetterId(id);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    errorNotification();
     const timeout = setTimeout(() => {
       setIncorrectLetterId(null);
     }, HIGHLIGHT_DELAY);
@@ -93,7 +94,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
     if (newLetterIndex === word.length) {
       playAccepted();
       setIsWordHighlighted(true);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      successNotification();
       const timeout = setTimeout(() => {
         moveToNextWord();
       }, HIGHLIGHT_DELAY);

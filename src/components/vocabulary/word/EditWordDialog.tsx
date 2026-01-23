@@ -2,11 +2,11 @@ import TouchableTextInput from "@/src/components/common/TouchableTextInput";
 import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
-import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
+import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import PickCategoryButton from "../category/PickCategoryButton";
 
@@ -22,6 +22,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   const { editWord, removeWord } = useVocabulary();
   const [wordToEdit, setWordToEdit] = useState(word);
   const { text } = useLanguageContext();
+  const { mediumImpact } = useHaptics();
 
   const setWordEn = (text: string) => {
     setWordToEdit({ ...wordToEdit, word_en: text });
@@ -36,7 +37,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   };
 
   const handleDeleteWord = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    mediumImpact();
     sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("vocabulary_delete_word_confirm_message"),

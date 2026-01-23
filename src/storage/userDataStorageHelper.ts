@@ -13,6 +13,7 @@ export enum USER_DATA_KEYS {
   THEME = "theme",
   LOCALE = "locale",
   SOUND_ENABLED = "soundEnabled",
+  HAPTICS_ENABLED = "hapticsEnabled",
 }
 
 export const ALL_USER_DATA_KEYS = Object.values(USER_DATA_KEYS) as string[];
@@ -29,6 +30,7 @@ export const DEFAULT_USER_DATA: UserData = {
   theme: THEMES.LIGHT,
   locale: undefined,
   soundEnabled: true,
+  hapticsEnabled: true,
 };
 
 function mapStorageValueToUserData<K extends USER_DATA_KEYS>(key: K, value: string | null): UserData[K] {
@@ -43,6 +45,7 @@ function mapStorageValueToUserData<K extends USER_DATA_KEYS>(key: K, value: stri
       return Number(value) as UserData[K];
     case USER_DATA_KEYS.DAILY_GOAL_ACHIEVE:
     case USER_DATA_KEYS.SOUND_ENABLED:
+    case USER_DATA_KEYS.HAPTICS_ENABLED:
       return (value === "true") as UserData[K];
     default:
       return value as UserData[K];

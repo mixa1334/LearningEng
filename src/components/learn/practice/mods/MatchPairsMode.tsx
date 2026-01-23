@@ -3,10 +3,10 @@ import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/arrayHelper";
-import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useLanguageContext } from "../../../common/LanguageProvider";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
@@ -33,6 +33,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
   const { words } = usePractice();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
+  const { successNotification, errorNotification } = useHaptics();
   const { playAccepted, playRejected } = useSoundPlayer();
   const [hasFinished, setHasFinished] = useState(words.length === 0);
 
@@ -116,10 +117,10 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
     };
     if (isCorrect) {
       playAccepted();
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      successNotification();
     } else {
       playRejected();
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      errorNotification();
     }
     setPairMatch(pair);
     setSelectedPlate(null);

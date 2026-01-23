@@ -1,11 +1,11 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
-import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
 
+import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import PickEmojiButton from "../../common/PickEmojiButton";
 import TouchableTextInput from "../../common/TouchableTextInput";
@@ -21,6 +21,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   const { editCategory, removeCategory } = useVocabulary();
   const { text } = useLanguageContext();
   const [categoryToEdit, setCategoryToEdit] = useState(category);
+  const { mediumImpact } = useHaptics();
   useEffect(() => setCategoryToEdit(category), [category]);
 
   const setCategoryName = (text: string) => {
@@ -37,7 +38,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   };
 
   const handleDeleteCategory = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    mediumImpact();
     sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("vocabulary_delete_category_confirm_message"),

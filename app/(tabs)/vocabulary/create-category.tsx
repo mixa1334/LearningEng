@@ -1,4 +1,5 @@
 import FieldTextInput from "@/src/components/common/FieldTextInput";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import PickEmojiButton from "@/src/components/common/PickEmojiButton";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
@@ -13,12 +14,14 @@ export default function CreateCategoryPage() {
   const { text } = useLanguageContext();
   const { addCategory } = useVocabulary();
   const { playActionSuccess } = useSoundPlayer();
+  const { mediumImpact } = useHaptics();
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryEmoji, setNewCategoryEmoji] = useState<string | undefined>(undefined);
 
   const handleAddCategory = () => {
     if (!newCategoryName || !newCategoryEmoji) return;
     playActionSuccess();
+    mediumImpact();
     addCategory({
       name: newCategoryName,
       icon: newCategoryEmoji,

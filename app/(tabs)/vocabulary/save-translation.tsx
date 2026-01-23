@@ -1,3 +1,4 @@
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
@@ -8,6 +9,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
+
 
 export default function SaveTranslationPage() {
   const router = useRouter();
@@ -22,12 +24,14 @@ export default function SaveTranslationPage() {
   const { removeTranslation } = useTranslation();
 
   const {playActionSuccess} = useSoundPlayer();
+  const {mediumImpact} = useHaptics();
 
   const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
 
   const handleSaveToVocabulary = () => {
     if (!selectedCategory) return;
     playActionSuccess();
+    mediumImpact();
     addWord({
       word_en: word_en,
       word_ru: word_ru,

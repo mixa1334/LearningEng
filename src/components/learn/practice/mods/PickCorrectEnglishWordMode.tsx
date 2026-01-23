@@ -1,11 +1,11 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/arrayHelper";
-import * as Haptics from "expo-haptics";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
@@ -30,6 +30,7 @@ export default function PickCorrectEnglishWordMode(
     const theme = useAppTheme();
     const { words } = usePractice();
     const { text } = useLanguageContext();
+    const { successNotification, errorNotification } = useHaptics();
     const { playAccepted, playRejected } = useSoundPlayer();
     const [hasFinished, setHasFinished] = useState(words.length === 0);
 
@@ -64,7 +65,7 @@ export default function PickCorrectEnglishWordMode(
     const handleCorrectPick = () => {
         playAccepted();
         setIsCorrect(true);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        successNotification();
         const timeout = setTimeout(() => {
             moveToNextWord();
         }, HIGHLIGHT_DELAY);
@@ -75,7 +76,7 @@ export default function PickCorrectEnglishWordMode(
         playRejected();
         setMadeMistake(true);
         setIsIncorrect(true);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        errorNotification();
         const timeout = setTimeout(() => {
             setIsIncorrect(false);
         }, HIGHLIGHT_DELAY);

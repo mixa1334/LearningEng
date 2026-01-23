@@ -41,6 +41,7 @@ export type UserData = {
   theme: THEMES;
   locale: SupportedLocales | undefined;
   soundEnabled: boolean;
+  hapticsEnabled: boolean;
 };
 
 export enum Language {
