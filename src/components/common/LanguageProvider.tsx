@@ -1,6 +1,6 @@
 import en from "@/assets/locales/en.json";
 import ru from "@/assets/locales/ru.json";
-import { getUserLocale, setUserLocale } from "@/src/service/userDataService";
+import * as UserDataService from "@/src/service/userDataService";
 import * as Localization from "expo-localization";
 import { I18n } from "i18n-js";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -23,7 +23,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType>({
   locale: SupportedLocales.ENGLISH,
   text: () => "",
-  changeLanguage: () => {},
+  changeLanguage: () => { },
   isReady: false,
 });
 
@@ -36,17 +36,17 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
   useEffect(() => {
     (async () => {
       try {
-        const savedLang = await getUserLocale();
+        const savedLang = await UserDataService.getUserLocale();
         const systemLocales = Localization.getLocales();
         const systemLanguage = systemLocales[0]?.languageCode;
         const isSupported = Object.values(SupportedLocales).includes(systemLanguage as SupportedLocales);
         const initialLocale = (savedLang || (isSupported ? systemLanguage : SupportedLocales.ENGLISH)) as SupportedLocales;
         i18n.locale = initialLocale;
         setLocale(initialLocale);
+        setIsReady(true);
       } catch (error) {
         console.error("Failed to load locale:", error);
-      } finally {
-        setIsReady(true);
+        setIsReady(false);
       }
     })();
   }, []);
@@ -54,17 +54,22 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
   const changeLanguage = useCallback((newLocale: SupportedLocales) => {
     i18n.locale = newLocale;
     setLocale(newLocale);
-    setUserLocale(newLocale);
+    UserDataService.setUserLocale(newLocale);
   }, []);
+
+  const text = useCallback((key: string, options?: object) => {
+    if (!isReady) return "error_lang";
+    return i18n.t(key, options);
+  }, [isReady]);
 
   const value = useMemo(
     () => ({
       locale,
-      text: (key: string, options?: object) => i18n.t(key, options),
+      text,
       changeLanguage,
       isReady,
     }),
-    [locale, changeLanguage, isReady]
+    [locale, changeLanguage, text, isReady]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

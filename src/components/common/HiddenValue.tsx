@@ -34,7 +34,7 @@ export default function HiddenValue({ value, isVisible, onShowCallback }: Hidden
         <View style={styles.hiddenValueContainer}>
             {visible ? (
                 <View style={[styles.hiddenTitleContainer, { backgroundColor: theme.colors.surface }]}>
-                    <Text style={[styles.hiddenTitle, { color: theme.colors.onSurface}]} numberOfLines={3}>
+                    <Text style={[styles.hiddenTitle, { color: theme.colors.onSurface }]} numberOfLines={3}>
                         {value}
                     </Text>
                 </View>
