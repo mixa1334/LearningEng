@@ -3,15 +3,15 @@ import { SoundEffect, soundPlayer } from "@/src/util/soundPlayer";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 interface SoundContextType {
-    enabled: boolean;
-    toggleEnabled: () => void;
-    isReady: boolean;
+    soundEnabled: boolean;
+    toggleSound: () => void;
+    isSoundReady: boolean;
 }
 
 const SoundContext = createContext<SoundContextType>({
-    enabled: true,
-    toggleEnabled: () => { },
-    isReady: false,
+    soundEnabled: true,
+    toggleSound: () => { },
+    isSoundReady: false,
 });
 
 export const useSoundContext = () => useContext(SoundContext);
@@ -29,8 +29,8 @@ export function useSoundPlayer() {
 }
 
 export function SoundProvider({ children }: { readonly children: React.ReactNode }) {
-    const [enabled, setEnabled] = useState(true);
-    const [isReady, setIsReady] = useState(false);
+    const [soundEnabled, setSoundEnabled] = useState(true);
+    const [isSoundReady, setIsSoundReady] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -38,31 +38,31 @@ export function SoundProvider({ children }: { readonly children: React.ReactNode
                 soundPlayer.init();
                 const soundEnabled = await UserDataService.getUserSoundEnabled();
                 soundPlayer.setAudioEnabled(soundEnabled);
-                setEnabled(soundEnabled);
-                setIsReady(true);
+                setSoundEnabled(soundEnabled);
+                setIsSoundReady(true);
             } catch (error) {
                 console.error("Failed to initialize sound player:", error);
                 soundPlayer.setAudioEnabled(false);
-                setIsReady(false);
+                setIsSoundReady(false);
             }
         })();
     }, []);
 
-    const toggleEnabled = useCallback(() => {
-        if (!isReady) return;
-        setEnabled((prev) => {
+    const toggleSound = useCallback(() => {
+        if (!isSoundReady) return;
+        setSoundEnabled((prev) => {
             const newEnabled = !prev;
             soundPlayer.setAudioEnabled(newEnabled);
             UserDataService.setUserSoundEnabled(newEnabled);
             return newEnabled;
         });
-    }, [isReady]);
+    }, [isSoundReady]);
 
     const value = useMemo(() => ({
-        enabled,
-        toggleEnabled,
-        isReady,
-    }), [enabled, toggleEnabled, isReady]);
+        soundEnabled,
+        toggleSound,
+        isSoundReady,
+    }), [soundEnabled, toggleSound, isSoundReady]);
 
     return <SoundContext.Provider value={value}>{children}</SoundContext.Provider>;
 }

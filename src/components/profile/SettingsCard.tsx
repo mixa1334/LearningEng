@@ -14,7 +14,7 @@ import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
 import LottieView from "lottie-react-native";
-import { useHaptics } from "../common/HapticsProvider";
+import { useHaptics, useHapticsContext } from "../common/HapticsProvider";
 import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
 import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
 import { useSoundContext, useSoundPlayer } from "../common/SoundProvider";
@@ -27,9 +27,10 @@ export default function SettingsCard() {
   const { show, hide } = useLoadingOverlay();
   const { isDark, toggleTheme, toggleHihikTheme, isHihik } = useThemeContext();
   const { playActionSuccess, playRejected } = useSoundPlayer();
+  const { hapticsEnabled, toggleHaptics } = useHapticsContext();
   const [isLanguagePickerVisible, setIsLanguagePickerVisible] = useState(false);
   const { text, changeLanguage, locale } = useLanguageContext();
-  const { enabled, toggleEnabled} = useSoundContext();
+  const { soundEnabled, toggleSound, isSoundReady } = useSoundContext();
   const theme = useAppTheme();
   const { lightImpact } = useHaptics();
 
@@ -115,7 +116,11 @@ export default function SettingsCard() {
         </View>
         <View style={styles.switcherSettingRow}>
           <Text>{text("settings_sound_enabled")}</Text>
-          <Switch value={enabled} onValueChange={toggleEnabled} />
+          <Switch value={soundEnabled} onValueChange={toggleSound} disabled={!isSoundReady} />
+        </View>
+        <View style={styles.switcherSettingRow}>
+          <Text>{text("settings_haptics_enabled")}</Text>
+          <Switch value={hapticsEnabled} onValueChange={toggleHaptics} />
         </View>
         {hihikUser && (
           <View style={styles.switcherSettingRow}>

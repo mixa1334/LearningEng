@@ -22,6 +22,7 @@
   "settings_title": "Settings",
   "settings_dark_theme": "Dark Theme",
   "settings_sound_enabled": "System sounds",
+  "settings_haptics_enabled": "Haptics",
   "settings_backup_button": "Backup",
   "settings_restore_button": "Restore",
   "settings_backup_failed_title": "Backup failed",

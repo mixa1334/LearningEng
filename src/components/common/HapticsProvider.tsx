@@ -3,13 +3,13 @@ import { haptics } from "@/src/util/haptics";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 interface HapticsContextType {
-    enabled: boolean;
-    toggleEnabled: () => void;
+    hapticsEnabled: boolean;
+    toggleHaptics: () => void;
 }
 
 const HapticsContext = createContext<HapticsContextType>({
-    enabled: true,
-    toggleEnabled: () => { },
+    hapticsEnabled: true,
+    toggleHaptics: () => { },
 });
 
 export const useHapticsContext = () => useContext(HapticsContext);
@@ -27,18 +27,18 @@ export const useHaptics = () => {
 };
 
 export function HapticsProvider({ children }: { readonly children: React.ReactNode }) {
-    const [enabled, setEnabled] = useState(true);
+    const [hapticsEnabled, setHapticsEnabled] = useState(true);
 
     useEffect(() => {
         (async () => {
             const hapticsEnabled = await UserDataService.getUserHapticsEnabled();
-            setEnabled(hapticsEnabled);
+            setHapticsEnabled(hapticsEnabled);
             haptics.setEnabled(hapticsEnabled);
         })();
     }, []);
 
-    const toggleEnabled = useCallback(() => {
-        setEnabled((prev) => {
+    const toggleHaptics = useCallback(() => {
+        setHapticsEnabled((prev) => {
             const newEnabled = !prev;
             UserDataService.setUserHapticsEnabled(newEnabled);
             haptics.setEnabled(newEnabled);
@@ -47,9 +47,9 @@ export function HapticsProvider({ children }: { readonly children: React.ReactNo
     }, []);
 
     const value = useMemo(() => ({
-        enabled,
-        toggleEnabled,
-    }), [enabled, toggleEnabled]);
+        hapticsEnabled,
+        toggleHaptics,
+    }), [hapticsEnabled, toggleHaptics]);
 
     return <HapticsContext.Provider value={value}>{children}</HapticsContext.Provider>;
 }

@@ -22,6 +22,7 @@
   "settings_title": "Настройки",
   "settings_dark_theme": "Тёмная тема",
   "settings_sound_enabled": "Системные звуки",
+  "settings_haptics_enabled": "Вибрации",
   "settings_backup_button": "Копировать",
   "settings_restore_button": "Восстановить",
   "settings_backup_failed_title": "Не удалось создать копию",
