@@ -52,15 +52,16 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
   }, []);
 
   const changeLanguage = useCallback((newLocale: SupportedLocales) => {
+    if (locale === newLocale || !isReady) return;
     i18n.locale = newLocale;
     setLocale(newLocale);
     UserDataService.setUserLocale(newLocale);
-  }, []);
+  }, [isReady, locale]);
 
   const text = useCallback((key: string, options?: object) => {
-    if (!isReady) return "error_lang";
+    if (!isReady || !locale) return "error";
     return i18n.t(key, options);
-  }, [isReady]);
+  }, [isReady, locale]);
 
   const value = useMemo(
     () => ({
