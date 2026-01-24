@@ -1,7 +1,6 @@
-import { DateShifts, getCurrentDate } from "@/src/util/dateHelper";
+import { dateHelper, DateShifts } from "@/src/util/DateHelper";
 import Storage from "expo-sqlite/kv-store";
-import { SupportedLocales } from "../components/common/LanguageProvider";
-import { THEMES, UserData } from "../entity/types";
+import { Language, THEMES, UserData } from "../entity/types";
 import {
   ALL_USER_DATA_KEYS,
   DEFAULT_USER_DATA,
@@ -12,7 +11,7 @@ import {
   setUserProp,
   USER_DATA_KEYS,
 } from "../storage/userDataStorageHelper";
-import { trimTextForSaving } from "../util/stringHelper";
+import { stringHelper } from "@/src/util/StringHelper";
 
 export async function getUserHapticsEnabled(): Promise<boolean> {
   return getUserProp(USER_DATA_KEYS.HAPTICS_ENABLED);
@@ -38,11 +37,11 @@ export async function setUserSoundEnabled(soundEnabled: boolean): Promise<boolea
   return oldSoundEnabled;
 }
 
-export async function getUserLocale(): Promise<SupportedLocales | undefined> {
+export async function getUserLocale(): Promise<Language | undefined> {
   return getUserProp(USER_DATA_KEYS.LOCALE);
 }
 
-export async function setUserLocale(locale: SupportedLocales): Promise<SupportedLocales | undefined> {
+export async function setUserLocale(locale: Language): Promise<Language | undefined> {
   const oldLocale = await getUserProp(USER_DATA_KEYS.LOCALE);
   if (oldLocale !== locale) {
     setUserProp(USER_DATA_KEYS.LOCALE, locale);
@@ -64,7 +63,7 @@ export async function setUserTheme(theme: THEMES): Promise<THEMES> {
 
 export async function changeName(name: string): Promise<string> {
   const oldName = await getUserProp(USER_DATA_KEYS.NAME);
-  const trimmedName = trimTextForSaving(name);
+  const trimmedName = stringHelper.trimTextForSaving(name);
   if (oldName !== trimmedName) {
     setUserProp(USER_DATA_KEYS.NAME, trimmedName);
   }
@@ -109,7 +108,7 @@ export async function updateAfterLearningWord(): Promise<{
   lastLearningDate: string;
   dailyGoalAchieve: boolean;
 }> {
-  const todayDate = getCurrentDate();
+  const todayDate = dateHelper.getCurrentDate();
 
   let { learnedToday, totalLearnedWords, streak, lastLearningDate, dailyGoal, dailyGoalAchieve } = await getMultipleUserProps([
     USER_DATA_KEYS.LEARNED_TODAY,
@@ -151,8 +150,8 @@ export async function updateAfterReviewingWord(): Promise<{
 
 export async function loadUserData(): Promise<UserData> {
   const userProps = await getAllUserProps();
-  const today = getCurrentDate();
-  const yesterday = getCurrentDate(DateShifts.yesterday);
+  const today = dateHelper.getCurrentDate();
+  const yesterday = dateHelper.getCurrentDate(DateShifts.yesterday);
   if (userProps.lastLearningDate !== today) {
     resetUserDailyProgress(userProps);
     if (userProps.lastLearningDate !== yesterday && userProps.lastLearningDate !== today) {

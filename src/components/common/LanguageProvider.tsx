@@ -1,5 +1,6 @@
 import en from "@/assets/locales/en.json";
 import ru from "@/assets/locales/ru.json";
+import { Language } from "@/src/entity/types";
 import * as UserDataService from "@/src/service/userDataService";
 import * as Localization from "expo-localization";
 import { I18n } from "i18n-js";
@@ -8,20 +9,15 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 const i18n = new I18n({ ru, en });
 i18n.enableFallback = true;
 
-export enum SupportedLocales {
-  ENGLISH = "en",
-  RUSSIAN = "ru",
-}
-
 interface LanguageContextType {
-  locale: SupportedLocales;
+  locale: Language;
   text: (key: string, options?: object) => string;
-  changeLanguage: (newLocale: SupportedLocales) => void;
+  changeLanguage: (newLocale: Language) => void;
   isReady: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType>({
-  locale: SupportedLocales.ENGLISH,
+  locale: Language.ENGLISH,
   text: () => "",
   changeLanguage: () => { },
   isReady: false,
@@ -30,7 +26,7 @@ const LanguageContext = createContext<LanguageContextType>({
 export const useLanguageContext = () => useContext(LanguageContext);
 
 export function LanguageProvider({ children }: { readonly children: React.ReactNode }) {
-  const [locale, setLocale] = useState<SupportedLocales>(SupportedLocales.ENGLISH);
+  const [locale, setLocale] = useState<Language>(Language.ENGLISH);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -39,8 +35,8 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
         const savedLang = await UserDataService.getUserLocale();
         const systemLocales = Localization.getLocales();
         const systemLanguage = systemLocales[0]?.languageCode;
-        const isSupported = Object.values(SupportedLocales).includes(systemLanguage as SupportedLocales);
-        const initialLocale = (savedLang || (isSupported ? systemLanguage : SupportedLocales.ENGLISH)) as SupportedLocales;
+        const isSupported = Object.values(Language).includes(systemLanguage as Language);
+        const initialLocale = (savedLang || (isSupported ? systemLanguage : Language.ENGLISH)) as Language;
         i18n.locale = initialLocale;
         setLocale(initialLocale);
         setIsReady(true);
@@ -51,7 +47,7 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
     })();
   }, []);
 
-  const changeLanguage = useCallback((newLocale: SupportedLocales) => {
+  const changeLanguage = useCallback((newLocale: Language) => {
     if (locale === newLocale || !isReady) return;
     i18n.locale = newLocale;
     setLocale(newLocale);

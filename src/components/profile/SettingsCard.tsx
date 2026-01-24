@@ -1,4 +1,5 @@
 import { useAppTheme, useThemeContext } from "@/src/components/common/ThemeProvider";
+import { Language } from "@/src/entity/types";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
@@ -15,7 +16,7 @@ import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
 import LottieView from "lottie-react-native";
 import { useHaptics, useHapticsContext } from "../common/HapticsProvider";
-import { SupportedLocales, useLanguageContext } from "../common/LanguageProvider";
+import { useLanguageContext } from "../common/LanguageProvider";
 import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
 import { useSoundContext, useSoundPlayer } from "../common/SoundProvider";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
@@ -35,8 +36,8 @@ export default function SettingsCard() {
   const { lightImpact } = useHaptics();
 
   const languageOptions = [
-    { value: SupportedLocales.ENGLISH, key: SupportedLocales.ENGLISH, label: text("language_english_label") },
-    { value: SupportedLocales.RUSSIAN, key: SupportedLocales.RUSSIAN, label: text("language_russian_label") },
+    { value: Language.ENGLISH, key: Language.ENGLISH, label: text("language_english_label") },
+    { value: Language.RUSSIAN, key: Language.RUSSIAN, label: text("language_russian_label") },
   ];
 
   const hihikUser = name.toLowerCase().includes("hihik");
@@ -97,7 +98,7 @@ export default function SettingsCard() {
     }
   };
 
-  const handleChangeLanguage = (locale: SupportedLocales) => {
+  const handleChangeLanguage = (locale: Language) => {
     setIsLanguagePickerVisible(false);
     changeLanguage(locale);
   };

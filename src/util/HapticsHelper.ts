@@ -1,6 +1,6 @@
 import * as engine from "expo-haptics";
 
-class Haptics {
+class HapticsHelper {
     enabled: boolean = true;
 
     setEnabled(enabled: boolean) {
@@ -43,4 +43,4 @@ class Haptics {
     }
 }
 
-export const haptics = new Haptics();
+export const hapticsHelper = new HapticsHelper();

@@ -1,7 +1,7 @@
 import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { usePractice } from "@/src/hooks/usePractice";
-import { shuffleArray } from "@/src/util/arrayHelper";
+import { shuffleArray } from "@/src/util/ShuffleArray";
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 

@@ -1,11 +1,11 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
-import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
-import { shuffleArray } from "@/src/util/arrayHelper";
+import { shuffleArray } from "@/src/util/ShuffleArray";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";

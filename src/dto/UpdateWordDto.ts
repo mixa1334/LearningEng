@@ -1,9 +1,7 @@
-import { Category } from "../entity/types";
-
 export type UpdateWordDto = {
   id: number;
   word_en: string;
   word_ru: string;
-  category: Category;
+  category_id: number;
   text_example: string;
 };

@@ -1,6 +1,6 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
+import { userAlerts } from "@/src/util/UserAlerts";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
@@ -39,7 +39,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 
   const handleDeleteCategory = () => {
     mediumImpact();
-    sendUserImportantConfirmation(
+    userAlerts.sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("vocabulary_delete_category_confirm_message"),
       () => {

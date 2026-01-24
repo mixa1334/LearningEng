@@ -3,10 +3,15 @@ export enum DateShifts {
   today = 0,
 }
 
-export function getCurrentDate(dateShift: DateShifts = DateShifts.today): string {
-  return new Date(Date.now() - dateShift).toISOString().split("T")[0];
+class DateHelper {
+
+  getCurrentDate(dateShift: DateShifts = DateShifts.today): string {
+    return new Date(Date.now() - dateShift).toISOString().split("T")[0];
+  }
+
+  getCurrentDateTime(): string {
+    return new Date().toISOString();
+  }
 }
 
-export function getCurrentDateTime(): string {
-  return new Date().toISOString();
-}
+export const dateHelper = new DateHelper();

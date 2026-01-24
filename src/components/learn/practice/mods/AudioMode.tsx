@@ -1,13 +1,13 @@
 import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { getCardShadow } from "@/src/components/common/cardShadow";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
 import HiddenValue from "@/src/components/common/HiddenValue";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
-import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
-import { shuffleArray } from "@/src/util/arrayHelper";
+import { shuffleArray } from "@/src/util/ShuffleArray";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";

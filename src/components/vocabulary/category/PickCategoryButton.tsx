@@ -1,5 +1,5 @@
 import { Category } from "@/src/entity/types";
-import { truncate } from "@/src/util/stringHelper";
+import { stringHelper } from "@/src/util/StringHelper";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
@@ -32,7 +32,7 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
   const categoryName = (function () {
     if (!category) return text("vocabulary_category_default_label");
     if (!truncateLength) return category.name;
-    return truncate(category.name, truncateLength);
+    return stringHelper.truncate(category.name, truncateLength);
   })();
 
   return (

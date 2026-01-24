@@ -1,5 +1,5 @@
 import * as UserDataService from "@/src/service/userDataService";
-import { haptics } from "@/src/util/haptics";
+import { hapticsHelper } from "@/src/util/HapticsHelper";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 interface HapticsContextType {
@@ -16,13 +16,13 @@ export const useHapticsContext = () => useContext(HapticsContext);
 
 export const useHaptics = () => {
     return {
-        lightImpact: () => haptics.lightImpact(),
-        mediumImpact: () => haptics.mediumImpact(),
-        heavyImpact: () => haptics.heavyImpact(),
-        softImpact: () => haptics.softImpact(),
-        errorNotification: () => haptics.errorNotification(),
-        successNotification: () => haptics.successNotification(),
-        warningNotification: () => haptics.warningNotification(),
+        lightImpact: () => hapticsHelper.lightImpact(),
+        mediumImpact: () => hapticsHelper.mediumImpact(),
+        heavyImpact: () => hapticsHelper.heavyImpact(),
+        softImpact: () => hapticsHelper.softImpact(),
+        errorNotification: () => hapticsHelper.errorNotification(),
+        successNotification: () => hapticsHelper.successNotification(),
+        warningNotification: () => hapticsHelper.warningNotification(),
     };
 };
 
@@ -33,7 +33,7 @@ export function HapticsProvider({ children }: { readonly children: React.ReactNo
         (async () => {
             const hapticsEnabled = await UserDataService.getUserHapticsEnabled();
             setHapticsEnabled(hapticsEnabled);
-            haptics.setEnabled(hapticsEnabled);
+            hapticsHelper.setEnabled(hapticsEnabled);
         })();
     }, []);
 
@@ -41,7 +41,7 @@ export function HapticsProvider({ children }: { readonly children: React.ReactNo
         setHapticsEnabled((prev) => {
             const newEnabled = !prev;
             UserDataService.setUserHapticsEnabled(newEnabled);
-            haptics.setEnabled(newEnabled);
+            hapticsHelper.setEnabled(newEnabled);
             return newEnabled;
         });
     }, []);

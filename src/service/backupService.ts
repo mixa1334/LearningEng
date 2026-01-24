@@ -1,7 +1,7 @@
 import { getDbInstance } from "@/src/database/db";
 import type { UserData } from "@/src/entity/types";
 import { USER_DATA_KEYS, getAllUserProps, setMultipleUserProps } from "@/src/storage/userDataStorageHelper";
-import { getCurrentDate } from "@/src/util/dateHelper";
+import { getCurrentDate } from "@/src/util/DateHelper";
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 

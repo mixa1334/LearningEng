@@ -5,10 +5,10 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, TextInput } from "react-native-paper";
 
-import { truncate } from "@/src/util/stringHelper";
+import { stringHelper } from "@/src/util/StringHelper";
 import LottieView from "lottie-react-native";
-import { useHaptics } from "../common/HapticsProvider";
 import { getCardShadow } from "../common/cardShadow";
+import { useHaptics } from "../common/HapticsProvider";
 import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
 
@@ -76,7 +76,7 @@ export default function ProfileHeaderCard() {
             variant="headlineSmall"
             style={[isHihik ? styles.hihikText : styles.name, { color: theme.colors.onPrimaryContainer }]}
           >
-            {truncate(name, isHihik ? 8 : 20)}
+            {stringHelper.truncate(name, isHihik ? 8 : 20)}
           </Text>
           {!isHihik && (<IconButton
             icon="pencil"

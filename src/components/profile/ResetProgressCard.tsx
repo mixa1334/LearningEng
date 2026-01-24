@@ -5,8 +5,8 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
+import { userAlerts } from "@/src/util/UserAlerts";
 import { useHaptics } from "../common/HapticsProvider";
-import { sendUserAlert, sendUserImportantConfirmation } from "@/src/util/userAlerts";
 import { useLanguageContext } from "../common/LanguageProvider";
 import ExpandedCard from "./ExpandedCard";
 
@@ -20,36 +20,36 @@ export default function ResetProgressCard() {
 
   const handleResetUserStats = () => {
     heavyImpact();
-    sendUserImportantConfirmation(
+    userAlerts.sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("reset_user_data_confirm_message"),
       () => {
         resetUserStats();
-        sendUserAlert(text("reset_user_data_success"));
+        userAlerts.sendUserAlert(text("reset_user_data_success"));
       }
     );
   };
 
   const handleResetVocabularyProgress = () => {
     heavyImpact();
-    sendUserImportantConfirmation(
+    userAlerts.sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("reset_vocabulary_stats_confirm_message"),
       () => {
         resetWordsProgress();
-        sendUserAlert(text("reset_vocabulary_stats_success"));
+        userAlerts.sendUserAlert(text("reset_vocabulary_stats_success"));
       }
     );
   };
 
   const handleRemoveUserVocabulary = () => {
     heavyImpact();
-    sendUserImportantConfirmation(
+    userAlerts.sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("reset_remove_vocabulary_confirm_message"),
       () => {
         removeUserVocabulary();
-        sendUserAlert(text("reset_remove_vocabulary_success"));
+        userAlerts.sendUserAlert(text("reset_remove_vocabulary_success"));
       }
     );
   };

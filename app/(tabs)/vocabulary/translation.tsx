@@ -8,7 +8,7 @@ import { Language, Translation } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
 import { SPACING_XL, SPACING_XXL, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
-import { sendUserError } from "@/src/util/userAlerts";
+import { sendUserError } from "@/src/util/UserAlerts";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";

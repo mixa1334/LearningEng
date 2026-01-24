@@ -2,17 +2,17 @@ import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
 interface FieldTextInputProps {
-  label: string;
-  initialValue?: string;
-  onChangeText: (text: string) => void;
+  readonly label: string;
+  readonly initialValue?: string;
+  readonly onChangeText: (text: string) => void;
 }
 
-export default function FieldTextInput(props: FieldTextInputProps) {
+export default function FieldTextInput({ label, initialValue, onChangeText }: FieldTextInputProps) {
   return (
     <TextInput
-      label={props.label}
-      value={props.initialValue || ""}
-      onChangeText={props.onChangeText}
+      label={label}
+      value={initialValue || ""}
+      onChangeText={onChangeText}
       style={styles.input}
       mode="outlined"
     />

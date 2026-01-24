@@ -1,9 +1,9 @@
+import { stringHelper } from "@/src/util/StringHelper";
 import axios from "axios";
 import { getDbInstance } from "../database/db";
 import { NewTranslationDto } from "../dto/NewTranslationDto";
 import { Language, Translation } from "../entity/types";
-import { getCurrentDateTime } from "../util/dateHelper";
-import { trimTextForSaving } from "../util/stringHelper";
+import { dateHelper } from "../util/DateHelper";
 
 // 5000 chars per day free (for anonymous use)
 const DEFAULT_TRANSLATOR_URL = "https://api.mymemory.translated.net";
@@ -14,7 +14,7 @@ const api = axios.create({
 });
 
 export async function translateWord(text: string, language: Language): Promise<Translation> {
-  const trimmedText = trimTextForSaving(text);
+  const trimmedText = stringHelper.trimTextForSaving(text);
   const translatedText = await translate(trimmedText, language);
   const newTranslation =
     language === Language.ENGLISH
@@ -38,7 +38,7 @@ async function translate(text: string, language: Language): Promise<string> {
 }
 
 async function saveTranslation(newTranslation: NewTranslationDto): Promise<Translation> {
-  const translationDate = getCurrentDateTime();
+  const translationDate = dateHelper.getCurrentDateTime();
   const insertedRow = await getDbInstance().runAsync(
     `INSERT INTO translations (word_en, word_ru, translation_date) VALUES (?, ?, ?)`,
     [newTranslation.word_en, newTranslation.word_ru, translationDate]

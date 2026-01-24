@@ -1,5 +1,5 @@
 import * as UserDataService from "@/src/service/userDataService";
-import { SoundEffect, soundPlayer } from "@/src/util/soundPlayer";
+import { SoundEffect, soundPlayer } from "@/src/util/SoundPlayer";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 interface SoundContextType {

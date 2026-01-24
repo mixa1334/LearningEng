@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useTheme } from "react-native-paper";
 
 interface DividerProps {
-  readonly name?: string; // optional section name
+  readonly name?: string;
 }
 
 export default function ContentDivider({ name }: DividerProps) {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   line: {
     flex: 1,
-    height: 2, // thicker line
+    height: 2,
     borderRadius: 2,
   },
   icon: {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: "700",
-    fontSize: 18, // bigger text
+    fontSize: 18,
     marginHorizontal: 6,
     textTransform: "uppercase",
     letterSpacing: 0.8,

@@ -1,7 +1,7 @@
 import TouchableTextInput from "@/src/components/common/TouchableTextInput";
 import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { sendUserImportantConfirmation } from "@/src/util/userAlerts";
+import { userAlerts } from "@/src/util/UserAlerts";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
@@ -38,7 +38,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
   const handleDeleteWord = () => {
     mediumImpact();
-    sendUserImportantConfirmation(
+    userAlerts.sendUserImportantConfirmation(
       text("common_action_permanent_title"),
       text("vocabulary_delete_word_confirm_message"),
       () => {
