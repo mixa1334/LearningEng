@@ -52,8 +52,8 @@ const translationSlice = createSlice({
       state.status = StateType.succeeded;
     },
     resetErrorAction: (state) => {
-      state.status = StateType.succeeded;
       state.error = undefined;
+      state.status = StateType.succeeded;
     },
   },
   extraReducers: (builder) => {
