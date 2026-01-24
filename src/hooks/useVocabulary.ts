@@ -11,7 +11,7 @@ import {
   removeWordThunk,
   updateWordCriteriaThunk
 } from "@/src/store/slice/vocabularySlice";
-import { WordCriteria } from "../service/wordService";
+import { WordCriteria } from "@/src/service/WordCriteria";
 
 
 export function useVocabulary() {

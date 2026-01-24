@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import { resetLearningStatsThunk } from "@/src/store/slice/learnSlice";
 import { changeDailyGoalThunk, changeNameThunk, hideBanner, resetUserDataThunk } from "@/src/store/slice/userDataSlice";
-import { removeUserVocabularyThunk } from "../store/slice/vocabularySlice";
+import { removeUserVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 
 export function useUserData() {
   const dispatch = useAppDispatch();

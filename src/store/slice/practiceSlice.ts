@@ -1,5 +1,6 @@
 import { EntityType, type Category, type Word } from "@/src/entity/types";
-import { getWordsByCriteria, WordCriteria } from "@/src/service/wordService";
+import { WordCriteria } from "@/src/service/WordCriteria";
+import { getWordsByCriteria } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 

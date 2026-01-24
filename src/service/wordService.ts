@@ -2,7 +2,6 @@ import { EntityType, type Word } from "@/src/entity/types";
 import { stringHelper } from "@/src/util/StringHelper";
 import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
-import { UpdateWordDto } from "../dto/UpdateWordDto";
 import { rowToWord } from "../mapper/typesMapper";
 import { WordCriteria } from "./WordCriteria";
 
@@ -86,15 +85,15 @@ export async function deleteUserWord(wordToDelete: Word): Promise<boolean> {
   return deletedRows.changes > 0;
 }
 
-export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
+export async function editUserWord(word: Word): Promise<boolean> {
   let result = false;
   await getDbInstance().withExclusiveTransactionAsync(async (tx) => {
     const existingCategory = await tx.getFirstAsync<{ id: number }>(`SELECT id FROM categories WHERE id = ?;`, [
-      word.category_id,
+      word.category.id,
     ]);
 
     if (!existingCategory) {
-      throw new Error(`Category with id ${word.category_id} does not exist`);
+      throw new Error(`Category with id ${word.category.id} does not exist`);
     }
 
     const updatedRows = await tx.runAsync(
@@ -103,7 +102,7 @@ export async function editUserWord(word: UpdateWordDto): Promise<boolean> {
       [
         stringHelper.trimTextForSaving(word.word_en),
         stringHelper.trimTextForSaving(word.word_ru),
-        word.category_id,
+        word.category.id,
         stringHelper.trimTextForSaving(word.text_example),
         word.id,
       ]

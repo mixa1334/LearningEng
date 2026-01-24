@@ -8,14 +8,13 @@ import {
   editUserCategory,
   getCategoriesByType,
 } from "@/src/service/categoryService";
+import { WordCriteria, WordCriteriaDTO } from "@/src/service/WordCriteria";
 import {
   addNewWord,
   deleteAllUserWords,
   deleteUserWord,
   editUserWord,
   getWordsByCriteria,
-  WordCriteria,
-  WordCriteriaDTO,
 } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";

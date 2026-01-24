@@ -6,6 +6,7 @@ export interface WordCriteriaDTO {
     offset?: number;
     limit?: number;
     searchPattern?: string;
+    isLearned?: boolean;
     orderBy: "ASC" | "DESC";
 }
 
@@ -15,6 +16,7 @@ export class WordCriteria {
     offset?: number;
     limit?: number;
     searchPattern?: string;
+    isLearned?: boolean;
     orderBy: "ASC" | "DESC" = "DESC";
 
     appendCategory(category?: Category): this {
@@ -46,6 +48,11 @@ export class WordCriteria {
         return this;
     }
 
+    appendIsLearned(isLearned?: boolean): this {
+        this.isLearned = isLearned;
+        return this;
+    }
+
     appendOrderBy(orderBy: "ASC" | "DESC"): this {
         this.orderBy = orderBy;
         return this;
@@ -62,14 +69,16 @@ export class WordCriteria {
         if (this.offset) {
             query += ` AND w.id ${this.orderBy === "ASC" ? ">" : "<"} ${this.offset}`;
         }
-        if (this.searchPattern) {
-            query += ` AND (w.word_en LIKE '%${this.searchPattern}%' OR w.word_ru LIKE '%${this.searchPattern}%')`;
-        }
-        query += ` ORDER BY w.id ${this.orderBy}`;
         if (this.limit) {
             query += ` LIMIT ${this.limit}`;
         }
-        return query;
+        if (this.searchPattern) {
+            query += ` AND (w.word_en LIKE '%${this.searchPattern}%' OR w.word_ru LIKE '%${this.searchPattern}%')`;
+        }
+        if(this.isLearned) {
+            query += ` AND w.learned = ${this.isLearned ? 1 : 0}`;
+        }
+        return query + ` ORDER BY w.id ${this.orderBy}`;
     }
 
     clone(): WordCriteria {
@@ -79,6 +88,7 @@ export class WordCriteria {
             .appendIdOffset(this.offset)
             .appendLimit(this.limit)
             .appendSearchPattern(this.searchPattern)
+            .appendIsLearned(this.isLearned)
             .appendOrderBy(this.orderBy);
     }
 
@@ -89,6 +99,7 @@ export class WordCriteria {
             offset: this.offset,
             limit: this.limit,
             searchPattern: this.searchPattern,
+            isLearned: this.isLearned,
             orderBy: this.orderBy,
         };
     }
@@ -100,6 +111,7 @@ export class WordCriteria {
             .appendIdOffset(dto.offset)
             .appendLimit(dto.limit)
             .appendSearchPattern(dto.searchPattern)
+            .appendIsLearned(dto.isLearned)
             .appendOrderBy(dto.orderBy);
     }
 }

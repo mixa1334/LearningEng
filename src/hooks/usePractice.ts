@@ -1,5 +1,5 @@
-import { Category, EntityType } from "../entity/types";
-import { useAppDispatch, useAppSelector } from "../store";
+import { Category, EntityType } from "@/src/entity/types";
+import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
   loadNextPracticeSetThunk,
   resetCriteriaAction,
@@ -7,7 +7,7 @@ import {
   setNewCategoryAction,
   setPracticeLimitAction,
   setWordTypeAction,
-} from "../store/slice/practiceSlice";
+} from "@/src/store/slice/practiceSlice";
 
 export function usePractice() {
   const dispatch = useAppDispatch();
