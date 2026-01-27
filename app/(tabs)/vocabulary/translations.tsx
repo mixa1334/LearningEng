@@ -55,7 +55,7 @@ export function ClearHistoryButton() {
             icon="trash-can-outline"
             onPress={handleClearHistory}
             iconColor={theme.colors.error}
-            size={18}
+            size={24}
             accessibilityLabel={text("translation_clear_history_accessibility")}
         />
     );

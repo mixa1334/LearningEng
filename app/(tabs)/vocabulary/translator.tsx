@@ -1,6 +1,7 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { LoadingContentSpinner } from "@/src/components/common/LoadingContentSpinner";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import TranslationCard from "@/src/components/vocabulary/translation/TranslationCard";
@@ -10,7 +11,7 @@ import { SPACING_XL, SPACING_XS, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/
 import { StateType } from "@/src/store/slice/stateType";
 import { userAlerts } from "@/src/util/userAlerts";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -25,6 +26,15 @@ export default function TranslatorPage() {
   const { playTap } = useSoundPlayer();
   const { softImpact, lightImpact } = useHaptics();
   const router = useRouter();
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  useEffect(() => {
+    if (status === StateType.succeeded) {
+      setTimeout(() => {
+        setIsTranslating(false);
+      }, 300);
+    }
+  }, [status]);
 
   const pageHorizontalPadding = SPACING_XS;
   const pageTopPadding = SPACING_XL;
@@ -37,6 +47,8 @@ export default function TranslatorPage() {
   };
 
   const handleTranslate = () => {
+    if (isTranslating || wordToTranslate.trim() === "") return;
+    setIsTranslating(true);
     playTap();
     lightImpact();
     Keyboard.dismiss();
@@ -50,7 +62,7 @@ export default function TranslatorPage() {
   };
 
   const handleOpenSettings = () => {
-
+    //todo: open settings
   };
 
   if (status === StateType.failed) {
@@ -109,9 +121,11 @@ export default function TranslatorPage() {
             size={24}
             accessibilityLabel={text("translation_open_settings_accessibility")}
           />
-          <Button mode="contained" icon="translate" onPress={handleTranslate} buttonColor={theme.colors.accept} textColor={theme.colors.onAcceptReject}>
-            {text("translation_translate_button")}
-          </Button>
+          {isTranslating ? <View style={styles.loadingContainer}><LoadingContentSpinner /></View> : (
+            <Button mode="contained" icon="translate" onPress={handleTranslate} buttonColor={theme.colors.accept} textColor={theme.colors.onAcceptReject}>
+              {text("translation_translate_button")}
+            </Button>
+          )}
           <IconButton
             icon="history"
             onPress={handleOpenHistory}
@@ -156,5 +170,11 @@ const styles = StyleSheet.create({
   },
   currentTranslationContainer: {
     paddingHorizontal: SPACING_XL,
+  },
+  loadingContainer: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
