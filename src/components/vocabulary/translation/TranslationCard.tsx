@@ -158,8 +158,8 @@ export default function TranslationCard({ translation }: TranslationCardProps) {
                             disabled={!translatedText}
                             icon="plus"
                             onPress={saveToVocabulary}
-                            containerColor="#81c784"
-                            iconColor="#1b5e20"
+                            containerColor={translatedText ? theme.colors.accept : theme.colors.surface}
+                            iconColor={translatedText ? theme.colors.onAcceptReject : theme.colors.onSurfaceDisabled}
                             size={24}
                             accessibilityLabel={text("translation_add_to_vocabulary_accessibility")}
                         />

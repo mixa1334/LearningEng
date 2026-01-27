@@ -109,7 +109,7 @@ export default function TranslatorPage() {
             size={24}
             accessibilityLabel={text("translation_open_settings_accessibility")}
           />
-          <Button mode="contained" icon="translate" onPress={handleTranslate} buttonColor="#81c784" textColor="#1b5e20">
+          <Button mode="contained" icon="translate" onPress={handleTranslate} buttonColor={theme.colors.accept} textColor={theme.colors.onAcceptReject}>
             {text("translation_translate_button")}
           </Button>
           <IconButton
