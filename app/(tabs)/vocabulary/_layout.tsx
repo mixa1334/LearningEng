@@ -18,9 +18,15 @@ export default function VocabularyLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
-        name="translation"
+        name="translator"
         options={{
-          title: text("nav_translation_title"),
+          title: text("nav_translator_title"),
+        }}
+      />
+      <Stack.Screen
+        name="translations"
+        options={{
+          title: text("nav_translations_title"),
         }}
       />
       <Stack.Screen

@@ -11,7 +11,7 @@ export default function VocabularyPage() {
 
   const navigateToCategory = () => router.push("/(tabs)/vocabulary/categories");
   const navigateToWord = () => router.push("/(tabs)/vocabulary/words");
-  const navigateToTranslation = () => router.push("/(tabs)/vocabulary/translation");
+  const navigateToTranslation = () => router.push("/(tabs)/vocabulary/translator");
 
   return (
     <AutoScrollProvider>

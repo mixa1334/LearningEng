@@ -3,7 +3,8 @@ import { stringHelper } from "@/src/util/StringHelper";
 import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
 import { rowToWord } from "../mapper/typesMapper";
-import { WordCriteria } from "./WordCriteria";
+import { WordCriteria } from "./criteria/impl/WordCriteria";
+import { Pageable } from "./criteria/Pageable";
 
 const SELECT_WORDS = `SELECT
       w.id, w.word_en, w.word_ru, w.type, w.learned,
@@ -113,11 +114,21 @@ export async function editUserWord(word: Word): Promise<boolean> {
   return result;
 }
 
+export async function getWordsByPageable(pageable: Pageable): Promise<Word[]> {
+  const { query, params } = pageable.buildQuery();
+  return getWordsByQuery(query, params);
+}
+
 export async function getWordsByCriteria(criteria: WordCriteria): Promise<Word[]> {
-  const condition = criteria.buildCondition();
+  const { query, params } = criteria.buildCondition();
+  return getWordsByQuery(query, params);
+}
+
+async function getWordsByQuery(query: string, params: any[]): Promise<Word[]> {
   const rows = await getDbInstance().getAllAsync<any>(
     `${SELECT_WORDS}
-    WHERE ${condition}`
+    WHERE ${query}`,
+    params
   );
   return rows.map(rowToWord);
 }

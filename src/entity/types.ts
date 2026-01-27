@@ -49,7 +49,8 @@ export enum Language {
 
 export type Translation = {
   id: number;
-  word_en: string;
-  word_ru: string;
+  text: string;
+  text_language: Language;
+  translated_array: string[];
   translation_date: string;
 };

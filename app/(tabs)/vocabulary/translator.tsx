@@ -1,36 +1,36 @@
-import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useLoadingOverlay } from "@/src/components/common/LoadingOverlayProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
-import { Language, Translation } from "@/src/entity/types";
+import TranslationCard from "@/src/components/vocabulary/translation/TranslationCard";
+import { Language } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { SPACING_XL, SPACING_XXL, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import { SPACING_LG, SPACING_XS, SPACING_XXL, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
-import { sendUserError } from "@/src/util/UserAlerts";
+import { userAlerts } from "@/src/util/UserAlerts";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Keyboard, Platform, StyleSheet, View } from "react-native";
-import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
+import { Keyboard, Platform, ScrollView, StyleSheet } from "react-native";
+import { Button, Card, IconButton, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function TranslationPage() {
+export default function TranslatorPage() {
   const theme = useAppTheme();
-  const router = useRouter();
   const { text } = useLanguageContext();
   const { visible, show, hide } = useLoadingOverlay();
-  const { currentTranslation, translations, status, error, translateWord, clearTranslations, resetError } = useTranslation();
+  const { currentTranslation, status, error, translateWord, resetError } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
   const { playTap } = useSoundPlayer();
   const { softImpact, lightImpact, mediumImpact } = useHaptics();
+  const router = useRouter();
 
-  const pageHorizontalPadding = SPACING_XL;
+  const pageHorizontalPadding = SPACING_LG;
   const pageTopPadding = SPACING_XXL;
-  const pageBottomPadding = (Platform.OS === "android" ? insets.bottom : SPACING_XXS) + TAB_BAR_BASE_HEIGHT;
+  const pageBottomPadding = (Platform.OS === "android" ? insets.bottom : SPACING_XXS) + TAB_BAR_BASE_HEIGHT + SPACING_XS;
 
   useEffect(() => {
     if (status !== StateType.loading && visible) {
@@ -39,54 +39,42 @@ export default function TranslationPage() {
   }, [status, visible, hide]);
 
   const switchLanguages = () => {
+    playTap();
     softImpact();
     setLanguage((prev) => (prev === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH));
   };
 
   const translate = () => {
+    playTap();
     lightImpact();
     Keyboard.dismiss();
-    playTap();
     show();
     translateWord(wordToTranslate, language);
     setWordToTranslate("");
   };
 
-  const handleClearHistory = () => {
-    mediumImpact();
-    clearTranslations();
-  };
-
-  const openWordFromTranslationModal = (translation: Translation) => {
+  const handleOpenHistory = () => {
     playTap();
-    router.push({
-      pathname: "./save-translation",
-      params: {
-        translation_id: translation.id.toString(),
-        word_en: translation.word_en,
-        word_ru: translation.word_ru,
-      },
-    });
+    softImpact();
+    router.push("./translations");
   };
 
   if (status === StateType.failed) {
 
-    sendUserError(error || text("translation_error_unknown"), () => resetError());
+    userAlerts.sendUserError(error || text("translation_error_unknown"), () => resetError());
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          paddingTop: pageTopPadding,
-          paddingBottom: pageBottomPadding,
-          paddingHorizontal: pageHorizontalPadding,
-          backgroundColor: theme.colors.background,
-        },
-      ]}
+    <ScrollView
+      style={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        paddingTop: pageTopPadding,
+        paddingBottom: pageBottomPadding,
+        paddingHorizontal: pageHorizontalPadding,
+      }}
     >
-      <Card style={[styles.card, { backgroundColor: theme.colors.primary }, getCardShadow(theme)]}>
+      <Card style={[styles.card, { backgroundColor: theme.colors.primary }]}>
         <Card.Title
           titleStyle={{ color: theme.colors.onPrimary }}
           title={language === Language.ENGLISH ? text("translation_card_title_en_ru") : text("translation_card_title_ru_en")}
@@ -112,11 +100,6 @@ export default function TranslationPage() {
               },
             }}
           />
-          {currentTranslation && (
-            <Text style={[styles.result, { color: theme.colors.onPrimary }]}>
-              {currentTranslation.word_en} - {currentTranslation.word_ru}
-            </Text>
-          )}
         </Card.Content>
         <Card.Actions style={styles.actions}>
           <IconButton
@@ -131,57 +114,24 @@ export default function TranslationPage() {
             {text("translation_translate_button")}
           </Button>
           <IconButton
-            icon="delete"
-            onPress={handleClearHistory}
-            containerColor={theme.colors.error}
-            iconColor={theme.colors.onError}
+            icon="history"
+            onPress={handleOpenHistory}
+            containerColor={theme.colors.secondary}
+            iconColor={theme.colors.onSecondary}
             size={24}
-            accessibilityLabel={text("translation_clear_history_accessibility")}
+            accessibilityLabel={text("translation_open_history_accessibility")}
           />
         </Card.Actions>
       </Card>
-
-      <FlatList
-        data={translations}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Card style={[styles.historyCard, { backgroundColor: theme.colors.surfaceVariant }]}>
-            <Card.Content
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text>
-                {item.word_en} - {item.word_ru}
-              </Text>
-              <IconButton
-                icon="plus"
-                onPress={() => openWordFromTranslationModal(item)}
-                containerColor="#81c784"
-                iconColor="#1b5e20"
-                size={24}
-                accessibilityLabel={text("translation_add_to_vocabulary_accessibility")}
-              />
-            </Card.Content>
-          </Card>
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        contentContainerStyle={{ marginBottom: TAB_BAR_BASE_HEIGHT }}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+      {currentTranslation && <TranslationCard translation={currentTranslation} />}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   card: {
     borderRadius: 12,
-    marginBottom: 12,
+    marginBottom: 30,
   },
   input: {
     marginTop: 12,
@@ -197,6 +147,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   historyCard: {
-    borderRadius: 8,
+    borderRadius: 20,
   },
 });

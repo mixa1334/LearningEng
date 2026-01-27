@@ -24,3 +24,4 @@ class UserAlerts {
 }
 
 export const userAlerts = new UserAlerts();
+

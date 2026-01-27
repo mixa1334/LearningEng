@@ -2,26 +2,26 @@ import { NewCategoryDto } from "@/src/dto/NewCategoryDto";
 import { NewWordDto } from "@/src/dto/NewWordDto";
 import { Category, EntityType, Word } from "@/src/entity/types";
 import {
-  addNewCategory,
-  deleteAllUserCategories,
-  deleteUserCategory,
-  editUserCategory,
-  getCategoriesByType,
+    addNewCategory,
+    deleteAllUserCategories,
+    deleteUserCategory,
+    editUserCategory,
+    getCategoriesByType,
 } from "@/src/service/categoryService";
-import { WordCriteria, WordCriteriaDTO } from "@/src/service/WordCriteria";
+import { WordCriteria, WordCriteriaDTO } from "@/src/service/criteria/impl/WordCriteria";
 import {
-  addNewWord,
-  deleteAllUserWords,
-  deleteUserWord,
-  editUserWord,
-  getWordsByCriteria,
+    addNewWord,
+    deleteAllUserWords,
+    deleteUserWord,
+    editUserWord,
+    getWordsByCriteria,
 } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { loadDailyWordSetThunk } from "./learnSlice";
 import { reloadPracticeThunk, resetPracticeSetThunk } from "./practiceSlice";
 
-const getDefaultCriteria = () => new WordCriteria().appendType(EntityType.useradd).appendOrderBy("DESC").toRedux();
+const getDefaultCriteria = () => new WordCriteria().appendType(EntityType.useradd).toRedux();
 
 export type VocabularyState = {
   userCategories: Category[];

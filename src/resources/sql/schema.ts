@@ -7,8 +7,9 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
 
     CREATE TABLE IF NOT EXISTS translations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      word_en TEXT NOT NULL,
-      word_ru TEXT NOT NULL,
+      text TEXT NOT NULL,
+      text_language TEXT NOT NULL CHECK (text_language IN ('en', 'ru')),
+      translated_array TEXT NOT NULL CHECK (json_valid(translated_array)),
       translation_date TEXT NOT NULL DEFAULT (datetime('now'))
     );
 

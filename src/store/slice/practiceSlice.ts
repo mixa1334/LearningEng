@@ -1,5 +1,5 @@
 import { EntityType, type Category, type Word } from "@/src/entity/types";
-import { WordCriteria } from "@/src/service/WordCriteria";
+import { WordCriteria } from "@/src/service/criteria/impl/WordCriteria";
 import { getWordsByCriteria } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
@@ -25,8 +25,8 @@ const initialPracticeState: PracticeState = {
 
 const buildCriteria = (practice: PracticeState) => {
   return new WordCriteria()
-    .appendLimit(practice.practiceLimit)
-    .appendOrderBy(ORDER_BY)
+    // .appendLimit(practice.practiceLimit)
+    // .appendOrderBy(ORDER_BY)
     .appendCategory(practice.category)
     .appendType(practice.wordType);
 };
@@ -43,7 +43,8 @@ export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
     const practice = (getState() as RootState).practice;
     const prevWords = practice.words;
     const offset = prevWords.length > 0 ? prevWords[prevWords.length - 1].id : 0;
-    const criteria = buildCriteria(practice).appendIdOffset(offset);
+    const criteria = buildCriteria(practice)
+                    //  .appendIdOffset(offset);
     return await getWordsByCriteria(criteria);
   }
 );

@@ -10,3 +10,4 @@ class StringHelper {
 }
 
 export const stringHelper = new StringHelper();
+

@@ -1,23 +1,18 @@
 import { Category, EntityType } from "@/src/entity/types";
+import { Criteria } from "../Criteria";
 
-export interface WordCriteriaDTO {
+export type WordCriteriaDTO = {
     category?: Category;
     type?: EntityType;
-    offset?: number;
-    limit?: number;
     searchPattern?: string;
     isLearned?: boolean;
-    orderBy: "ASC" | "DESC";
-}
+};
 
-export class WordCriteria {
+export class WordCriteria implements Criteria {
     category?: Category;
     type?: EntityType;
-    offset?: number;
-    limit?: number;
     searchPattern?: string;
     isLearned?: boolean;
-    orderBy: "ASC" | "DESC" = "DESC";
 
     appendCategory(category?: Category): this {
         this.category = category;
@@ -26,16 +21,6 @@ export class WordCriteria {
 
     appendType(type?: EntityType): this {
         this.type = type;
-        return this;
-    }
-
-    appendIdOffset(offset?: number): this {
-        this.offset = offset;
-        return this;
-    }
-
-    appendLimit(limit?: number): this {
-        this.limit = limit;
         return this;
     }
 
@@ -53,54 +38,42 @@ export class WordCriteria {
         return this;
     }
 
-    appendOrderBy(orderBy: "ASC" | "DESC"): this {
-        this.orderBy = orderBy;
-        return this;
-    }
-
-    buildCondition(): string {
-        let query = `1 = 1`;
+    buildCondition(): { query: string, params: any[] } {
+        let { query, params } = { query: "1 = 1", params: [] as any[] };
         if (this.category) {
-            query += ` AND w.category_id = ${this.category.id}`;
+            query += ` AND w.category_id = ?`;
+            params.push(this.category.id);
         }
         if (this.type) {
-            query += ` AND w.type = '${this.type}'`;
-        }
-        if (this.offset) {
-            query += ` AND w.id ${this.orderBy === "ASC" ? ">" : "<"} ${this.offset}`;
-        }
-        if (this.limit) {
-            query += ` LIMIT ${this.limit}`;
+            query += ` AND w.type = ?`;
+            params.push(this.type);
         }
         if (this.searchPattern) {
-            query += ` AND (w.word_en LIKE '%${this.searchPattern}%' OR w.word_ru LIKE '%${this.searchPattern}%')`;
+            query += ` AND (w.word_en LIKE ? OR w.word_ru LIKE ?)`;
+            const searchPattern = `%${this.searchPattern}%`;
+            params.push(searchPattern, searchPattern);
         }
-        if(this.isLearned) {
-            query += ` AND w.learned = ${this.isLearned ? 1 : 0}`;
+        if (this.isLearned) {
+            query += ` AND w.learned = ?`;
+            params.push(this.isLearned ? 1 : 0);
         }
-        return query + ` ORDER BY w.id ${this.orderBy}`;
+        return { query, params };
     }
 
     clone(): WordCriteria {
         return new WordCriteria()
             .appendCategory(this.category)
             .appendType(this.type)
-            .appendIdOffset(this.offset)
-            .appendLimit(this.limit)
             .appendSearchPattern(this.searchPattern)
-            .appendIsLearned(this.isLearned)
-            .appendOrderBy(this.orderBy);
+            .appendIsLearned(this.isLearned);
     }
 
     toRedux(): WordCriteriaDTO {
         return {
             category: this.category,
             type: this.type,
-            offset: this.offset,
-            limit: this.limit,
             searchPattern: this.searchPattern,
             isLearned: this.isLearned,
-            orderBy: this.orderBy,
         };
     }
 
@@ -108,10 +81,7 @@ export class WordCriteria {
         return new WordCriteria()
             .appendCategory(dto.category)
             .appendType(dto.type)
-            .appendIdOffset(dto.offset)
-            .appendLimit(dto.limit)
             .appendSearchPattern(dto.searchPattern)
-            .appendIsLearned(dto.isLearned)
-            .appendOrderBy(dto.orderBy);
+            .appendIsLearned(dto.isLearned);
     }
 }

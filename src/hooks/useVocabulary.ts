@@ -1,17 +1,17 @@
 import { NewCategoryDto } from "@/src/dto/NewCategoryDto";
 import { NewWordDto } from "@/src/dto/NewWordDto";
 import { Category, Word } from "@/src/entity/types";
+import { WordCriteria } from "@/src/service/criteria/impl/WordCriteria";
 import { useAppDispatch, useAppSelector } from "@/src/store";
 import {
-  addCategoryThunk,
-  addWordThunk,
-  editCategoryThunk,
-  editWordThunk,
-  removeCategoryThunk,
-  removeWordThunk,
-  updateWordCriteriaThunk
+    addCategoryThunk,
+    addWordThunk,
+    editCategoryThunk,
+    editWordThunk,
+    removeCategoryThunk,
+    removeWordThunk,
+    updateWordCriteriaThunk
 } from "@/src/store/slice/vocabularySlice";
-import { WordCriteria } from "@/src/service/WordCriteria";
 
 
 export function useVocabulary() {
