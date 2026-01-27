@@ -2,7 +2,7 @@ import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
-import { shuffleArray } from "@/src/util/ShuffleArray";
+import { shuffleArray } from "@/src/util/shuffleArray";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 

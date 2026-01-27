@@ -1,5 +1,5 @@
 import { Category } from "@/src/entity/types";
-import { stringHelper } from "@/src/util/StringHelper";
+import { stringHelper } from "@/src/util/stringHelper";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";

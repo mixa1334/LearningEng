@@ -2,7 +2,7 @@ import { Category, EntityType } from "@/src/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
 import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";
-import { trimTextForSaving } from "../util/StringHelper";
+import { trimTextForSaving } from "../util/stringHelper";
 
 // db always has preloaded category with id 1!!!!!! (if migration have been run successfully)
 

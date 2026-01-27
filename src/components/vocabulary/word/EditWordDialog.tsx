@@ -1,7 +1,7 @@
 import TouchableTextInput from "@/src/components/common/TouchableTextInput";
 import { Category, Word } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { userAlerts } from "@/src/util/UserAlerts";
+import { userAlerts } from "@/src/util/userAlerts";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";

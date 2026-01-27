@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Text, TextInput } from "react-native-paper";
 
-import { stringHelper } from "@/src/util/StringHelper";
+import { stringHelper } from "@/src/util/stringHelper";
 import LottieView from "lottie-react-native";
 import { getCardShadow } from "../common/cardShadow";
 import { useHaptics } from "../common/HapticsProvider";

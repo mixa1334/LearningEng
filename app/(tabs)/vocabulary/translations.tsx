@@ -3,8 +3,8 @@ import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import TranslationsList from "@/src/components/vocabulary/translation/TranslationsList";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { SPACING_MD, SPACING_SM, SPACING_XS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
-import { userAlerts } from "@/src/util/UserAlerts";
+import { SPACING_LG, SPACING_XS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import { userAlerts } from "@/src/util/userAlerts";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
@@ -13,10 +13,31 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TranslationsPage() {
     const theme = useAppTheme();
     const insets = useSafeAreaInsets();
+
+
+    return (
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <ScrollView
+                style={{ flex: 1 }}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                    paddingTop: SPACING_LG,
+                    paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
+                    paddingHorizontal: SPACING_XS,
+                }}
+            >
+                <TranslationsList />
+            </ScrollView>
+        </View>
+    );
+}
+
+export function ClearHistoryButton() {
     const { text } = useLanguageContext();
+    const theme = useAppTheme();
     const { clearTranslations } = useTranslation();
     const { heavyImpact } = useHaptics();
-    
+
     const handleClearHistory = () => {
         heavyImpact();
         userAlerts.sendUserImportantConfirmation(
@@ -29,60 +50,23 @@ export default function TranslationsPage() {
         );
     };
 
-
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <View
-                style={[
-                    styles.navbar,
-                    {
-                        backgroundColor: theme.colors.surfaceVariant,
-                        borderColor: theme.colors.onSurfaceVariant,
-                    },
-                ]}
-            >
-                <IconButton
-                    icon="trash-can"
-                    onPress={handleClearHistory}
-                    iconColor={theme.colors.onError}
-                    containerColor={theme.colors.error}
-                    size={18}
-                    accessibilityLabel={text("translation_clear_history_accessibility")}
-                />
-
-
-            </View>
-
-            <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={{
-                    // 60 is the height of the navbar
-                    paddingTop: SPACING_MD + 60,
-                    paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
-                    paddingHorizontal: SPACING_XS,
-                }}
-            >
-                <TranslationsList />
-            </ScrollView>
-        </View>
+        <IconButton
+            icon="trash-can-outline"
+            onPress={handleClearHistory}
+            iconColor={theme.colors.error}
+            size={18}
+            accessibilityLabel={text("translation_clear_history_accessibility")}
+        />
     );
 }
 
 const styles = StyleSheet.create({
     container: { flex: 1 },
-    navbar: {
+    clearHistoryButton: {
         position: "absolute",
-        top: 0,
-        left: 0,
         right: 0,
-        height: 60,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: SPACING_SM,
-        borderBottomEndRadius: 20,
-        borderBottomStartRadius: 20,
+        top: 0,
         zIndex: 100,
-        gap: SPACING_MD,
     },
 });

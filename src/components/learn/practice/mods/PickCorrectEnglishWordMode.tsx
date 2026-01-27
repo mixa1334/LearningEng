@@ -5,7 +5,7 @@ import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
-import { shuffleArray } from "@/src/util/ShuffleArray";
+import { shuffleArray } from "@/src/util/shuffleArray";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";

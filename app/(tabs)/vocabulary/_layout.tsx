@@ -2,6 +2,7 @@ import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { IconButton, useTheme } from "react-native-paper";
+import { ClearHistoryButton } from "./translations";
 
 export default function VocabularyLayout() {
   const theme = useTheme();
@@ -27,6 +28,7 @@ export default function VocabularyLayout() {
         name="translations"
         options={{
           title: text("nav_translations_title"),
+          headerRight: () => <ClearHistoryButton />,
         }}
       />
       <Stack.Screen

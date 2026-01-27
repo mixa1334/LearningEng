@@ -1,5 +1,5 @@
 import { EntityType, type Word } from "@/src/entity/types";
-import { stringHelper } from "@/src/util/StringHelper";
+import { stringHelper } from "@/src/util/stringHelper";
 import { getDbInstance } from "../database/db";
 import { NewWordDto } from "../dto/NewWordDto";
 import { rowToWord } from "../mapper/typesMapper";

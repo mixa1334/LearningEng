@@ -1,6 +1,6 @@
 import { Category } from "@/src/entity/types";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
-import { userAlerts } from "@/src/util/UserAlerts";
+import { userAlerts } from "@/src/util/userAlerts";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";

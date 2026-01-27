@@ -1,9 +1,9 @@
-import { stringHelper } from "@/src/util/StringHelper";
+import { stringHelper } from "@/src/util/stringHelper";
 import axios from "axios";
 import { getDbInstance } from "../database/db";
 import { NewTranslationDto } from "../dto/NewTranslationDto";
 import { Language, Translation } from "../entity/types";
-import { dateHelper } from "../util/DateHelper";
+import { dateHelper } from "../util/dateHelper";
 
 const MAX_TEXT_LENGTH = 20;
 const TIMEOUT = 7000;

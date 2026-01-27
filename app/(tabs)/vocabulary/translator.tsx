@@ -1,42 +1,34 @@
+import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
-import { useLoadingOverlay } from "@/src/components/common/LoadingOverlayProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import TranslationCard from "@/src/components/vocabulary/translation/TranslationCard";
 import { Language } from "@/src/entity/types";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { SPACING_LG, SPACING_XS, SPACING_XXL, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
+import { SPACING_XL, SPACING_XS, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
-import { userAlerts } from "@/src/util/UserAlerts";
-import { Ionicons } from "@expo/vector-icons";
+import { userAlerts } from "@/src/util/userAlerts";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Keyboard, Platform, ScrollView, StyleSheet } from "react-native";
-import { Button, Card, IconButton, TextInput } from "react-native-paper";
+import React, { useState } from "react";
+import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TranslatorPage() {
   const theme = useAppTheme();
   const { text } = useLanguageContext();
-  const { visible, show, hide } = useLoadingOverlay();
   const { currentTranslation, status, error, translateWord, resetError } = useTranslation();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
   const { playTap } = useSoundPlayer();
-  const { softImpact, lightImpact, mediumImpact } = useHaptics();
+  const { softImpact, lightImpact } = useHaptics();
   const router = useRouter();
 
-  const pageHorizontalPadding = SPACING_LG;
-  const pageTopPadding = SPACING_XXL;
+  const pageHorizontalPadding = SPACING_XS;
+  const pageTopPadding = SPACING_XL;
   const pageBottomPadding = (Platform.OS === "android" ? insets.bottom : SPACING_XXS) + TAB_BAR_BASE_HEIGHT + SPACING_XS;
-
-  useEffect(() => {
-    if (status !== StateType.loading && visible) {
-      hide();
-    }
-  }, [status, visible, hide]);
 
   const switchLanguages = () => {
     playTap();
@@ -44,19 +36,21 @@ export default function TranslatorPage() {
     setLanguage((prev) => (prev === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH));
   };
 
-  const translate = () => {
+  const handleTranslate = () => {
     playTap();
     lightImpact();
     Keyboard.dismiss();
-    show();
     translateWord(wordToTranslate, language);
-    setWordToTranslate("");
   };
 
   const handleOpenHistory = () => {
     playTap();
     softImpact();
     router.push("./translations");
+  };
+
+  const handleOpenSettings = () => {
+
   };
 
   if (status === StateType.failed) {
@@ -74,56 +68,63 @@ export default function TranslatorPage() {
         paddingHorizontal: pageHorizontalPadding,
       }}
     >
-      <Card style={[styles.card, { backgroundColor: theme.colors.primary }]}>
+      <Card style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
         <Card.Title
-          titleStyle={{ color: theme.colors.onPrimary }}
-          title={language === Language.ENGLISH ? text("translation_card_title_en_ru") : text("translation_card_title_ru_en")}
-          left={(props) => <Ionicons {...props} name={"language-outline"} size={24} color={theme.colors.onPrimary} />}
+          titleStyle={{ color: theme.colors.onSurfaceVariant, alignSelf: "center" }}
+          title={<Pressable
+            onPress={switchLanguages}
+            style={({ pressed }) => [
+              {
+                backgroundColor: theme.colors.primary,
+                borderWidth: 1,
+                borderColor: theme.colors.outline,
+                borderRadius: 8,
+                paddingHorizontal: 6,
+                paddingVertical: 8,
+                opacity: pressed ? 0.8 : 1,
+                transform: [{ scale: pressed ? 0.97 : 1 }],
+              },
+            ]}
+          >
+            <Text style={{ color: theme.colors.onPrimary, fontSize: 16, fontWeight: "500" }}>{language === Language.ENGLISH ? text("translation_card_title_en_ru") : text("translation_card_title_ru_en")}</Text>
+          </Pressable>}
         />
-        <Card.Content>
+        <Card.Content style={styles.content}>
           <TextInput
             mode="flat"
             placeholder={language === Language.ENGLISH ? text("translation_placeholder_en") : text("translation_placeholder_ru")}
             value={wordToTranslate}
             onChangeText={setWordToTranslate}
-            style={[styles.input, { backgroundColor: theme.colors.secondaryContainer, borderRadius: 8 }]}
-            theme={{
-              colors: {
-                primary: theme.colors.secondary,
-                placeholder: theme.colors.onSecondaryContainer,
-                text: theme.colors.onSecondaryContainer,
-                background: theme.colors.secondaryContainer,
-                surface: theme.colors.secondaryContainer,
-                surfaceVariant: theme.colors.secondaryContainer,
-                outline: "transparent",
-                outlineVariant: "transparent",
-              },
-            }}
+            onSubmitEditing={handleTranslate}
+            returnKeyType="search"
+            style={[styles.input, { borderRadius: 8 }]}
           />
         </Card.Content>
         <Card.Actions style={styles.actions}>
           <IconButton
-            icon="swap-horizontal"
-            onPress={switchLanguages}
-            containerColor={theme.colors.onPrimary}
-            iconColor={theme.colors.primary}
+            icon="cog"
+            onPress={handleOpenSettings}
+            containerColor={theme.colors.primary}
+            iconColor={theme.colors.onPrimary}
             size={24}
-            accessibilityLabel={text("translation_switch_accessibility")}
+            accessibilityLabel={text("translation_open_settings_accessibility")}
           />
-          <Button mode="contained" icon="translate" onPress={translate} buttonColor="#81c784" textColor="#1b5e20">
+          <Button mode="contained" icon="translate" onPress={handleTranslate} buttonColor="#81c784" textColor="#1b5e20">
             {text("translation_translate_button")}
           </Button>
           <IconButton
             icon="history"
             onPress={handleOpenHistory}
-            containerColor={theme.colors.secondary}
-            iconColor={theme.colors.onSecondary}
+            containerColor={theme.colors.primary}
+            iconColor={theme.colors.onPrimary}
             size={24}
             accessibilityLabel={text("translation_open_history_accessibility")}
           />
         </Card.Actions>
       </Card>
-      {currentTranslation && <TranslationCard translation={currentTranslation} />}
+      <View style={styles.currentTranslationContainer}>
+        {currentTranslation && <TranslationCard translation={currentTranslation} />}
+      </View>
     </ScrollView>
   );
 }
@@ -131,7 +132,11 @@ export default function TranslatorPage() {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
-    marginBottom: 30,
+    marginBottom: 25,
+    padding: 16,
+  },
+  content: {
+    marginVertical: 15,
   },
   input: {
     marginTop: 12,
@@ -148,5 +153,8 @@ const styles = StyleSheet.create({
   },
   historyCard: {
     borderRadius: 20,
+  },
+  currentTranslationContainer: {
+    paddingHorizontal: SPACING_XL,
   },
 });

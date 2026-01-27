@@ -5,7 +5,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 
-import { userAlerts } from "@/src/util/UserAlerts";
+import { userAlerts } from "@/src/util/userAlerts";
 import { useHaptics } from "../common/HapticsProvider";
 import { useLanguageContext } from "../common/LanguageProvider";
 import ExpandedCard from "./ExpandedCard";

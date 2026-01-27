@@ -1,4 +1,5 @@
-import { dateHelper, DateShifts } from "@/src/util/DateHelper";
+import { dateHelper, DateShifts } from "@/src/util/dateHelper";
+import { stringHelper } from "@/src/util/stringHelper";
 import Storage from "expo-sqlite/kv-store";
 import { Language, THEMES, UserData } from "../entity/types";
 import {
@@ -11,7 +12,6 @@ import {
   setUserProp,
   USER_DATA_KEYS,
 } from "../storage/userDataStorageHelper";
-import { stringHelper } from "@/src/util/StringHelper";
 
 export async function getUserHapticsEnabled(): Promise<boolean> {
   return getUserProp(USER_DATA_KEYS.HAPTICS_ENABLED);

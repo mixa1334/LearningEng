@@ -1,5 +1,5 @@
 import * as UserDataService from "@/src/service/userDataService";
-import { hapticsHelper } from "@/src/util/HapticsHelper";
+import { hapticsHelper } from "@/src/util/hapticsHelper";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 interface HapticsContextType {

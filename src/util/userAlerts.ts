@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { SoundEffect, soundPlayer } from "./SoundPlayer";
+import { SoundEffect, soundPlayer } from "./soundPlayer";
 
 class UserAlerts {
   sendUserAlert(message: string) {

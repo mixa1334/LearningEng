@@ -7,7 +7,7 @@ import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
-import { shuffleArray } from "@/src/util/ShuffleArray";
+import { shuffleArray } from "@/src/util/shuffleArray";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";
