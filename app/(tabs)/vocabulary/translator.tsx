@@ -43,6 +43,7 @@ export default function TranslatorPage() {
   const switchLanguages = () => {
     playTap();
     softImpact();
+    setWordToTranslate("");
     setLanguage((prev) => (prev === Language.ENGLISH ? Language.RUSSIAN : Language.ENGLISH));
   };
 

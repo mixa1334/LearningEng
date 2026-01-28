@@ -1,8 +1,7 @@
 import { Category, EntityType } from "@/src/entity/types";
 import { getDbInstance } from "../database/db";
 import { NewCategoryDto } from "../dto/NewCategoryDto";
-import { UpdateCategoryDto } from "../dto/UpdateCategoryDto";
-import { trimTextForSaving } from "../util/stringHelper";
+import { stringHelper } from "../util/stringHelper";
 
 // db always has preloaded category with id 1!!!!!! (if migration have been run successfully)
 
@@ -33,7 +32,7 @@ export async function addNewCategoriesBatch(
 
       const params: (string | EntityType)[] = [];
       for (const category of batch) {
-        params.push(trimTextForSaving(category.name), categoryType, category.icon);
+        params.push(stringHelper.trimTextForSaving(category.name), categoryType, category.icon);
       }
 
       await tx.runAsync(sql, params);
@@ -46,7 +45,7 @@ export async function addNewCategory(
   categoryType: EntityType = EntityType.useradd
 ): Promise<number> {
   const insertedRow = await getDbInstance().runAsync(`INSERT INTO categories (name, type, icon) VALUES (?, ?, ?)`, [
-    trimTextForSaving(newCategory.name),
+    stringHelper.trimTextForSaving(newCategory.name),
     categoryType,
     newCategory.icon,
   ]);
@@ -93,11 +92,11 @@ export async function deleteUserCategory(category: Category): Promise<boolean> {
   return result;
 }
 
-export async function editUserCategory(category: UpdateCategoryDto): Promise<boolean> {
+export async function editUserCategory(category: Category): Promise<boolean> {
   const updatedRows = await getDbInstance().runAsync(
     `UPDATE categories SET name = ?, icon = ?
     WHERE type = 'user_added' AND id = ?`,
-    [trimTextForSaving(category.name), category.icon, category.id]
+    [stringHelper.trimTextForSaving(category.name), category.icon, category.id]
   );
   return updatedRows.changes > 0;
 }

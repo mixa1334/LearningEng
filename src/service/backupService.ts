@@ -1,7 +1,7 @@
 import { getDbInstance } from "@/src/database/db";
 import type { UserData } from "@/src/entity/types";
 import { USER_DATA_KEYS, getAllUserProps, setMultipleUserProps } from "@/src/storage/userDataStorageHelper";
-import { getCurrentDate } from "@/src/util/dateHelper";
+import { dateHelper } from "@/src/util/dateHelper";
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
@@ -28,13 +28,14 @@ type BackupFileV1 = {
   }[];
   translations: {
     id: number;
-    word_en: string;
-    word_ru: string;
+    text: string;
+    text_language: string;
+    translated_array: string;
     translation_date: string;
   }[];
 };
 
-const BACKUP_FILE_PREFIX = "pocket-english-backup";
+const BACKUP_FILE_PREFIX = "pocket-eng-backup";
 
 export async function createBackupFileAndShare(): Promise<void> {
   const db = getDbInstance();
@@ -48,7 +49,7 @@ export async function createBackupFileAndShare(): Promise<void> {
   );
 
   const translations = await db.getAllAsync<BackupFileV1["translations"][number]>(
-    "SELECT id, word_en, word_ru, translation_date FROM translations"
+    "SELECT id, text, text_language, translated_array, translation_date FROM translations"
   );
 
   const payload: BackupFileV1 = {
@@ -62,7 +63,7 @@ export async function createBackupFileAndShare(): Promise<void> {
 
   const json = JSON.stringify(payload);
 
-  const datePart = getCurrentDate();
+  const datePart = dateHelper.getCurrentDate();
   const fileName = `${BACKUP_FILE_PREFIX}-${datePart}.json`;
   const directory = Paths.cache ?? Paths.document;
   const file = new File(directory, fileName);
@@ -72,7 +73,7 @@ export async function createBackupFileAndShare(): Promise<void> {
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(fileUri, {
       mimeType: "application/json",
-      dialogTitle: "Export LearningEng backup",
+      dialogTitle: "Export Pocket English backup",
       UTI: "public.json",
     });
   }
@@ -101,7 +102,7 @@ export async function restoreFromBackupFileUri(fileUri: string): Promise<void> {
     throw new Error("Selected file is missing required backup fields.");
   }
   const lastLearningDate = userData[USER_DATA_KEYS.LAST_LEARNING_DATE];
-  if (lastLearningDate !== getCurrentDate()) {
+  if (lastLearningDate !== dateHelper.getCurrentDate()) {
     userData[USER_DATA_KEYS.DAILY_GOAL_ACHIEVE] = false;
     userData[USER_DATA_KEYS.LEARNED_TODAY] = 0;
     userData[USER_DATA_KEYS.REVIEWED_TODAY] = 0;
@@ -128,10 +129,11 @@ export async function restoreFromBackupFileUri(fileUri: string): Promise<void> {
     }
 
     for (const t of translations) {
-      await tx.runAsync("INSERT INTO translations (id, word_en, word_ru, translation_date) VALUES (?, ?, ?, ?);", [
+      await tx.runAsync("INSERT INTO translations (id, text, text_language, translated_array, translation_date) VALUES (?, ?, ?, ?, ?);", [
         t.id,
-        t.word_en,
-        t.word_ru,
+        t.text,
+        t.text_language,
+        t.translated_array,
         t.translation_date,
       ]);
     }
