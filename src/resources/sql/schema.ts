@@ -5,6 +5,13 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
 
     PRAGMA foreign_keys = ON;
 
+    CREATE TABLE IF NOT EXISTS statistics (
+      date TEXT PRIMARY KEY NOT NULL DEFAULT (datetime('now')),
+      learned INTEGER NOT NULL DEFAULT 0,
+      reviewed INTEGER NOT NULL DEFAULT 0,
+      isGoalAchieved INTEGER NOT NULL CHECK (isGoalAchieved IN (0, 1)) DEFAULT 0
+    );
+
     CREATE TABLE IF NOT EXISTS translations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       text TEXT NOT NULL,
@@ -25,7 +32,7 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
       word_en TEXT NOT NULL,
       word_ru TEXT NOT NULL,
       type TEXT NOT NULL CHECK (type IN ('pre_loaded', 'user_added')) DEFAULT 'pre_loaded',
-      learned INTEGER NOT NULL DEFAULT 0,
+      learned INTEGER NOT NULL CHECK (learned IN (0, 1)) DEFAULT 0,
       category_id INTEGER NOT NULL,
       next_review TEXT NOT NULL DEFAULT (datetime('now')),
       priority INTEGER NOT NULL DEFAULT 0,

@@ -54,3 +54,10 @@ export type Translation = {
   translated_array: string[];
   translation_date: string;
 };
+
+export type Statistics = {
+  date: string;
+  learned: number;
+  reviewed: number;
+  isGoalAchieved: boolean;
+};

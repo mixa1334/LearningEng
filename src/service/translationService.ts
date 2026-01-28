@@ -11,7 +11,7 @@ const TIMEOUT = 7000;
 // 5000 chars per day free (for anonymous use)
 const FREE_API_TRANSLATOR_URL = "https://api.mymemory.translated.net";
 
-// 10_000 request per day (limit for each user by 10 requests per day)
+// 10_000 request per day (set limit for each user- 10 requests per day)
 const YANDEX_TRANSLATOR_URL = "https://dictionary.yandex.net/api/v1/dicservice.json";
 const YANDEX_TRANSLATOR_API_KEY = process.env.EXPO_PUBLIC_YANDEX_API_KEY ?? "no_key_provided";
 
