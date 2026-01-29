@@ -1,10 +1,10 @@
 import { useAppDispatch } from "@/src/hooks/hooks";
-import { AppDispatch } from "@/src/store/types";
 import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
 import { reloadPracticeThunk } from "@/src/store/slice/practiceSlice";
 import { initTranslationThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
+import { AppDispatch } from "@/src/store/types";
 import * as Audio from "expo-audio";
 import * as NavigationBar from 'expo-navigation-bar';
 import { Platform } from "react-native";
@@ -25,7 +25,9 @@ function loadSettingsOnce(dispatch: AppDispatch) {
       try {
         await Audio.setAudioModeAsync({
           playsInSilentMode: true,
-          interruptionMode: 'mixWithOthers',
+          ...(Platform.OS === 'ios'
+            ? { interruptionMode: 'mixWithOthers' }
+            : { interruptionModeAndroid: 'duckOthers' }),
         });
         await dispatch(loadUserDataThunk()).unwrap();
         await dispatch(loadDailyWordSetThunk()).unwrap();

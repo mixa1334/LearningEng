@@ -2,6 +2,7 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
     -- DROP TABLE IF EXISTS categories;
     -- DROP TABLE IF EXISTS words;
     -- DROP TABLE IF EXISTS translations;
+    -- DROP TABLE IF EXISTS statistics;
 
     PRAGMA foreign_keys = ON;
 
