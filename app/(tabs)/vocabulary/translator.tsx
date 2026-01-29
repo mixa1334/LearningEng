@@ -5,11 +5,11 @@ import { LoadingContentSpinner } from "@/src/components/common/LoadingContentSpi
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import TranslationCard from "@/src/components/vocabulary/translation/TranslationCard";
+import TranslatorSettings from "@/src/components/vocabulary/translation/TranslatorSettings";
 import { Language } from "@/src/entity/types";
-import { useTranslation } from "@/src/hooks/useTranslation";
+import { useTranslationActions, useTranslationData } from "@/src/hooks/useTranslation";
 import { SPACING_XL, SPACING_XS, SPACING_XXS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { StateType } from "@/src/store/slice/stateType";
-import { userAlerts } from "@/src/util/userAlerts";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
@@ -19,7 +19,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TranslatorPage() {
   const theme = useAppTheme();
   const { text } = useLanguageContext();
-  const { currentTranslation, status, error, translateWord, resetError } = useTranslation();
+  const { latestTranslationId, status, clearTranslatorInputField } = useTranslationData();
+  const { translateWord } = useTranslationActions();
   const [wordToTranslate, setWordToTranslate] = useState("");
   const [language, setLanguage] = useState(Language.ENGLISH);
   const insets = useSafeAreaInsets();
@@ -27,6 +28,7 @@ export default function TranslatorPage() {
   const { softImpact, lightImpact } = useHaptics();
   const router = useRouter();
   const [isTranslating, setIsTranslating] = useState(false);
+  const [isTranslatorSettingsVisible, setIsTranslatorSettingsVisible] = useState(false);
 
   useEffect(() => {
     if (status === StateType.succeeded) {
@@ -54,6 +56,9 @@ export default function TranslatorPage() {
     lightImpact();
     Keyboard.dismiss();
     translateWord(wordToTranslate, language);
+    if(clearTranslatorInputField) {
+      setWordToTranslate("");
+    }
   };
 
   const handleOpenHistory = () => {
@@ -62,13 +67,11 @@ export default function TranslatorPage() {
     router.push("./translations");
   };
 
-  const handleOpenSettings = () => {
-    //todo: open settings
-  };
 
   if (status === StateType.failed) {
 
-    userAlerts.sendUserError(error || text("translation_error_unknown"), () => resetError());
+    //todo global error handler
+    
   }
 
   return (
@@ -81,6 +84,7 @@ export default function TranslatorPage() {
         paddingHorizontal: pageHorizontalPadding,
       }}
     >
+      <TranslatorSettings visible={isTranslatorSettingsVisible} onClose={() => setIsTranslatorSettingsVisible(false)} />
       <Card style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
         <Card.Title
           titleStyle={{ color: theme.colors.onSurfaceVariant, alignSelf: "center" }}
@@ -116,7 +120,7 @@ export default function TranslatorPage() {
         <Card.Actions style={styles.actions}>
           <IconButton
             icon="cog"
-            onPress={handleOpenSettings}
+            onPress={() => setIsTranslatorSettingsVisible(true)}
             containerColor={theme.colors.primary}
             iconColor={theme.colors.onPrimary}
             size={24}
@@ -138,7 +142,7 @@ export default function TranslatorPage() {
         </Card.Actions>
       </Card>
       <View style={styles.currentTranslationContainer}>
-        {currentTranslation && <TranslationCard translation={currentTranslation} />}
+        {latestTranslationId && <TranslationCard translationId={latestTranslationId} />}
       </View>
     </ScrollView>
   );

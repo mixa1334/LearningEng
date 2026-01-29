@@ -1,5 +1,5 @@
 import Storage from "expo-sqlite/kv-store";
-import { THEMES, UserData } from "../entity/types";
+import { THEMES, TranslatorEngine, UserData } from "../entity/types";
 
 export enum USER_DATA_KEYS {
   NAME = "name",
@@ -14,6 +14,9 @@ export enum USER_DATA_KEYS {
   LOCALE = "locale",
   SOUND_ENABLED = "soundEnabled",
   HAPTICS_ENABLED = "hapticsEnabled",
+  TRANSLATOR_ENGINE = "translatorEngine",
+  DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY = "deleteTranslationAfterAddingToVocabulary",
+  CLEAR_TRANSLATOR_INPUT_FIELD = "clearTranslatorInputField",
 }
 
 export const ALL_USER_DATA_KEYS = Object.values(USER_DATA_KEYS) as string[];
@@ -27,10 +30,15 @@ export const DEFAULT_USER_DATA: UserData = {
   learnedToday: 0,
   dailyGoal: 5,
   dailyGoalAchieve: false,
-  theme: THEMES.LIGHT,
+  // todo: use system theme
+  // theme: Appearance.getColorScheme() === "dark" ? THEMES.DARK : THEMES.LIGHT,
+  theme: THEMES.DARK,
   locale: undefined,
   soundEnabled: true,
   hapticsEnabled: true,
+  translatorEngine: TranslatorEngine.FREE_API,
+  deleteTranslationAfterAddingToVocabulary: false,
+  clearTranslatorInputField: false,
 };
 
 function mapStorageValueToUserData<K extends USER_DATA_KEYS>(key: K, value: string | null): UserData[K] {
@@ -46,6 +54,8 @@ function mapStorageValueToUserData<K extends USER_DATA_KEYS>(key: K, value: stri
     case USER_DATA_KEYS.DAILY_GOAL_ACHIEVE:
     case USER_DATA_KEYS.SOUND_ENABLED:
     case USER_DATA_KEYS.HAPTICS_ENABLED:
+    case USER_DATA_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY:
+    case USER_DATA_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD:
       return (value === "true") as UserData[K];
     default:
       return value as UserData[K];

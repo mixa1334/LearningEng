@@ -3,6 +3,7 @@ import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import PickCategoryButton from "@/src/components/vocabulary/category/PickCategoryButton";
 import { Category } from "@/src/entity/types";
+import { useTranslationActions, useTranslationData } from "@/src/hooks/useTranslation";
 import { useVocabulary } from "@/src/hooks/useVocabulary";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -13,15 +14,18 @@ import { Button, Text } from "react-native-paper";
 export default function SaveTranslationPage() {
   const router = useRouter();
   const { text } = useLanguageContext();
-  const { word_en, word_ru } = useLocalSearchParams<{
+  const { translation_id, word_en, word_ru } = useLocalSearchParams<{
+    translation_id: string;
     word_ru: string;
     word_en: string;
   }>();
 
   const { addWord } = useVocabulary();
+  const { deleteTranslationAfterAddingToVocabulary } = useTranslationData();
+  const { removeTranslation } = useTranslationActions();
 
-  const {playActionSuccess} = useSoundPlayer();
-  const {mediumImpact} = useHaptics();
+  const { playActionSuccess } = useSoundPlayer();
+  const { mediumImpact } = useHaptics();
 
   const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
 
@@ -35,6 +39,9 @@ export default function SaveTranslationPage() {
       category_id: selectedCategory.id,
       text_example: "",
     });
+    if (deleteTranslationAfterAddingToVocabulary) {
+      removeTranslation(Number(translation_id));
+    }
     router.back();
   };
 

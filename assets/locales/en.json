@@ -14,10 +14,20 @@
   "common_action_permanent_title": "ACTION IS PERMANENT",
 
   "value_picker_select_title": "Select {{entityTitle}}",
-  "value_picker_close_accessibility": "Close {{entityTitle}} picker",
+  "custom_modal_dialog_close_accessibility": "Close {{title}} dialog",
 
   "goal_overlay_body": "You have achieved your daily learning goal!",
   "goal_overlay_footer": "You did it! You're amazing!",
+
+  "translator_settings_title": "Translator settings",
+  "translator_settings_description": "Configure the translator settings",
+  "translator_settings_delete_translation_after_adding_to_vocabulary": "Delete translation after adding",
+  "translator_settings_clear_translator_input_field": "Clear input every time",
+  "translator_engine_title": "API: {{translatorEngine}}",
+  "translator_engine": "Translator API",
+  "translator_engine_description": "Select the translator API you want to use",
+  "translator_engine_free_api": "Free API",
+  "translator_engine_yandex_api": "Yandex API",
 
   "settings_title": "Settings",
   "settings_dark_theme": "Dark Theme",

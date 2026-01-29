@@ -1,14 +1,14 @@
-import { useTranslation } from "@/src/hooks/useTranslation";
+import { useTranslationData } from "@/src/hooks/useTranslation";
 import { StyleSheet, View } from "react-native";
 import TranslationCard from "./TranslationCard";
 
 export default function TranslationsList() {
-    const { translations } = useTranslation();
+    const { translationIds } = useTranslationData();
 
     return (
         <View style={styles.listContent}>
-            {translations.map((translation) => (
-                <TranslationCard key={translation.id} translation={translation} />
+            {translationIds.map((id) => (
+                <TranslationCard key={id} translationId={id} />
             ))}
         </View>
     );

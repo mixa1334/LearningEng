@@ -1,7 +1,8 @@
-import { AppDispatch, useAppDispatch } from "@/src/store";
+import { useAppDispatch } from "@/src/hooks/hooks";
+import { AppDispatch } from "@/src/store/types";
 import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
 import { reloadPracticeThunk } from "@/src/store/slice/practiceSlice";
-import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
+import { initTranslationThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as Audio from "expo-audio";
@@ -20,36 +21,26 @@ function loadSettingsOnce(dispatch: AppDispatch) {
       NavigationBar.setVisibilityAsync('hidden');
     }
 
-    (async function () {
+    settingsPromise = (async () => {
       try {
         await Audio.setAudioModeAsync({
           playsInSilentMode: true,
-          allowsRecording: false,
           interruptionMode: 'mixWithOthers',
         });
-      } catch (error) {
-        console.error("Audio mode setup failed:", error);
-      }
-    })();
+        await dispatch(loadUserDataThunk()).unwrap();
+        await dispatch(loadDailyWordSetThunk()).unwrap();
+        await dispatch(initTranslationThunk()).unwrap();
+        await dispatch(initalizeVocabularyThunk()).unwrap();
+        await dispatch(reloadPracticeThunk()).unwrap();
 
-    settingsPromise = dispatch(loadUserDataThunk())
-      .unwrap()
-      .then(() =>
-        Promise.all([
-          dispatch(loadDailyWordSetThunk()).unwrap(),
-          dispatch(loadTranslationsThunk()).unwrap(),
-          dispatch(initalizeVocabularyThunk()).unwrap(),
-          dispatch(reloadPracticeThunk()).unwrap(),
-        ])
-      )
-      .then(() => {
         settingsStatus = "success";
-      })
-      .catch((error) => {
+      } catch (error) {
         settingsStatus = "error";
         settingsError = error;
+        console.error("Bootstrap failed:", error);
         throw error;
-      });
+      }
+    })();
   }
 
   return settingsPromise;

@@ -36,11 +36,23 @@ export type UserData = {
   learnedToday: number;
   dailyGoal: number;
   dailyGoalAchieve: boolean;
+  
+  // appearance settings
   theme: THEMES;
   locale: Language | undefined;
   soundEnabled: boolean;
   hapticsEnabled: boolean;
+
+  // translator settings
+  translatorEngine: TranslatorEngine;
+  deleteTranslationAfterAddingToVocabulary: boolean;
+  clearTranslatorInputField: boolean;
 };
+
+export enum TranslatorEngine {
+  FREE_API = "free_api",
+  YANDEX_API = "yandex_api",
+}
 
 export enum Language {
   ENGLISH = "en",

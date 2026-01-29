@@ -14,10 +14,20 @@
   "common_action_permanent_title": "ДЕЙСТВИЕ НЕОБРАТИМО",
 
   "value_picker_select_title": "Выберите {{entityTitle}}",
-  "value_picker_close_accessibility": "Закрыть окно выбора ({{entityTitle}})",
+  "custom_modal_dialog_close_accessibility": "Закрыть окно ({{title}})",
 
   "goal_overlay_body": "Вы достигли своей ежедневной цели по обучению!",
   "goal_overlay_footer": "Отличная работа! Вы молодец!",
+
+  "translator_settings_title": "Настройки переводчика",
+  "translator_settings_description": "Настройте параметры переводчика",
+  "translator_settings_delete_translation_after_adding_to_vocabulary": "Удалять перевод после добавления",
+  "translator_settings_clear_translator_input_field": "Очищать поле ввода каждый раз",
+  "translator_engine_title": "API: {{translatorEngine}}",
+  "translator_engine": "API переводчика",
+  "translator_engine_description": "Выберите API переводчика, который вы хотите использовать",
+  "translator_engine_free_api": "Бесплатный API",
+  "translator_engine_yandex_api": "API Яндекса",
 
   "settings_title": "Настройки",
   "settings_dark_theme": "Тёмная тема",

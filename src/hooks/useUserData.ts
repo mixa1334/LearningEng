@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/src/store";
+import { useAppDispatch, useAppSelector } from "@/src/hooks/hooks";
 import { resetLearningStatsThunk } from "@/src/store/slice/learnSlice";
 import { changeDailyGoalThunk, changeNameThunk, hideBanner, resetUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { removeUserVocabularyThunk } from "@/src/store/slice/vocabularySlice";

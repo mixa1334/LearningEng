@@ -1,32 +1,55 @@
-import { Language } from "@/src/entity/types";
-import { useAppDispatch, useAppSelector } from "@/src/store";
+import { Language, TranslatorEngine } from "@/src/entity/types";
+import { useAppDispatch, useAppSelector } from "@/src/hooks/hooks";
 import {
   clearTranslationsAction,
-  loadTranslationsThunk,
   removeTranslationAction,
-  resetErrorAction,
-  translateWordThunk,
+  selectTranslationById,
+  selectTranslationIds,
+  setClearTranslatorInputFieldAction,
+  setDeleteTranslationAfterAddingToVocabularyAction,
+  setTranslatorEngineAction,
+  translateWordThunk
 } from "@/src/store/slice/translationSlice";
 
-export function useTranslation() {
-  const dispatch = useAppDispatch();
-  const { currentTranslation, translations, status, error } = useAppSelector((s) => s.translation);
+export function useTranslationData() {
 
-  const resetError = () => dispatch(resetErrorAction());
-  const loadTranslations = () => dispatch(loadTranslationsThunk());
-  const removeTranslation = (translationId: number) => dispatch(removeTranslationAction(translationId));
+  const translationIds = useAppSelector(selectTranslationIds);
+  const latestTranslationId = useAppSelector((s) => s.translation.latestTranslationId);
+  const translatorEngine = useAppSelector((s) => s.translation.translatorEngine);
+  const deleteTranslationAfterAddingToVocabulary = useAppSelector((s) => s.translation.deleteTranslationAfterAddingToVocabulary);
+  const clearTranslatorInputField = useAppSelector((s) => s.translation.clearTranslatorInputField);
+  const status = useAppSelector((s) => s.translation.status);
+
+  return {
+    translationIds,
+    latestTranslationId,
+    translatorEngine,
+    deleteTranslationAfterAddingToVocabulary,
+    clearTranslatorInputField,
+    status,
+  };
+}
+
+export function useTranslationActions() {
+  const dispatch = useAppDispatch();
+
+  const setTranslatorEngine = (translatorEngine: TranslatorEngine) => dispatch(setTranslatorEngineAction(translatorEngine));
+  const setDeleteTranslationAfterAddingToVocabulary = (deleteTranslationAfterAddingToVocabulary: boolean) => dispatch(setDeleteTranslationAfterAddingToVocabularyAction(deleteTranslationAfterAddingToVocabulary));
+  const setClearTranslatorInputField = (clearTranslatorInputField: boolean) => dispatch(setClearTranslatorInputFieldAction(clearTranslatorInputField));
+  const removeTranslation = (id: number) => dispatch(removeTranslationAction(id));
   const translateWord = (word: string, language: Language) => dispatch(translateWordThunk({ word, language }));
   const clearTranslations = () => dispatch(clearTranslationsAction());
 
   return {
-    currentTranslation,
-    translations,
-    status,
-    error,
-    resetError,
-    loadTranslations,
+    setTranslatorEngine,
+    setDeleteTranslationAfterAddingToVocabulary,
+    setClearTranslatorInputField,
     removeTranslation,
     translateWord,
     clearTranslations,
   };
+}
+
+export function useTranslationItem(id: number) {
+  return useAppSelector((state) => selectTranslationById(state, id));
 }

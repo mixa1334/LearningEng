@@ -5,12 +5,12 @@ import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, IconButton, Switch, Text } from "react-native-paper";
 
+import { useAppDispatch } from "@/src/hooks/hooks";
 import { useUserData } from "@/src/hooks/useUserData";
 import { createBackupFileAndShare, restoreFromBackupFileUri } from "@/src/service/backupService";
-import { useAppDispatch } from "@/src/store";
 import { loadDailyWordSetThunk } from "@/src/store/slice/learnSlice";
 import { reloadPracticeThunk } from "@/src/store/slice/practiceSlice";
-import { loadTranslationsThunk } from "@/src/store/slice/translationSlice";
+import { initTranslationThunk } from "@/src/store/slice/translationSlice";
 import { loadUserDataThunk } from "@/src/store/slice/userDataSlice";
 import { initalizeVocabularyThunk } from "@/src/store/slice/vocabularySlice";
 import * as DocumentPicker from "expo-document-picker";
@@ -78,7 +78,7 @@ export default function SettingsCard() {
         .then(() =>
           Promise.all([
             dispatch(loadDailyWordSetThunk()).unwrap(),
-            dispatch(loadTranslationsThunk()).unwrap(),
+            dispatch(initTranslationThunk()).unwrap(),
             dispatch(initalizeVocabularyThunk()).unwrap(),
             dispatch(reloadPracticeThunk()).unwrap(),
           ])

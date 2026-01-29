@@ -2,7 +2,7 @@ import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import TranslationsList from "@/src/components/vocabulary/translation/TranslationsList";
-import { useTranslation } from "@/src/hooks/useTranslation";
+import { useTranslationActions } from "@/src/hooks/useTranslation";
 import { SPACING_LG, SPACING_XS, TAB_BAR_BASE_HEIGHT } from "@/src/resources/constants/layout";
 import { userAlerts } from "@/src/util/userAlerts";
 import React from "react";
@@ -35,7 +35,7 @@ export default function TranslationsPage() {
 export function ClearHistoryButton() {
     const { text } = useLanguageContext();
     const theme = useAppTheme();
-    const { clearTranslations } = useTranslation();
+    const { clearTranslations } = useTranslationActions();
     const { heavyImpact } = useHaptics();
 
     const handleClearHistory = () => {

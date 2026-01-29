@@ -3,19 +3,20 @@ import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
-import { Language, Translation } from "@/src/entity/types";
-import { useTranslation } from "@/src/hooks/useTranslation";
+import { Language } from "@/src/entity/types";
+import { useTranslationActions, useTranslationItem } from "@/src/hooks/useTranslation";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, PanResponder, Pressable, StyleSheet, View } from "react-native";
 import { Card, IconButton, Text } from "react-native-paper";
 
 interface TranslationCardProps {
-    readonly translation: Translation;
+    readonly translationId: number;
 }
 
-export default function TranslationCard({ translation }: TranslationCardProps) {
-    const { removeTranslation } = useTranslation();
+export default function TranslationCard({ translationId }: TranslationCardProps) {
+    const translation = useTranslationItem(translationId);
+    const { removeTranslation } = useTranslationActions();
     const theme = useAppTheme();
     const router = useRouter();
     const { playTap } = useSoundPlayer();
@@ -77,6 +78,7 @@ export default function TranslationCard({ translation }: TranslationCardProps) {
         router.push({
             pathname: "./save-translation",
             params: {
+                translation_id: translation.id.toString(),
                 word_ru,
                 word_en,
             },

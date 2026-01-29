@@ -1,5 +1,5 @@
 import { Category, EntityType } from "@/src/entity/types";
-import { useAppDispatch, useAppSelector } from "@/src/store";
+import { useAppDispatch, useAppSelector } from "@/src/hooks/hooks";
 import {
   loadNextPracticeSetThunk,
   resetCriteriaAction,
