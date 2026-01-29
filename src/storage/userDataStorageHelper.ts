@@ -1,4 +1,5 @@
 import Storage from "expo-sqlite/kv-store";
+import { Appearance } from "react-native";
 import { THEMES, TranslatorEngine, UserData } from "../entity/types";
 
 export enum USER_DATA_KEYS {
@@ -32,7 +33,7 @@ export const DEFAULT_USER_DATA: UserData = {
   dailyGoalAchieve: false,
   // todo: use system theme
   // theme: Appearance.getColorScheme() === "dark" ? THEMES.DARK : THEMES.LIGHT,
-  theme: THEMES.DARK,
+  theme: Appearance.getColorScheme() === "dark" ? THEMES.DARK : THEMES.LIGHT,
   locale: undefined,
   soundEnabled: true,
   hapticsEnabled: true,
