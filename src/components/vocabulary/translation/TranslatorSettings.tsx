@@ -1,3 +1,4 @@
+import { TranslatorEngine } from "@/src/entity/types";
 import { useTranslationActions, useTranslationData } from "@/src/hooks/useTranslation";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import { useMemo, useState } from "react";
@@ -7,7 +8,6 @@ import { CustomModalDialog } from "../../common/CustomModalDialog";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
-import { TranslatorEngine } from "@/src/entity/types";
 
 interface TranslatorSettingsProps {
     readonly visible: boolean;
@@ -32,20 +32,24 @@ export default function TranslatorSettings({ visible, onClose }: TranslatorSetti
     const handleClearTranslatorInputField = (value: boolean) => {
         setClearTranslatorInputField(value);
     };
+    const handleSetTranslatorEngine = (value: TranslatorEngine) => {
+        setTranslatorEngine(value);
+        setIsTranslatorEnginePickerVisible(false);
+    };
 
     return (
         <CustomModalDialog title={text("translator_settings_title")} description={text("translator_settings_description")} visible={visible} onClose={onClose}>
             <View style={{ marginTop: SPACING_MD }}>
                 <View style={styles.switcherSettingRow}>
-                    <Text>{text("translator_settings_delete_translation_after_adding_to_vocabulary")}</Text>
+                    <Text style={styles.settingText}>{text("translator_settings_delete_translation_after_adding_to_vocabulary")}</Text>
                     <Switch value={deleteTranslationAfterAddingToVocabulary} onValueChange={handleDeleteTranslationAfterAddingToVocabulary} />
                 </View>
                 <View style={styles.switcherSettingRow}>
-                    <Text>{text("translator_settings_clear_translator_input_field")}</Text>
+                    <Text style={styles.settingText}>{text("translator_settings_clear_translator_input_field")}</Text>
                     <Switch value={clearTranslatorInputField} onValueChange={handleClearTranslatorInputField} />
                 </View>
                 <View style={styles.switcherSettingRow}>
-                    <Text>{text("translator_engine_title", { translatorEngine })}</Text>
+                    <Text style={styles.settingText}>{text("translator_engine_title", { translatorEngine })}</Text>
                     <IconButton style={{ backgroundColor: theme.colors.primary }}
                         iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={() => setIsTranslatorEnginePickerVisible(true)} />
                     <ValuePickerDialog
@@ -54,7 +58,7 @@ export default function TranslatorSettings({ visible, onClose }: TranslatorSetti
                         visible={isTranslatorEnginePickerVisible}
                         onClose={() => setIsTranslatorEnginePickerVisible(false)}
                         options={translatorEngineOptions}
-                        onSelectOption={setTranslatorEngine}
+                        onSelectOption={handleSetTranslatorEngine}
                     />
                 </View>
             </View>
@@ -70,5 +74,8 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         marginBottom: 16,
         width: "100%",
+    },
+    settingText: {
+        fontSize: 12,
     },
 });

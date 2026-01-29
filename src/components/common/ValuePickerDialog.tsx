@@ -1,6 +1,6 @@
 import { SCREEN_HEIGHT_0_5 } from "@/src/resources/constants/layout";
 import { FlatList, StyleSheet } from "react-native";
-import { Button, useTheme } from "react-native-paper";
+import { Button, Text, useTheme } from "react-native-paper";
 
 import { CustomModalDialog } from "./CustomModalDialog";
 import { useLanguageContext } from "./LanguageProvider";
@@ -42,7 +42,7 @@ export function ValuePickerDialog<T>({
             contentStyle={styles.categoryBtnContent}
             onPress={() => onSelectOption(item.value)}
           >
-            {item.label}
+            <Text style={styles.valueText}>{item.label}</Text>
           </Button>
         )}
       />
@@ -57,5 +57,8 @@ const styles = StyleSheet.create({
   },
   categoryBtnContent: {
     justifyContent: "flex-start",
+  },
+  valueText: {
+    fontSize: 16,
   },
 });
