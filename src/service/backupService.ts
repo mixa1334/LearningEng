@@ -5,8 +5,8 @@ import { dateHelper } from "@/src/util/dateHelper";
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
-type BackupFileV1 = {
-  version: 1;
+type BackupFile = {
+  version: 2;
   createdAt: string;
   userData: UserData;
   categories: {
@@ -42,18 +42,18 @@ export async function createBackupFileAndShare(): Promise<void> {
 
   const userData = await getAllUserProps();
 
-  const categories = await db.getAllAsync<BackupFileV1["categories"][number]>("SELECT id, name, type, icon FROM categories");
+  const categories = await db.getAllAsync<BackupFile["categories"][number]>("SELECT id, name, type, icon FROM categories");
 
-  const words = await db.getAllAsync<BackupFileV1["words"][number]>(
+  const words = await db.getAllAsync<BackupFile["words"][number]>(
     "SELECT id, word_en, word_ru, type, learned, category_id, next_review, priority, text_example FROM words"
   );
 
-  const translations = await db.getAllAsync<BackupFileV1["translations"][number]>(
+  const translations = await db.getAllAsync<BackupFile["translations"][number]>(
     "SELECT id, text, text_language, translated_array, translation_date FROM translations"
   );
 
-  const payload: BackupFileV1 = {
-    version: 1,
+  const payload: BackupFile = {
+    version: 2,
     createdAt: new Date().toISOString(),
     userData,
     categories,
@@ -85,14 +85,14 @@ export async function restoreFromBackupFileUri(fileUri: string): Promise<void> {
   const file = new File(fileUri);
   const json = await file.text();
 
-  let parsed: BackupFileV1;
+  let parsed: BackupFile;
   try {
-    parsed = JSON.parse(json) as BackupFileV1;
+    parsed = JSON.parse(json) as BackupFile;
   } catch {
     throw new Error("Selected file is not a valid backup (invalid JSON).");
   }
 
-  if (parsed?.version !== 1) {
+  if (parsed?.version !== 2) {
     throw new Error("Selected file is not a supported backup version.");
   }
 

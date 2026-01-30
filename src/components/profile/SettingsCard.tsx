@@ -71,18 +71,14 @@ export default function SettingsCard() {
 
       show();
       const uri = result.assets[0].uri;
+      
       await restoreFromBackupFileUri(uri);
 
-      await dispatch(loadUserDataThunk())
-        .unwrap()
-        .then(() =>
-          Promise.all([
-            dispatch(loadDailyWordSetThunk()).unwrap(),
-            dispatch(initTranslationThunk()).unwrap(),
-            dispatch(initalizeVocabularyThunk()).unwrap(),
-            dispatch(reloadPracticeThunk()).unwrap(),
-          ])
-        );
+      await dispatch(loadUserDataThunk());
+      await dispatch(loadDailyWordSetThunk());
+      await dispatch(initTranslationThunk());
+      await dispatch(initalizeVocabularyThunk());
+      await dispatch(reloadPracticeThunk());
 
       playActionSuccess();
       Alert.alert(text("settings_restore_completed_title"), text("settings_restore_completed_message"));
