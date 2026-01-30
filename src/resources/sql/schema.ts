@@ -10,7 +10,7 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       text TEXT NOT NULL,
       text_language TEXT NOT NULL CHECK (text_language IN ('en', 'ru')),
-      translated_array TEXT NOT NULL CHECK (json_valid(translated_array)),
+      translated_array TEXT NOT NULL,
       translation_date TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
@@ -37,13 +37,15 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
 
 export const SCHEMA_ALTER_TO_V2 = `
   DROP TABLE IF EXISTS translations;
+
   CREATE TABLE IF NOT EXISTS translations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     text TEXT NOT NULL,
     text_language TEXT NOT NULL CHECK (text_language IN ('en', 'ru')),
-    translated_array TEXT NOT NULL CHECK (json_valid(translated_array)),
+    translated_array TEXT NOT NULL,
     translation_date TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
   CREATE TABLE IF NOT EXISTS statistics (
     date TEXT PRIMARY KEY NOT NULL DEFAULT (datetime('now')),
     learned INTEGER NOT NULL DEFAULT 0,
