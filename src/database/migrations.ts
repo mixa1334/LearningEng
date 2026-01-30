@@ -22,7 +22,9 @@ export async function runMigrations(db: SQLiteDatabase) {
     const userExists = await checkIfUserExists(db);
 
     if (userExists) {
-      await db.execAsync(SCHEMA_ALTER_TO_V2);
+      for (const schema of SCHEMA_ALTER_TO_V2) {
+        await db.execAsync(schema);
+      }
       user_version = 2;
     } else {
       await db.execAsync(SCHEMA_CREATION_IF_NOT_EXISTS);
