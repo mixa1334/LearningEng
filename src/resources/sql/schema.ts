@@ -1,9 +1,4 @@
 export const SCHEMA_CREATION_IF_NOT_EXISTS = `
-    -- DROP TABLE IF EXISTS categories;
-    -- DROP TABLE IF EXISTS words;
-    -- DROP TABLE IF EXISTS translations;
-    -- DROP TABLE IF EXISTS statistics;
-
     PRAGMA foreign_keys = ON;
 
     CREATE TABLE IF NOT EXISTS statistics (
@@ -40,4 +35,21 @@ export const SCHEMA_CREATION_IF_NOT_EXISTS = `
       text_example TEXT NOT NULL,
       FOREIGN KEY (category_id) REFERENCES categories(id)
     );
-  `;
+`;
+
+export const SCHEMA_ALTER_TO_V2 = `
+  DROP TABLE IF EXISTS translations;
+  CREATE TABLE IF NOT EXISTS translations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT NOT NULL,
+    text_language TEXT NOT NULL CHECK (text_language IN ('en', 'ru')),
+    translated_array TEXT NOT NULL CHECK (json_valid(translated_array)),
+    translation_date TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS statistics (
+    date TEXT PRIMARY KEY NOT NULL DEFAULT (datetime('now')),
+    learned INTEGER NOT NULL DEFAULT 0,
+    reviewed INTEGER NOT NULL DEFAULT 0,
+    isGoalAchieved INTEGER NOT NULL CHECK (isGoalAchieved IN (0, 1)) DEFAULT 0
+  );
+`;
