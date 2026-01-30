@@ -7,7 +7,8 @@ import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/shuffleArray";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeIn, ZoomIn, ZoomOut, Layout } from "react-native-reanimated";
+import Animated, { Layout, ZoomIn, ZoomOut } from "react-native-reanimated";
+import { useAutoScroll } from "../../../common/AutoScrollContext";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const VISIBLE_PAIRS = 5;
@@ -31,6 +32,7 @@ const toWordTextPlate = (word: Word, isEnglish: boolean): WordTextPlate => {
 
 export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeModeChildProps>) {
   const { words } = usePractice();
+  const { triggerScroll } = useAutoScroll();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
   const { successNotification, errorNotification } = useHaptics();
@@ -59,7 +61,8 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
     setPlatesRemainingCount(visiblePool.length);
     setRuPlates(shuffleArray(visiblePool.map((w) => toWordTextPlate(w, false))));
     setEngPlates(shuffleArray(visiblePool.map((w) => toWordTextPlate(w, true))));
-  }, [remainingPool, platesRemainingCount]);
+    triggerScroll();
+  }, [remainingPool, platesRemainingCount, triggerScroll]);
 
   useEffect(() => {
     if (!hasFinished && (ruPlates.length === 0 || engPlates.length === 0)) {
