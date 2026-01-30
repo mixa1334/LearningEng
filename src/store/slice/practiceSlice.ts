@@ -2,7 +2,7 @@ import { EntityType, type Category, type Word } from "@/src/entity/types";
 import { WordCriteria } from "@/src/service/criteria/impl/WordCriteria";
 import { getWordsByCriteria } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "..";
+import { RootState } from "../types";
 
 //cuz depends on ids (which are in asc order) we need to load words in asc order
 const ORDER_BY = "ASC";

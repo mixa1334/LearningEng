@@ -8,7 +8,7 @@ import {
   startLearningWord,
 } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "..";
+import { RootState } from "../types";
 import {
   updateStatsAfterLearnThunk,
   updateStatsAfterReviewThunk,
