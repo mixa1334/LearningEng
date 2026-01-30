@@ -4,8 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
 
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { useHaptics } from "../../common/HapticsProvider";
 import { getCardShadow } from "../../common/cardShadow";
+import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
@@ -119,7 +119,7 @@ export default function LearningMainMode() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
+
         {word === undefined ? (
           <View style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
             <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
@@ -134,7 +134,7 @@ export default function LearningMainMode() {
         ) : (
           <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
         )}
-      </View>
+    
     </View>
   );
 }
@@ -171,10 +171,6 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: 16,
     fontWeight: "600",
-  },
-  content: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   completeMsg: {
     alignItems: "center",

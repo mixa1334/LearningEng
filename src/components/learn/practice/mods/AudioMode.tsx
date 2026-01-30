@@ -10,9 +10,9 @@ import { shuffleArray } from "@/src/util/shuffleArray";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming, ZoomIn } from "react-native-reanimated";
+import Animated, { FadeInDown, ZoomIn } from "react-native-reanimated";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const HIGHLIGHT_DELAY = 500;
@@ -130,7 +130,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         const isError = isIncorrect && isSelected;
 
         return (
-            <Animated.View 
+            <Animated.View
                 key={`${option.id}-${currentWordIndex}`}
                 entering={FadeInDown.delay(index * 100).springify()}
                 style={{ width: '100%' }}
@@ -178,8 +178,6 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         <View style={styles.container}>
             <View style={styles.sessionContent}>
                 <View style={styles.headerContainer}>
-                    <HiddenValue value={words[currentWordIndex].word_en} />
-                    
                     <View style={styles.audioButtonContainer}>
                         {isPlaying ? (
                             <LottieView
@@ -208,9 +206,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
                             </Animated.View>
                         )}
                     </View>
-                    <Text style={[styles.instructionText, { color: theme.colors.onSurfaceVariant }]}>
-                        {text("practice_audio_play_button") || "Tap to listen"}
-                    </Text>
+                    <HiddenValue value={words[currentWordIndex].word_en} />
                 </View>
 
                 <View style={styles.optionsContainer}>

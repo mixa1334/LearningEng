@@ -114,7 +114,6 @@
   "practice_header_session": "Сессия: {{mode}}",
   "practice_end_button": "Завершить",
   "practice_start_button": "Начать",
-  "practice_audio_play_button": "Воспроизвести",
 
   "practice_label_only_user_words": "Только свои слова",
   "practice_label_word_limit": "Лимит слов",
@@ -130,7 +129,6 @@
   "practice_pick_english_end_message": "Вы допустили {{mistakes}} ошибок при выборе правильного английского перевода",
   "practice_audio_end_message": "Вы допустили {{mistakes}} ошибок при выборе правильного русского перевода",
 
-  "practice_builder_ru_label": "Русское слово",
   "practice_builder_end_message": "Вы собрали {{correct}} из {{total}} слов без ошибок",
 
   "practice_pairs_ru_label": "RU слова",

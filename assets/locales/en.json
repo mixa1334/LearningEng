@@ -115,7 +115,6 @@
   "practice_header_session": "{{mode}} session",
   "practice_end_button": "End",
   "practice_start_button": "Start",
-  "practice_audio_play_button": "Play",
 
   "practice_label_only_user_words": "Only user words",
   "practice_label_word_limit": "Word limit",
@@ -131,7 +130,6 @@
   "practice_pick_english_end_message": "You made {{mistakes}} mistakes while picking the correct English translation",
   "practice_audio_end_message": "You made {{mistakes}} mistakes while picking the correct Russian translation",
 
-  "practice_builder_ru_label": "RU word",
   "practice_builder_end_message": "You solved {{correct}} / {{total}} words without mistakes",
 
   "practice_pairs_ru_label": "RU words",

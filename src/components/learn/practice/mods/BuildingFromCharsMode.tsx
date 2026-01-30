@@ -2,9 +2,9 @@ import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/shuffleArray";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Animated, { FadeInDown, ZoomIn, Layout, FadeOut } from "react-native-reanimated";
+import Animated, { FadeInDown, Layout, ZoomIn } from "react-native-reanimated";
 
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useLanguageContext } from "../../../common/LanguageProvider";
@@ -118,9 +118,6 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
     <View style={styles.container}>
       <View style={styles.sessionContent}>
         <View style={styles.headerContainer}>
-             <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>
-              {text("practice_builder_ru_label")}
-            </Text>
             <Animated.Text 
                 key={`q-${words[currentWordIndex].id}`}
                 entering={ZoomIn.springify()}

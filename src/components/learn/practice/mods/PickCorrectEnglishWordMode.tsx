@@ -5,9 +5,9 @@ import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/shuffleArray";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInDown, ZoomIn, useAnimatedStyle, useSharedValue, withSequence, withTiming, withRepeat } from "react-native-reanimated";
+import Animated, { FadeInDown, ZoomIn } from "react-native-reanimated";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const HIGHLIGHT_DELAY = 600;
@@ -104,7 +104,7 @@ export default function PickCorrectEnglishWordMode(
 
         return (
             <Animated.View 
-                key={`${option.id}-${currentWordIndex}`} // Force re-render animation on new word
+                key={`${option.id}-${currentWordIndex}`}
                 entering={FadeInDown.delay(index * 100).springify()}
                 style={{ width: '100%' }}
             >
@@ -158,9 +158,6 @@ export default function PickCorrectEnglishWordMode(
                     >
                         {words[currentWordIndex].word_ru}
                     </Animated.Text>
-                    <Text style={[styles.instructionText, { color: theme.colors.onSurfaceVariant }]}>
-                        {text("practice_pick_english_instruction") || "Select the correct translation"}
-                    </Text>
                 </View>
 
                 <View style={styles.optionsContainer}>
@@ -182,7 +179,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerContainer: {
-        marginBottom: 40,
+        marginBottom: 15,
         alignItems: 'center',
     },
     wordHeaderValue: {
