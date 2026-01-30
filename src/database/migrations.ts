@@ -19,28 +19,28 @@ export async function runMigrations(db: SQLiteDatabase) {
 
   if (user_version === 0) {
 
-    const userExists = await checkIfUserExists(db);
+    const migrationsNeedToBeRun = await checkIfMigrationsNeedToBeRun(db);
 
-    if (userExists) {
-      for (const schema of SCHEMA_ALTER_TO_V2) {
-        await db.execAsync(schema);
-      }
+    if (migrationsNeedToBeRun) {
+      await db.execAsync(SCHEMA_ALTER_TO_V2);
       user_version = 2;
     } else {
       await db.execAsync(SCHEMA_CREATION_IF_NOT_EXISTS);
       await addNewCategoriesBatch(categoriesSeed, EntityType.preloaded);
       await addNewWordsBatch(wordsSeed, EntityType.preloaded);
       user_version = LATEST_VERSION;
-    }
-
-    await db.execAsync(`PRAGMA user_version = ${user_version}`);
+    }  
   }
+
+
+  await db.execAsync(`PRAGMA user_version = ${user_version}`);
 
   await db.execAsync('PRAGMA foreign_keys = ON;');
 }
 
-async function checkIfUserExists(db: SQLiteDatabase) {
-  return await db.getFirstAsync<{ name: string }>(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name='users';"
+async function checkIfMigrationsNeedToBeRun(db: SQLiteDatabase) {
+  const result = await db.getFirstAsync<{ exists: number }>(
+    "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type='table' AND name='translations') AS 'exists';"
   );
+  return result?.exists === 1;
 }
