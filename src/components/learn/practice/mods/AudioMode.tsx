@@ -1,5 +1,4 @@
 import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
-import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import HiddenValue from "@/src/components/common/HiddenValue";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
@@ -11,12 +10,12 @@ import { shuffleArray } from "@/src/util/shuffleArray";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming, ZoomIn } from "react-native-reanimated";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const HIGHLIGHT_DELAY = 500;
-
 const OPTIONS_COUNT = 3;
 
 const buildOptions = (words: Word[], currentWord: Word) => {
@@ -47,6 +46,12 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 
+    // Reset options when word changes
+    useEffect(() => {
+        if (!words[currentWordIndex]) return;
+        setOptions(buildOptions(words, words[currentWordIndex]));
+    }, [currentWordIndex, words]);
+
     const playAudio = (i: number) => {
         if (isPlaying) {
             Speech.stop();
@@ -55,7 +60,7 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         Speech.speak(words[i].word_en, {
             language: "en",
             pitch: 1,
-            rate: 0.3,
+            rate: 0.8,
             onDone: () => { setTimeout(() => setIsPlaying(false), 300); },
             onStopped: () => setIsPlaying(false),
             onError: () => setIsPlaying(false),
@@ -68,6 +73,8 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         setMistakesCount(mistakes);
         setIsCorrect(false);
         setIsIncorrect(false);
+        setSelectedOptionId(null);
+
         const newWordIndex = currentWordIndex + 1;
         if (newWordIndex >= words.length) {
             setHasFinished(true);
@@ -79,7 +86,6 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
             return;
         }
         setCurrentWordIndex(newWordIndex);
-        setOptions(buildOptions(words, words[newWordIndex]));
         playAudio(newWordIndex);
         triggerScroll();
     }
@@ -117,101 +123,98 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
         playAudio(currentWordIndex);
     };
 
-    if (hasFinished || words.length === 0) return null;
-
-    const renderOption = (option: Word) => {
+    const renderOption = (option: Word, index: number) => {
         const isSelected = selectedOptionId === option.id;
         const isRightOption = option.id === words[currentWordIndex].id;
         const isSuccess = isCorrect && isRightOption;
         const isError = isIncorrect && isSelected;
 
         return (
-            <Pressable
-                key={option.id}
-                onPress={() => handleSelectOption(option)}
-                disabled={isCorrect || isIncorrect}
-                style={({ pressed }) => [
-                    styles.optionButton,
-                    {
-                        backgroundColor: theme.colors.onSurfaceVariant,
-                        borderColor: theme.colors.outline,
-                    },
-                    pressed &&
-                    !isCorrect &&
-                    !isIncorrect && {
-                        opacity: 0.85,
-                        transform: [{ scale: 0.98 }],
-                    },
-                    isSuccess && {
-                        backgroundColor: theme.colors.accept,
-                        borderColor: theme.colors.accept,
-                    },
-                    isError && {
-                        backgroundColor: theme.colors.reject,
-                        borderColor: theme.colors.reject,
-                    },
-                ]}
+            <Animated.View 
+                key={`${option.id}-${currentWordIndex}`}
+                entering={FadeInDown.delay(index * 100).springify()}
+                style={{ width: '100%' }}
             >
-                <Text
-                    style={[
-                        styles.optionText,
-                        { color: theme.colors.surface },
-                        (isSuccess || isError) && { color: theme.colors.onAcceptReject },
+                <Pressable
+                    onPress={() => handleSelectOption(option)}
+                    disabled={isCorrect || isIncorrect}
+                    style={({ pressed }) => [
+                        styles.optionButton,
+                        {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.outline,
+                        },
+                        pressed && !isCorrect && !isIncorrect && {
+                            backgroundColor: theme.colors.surfaceVariant,
+                            transform: [{ scale: 0.98 }],
+                        },
+                        isSuccess && {
+                            backgroundColor: theme.colors.accept,
+                            borderColor: theme.colors.accept,
+                        },
+                        isError && {
+                            backgroundColor: theme.colors.reject,
+                            borderColor: theme.colors.reject,
+                        },
                     ]}
                 >
-                    {option.word_ru}
-                </Text>
-            </Pressable>
+                    <Text
+                        style={[
+                            styles.optionText,
+                            { color: theme.colors.onSurface },
+                            (isSuccess || isError) && { color: theme.colors.onAcceptReject },
+                        ]}
+                    >
+                        {option.word_ru}
+                    </Text>
+                </Pressable>
+            </Animated.View>
         );
     };
+
+    if (hasFinished || words.length === 0) return null;
 
     return (
         <View style={styles.container}>
             <View style={styles.sessionContent}>
-                <View
-                    style={[
-                        styles.modeCard,
-                        { backgroundColor: theme.colors.surfaceVariant },
-                        getCardShadow(theme),
-                    ]}
-                >
+                <View style={styles.headerContainer}>
                     <HiddenValue value={words[currentWordIndex].word_en} />
+                    
                     <View style={styles.audioButtonContainer}>
-
                         {isPlaying ? (
                             <LottieView
                                 source={require("@/assets/animations/playing.json")}
                                 autoPlay
                                 loop={true}
-                                speed={2}
+                                speed={1.5}
                                 resizeMode="contain"
                                 style={styles.playAnimation}
                             />
                         ) : (
-                            <Pressable
-                                onPress={handlePlayAudio}
-                                style={({ pressed }) => [
-                                    styles.audioButton,
-                                    {
-                                        backgroundColor: theme.colors.primary,
-                                        borderColor: theme.colors.onPrimary,
-                                    },
-                                    pressed && {
-                                        opacity: 0.5,
-                                    },
-                                ]}
-                            >
-                                <MaterialIcons name="play-arrow" size={24} color={theme.colors.onPrimary} />
-                                <Text style={[styles.audioButtonText, { color: theme.colors.onPrimary }]}>
-                                    {text("practice_audio_play_button")}
-                                </Text>
-                            </Pressable>
+                            <Animated.View entering={ZoomIn.springify()}>
+                                <Pressable
+                                    onPress={handlePlayAudio}
+                                    style={({ pressed }) => [
+                                        styles.audioButton,
+                                        {
+                                            backgroundColor: theme.colors.primary,
+                                            shadowColor: theme.colors.primary,
+                                        },
+                                        pressed && { opacity: 0.8, transform: [{ scale: 0.95 }] },
+                                    ]}
+                                >
+                                    <MaterialIcons name="play-arrow" size={48} color={theme.colors.onPrimary} />
+                                </Pressable>
+                            </Animated.View>
                         )}
                     </View>
+                    <Text style={[styles.instructionText, { color: theme.colors.onSurfaceVariant }]}>
+                        {text("practice_audio_play_button") || "Tap to listen"}
+                    </Text>
+                </View>
 
-                    <View style={styles.optionsContainer}>
-                        {options.map(renderOption)}
-                    </View>
+                <View style={styles.optionsContainer}>
+                    {options.map((opt, idx) => renderOption(opt, idx))}
                 </View>
             </View>
         </View>
@@ -221,62 +224,59 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 2,
+        paddingHorizontal: 16,
     },
     sessionContent: {
         flex: 1,
+        justifyContent: 'center',
     },
-    modeCard: {
-        flex: 1,
-        borderRadius: 20,
-        marginVertical: 16,
-        padding: 10,
+    headerContainer: {
+        alignItems: "center",
+        marginBottom: 40,
     },
     audioButtonContainer: {
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 25,
-        height: 50,
+        marginVertical: 24,
+        height: 100,
+        width: 100,
     },
     audioButton: {
-        flexDirection: "row",
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 999,
-        borderWidth: 2,
-        paddingVertical: 10,
-        paddingHorizontal: 26,
-        gap: 10,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
     },
-    audioButtonIcon: {
-        fontSize: 24,
-        fontWeight: "800",
-    },
-    audioButtonText: {
-        fontSize: 18,
-        fontWeight: "700",
-    },
-    optionsContainer: {
-        flex: 1,
-        justifyContent: "center",
-        gap: 10,
-        paddingHorizontal: 30,
-        paddingBottom: 10,
-    },
-    optionButton: {
-        borderRadius: 12,
-        borderWidth: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 12,
-    },
-    optionText: {
+    instructionText: {
         fontSize: 16,
         fontWeight: "600",
-        textAlign: "center",
+        opacity: 0.7,
     },
     playAnimation: {
-        alignSelf: "center",
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
+    },
+    optionsContainer: {
+        width: '100%',
+        gap: 12,
+    },
+    optionButton: {
+        width: '100%',
+        borderRadius: 16,
+        borderWidth: 1,
+        paddingVertical: 18,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    optionText: {
+        fontSize: 18,
+        fontWeight: "600",
+        textAlign: "center",
     },
 });

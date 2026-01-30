@@ -1,15 +1,15 @@
-import { getCardShadow } from "@/src/components/common/cardShadow";
+import { useHaptics } from "@/src/components/common/HapticsProvider";
+import { useLanguageContext } from "@/src/components/common/LanguageProvider";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useAppTheme } from "@/src/components/common/ThemeProvider";
 import { Word } from "@/src/entity/types";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/shuffleArray";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
-import { useHaptics } from "@/src/components/common/HapticsProvider";
-import { useSoundPlayer } from "@/src/components/common/SoundProvider";
-import { useLanguageContext } from "../../../common/LanguageProvider";
+import Animated, { FadeIn, ZoomIn, ZoomOut, Layout } from "react-native-reanimated";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
+
 const VISIBLE_PAIRS = 5;
 const HIGHLIGHT_DELAY = 400;
 
@@ -126,7 +126,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
     setSelectedPlate(null);
   };
 
-  const renderPlate = (plate: WordTextPlate) => {
+  const renderPlate = (plate: WordTextPlate, index: number) => {
     const { colors } = theme;
 
     const isSelected = selectedPlate?.wordId === plate.wordId && selectedPlate?.isEnglish === plate.isEnglish;
@@ -138,60 +138,67 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
     const isIncorrectPair = isInPair && pairMatch && !pairMatch.isCorrect;
     const isComplete = plate.isComplete;
 
-    if (isComplete) {
-      return (
-        <View style={[styles.plate, { backgroundColor: colors.surfaceVariant, borderColor: colors.outline }]}>
-          <Text style={[styles.plateText, { color: colors.surfaceVariant }]}>{plate.text}</Text>
-        </View>
-      );
-    }
-
     return (
-      <Pressable
-        key={`${plate.wordId}-${plate.isEnglish ? "en" : "ru"}`}
-        onPress={() => handleSelectPlate(plate)}
-        disabled={!!pairMatch}
-        style={({ pressed }) => [
-          styles.plate,
-          {
-            backgroundColor: colors.onSurfaceVariant,
-            borderColor: colors.outline,
-          },
-          pressed &&
-            !isInPair && {
-              opacity: 0.8,
-              transform: [{ scale: 0.97 }],
-            },
-          isSelected &&
-            !isInPair && {
-              backgroundColor: colors.primaryContainer,
-              borderColor: colors.primary,
-            },
-          isCorrectPair && {
-            backgroundColor: colors.accept,
-            borderColor: colors.accept,
-          },
-          isIncorrectPair && {
-            backgroundColor: colors.reject,
-            borderColor: colors.reject,
-          },
-        ]}
-      >
-        <Text
-          style={[
-            styles.plateText,
-            { color: colors.surface },
-            (isCorrectPair || isIncorrectPair) && {
-              color: colors.onAcceptReject,
-            },
-            isSelected && {
-              color: colors.onPrimaryContainer,
-            },
-          ]}
-        >
-          {plate.text}
-        </Text>
-      </Pressable>
+      <View style={{ flex: 1 }}>
+        {isComplete ? (
+          <View style={[styles.plate, styles.platePlaceholder]} />
+        ) : (
+          <Animated.View
+            entering={ZoomIn.delay(index * 50).springify()}
+            exiting={ZoomOut}
+            layout={Layout.springify()}
+            style={{ flex: 1 }}
+          >
+            <Pressable
+              key={`${plate.wordId}-${plate.isEnglish ? "en" : "ru"}`}
+              onPress={() => handleSelectPlate(plate)}
+              disabled={!!pairMatch}
+              style={({ pressed }) => [
+                styles.plate,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.outline,
+                },
+                pressed &&
+                  !isInPair && {
+                    backgroundColor: colors.surfaceVariant,
+                    transform: [{ scale: 0.96 }],
+                  },
+                isSelected &&
+                  !isInPair && {
+                    backgroundColor: colors.primaryContainer,
+                    borderColor: colors.primary,
+                  },
+                isCorrectPair && {
+                  backgroundColor: colors.accept,
+                  borderColor: colors.accept,
+                },
+                isIncorrectPair && {
+                  backgroundColor: colors.reject,
+                  borderColor: colors.reject,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.plateText,
+                  { color: colors.onSurface },
+                  (isCorrectPair || isIncorrectPair) && {
+                    color: colors.onAcceptReject,
+                  },
+                  isSelected && {
+                    color: colors.onPrimaryContainer,
+                  },
+                ]}
+                numberOfLines={2}
+                adjustsFontSizeToFit
+              >
+                {plate.text}
+              </Text>
+            </Pressable>
+          </Animated.View>
+        )}
+      </View>
     );
   };
 
@@ -201,7 +208,7 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
 
   return (
     <View style={styles.container}>
-      <View style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
+      <View style={styles.content}>
         <View style={styles.headerRow}>
           <Text style={[styles.headerLabel, { color: theme.colors.onSurfaceVariant }]}>
             {text("practice_pairs_ru_label")}
@@ -214,8 +221,8 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
         <View style={styles.rows}>
           {Array.from({ length: size }).map((_, index) => (
             <View key={index} style={styles.row}>
-              {renderPlate(ruPlates[index])}
-              {renderPlate(engPlates[index])}
+              {renderPlate(ruPlates[index], index)}
+              {renderPlate(engPlates[index], index)}
             </View>
           ))}
         </View>
@@ -227,44 +234,57 @@ export default function MatchPairsMode({ onEndCurrentSet }: Readonly<PracticeMod
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 2,
+    padding: 16,
   },
-  card: {
+  content: {
     flex: 1,
-    borderRadius: 20,
-    padding: 10,
-    marginVertical: 16,
+    borderRadius: 24,
+    // No shadow, handled by layout
   },
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    paddingHorizontal: 8,
     marginBottom: 16,
   },
   headerLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   rows: {
     flex: 1,
+    gap: 12,
   },
   row: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "stretch",
     gap: 12,
-    marginBottom: 10,
   },
   plate: {
     flex: 1,
-    borderRadius: 14,
+    height: '100%',
+    borderRadius: 16,
     borderWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  platePlaceholder: {
+      borderColor: 'transparent',
+      backgroundColor: 'transparent',
+      elevation: 0,
   },
   plateText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
+    textAlign: 'center',
   },
 });

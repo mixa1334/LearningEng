@@ -2,13 +2,13 @@ import { useAutoScroll } from "@/src/components/common/AutoScrollContext";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/shuffleArray";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Animated, { FadeInDown, ZoomIn, Layout, FadeOut } from "react-native-reanimated";
 
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { useLanguageContext } from "../../../common/LanguageProvider";
 import { useAppTheme } from "../../../common/ThemeProvider";
-import { getCardShadow } from "../../../common/cardShadow";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 type LetterTile = {
@@ -40,12 +40,20 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [madeMistakeOnWord, setMadeMistakeOnWord] = useState(false);
 
-  const [word, setWord] = useState(words[currentWordIndex].word_en.toUpperCase());
-  const [letterPool, setLetterPool] = useState<LetterTile[]>(buildLetterPool(word));
+  const [word, setWord] = useState(words[currentWordIndex]?.word_en.toUpperCase() || "");
+  const [letterPool, setLetterPool] = useState<LetterTile[]>(() => words[currentWordIndex] ? buildLetterPool(words[currentWordIndex].word_en.toUpperCase()) : []);
   const [usedLetters, setUsedLetters] = useState<LetterTile[]>([]);
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
   const [incorrectLetterId, setIncorrectLetterId] = useState<number | null>(null);
   const [isWordHighlighted, setIsWordHighlighted] = useState(false);
+
+  useEffect(() => {
+     if(words[currentWordIndex]) {
+         const w = words[currentWordIndex].word_en.toUpperCase();
+         setWord(w);
+         setLetterPool(buildLetterPool(w));
+     }
+  }, [currentWordIndex, words]);
 
   const moveToNextWord = () => {
     const newWithoutMistakesCount = withoutMistakesCount + (madeMistakeOnWord ? 0 : 1);
@@ -67,9 +75,6 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
       );
       return;
     }
-    const nextWord = words[nextWordIndex].word_en.toUpperCase();
-    setWord(nextWord);
-    setLetterPool(buildLetterPool(nextWord));
     setCurrentWordIndex(nextWordIndex);
     triggerScroll();
   };
@@ -112,24 +117,22 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
   return (
     <View style={styles.container}>
       <View style={styles.sessionContent}>
-        <View
-          style={[
-            styles.modeCard,
-            { backgroundColor: theme.colors.surfaceVariant },
-            getCardShadow(theme),
-          ]}
-        >
-          <View style={styles.wordHeader}>
-            <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>
+        <View style={styles.headerContainer}>
+             <Text style={[styles.wordHeaderLabel, { color: theme.colors.onSurfaceVariant }]}>
               {text("practice_builder_ru_label")}
             </Text>
-            <Text style={[styles.wordHeaderValue, { color: theme.colors.onSurfaceVariant }]}>{words[currentWordIndex].word_ru}</Text>
-          </View>
+            <Animated.Text 
+                key={`q-${words[currentWordIndex].id}`}
+                entering={ZoomIn.springify()}
+                style={[styles.wordHeaderValue, { color: theme.colors.primary }]}
+            >
+                {words[currentWordIndex].word_ru}
+            </Animated.Text>
+        </View>
 
-          <View style={styles.letterBoxesRow}>
+        <View style={styles.letterBoxesRow}>
             {[...word].map((char, index) => {
               const isFilled = index < currentLetterIndex;
-
               return (
                 <View
                   key={`box-${index}`}
@@ -137,7 +140,7 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
                     styles.letterBox,
                     {
                       borderColor: theme.colors.outline,
-                      backgroundColor: theme.colors.onSurfaceVariant,
+                      backgroundColor: theme.colors.surface,
                     },
                     isFilled && {
                       backgroundColor: theme.colors.primaryContainer,
@@ -149,59 +152,65 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
                     },
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.letterBoxText,
-                      { color: theme.colors.surface },
-                      isWordHighlighted && { color: theme.colors.onAcceptReject },
-                      isFilled && { color: theme.colors.onPrimaryContainer },
-                    ]}
-                  >
-                    {isFilled ? char : ""}
-                  </Text>
+                  {isFilled && (
+                      <Animated.Text
+                        entering={ZoomIn.springify()}
+                        style={[
+                            styles.letterBoxText,
+                            { color: theme.colors.onPrimaryContainer },
+                            isWordHighlighted && { color: theme.colors.onAcceptReject },
+                        ]}
+                      >
+                        {char}
+                      </Animated.Text>
+                  )}
                 </View>
               );
             })}
-          </View>
+        </View>
 
-          <View style={styles.letterPool}>
-            {letterPool.map((tile) => {
+        <View style={styles.letterPool}>
+            {letterPool.map((tile, index) => {
               const isUsed = usedLetters.includes(tile);
               const isIncorrect = incorrectLetterId === tile.id;
 
+              if (isUsed) {
+                  return <View key={tile.id} style={styles.letterTilePlaceholder} />;
+              }
+
               return (
-                <TouchableOpacity
-                  key={tile.id}
-                  style={[
-                    styles.letterTile,
-                    {
-                      backgroundColor: theme.colors.onSurfaceVariant,
-                      borderColor: theme.colors.outline,
-                    },
-                    isUsed && {
-                      opacity: 0.3,
-                    },
-                    isIncorrect && {
-                      backgroundColor: theme.colors.reject,
-                      borderColor: theme.colors.reject,
-                    },
-                  ]}
-                  disabled={isUsed}
-                  onPress={() => handleSelectLetter(tile)}
+                <Animated.View 
+                    key={tile.id}
+                    entering={FadeInDown.delay(index * 50).springify()}
+                    layout={Layout.springify()}
                 >
-                  <Text
+                    <TouchableOpacity
                     style={[
-                      styles.letterTileText,
-                      { color: theme.colors.surface },
-                      isIncorrect && { color: theme.colors.onAcceptReject },
+                        styles.letterTile,
+                        {
+                        backgroundColor: theme.colors.surface,
+                        borderColor: theme.colors.outline,
+                        },
+                        isIncorrect && {
+                        backgroundColor: theme.colors.reject,
+                        borderColor: theme.colors.reject,
+                        },
                     ]}
-                  >
-                    {tile.char}
-                  </Text>
-                </TouchableOpacity>
+                    onPress={() => handleSelectLetter(tile)}
+                    >
+                    <Text
+                        style={[
+                        styles.letterTileText,
+                        { color: theme.colors.onSurface },
+                        isIncorrect && { color: theme.colors.onAcceptReject },
+                        ]}
+                    >
+                        {tile.char}
+                    </Text>
+                    </TouchableOpacity>
+                </Animated.View>
               );
             })}
-          </View>
         </View>
       </View>
     </View>
@@ -211,71 +220,74 @@ export default function BuildingFromCharsMode(props: Readonly<PracticeModeChildP
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 2,
+    paddingHorizontal: 16,
   },
   sessionContent: {
     flex: 1,
+    justifyContent: 'center',
   },
-  modeCard: {
-    flex: 1,
-    borderRadius: 20,
-    marginVertical: 16,
-    padding: 10,
-  },
-  wordHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    marginBottom: 16,
+  headerContainer: {
+      alignItems: 'center',
+      marginBottom: 32,
   },
   wordHeaderLabel: {
     fontSize: 14,
     fontWeight: "600",
+    marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   wordHeaderValue: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 32,
+    fontWeight: "800",
+    textAlign: 'center',
   },
   letterBoxesRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    marginBottom: 16,
+    marginBottom: 40,
     gap: 8,
   },
   letterBox: {
-    width: 32,
-    height: 40,
-    borderRadius: 8,
+    width: 40,
+    height: 48,
+    borderRadius: 12,
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   letterBoxText: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "700",
   },
   letterPool: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    gap: 8,
+    gap: 12,
     marginVertical: 8,
   },
   letterTile: {
-    minWidth: 40,
-    height: 44,
-    borderRadius: 10,
+    minWidth: 48,
+    height: 56,
+    borderRadius: 16,
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 8,
+    paddingHorizontal: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  letterTilePlaceholder: {
+      width: 48,
+      height: 56,
   },
   letterTileText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "700",
   },
 });
