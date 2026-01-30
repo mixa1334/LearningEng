@@ -13,6 +13,8 @@ export async function runMigrations(db: SQLiteDatabase) {
   // Initialize global DB instance for the whole app
   setDbInstance(db);
 
+  await db.execAsync('PRAGMA foreign_keys = OFF;');
+
   let { user_version } = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version') ?? { user_version: 0 };
 
   if (user_version === 0) {
@@ -31,6 +33,8 @@ export async function runMigrations(db: SQLiteDatabase) {
 
     await db.execAsync(`PRAGMA user_version = ${user_version}`);
   }
+
+  await db.execAsync('PRAGMA foreign_keys = ON;');
 }
 
 async function checkIfUserExists(db: SQLiteDatabase) {

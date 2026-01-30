@@ -1,6 +1,4 @@
 export const SCHEMA_CREATION_IF_NOT_EXISTS = `
-    PRAGMA foreign_keys = ON;
-
     CREATE TABLE IF NOT EXISTS statistics (
       date TEXT PRIMARY KEY NOT NULL DEFAULT (datetime('now')),
       learned INTEGER NOT NULL DEFAULT 0,
