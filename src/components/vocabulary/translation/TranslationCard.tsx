@@ -1,4 +1,3 @@
-import { getCardShadow } from "@/src/components/common/cardShadow";
 import { useHaptics } from "@/src/components/common/HapticsProvider";
 import { useLanguageContext } from "@/src/components/common/LanguageProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
@@ -9,6 +8,7 @@ import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, PanResponder, Pressable, StyleSheet, View } from "react-native";
 import { Card, IconButton, Text } from "react-native-paper";
+import { getCardShadow } from "../../common/cardShadow";
 
 interface TranslationCardProps {
     readonly translationId: number;
@@ -142,7 +142,7 @@ export default function TranslationCard({ translationId }: TranslationCardProps)
                                     >
                                         <Text style={{ 
                                             color: translatedText === t ? theme.colors.onPrimaryContainer : theme.colors.onSurface,
-                                            fontWeight: translatedText === t ? "600" : "400",
+                                            fontWeight: "400",
                                             fontSize: 14
                                         }}>
                                             {t}
@@ -182,7 +182,6 @@ const styles = StyleSheet.create({
     },
     historyCard: {
         borderRadius: 24,
-        overflow: 'hidden',
     },
     cardContent: {
         padding: 20,
