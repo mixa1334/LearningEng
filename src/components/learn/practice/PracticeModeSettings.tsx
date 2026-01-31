@@ -20,7 +20,9 @@ const practiceLimitLabels = [
 ];
 
 export default function PracticeModeSettings() {
-  const { category, wordType, practiceLimit, setCategory, setWordType, setPracticeLimit, resetCriteria } = usePractice();
+  const { category, wordType, practiceLimit, 
+    newFirstly, setCategory, setWordType, setPracticeLimit, 
+    resetCriteria, setNewFirstly } = usePractice();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
   const { playTap } = useSoundPlayer();
@@ -44,20 +46,29 @@ export default function PracticeModeSettings() {
     resetCriteria();
   };
 
+  const handleSwitchNewFirstly = () => {
+    setNewFirstly(!newFirstly);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
       <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.colors.onSurface }]}>{text("practice_mode_title") || "Settings"}</Text>
-          <IconButton 
-            onPress={handleResetCriteria} 
-            iconColor={theme.colors.error}
-            icon="refresh"
-          />
+        <Text style={[styles.title, { color: theme.colors.onSurface }]}>{text("practice_mode_title") || "Settings"}</Text>
+        <IconButton
+          onPress={handleResetCriteria}
+          iconColor={theme.colors.error}
+          icon="refresh"
+        />
       </View>
 
       <View style={styles.rowContainer}>
         <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_only_user_words")}</Text>
         <Switch value={wordType === EntityType.useradd} onValueChange={handleSwitchWordType} />
+      </View>
+
+      <View style={styles.rowContainer}>
+        <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_new_words_first")}</Text>
+        <Switch value={newFirstly} onValueChange={handleSwitchNewFirstly} />
       </View>
 
       <View style={styles.rowContainer}>
@@ -84,7 +95,7 @@ export default function PracticeModeSettings() {
       </View>
       <View style={styles.rowContainer}>
         <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_category")}</Text>
-        <PickCategoryButton category={category} onSelectCategory={setCategory} truncateLength={15}/>
+        <PickCategoryButton category={category} onSelectCategory={setCategory} truncateLength={15} />
       </View>
     </View>
   );
@@ -99,14 +110,14 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   header: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
   },
   title: {
-      fontSize: 18,
-      fontWeight: "700",
+    fontSize: 18,
+    fontWeight: "700",
   },
   rowContainer: {
     flexDirection: "row",
@@ -120,7 +131,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   valueLabel: {
-      fontSize: 16,
-      fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

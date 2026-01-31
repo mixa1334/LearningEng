@@ -117,6 +117,7 @@
   "practice_start_button": "Start",
 
   "practice_label_only_user_words": "Only user words",
+  "practice_label_new_words_first": "New words first",
   "practice_label_word_limit": "Word limit",
   "practice_label_category": "Category",
   "practice_limit_title": "practice limit",

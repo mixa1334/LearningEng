@@ -5,13 +5,14 @@ import {
   resetCriteriaAction,
   resetPracticeSetThunk,
   setNewCategoryAction,
+  setNewFirstlyAction,
   setPracticeLimitAction,
   setWordTypeAction,
 } from "@/src/store/slice/practiceSlice";
 
 export function usePractice() {
   const dispatch = useAppDispatch();
-  const { category, wordType, practiceLimit, words } = useAppSelector((s) => s.practice);
+  const { category, wordType, practiceLimit, words, newFirstly } = useAppSelector((s) => s.practice);
 
   const setCategory = (category?: Category) => dispatch(setNewCategoryAction(category));
   const setWordType = (wordType?: EntityType) => {
@@ -20,6 +21,7 @@ export function usePractice() {
   const setPracticeLimit = (practiceLimit: number) => {
     dispatch(setPracticeLimitAction(practiceLimit));
   };
+  const setNewFirstly = (newFirstly: boolean) => dispatch(setNewFirstlyAction(newFirstly));
 
   const resetCriteria = () => dispatch(resetCriteriaAction());
   const loadNextPracticeSet = () => dispatch(loadNextPracticeSetThunk());
@@ -30,10 +32,12 @@ export function usePractice() {
     category,
     wordType,
     practiceLimit,
+    newFirstly,
     words,
     setCategory,
     setWordType,
     setPracticeLimit,
+    setNewFirstly,
     loadNextPracticeSet,
     resetPracticeSet,
     resetCriteria,

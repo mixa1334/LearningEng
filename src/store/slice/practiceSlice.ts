@@ -1,17 +1,16 @@
 import { EntityType, type Category, type Word } from "@/src/entity/types";
 import { WordCriteria } from "@/src/service/criteria/impl/WordCriteria";
-import { getWordsByCriteria } from "@/src/service/wordService";
+import { Pageable } from "@/src/service/criteria/Pageable";
+import { getWordsByPageable } from "@/src/service/wordService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../types";
-
-//cuz depends on ids (which are in asc order) we need to load words in asc order
-const ORDER_BY = "ASC";
 
 export const DEFAULT_PRACTICE_LIMIT = 10;
 
 export type PracticeState = {
   category?: Category;
   wordType?: EntityType;
+  newFirstly: boolean;
   practiceLimit: number;
   words: Word[];
 };
@@ -19,22 +18,24 @@ export type PracticeState = {
 const initialPracticeState: PracticeState = {
   category: undefined,
   wordType: EntityType.useradd,
+  newFirstly: true,
   practiceLimit: DEFAULT_PRACTICE_LIMIT,
   words: [],
 };
 
-const buildCriteria = (practice: PracticeState) => {
-  return new WordCriteria()
-    // .appendLimit(practice.practiceLimit)
-    // .appendOrderBy(ORDER_BY)
-    .appendCategory(practice.category)
-    .appendType(practice.wordType);
+const buildPageable = (practice: PracticeState) => {
+  const pageable = new Pageable(practice.practiceLimit);
+  pageable.setDirection(practice.newFirstly ? "desc" : "asc");
+  const criteria = new WordCriteria();
+  criteria.appendCategory(practice.category);
+  criteria.appendType(practice.wordType);
+  return { pageable, criteria };
 };
 
 export const resetPracticeSetThunk = createAsyncThunk<Word[]>("practiceState/resetPracticeSet", async (_, { getState }) => {
   const practice = (getState() as RootState).practice;
-  const criteria = buildCriteria(practice);
-  return await getWordsByCriteria(criteria);
+  const { pageable, criteria } = buildPageable(practice);
+  return await getWordsByPageable(pageable, criteria);
 });
 
 export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
@@ -42,17 +43,19 @@ export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
   async (_, { getState }) => {
     const practice = (getState() as RootState).practice;
     const prevWords = practice.words;
-    const offset = prevWords.length > 0 ? prevWords[prevWords.length - 1].id : 0;
-    const criteria = buildCriteria(practice)
-                    //  .appendIdOffset(offset);
-    return await getWordsByCriteria(criteria);
+    const { pageable, criteria } = buildPageable(practice);
+    if (prevWords.length > 0) {
+      pageable.setLastId(prevWords[prevWords.length - 1].id);
+      pageable.setFirstId(prevWords[0].id);
+    }
+    return await getWordsByPageable(pageable, criteria);
   }
 );
 
 export const reloadPracticeThunk = createAsyncThunk<PracticeState>("practiceState/reloadPracticeThunk", async () => {
   const practiceState = { ...initialPracticeState };
-  const criteria = buildCriteria(practiceState);
-  practiceState.words = await getWordsByCriteria(criteria);
+  const { pageable, criteria } = buildPageable(practiceState);
+  practiceState.words = await getWordsByPageable(pageable, criteria);
   return practiceState;
 });
 
@@ -65,6 +68,9 @@ const practiceSlice = createSlice({
     },
     setWordTypeAction: (state, action: PayloadAction<EntityType | undefined>) => {
       state.wordType = action.payload;
+    },
+    setNewFirstlyAction: (state, action: PayloadAction<boolean>) => {
+      state.newFirstly = action.payload;
     },
     setPracticeLimitAction: (state, action: PayloadAction<number>) => {
       state.practiceLimit = action.payload;
@@ -89,6 +95,12 @@ const practiceSlice = createSlice({
   },
 });
 
-export const { setNewCategoryAction, setWordTypeAction, setPracticeLimitAction, resetCriteriaAction } = practiceSlice.actions;
+export const {
+  setNewCategoryAction,
+  setWordTypeAction,
+  setPracticeLimitAction,
+  resetCriteriaAction,
+  setNewFirstlyAction,
+} = practiceSlice.actions;
 
 export const practiceReducer = practiceSlice.reducer;
