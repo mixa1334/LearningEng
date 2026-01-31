@@ -26,6 +26,7 @@ const initialPracticeState: PracticeState = {
 const buildPageable = (practice: PracticeState) => {
   const pageable = new Pageable(practice.practiceLimit);
   pageable.setDirection(practice.newFirstly ? "desc" : "asc");
+  pageable.setTableAlias("w");
   const criteria = new WordCriteria();
   criteria.appendCategory(practice.category);
   criteria.appendType(practice.wordType);
@@ -45,8 +46,10 @@ export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
     const prevWords = practice.words;
     const { pageable, criteria } = buildPageable(practice);
     if (prevWords.length > 0) {
-      pageable.setLastId(prevWords[prevWords.length - 1].id);
-      pageable.setFirstId(prevWords[0].id);
+      const lastId = prevWords[prevWords.length - 1].id;
+      console.log("lastId", lastId);
+      console.log("prevWords", prevWords);
+      pageable.setLastId(lastId);
     }
     return await getWordsByPageable(pageable, criteria);
   }

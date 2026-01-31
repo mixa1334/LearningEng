@@ -2,29 +2,29 @@ import { Criteria } from "./Criteria";
 
 export type PageableDTO = {
     lastId?: number;
-    firstId?: number;
     limit: number;
     direction: "asc" | "desc";
+    tableAlias?: string;
 };
 
 export class Pageable {
     lastId?: number;
-    firstId?: number;
     limit: number;
     direction: "asc" | "desc";
+    tableAlias?: string;
 
     constructor(limit: number) {
         this.limit = limit;
         this.direction = "asc";
     }
 
-    setLastId(lastId?: number): Pageable {
-        this.lastId = lastId;
+    setTableAlias(tableAlias?: string): Pageable {
+        this.tableAlias = tableAlias;
         return this;
     }
 
-    setFirstId(firstId?: number): Pageable {
-        this.firstId = firstId;
+    setLastId(lastId?: number): Pageable {
+        this.lastId = lastId;
         return this;
     }
 
@@ -35,19 +35,20 @@ export class Pageable {
 
     buildQuery(criteria?: Criteria): { query: string, params: any[] } {
         let { query, params } = criteria?.buildCondition() ?? { query: "1 = 1", params: [] as any[] };
+        const idColumn = this.tableAlias ? `${this.tableAlias}.id` : "id";
         if (this.direction === "asc") {
             if (this.lastId) {
-                query += `AND id > ?`;
+                query += ` AND ${idColumn} > ?`;
                 params.push(this.lastId);
             }
-            query += ` ORDER BY id ASC`;
+            query += ` ORDER BY ${idColumn} ASC`;
         }
         if (this.direction === "desc") {
-            if (this.firstId) {
-                query += ` AND id < ?`;
-                params.push(this.firstId);
+            if (this.lastId) {
+                query += ` AND ${idColumn} < ?`;
+                params.push(this.lastId);
             }
-            query += ` ORDER BY id DESC`;
+            query += ` ORDER BY ${idColumn} DESC`;
         }
         if (this.limit) {
             query += ` LIMIT ?`;
@@ -59,7 +60,7 @@ export class Pageable {
     toRedux(): PageableDTO {
         return {
             lastId: this.lastId,
-            firstId: this.firstId,
+            tableAlias: this.tableAlias,
             limit: this.limit,
             direction: this.direction,
         };
@@ -68,14 +69,14 @@ export class Pageable {
     clone(): Pageable {
         return new Pageable(this.limit)
             .setLastId(this.lastId)
-            .setFirstId(this.firstId)
+            .setTableAlias(this.tableAlias)
             .setDirection(this.direction);
     }
 
     static fromRedux(dto: PageableDTO): Pageable {
         const pageable = new Pageable(dto.limit);
         pageable.setLastId(dto.lastId);
-        pageable.setFirstId(dto.firstId);
+        pageable.setTableAlias(dto.tableAlias);
         pageable.setDirection(dto.direction);
         return pageable;
     }
