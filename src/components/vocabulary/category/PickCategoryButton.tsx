@@ -4,9 +4,9 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { CategoryPicker } from "../category/CategoryPicker";
-import { MaterialIcons } from "@expo/vector-icons";
 
 interface PickCategoryButtonProps {
   readonly category?: Category;
@@ -47,7 +47,6 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
           },
         ]}
         onPress={() => setShowCategoryPicker(!showCategoryPicker)}
-        contentStyle={styles.categorySelectorButtonContent}
       >
         <View style={styles.categorySelectorContent}>
           {category ? (
@@ -55,7 +54,6 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
           ) : (
               <MaterialIcons name="category" size={18} color={theme.colors.onSecondaryContainer} />
           )}
-          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondaryContainer }]}>{categoryName}</Text>
           <MaterialIcons name="arrow-drop-down" size={20} color={theme.colors.onSecondaryContainer} />
         </View>
       </Button>
@@ -79,9 +77,5 @@ const styles = StyleSheet.create({
   categoryLabel: {
     fontSize: 14,
     fontWeight: "600",
-  },
-  categorySelectorButtonContent: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
   },
 });

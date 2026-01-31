@@ -12,8 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Keyboard, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { IconButton } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function WordsPage() {
   const theme = useAppTheme();
@@ -109,9 +109,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: SPACING_SM,
-    borderBottomEndRadius: 24,
-    borderBottomStartRadius: 24,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     zIndex: 100,
     gap: 8,
     elevation: 4,
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 12,
     paddingHorizontal: 12,
-    height: 40,
+    height: 42,
   },
   searchInput: {
     flex: 1,

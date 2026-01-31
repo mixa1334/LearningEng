@@ -160,7 +160,6 @@ export default function LearningMainMode() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
     paddingTop: 16,
   },
   tabHeader: {
