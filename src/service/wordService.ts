@@ -116,8 +116,6 @@ export async function editUserWord(word: Word): Promise<boolean> {
 
 export async function getWordsByPageable(pageable: Pageable, criteria: WordCriteria): Promise<Word[]> {
   const { query, params } = pageable.buildQuery(criteria);
-  console.log("query", query);
-  console.log("params", JSON.stringify(params));
   return getWordsByQuery(query, params);
 }
 

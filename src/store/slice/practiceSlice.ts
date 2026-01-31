@@ -47,8 +47,6 @@ export const loadNextPracticeSetThunk = createAsyncThunk<Word[]>(
     const { pageable, criteria } = buildPageable(practice);
     if (prevWords.length > 0) {
       const lastId = prevWords[prevWords.length - 1].id;
-      console.log("lastId", lastId);
-      console.log("prevWords", prevWords);
       pageable.setLastId(lastId);
     }
     return await getWordsByPageable(pageable, criteria);
