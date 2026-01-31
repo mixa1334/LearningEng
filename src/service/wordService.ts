@@ -7,7 +7,7 @@ import { WordCriteria } from "./criteria/impl/WordCriteria";
 import { Pageable } from "./criteria/Pageable";
 
 const SELECT_WORDS = `SELECT
-      w.id, w.word_en, w.word_ru, w.type, w.learned,
+      w.id AS id, w.word_en, w.word_ru, w.type, w.learned,
       w.next_review, w.priority, w.text_example, w.category_id,
       c.name AS category_name, c.type AS category_type, c.icon AS category_icon
     FROM words w
@@ -138,7 +138,7 @@ export async function getDailyWordsToLearn(limit: number = 5): Promise<Word[]> {
     `${SELECT_WORDS}
     WHERE w.learned = 0
       AND w.priority = 0
-    ORDER BY w.id DESC
+    ORDER BY id DESC
     LIMIT ?`,
     [limit]
   );

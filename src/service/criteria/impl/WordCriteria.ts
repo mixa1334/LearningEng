@@ -45,8 +45,7 @@ export class WordCriteria implements Criteria {
             params.push(this.category.id);
         }
         if (this.type) {
-            query += ` AND w.type = ?`;
-            params.push(this.type);
+            query += ` AND w.type = '${this.type}'`;
         }
         if (this.searchPattern) {
             query += ` AND (w.word_en LIKE ? OR w.word_ru LIKE ?)`;
