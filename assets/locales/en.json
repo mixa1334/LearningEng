@@ -83,6 +83,9 @@
   "faq_theme_title": "Theme & data reset",
   "faq_theme_body": "Switch between light and dark themes, reset statistics, or reset vocabulary progress from the Settings dialog when you want a fresh start.",
 
+  "learn_section_title": "Learn",
+  "practice_section_title": "Practice",
+
   "learn_tab_label": "Learn",
   "review_tab_label": "Review",
   "learn_accept_label": "I know",

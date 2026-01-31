@@ -83,6 +83,9 @@
   "faq_theme_title": "Тема и сброс данных",
   "faq_theme_body": "Переключайтесь между светлой и тёмной темами, сбрасывайте статистику или прогресс словаря в настройках, когда хотите начать заново.",
 
+  "learn_section_title": "Изучение",
+  "practice_section_title": "Практика",
+
   "learn_tab_label": "Изучение",
   "review_tab_label": "Повторение",
   "learn_accept_label": "Я знаю",

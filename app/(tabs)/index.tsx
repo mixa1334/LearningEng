@@ -15,12 +15,12 @@ export default function LearnPage() {
     <AutoScrollProvider>
       <AnimatedScrollView headerTitle={text("tabs_learn_title")}>
         <Animated.View entering={FadeInDown.delay(100).springify()}>
-            <ContentDivider name={text("learn_tab_label")} />
+            <ContentDivider name={text("learn_section_title")} />
             <LearningMainMode />
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(300).springify()} style={{ marginTop: SPACING_XXL * 1.5 }}>
-          <ContentDivider name={text("review_tab_label")} />
+          <ContentDivider name={text("practice_section_title")} />
           <PracticeMain />
         </Animated.View>
       </AnimatedScrollView>
