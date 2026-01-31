@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pocket English",
     "slug": "pocket-eng",
-    "version": "2.4.1",
+    "version": "3.0.0",
     "orientation": "portrait",
     "scheme": "pocketeng",
     "userInterfaceStyle": "automatic",
