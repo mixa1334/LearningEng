@@ -218,6 +218,7 @@ export default function PracticeMain() {
     }
     return (
       <Animated.View 
+        key={theme.colors.surfaceVariant}
         entering={FadeInDown.delay(100).springify()}
         style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}
       >

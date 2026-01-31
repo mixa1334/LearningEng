@@ -122,6 +122,7 @@ export default function LearningMainMode() {
 
         {word === undefined ? (
           <Animated.View 
+            key={theme.colors.surfaceVariant}
             entering={FadeIn.duration(300)}
             exiting={FadeOut.duration(200)}
             style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}

@@ -7,22 +7,39 @@ import { ThemeProvider } from "@/src/components/common/ThemeProvider";
 import { runMigrations } from "@/src/database/migrations";
 import { useBootstrapSettings } from "@/src/hooks/useBootstrapSettings";
 import { store } from "@/src/store";
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
-import React, { Suspense } from "react";
+import * as SystemUI from "expo-system-ui";
+import React, { Suspense, useEffect } from "react";
 import { StatusBar } from "react-native";
 import { useTheme } from "react-native-paper";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider as ReduxProvider } from "react-redux";
 
+SplashScreen.preventAutoHideAsync();
+
 function AppContent() {
   const theme = useTheme();
+
+  useEffect(() => {
+    async function finalizeApp() {
+      await SystemUI.setBackgroundColorAsync(theme.colors.surfaceVariant);
+      setTimeout(async () => {
+        await SplashScreen.hideAsync();
+      }, 150);
+    }
+
+    finalizeApp();
+  }, [theme]);
+
   return (
     <>
       <GoalAchieveOverlay />
       <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
-      <Stack initialRouteName="(tabs)">
+      <Stack initialRouteName="(tabs)" screenOptions={{
+        contentStyle: { backgroundColor: theme.colors.surfaceVariant },
+      }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </>

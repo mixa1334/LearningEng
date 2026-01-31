@@ -6,7 +6,6 @@ import LearningMainMode from "@/src/components/learn/learning/LearningMainMode";
 import PracticeMain from "@/src/components/learn/practice/PracticeMain";
 import { SPACING_XXL } from "@/src/resources/constants/layout";
 import React from "react";
-import { View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function LearnPage() {
