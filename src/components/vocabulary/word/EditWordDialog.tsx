@@ -70,7 +70,7 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
             onStartShouldSetResponder={() => true}
           >
             <View style={styles.headerContainer}>
-              <View>
+              <View style={{ flex: 1 }}>
                 <Text style={[styles.title, { color: theme.colors.onSurface }]}>
                     {text("vocabulary_edit_word_title")}
                 </Text>

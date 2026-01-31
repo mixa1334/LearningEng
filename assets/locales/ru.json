@@ -61,7 +61,7 @@
   "profile_daily_goal_value": "{{count}} слов в день",
 
   "profile_progress_title": "Прогресс",
-  "profile_progress_last_learning": "Последнее обучение",
+  "profile_progress_last_learning": "Посещение",
   "profile_progress_learned_today": "Выучено сегодня",
   "profile_progress_reviewed_today": "Повторено сегодня",
 

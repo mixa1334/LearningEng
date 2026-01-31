@@ -4,7 +4,7 @@ import { userAlerts } from "@/src/util/userAlerts";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
-import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
+import Animated, { ZoomIn } from "react-native-reanimated";
 
 import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -63,7 +63,7 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
             onStartShouldSetResponder={() => true}
           >
             <View style={styles.headerContainer}>
-              <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+              <Text style={[styles.title, { color: theme.colors.onSurface, flex: 1 }]}>
                 {text("vocabulary_edit_category_title")}
               </Text>
               <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
