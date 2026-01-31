@@ -89,8 +89,8 @@
   "review_accept_label": "I remember",
   "learn_reject_label": "Start learn",
   "review_reject_label": "Show late",
-  "learn_complete_message": "You've completed daily set!",
-  "review_no_words_message": "No words to review, come back later!",
+  "learn_complete_message": "Set completed!",
+  "review_no_words_message": "Come back later!",
   "learn_load_more_words_button": "Load more words",
 
   "learn_error_message": "Error: {{error}}",

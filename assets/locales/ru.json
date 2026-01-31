@@ -89,8 +89,8 @@
   "review_accept_label": "Я помню",
   "learn_reject_label": "Начать изучать",
   "review_reject_label": "Показать позже",
-  "learn_complete_message": "Вы выполнили дневной набор слов!",
-  "review_no_words_message": "Нет слов для повторения, загляните позже!",
+  "learn_complete_message": "Набор закончен!",
+  "review_no_words_message": "Загляните позже!",
   "learn_load_more_words_button": "Загрузить больше слов",
 
   "learn_error_message": "Ошибка: {{error}}",

@@ -120,40 +120,42 @@ export default function LearningMainMode() {
       </View>
 
 
-        {word === undefined ? (
-          <Animated.View 
-            key={theme.colors.surfaceVariant}
-            entering={FadeIn.duration(300)}
-            exiting={FadeOut.duration(200)}
-            style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}
-          >
-            <MaterialIcons name="check-circle-outline" size={64} color={theme.colors.primary} style={{ marginBottom: 16 }} />
+      {word === undefined ? (
+        <Animated.View
+          key={theme.colors.surfaceVariant}
+          entering={FadeIn.duration(300)}
+          exiting={FadeOut.duration(200)}
+          style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}
+        >
+          <View style={styles.completeMsgContent}>
+            <MaterialIcons name="check-circle-outline" size={64} color={theme.colors.primary} />
             <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
               {isLearnTab ? text("learn_complete_message") : text("review_no_words_message")}
             </Text>
-            {isLearnTab && (
-              <Button 
-                mode="contained"
-                buttonColor={theme.colors.primary} 
-                textColor={theme.colors.onPrimary} 
-                onPress={loadExtraDailySet}
-                style={{ marginTop: 24, borderRadius: 12 }}
-                contentStyle={{ height: 48 }}
-              >
-                {text("learn_load_more_words_button")}
-              </Button>
-            )}
-          </Animated.View>
-        ) : (
-          <Animated.View
-             key={word.id} // Key change triggers animation
-             entering={FadeIn.duration(300)}
-             style={{ width: '100%' }}
-          >
-            <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
-          </Animated.View>
-        )}
-    
+          </View>
+          {isLearnTab && (
+            <Button
+              mode="contained"
+              buttonColor={theme.colors.primary}
+              textColor={theme.colors.onPrimary}
+              onPress={loadExtraDailySet}
+              style={{ marginTop: 24, borderRadius: 12 }}
+              contentStyle={{ height: 48 }}
+            >
+              {text("learn_load_more_words_button")}
+            </Button>
+          )}
+        </Animated.View>
+      ) : (
+        <Animated.View
+          key={word.id}
+          entering={FadeIn.duration(300)}
+          style={{ width: '100%' }}
+        >
+          <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
+        </Animated.View>
+      )}
+
     </View>
   );
 }
@@ -196,10 +198,9 @@ const styles = StyleSheet.create({
   completeMsg: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 32,
+    padding: 15,
     borderRadius: 24,
     width: "100%",
-    minHeight: 300,
     borderWidth: 1,
   },
   emptyText: {
@@ -207,5 +208,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textAlign: "center",
     lineHeight: 28,
+  },
+  completeMsgContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 16,
+    width: "100%",
   },
 });

@@ -1,15 +1,15 @@
 import { getCardShadow } from "@/src/components/common/cardShadow";
+import { useSoundPlayer } from "@/src/components/common/SoundProvider";
 import { usePractice } from "@/src/hooks/usePractice";
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-paper";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { useAutoScroll } from "../../common/AutoScrollContext";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
 import { useAppTheme } from "../../common/ThemeProvider";
-import { useSoundPlayer } from "@/src/components/common/SoundProvider";
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
-import { MaterialIcons } from "@expo/vector-icons";
 
 export type PracticeModeChildProps = {
   readonly onEndCurrentSet?: (endMessage: string) => void;
@@ -31,7 +31,7 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   const [isOverLoadedSession, setIsOverLoadedSession] = useState(false);
   const { text } = useLanguageContext();
   const { playActionSuccess } = useSoundPlayer();
-  
+
   const performTransition = useCallback(
     async (action: () => void) => {
       setIsTransitioning(true);
@@ -49,7 +49,8 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
     setIsSetEnded(true);
     setChildTextMessage(endMessage);
     setIsOverLoadedSession(true);
-  }, [playActionSuccess]);
+    triggerScroll();
+  }, [playActionSuccess, triggerScroll]);
 
   const resetPracticeSession = () => {
     performTransition(() => {
@@ -130,12 +131,12 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   }
 
   return (
-      <Animated.View entering={FadeIn} style={{ flex: 1 }}>
-        {React.cloneElement(children, {
-            onEndCurrentSet: handleEndCurrentSet,
-            key: `set-${words.length}-${words[0]?.id || "init"}`,
-        })}
-      </Animated.View>
+    <Animated.View entering={FadeIn} style={{ flex: 1 }}>
+      {React.cloneElement(children, {
+        onEndCurrentSet: handleEndCurrentSet,
+        key: `set-${words.length}-${words[0]?.id || "init"}`,
+      })}
+    </Animated.View>
   );
 }
 
