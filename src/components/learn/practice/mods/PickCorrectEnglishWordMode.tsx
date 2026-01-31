@@ -7,7 +7,7 @@ import { usePractice } from "@/src/hooks/usePractice";
 import { shuffleArray } from "@/src/util/shuffleArray";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInDown, ZoomIn } from "react-native-reanimated";
+import Animated, { FadeInDown, Layout, ZoomIn } from "react-native-reanimated";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const HIGHLIGHT_DELAY = 600;
@@ -41,7 +41,6 @@ export default function PickCorrectEnglishWordMode(
     const [isIncorrect, setIsIncorrect] = useState(false);
     const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
 
-    // Reset options when word changes
     useEffect(() => {
         if (!words[currentWordIndex]) return;
         setOptions(buildOptions(words, words[currentWordIndex]));
@@ -104,9 +103,10 @@ export default function PickCorrectEnglishWordMode(
 
         return (
             <Animated.View 
-                key={`${option.id}-${currentWordIndex}`}
+                key={option.id.toString()}
                 entering={FadeInDown.delay(index * 100).springify()}
                 style={{ width: '100%' }}
+                layout={Layout.springify()}
             >
                 <Pressable
                     onPress={() => handleSelectOption(option)}

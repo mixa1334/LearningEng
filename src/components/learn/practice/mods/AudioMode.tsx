@@ -12,7 +12,7 @@ import * as Speech from "expo-speech";
 import LottieView from "lottie-react-native";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInDown, ZoomIn } from "react-native-reanimated";
+import Animated, { FadeInDown, Layout, ZoomIn } from "react-native-reanimated";
 import { PracticeModeChildProps } from "../PracticeModeWrapper";
 
 const HIGHLIGHT_DELAY = 500;
@@ -46,7 +46,6 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
     const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 
-    // Reset options when word changes
     useEffect(() => {
         if (!words[currentWordIndex]) return;
         setOptions(buildOptions(words, words[currentWordIndex]));
@@ -131,9 +130,10 @@ export default function AudioMode(props: Readonly<PracticeModeChildProps>) {
 
         return (
             <Animated.View
-                key={`${option.id}-${currentWordIndex}`}
+                key={option.id.toString()}
                 entering={FadeInDown.delay(index * 100).springify()}
                 style={{ width: '100%' }}
+                layout={Layout.springify()}
             >
                 <Pressable
                     onPress={() => handleSelectOption(option)}
