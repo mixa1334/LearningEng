@@ -5,22 +5,19 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
-import { useLanguageContext } from "../common/LanguageProvider";
-import { getCardShadow } from "../common/cardShadow";
-import { useAppTheme } from "../common/ThemeProvider";
 import { MaterialIcons } from "@expo/vector-icons";
+import { getCardShadow } from "../common/cardShadow";
+import { useLanguageContext } from "../common/LanguageProvider";
+import { useAppTheme } from "../common/ThemeProvider";
 
 export default function ProgressCard() {
   const { lastLearningDate, learnedToday, reviewedToday } = useUserData();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
 
-  const StatRow = ({ icon, label, value }: { icon: keyof typeof MaterialIcons.glyphMap, label: string, value: string | number }) => (
+  const StatRow = ({ label, value }: { label: string, value: string | number }) => (
       <View style={styles.row}>
           <View style={styles.rowLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: theme.colors.surface }]}>
-                <MaterialIcons name={icon} size={18} color={theme.colors.primary} />
-              </View>
               <Text style={[styles.label, { color: theme.colors.onSurfaceVariant }]}>{label}</Text>
           </View>
           <Text style={[styles.value, { color: theme.colors.onSurface }]}>{value}</Text>
@@ -45,17 +42,14 @@ export default function ProgressCard() {
       
       <View style={styles.statsContainer}>
         <StatRow 
-            icon="history" 
             label={text("profile_progress_last_learning")} 
             value={lastLearningDate || "—"} 
         />
         <StatRow 
-            icon="school" 
             label={text("profile_progress_learned_today")} 
             value={learnedToday} 
         />
         <StatRow 
-            icon="refresh" 
             label={text("profile_progress_reviewed_today")} 
             value={reviewedToday} 
         />
@@ -92,13 +86,6 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       gap: 12,
-  },
-  iconContainer: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      alignItems: "center",
-      justifyContent: "center",
   },
   label: {
     fontSize: 14,

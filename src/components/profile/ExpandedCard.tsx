@@ -4,12 +4,9 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
   useAnimatedStyle,
   useDerivedValue,
-  withTiming,
+  withTiming
 } from "react-native-reanimated";
 import { useAutoScroll } from "../common/AutoScrollContext";
 import { getCardShadow } from "../common/cardShadow";
@@ -42,9 +39,8 @@ export default function ExpandedCard({
   const toggleExpanded = () => {
     const nextState = !expanded;
     setExpanded(nextState);
-    if (autoScroll && nextState) {
-      // Small delay to allow animation to start
-      setTimeout(() => triggerScroll(), 300);
+    if (autoScroll) {
+      triggerScroll();
     }
   };
 
@@ -62,10 +58,6 @@ export default function ExpandedCard({
         getCardShadow(theme),
       ]}
     >
-      <Animated.View 
-        layout={LinearTransition.duration(300)}
-        style={{ overflow: 'hidden', borderRadius: 24 }} // Clipping happens here
-      >
         <Pressable
           onPress={toggleExpanded}
           style={({ pressed }) => [
@@ -101,14 +93,8 @@ export default function ExpandedCard({
         </Pressable>
 
         {expanded && (
-          <Animated.View
-            entering={FadeIn.duration(300)}
-            exiting={FadeOut.duration(200)}
-          >
             <View style={styles.contentInner}>{children}</View>
-          </Animated.View>
         )}
-      </Animated.View>
     </View>
   );
 }
