@@ -8,6 +8,7 @@ import { CustomModalDialog } from "../../common/CustomModalDialog";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface TranslatorSettingsProps {
     readonly visible: boolean;
@@ -37,21 +38,38 @@ export default function TranslatorSettings({ visible, onClose }: TranslatorSetti
         setIsTranslatorEnginePickerVisible(false);
     };
 
+    const SettingRow = ({ label, value, onToggle }: { label: string, value: boolean, onToggle: (val: boolean) => void }) => (
+        <View style={styles.switcherSettingRow}>
+            <Text style={[styles.settingText, { color: theme.colors.onSurface }]}>{label}</Text>
+            <Switch value={value} onValueChange={onToggle} />
+        </View>
+    );
+
     return (
         <CustomModalDialog title={text("translator_settings_title")} description={text("translator_settings_description")} visible={visible} onClose={onClose}>
-            <View style={{ marginTop: SPACING_MD }}>
-                <View style={styles.switcherSettingRow}>
-                    <Text style={styles.settingText}>{text("translator_settings_delete_translation_after_adding_to_vocabulary")}</Text>
-                    <Switch value={deleteTranslationAfterAddingToVocabulary} onValueChange={handleDeleteTranslationAfterAddingToVocabulary} />
-                </View>
-                <View style={styles.switcherSettingRow}>
-                    <Text style={styles.settingText}>{text("translator_settings_clear_translator_input_field")}</Text>
-                    <Switch value={clearTranslatorInputField} onValueChange={handleClearTranslatorInputField} />
-                </View>
-                <View style={styles.switcherSettingRow}>
-                    <Text style={styles.settingText}>{text("translator_engine_title", { translatorEngine })}</Text>
-                    <IconButton style={{ backgroundColor: theme.colors.primary }}
-                        iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={() => setIsTranslatorEnginePickerVisible(true)} />
+            <View style={{ marginTop: SPACING_MD, gap: 8 }}>
+                <SettingRow 
+                    label={text("translator_settings_delete_translation_after_adding_to_vocabulary")}
+                    value={deleteTranslationAfterAddingToVocabulary}
+                    onToggle={handleDeleteTranslationAfterAddingToVocabulary}
+                />
+                <SettingRow 
+                    label={text("translator_settings_clear_translator_input_field")}
+                    value={clearTranslatorInputField}
+                    onToggle={handleClearTranslatorInputField}
+                />
+                
+                <View style={styles.engineRow}>
+                    <View>
+                        <Text style={[styles.settingLabel, { color: theme.colors.onSurfaceVariant }]}>{text("translator_engine")}</Text>
+                        <Text style={[styles.engineValue, { color: theme.colors.onSurface }]}>{translatorEngine}</Text>
+                    </View>
+                    <IconButton 
+                        style={{ backgroundColor: theme.colors.secondaryContainer, margin: 0 }}
+                        iconColor={theme.colors.onSecondaryContainer} 
+                        icon="chevron-down" 
+                        onPress={() => setIsTranslatorEnginePickerVisible(true)} 
+                    />
                     <ValuePickerDialog
                         entityTitle={text("translator_engine")}
                         description={text("translator_engine_description")}
@@ -71,11 +89,30 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginVertical: 8,
-        marginBottom: 16,
-        width: "100%",
+        paddingVertical: 8,
     },
     settingText: {
+        fontSize: 16,
+        flex: 1,
+        marginRight: 16,
+    },
+    engineRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 16,
+        paddingTop: 16,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: "rgba(0,0,0,0.1)",
+    },
+    settingLabel: {
         fontSize: 12,
+        fontWeight: "500",
+        textTransform: "uppercase",
+    },
+    engineValue: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginTop: 4,
     },
 });

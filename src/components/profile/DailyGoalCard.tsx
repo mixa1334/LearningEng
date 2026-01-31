@@ -1,12 +1,14 @@
 import { useUserData } from "@/src/hooks/useUserData";
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { IconButton, Text } from "react-native-paper";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
-import { useHaptics } from "../common/HapticsProvider";
 import { getCardShadow } from "../common/cardShadow";
+import { useHaptics } from "../common/HapticsProvider";
 import { useLanguageContext } from "../common/LanguageProvider";
 import { useAppTheme, useThemeContext } from "../common/ThemeProvider";
 
@@ -33,9 +35,15 @@ export default function DailyGoalCard() {
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: backgroundColor }, getCardShadow(theme)]}>
-      <View style={styles.titleRow}>
-        <Text style={[styles.sectionTitle, { color: textColor }]}>{text("profile_daily_goal_title")}</Text>
+    <Animated.View 
+        entering={FadeInDown.delay(200).springify()}
+        style={[styles.card, { backgroundColor: backgroundColor }, getCardShadow(theme)]}
+    >
+      <View style={styles.header}>
+        <View style={styles.titleContainer}>
+            <MaterialIcons name="track-changes" size={20} color={textColor} />
+            <Text style={[styles.sectionTitle, { color: textColor }]}>{text("profile_daily_goal_title")}</Text>
+        </View>
         {dailyGoalAchieve && (
           <LottieView
             source={isHihik ? require("@/assets/animations/teddy.json") : require("@/assets/animations/trophy_achieved.json")}
@@ -46,58 +54,86 @@ export default function DailyGoalCard() {
           />
         )}
       </View>
-      <View style={styles.row}>
-        <IconButton
-          icon="minus"
-          mode="contained"
-          style={[styles.roundBtn, { backgroundColor: theme.colors.background }]}
-          onPress={decreaseGoal}
-        />
-        <Text style={[styles.goalText, { color: textColor }]}>{text("profile_daily_goal_value", { count: dailyGoal })}</Text>
-        <IconButton
-          icon="plus"
-          mode="contained"
-          style={[styles.roundBtn, { backgroundColor: theme.colors.background }]}
-          onPress={increaseGoal}
-        />
+      
+      <View style={styles.controlsRow}>
+        <Pressable
+            onPress={decreaseGoal}
+            style={({ pressed }) => [
+                styles.controlBtn,
+                { backgroundColor: dailyGoalAchieve ? 'rgba(255,255,255,0.2)' : theme.colors.surface },
+                pressed && { opacity: 0.7, transform: [{ scale: 0.95 }] }
+            ]}
+        >
+            <MaterialIcons name="remove" size={24} color={textColor} />
+        </Pressable>
+        
+        <View style={styles.valueContainer}>
+            <Text style={[styles.goalValue, { color: textColor }]}>{dailyGoal}</Text>
+        </View>
+
+        <Pressable
+            onPress={increaseGoal}
+            style={({ pressed }) => [
+                styles.controlBtn,
+                { backgroundColor: dailyGoalAchieve ? 'rgba(255,255,255,0.2)' : theme.colors.surface },
+                pressed && { opacity: 0.7, transform: [{ scale: 0.95 }] }
+            ]}
+        >
+            <MaterialIcons name="add" size={24} color={textColor} />
+        </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
+    borderRadius: 24,
     padding: SPACING_XL,
     marginBottom: SPACING_XL,
   },
+  header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 20,
+  },
+  titleContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+  },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
-    marginHorizontal: 12,
   },
-  titleRow: {
+  controlsRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12,
+    justifyContent: "space-between",
   },
-  row: {
-    flexDirection: "row",
+  controlBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
   },
-  roundBtn: {
-    borderRadius: 50,
+  valueContainer: {
+      alignItems: "center",
   },
-  goalText: {
-    marginHorizontal: 12,
-    fontSize: 16,
-    fontWeight: "600",
+  goalValue: {
+    fontSize: 32,
+    fontWeight: "800",
+    lineHeight: 36,
+  },
+  goalLabel: {
+      fontSize: 12,
+      fontWeight: "600",
+      textTransform: "uppercase",
   },
   trophyAchieved: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
   },
 });

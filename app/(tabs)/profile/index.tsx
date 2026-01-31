@@ -9,6 +9,7 @@ import ResetProgressCard from "@/src/components/profile/ResetProgressCard";
 import SettingsCard from "@/src/components/profile/SettingsCard";
 import { useUserData } from "@/src/hooks/useUserData";
 import React from "react";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function ProfilePage() {
   const { name } = useUserData();
@@ -24,11 +25,17 @@ export default function ProfilePage() {
 
         <QuoteCard />
 
-        <FaqCard />
+        <Animated.View entering={FadeInDown.delay(400).springify()}>
+            <FaqCard />
+        </Animated.View>
 
-        <SettingsCard />
+        <Animated.View entering={FadeInDown.delay(500).springify()}>
+            <SettingsCard />
+        </Animated.View>
 
-        <ResetProgressCard />
+        <Animated.View entering={FadeInDown.delay(600).springify()}>
+            <ResetProgressCard />
+        </Animated.View>
       </AnimatedScrollView>
     </AutoScrollProvider>
   );

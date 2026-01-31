@@ -55,29 +55,38 @@ export default function ResetProgressCard() {
   };
 
   return (
-    <ExpandedCard title={text("reset_title")} icon="close" autoScroll={true} touchableOpacity={1}>
+    <ExpandedCard title={text("reset_title")} icon="delete-outline" autoScroll={true} touchableOpacity={1}>
       <View style={[styles.resetSettingsRow, { marginTop: SPACING_MD }]}>
         <Button
           mode="contained"
-          style={{ backgroundColor: theme.colors.error }}
-          labelStyle={[styles.resetButton, { color: theme.colors.onError }]}
+          buttonColor={theme.colors.error}
+          textColor={theme.colors.onError}
+          style={styles.resetButton}
+          contentStyle={styles.btnContent}
           onPress={handleResetUserStats}
+          icon="account-off"
         >
           {text("reset_user_data_button")}
         </Button>
         <Button
           mode="contained"
-          style={{ backgroundColor: theme.colors.error }}
-          labelStyle={[styles.resetButton, { color: theme.colors.onError }]}
+          buttonColor={theme.colors.error}
+          textColor={theme.colors.onError}
+          style={styles.resetButton}
+          contentStyle={styles.btnContent}
           onPress={handleResetVocabularyProgress}
+          icon="school-outline"
         >
           {text("reset_vocabulary_stats_button")}
         </Button>
         <Button
           mode="contained"
-          style={{ backgroundColor: theme.colors.reject }}
-          labelStyle={[styles.resetButton, { color: theme.colors.onAcceptReject }]}
+          buttonColor={theme.colors.reject}
+          textColor={theme.colors.onAcceptReject}
+          style={styles.resetButton}
+          contentStyle={styles.btnContent}
           onPress={handleRemoveUserVocabulary}
+          icon="delete-sweep"
         >
           {text("reset_remove_vocabulary_button")}
         </Button>
@@ -89,14 +98,14 @@ export default function ResetProgressCard() {
 const styles = StyleSheet.create({
   resetSettingsRow: {
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 20,
-    marginTop: 30,
+    gap: 12,
   },
   resetButton: {
-    width: "80%",
-    fontSize: 12,
-    fontWeight: "600",
+    borderRadius: 12,
+    width: "100%",
   },
+  btnContent: {
+      height: 48,
+      justifyContent: "flex-start",
+  }
 });

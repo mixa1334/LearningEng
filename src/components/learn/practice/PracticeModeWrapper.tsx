@@ -8,6 +8,8 @@ import { useLanguageContext } from "../../common/LanguageProvider";
 import { LoadingContentSpinner } from "../../common/LoadingContentSpinner";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { useSoundPlayer } from "@/src/components/common/SoundProvider";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export type PracticeModeChildProps = {
   readonly onEndCurrentSet?: (endMessage: string) => void;
@@ -74,19 +76,21 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
   const noWordsToReview = !practiceWordsPoolLengthRule(words.length);
   if (noWordsToReview && !isSetEnded) {
     return (
-      <View
+      <Animated.View
+        entering={FadeInDown.springify()}
         style={[
           styles.centered,
-          { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" },
+          { backgroundColor: theme.colors.surfaceVariant },
           getCardShadow(theme),
         ]}
       >
+        <MaterialIcons name="info-outline" size={48} color={theme.colors.onSurfaceVariant} style={{ marginBottom: 16 }} />
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
           {text("practice_no_words_message")}
         </Text>
         {isOverLoadedSession && (
           <Button
-            mode="contained-tonal"
+            mode="contained"
             onPress={resetPracticeSession}
             icon="restart"
             style={[styles.btn, { backgroundColor: theme.colors.primary }]}
@@ -95,57 +99,68 @@ export default function PracticeModeWrapper({ practiceWordsPoolLengthRule, child
             {text("practice_start_over_button")}
           </Button>
         )}
-      </View>
+      </Animated.View>
     );
   }
 
   if (isSetEnded) {
     return (
-      <View
+      <Animated.View
+        entering={FadeInDown.springify()}
         style={[
           styles.centered,
-          { backgroundColor: theme.colors.surfaceVariant, borderRadius: 16, width: "100%" },
+          { backgroundColor: theme.colors.surfaceVariant },
           getCardShadow(theme),
         ]}
       >
+        <MaterialIcons name="emoji-events" size={64} color={theme.colors.primary} style={{ marginBottom: 16 }} />
         <Text style={[styles.resultText, { color: theme.colors.onSurface }]}>{childTextMessage}</Text>
         <Button
-          mode="contained-tonal"
+          mode="contained"
           onPress={loadMoreWordsToLearn}
           icon="play"
           style={[styles.btn, { backgroundColor: theme.colors.primary }]}
           textColor={theme.colors.onPrimary}
+          contentStyle={{ height: 48 }}
         >
           {text("practice_continue_button")}
         </Button>
-      </View>
+      </Animated.View>
     );
   }
 
-  return React.cloneElement(children, {
-    onEndCurrentSet: handleEndCurrentSet,
-    key: `set-${words.length}-${words[0]?.id || "init"}`,
-  });
+  return (
+      <Animated.View entering={FadeIn} style={{ flex: 1 }}>
+        {React.cloneElement(children, {
+            onEndCurrentSet: handleEndCurrentSet,
+            key: `set-${words.length}-${words[0]?.id || "init"}`,
+        })}
+      </Animated.View>
+  );
 }
 
 const styles = StyleSheet.create({
   btn: {
-    borderRadius: 8,
+    borderRadius: 12,
+    marginTop: 16,
+    width: "100%",
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 32,
     gap: 12,
+    borderRadius: 24,
+    minHeight: 300,
   },
   infoText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "500",
     textAlign: "center",
   },
   resultText: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",

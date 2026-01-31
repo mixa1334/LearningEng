@@ -52,7 +52,7 @@ export function ClearHistoryButton() {
 
     return (
         <IconButton
-            icon="trash-can-outline"
+            icon="delete-sweep-outline"
             onPress={handleClearHistory}
             iconColor={theme.colors.error}
             size={24}

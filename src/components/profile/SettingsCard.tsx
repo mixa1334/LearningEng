@@ -2,7 +2,7 @@ import { useAppTheme, useThemeContext } from "@/src/components/common/ThemeProvi
 import { Language } from "@/src/entity/types";
 import { SPACING_MD } from "@/src/resources/constants/layout";
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View, Pressable } from "react-native";
 import { Button, IconButton, Switch, Text } from "react-native-paper";
 
 import { useAppDispatch } from "@/src/hooks/hooks";
@@ -21,6 +21,7 @@ import { useLoadingOverlay } from "../common/LoadingOverlayProvider";
 import { useSoundContext, useSoundPlayer } from "../common/SoundProvider";
 import { ValuePickerDialog } from "../common/ValuePickerDialog";
 import ExpandedCard from "./ExpandedCard";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function SettingsCard() {
   const dispatch = useAppDispatch();
@@ -104,51 +105,91 @@ export default function SettingsCard() {
     setIsLanguagePickerVisible(true)
   };
 
+  const SettingRow = ({ label, value, onToggle, disabled, icon }: any) => (
+      <View style={styles.switcherSettingRow}>
+          <View style={styles.rowLeft}>
+              <MaterialIcons name={icon} size={20} color={theme.colors.onSurfaceVariant} />
+              <Text style={styles.rowLabel}>{label}</Text>
+          </View>
+          <Switch value={value} onValueChange={onToggle} disabled={disabled} />
+      </View>
+  );
+
   return (
     <ExpandedCard title={text("settings_title")} icon="settings" autoScroll={true} touchableOpacity={1}>
       <View style={{ marginTop: SPACING_MD }}>
-        <View style={styles.switcherSettingRow}>
-          <Text>{text("settings_dark_theme")}</Text>
-          <Switch value={isDark} onValueChange={toggleTheme} />
-        </View>
-        <View style={styles.switcherSettingRow}>
-          <Text>{text("settings_sound_enabled")}</Text>
-          <Switch value={soundEnabled} onValueChange={toggleSound} disabled={!isSoundReady} />
-        </View>
-        <View style={styles.switcherSettingRow}>
-          <Text>{text("settings_haptics_enabled")}</Text>
-          <Switch value={hapticsEnabled} onValueChange={toggleHaptics} />
-        </View>
+        <SettingRow 
+            label={text("settings_dark_theme")} 
+            value={isDark} 
+            onToggle={toggleTheme} 
+            icon="dark-mode"
+        />
+        <SettingRow 
+            label={text("settings_sound_enabled")} 
+            value={soundEnabled} 
+            onToggle={toggleSound} 
+            disabled={!isSoundReady}
+            icon="volume-up"
+        />
+        <SettingRow 
+            label={text("settings_haptics_enabled")} 
+            value={hapticsEnabled} 
+            onToggle={toggleHaptics} 
+            icon="vibration"
+        />
+        
         {hihikUser && (
           <View style={styles.switcherSettingRow}>
-            <LottieView
-              source={require("@/assets/animations/like.json")}
-              autoPlay
-              loop={true}
-              resizeMode="contain"
-              style={styles.likeAnimation}
-            />
+            <View style={styles.rowLeft}>
+                <LottieView
+                source={require("@/assets/animations/like.json")}
+                autoPlay
+                loop={true}
+                resizeMode="contain"
+                style={styles.likeAnimation}
+                />
+                <Text style={styles.rowLabel}>Hihik Mode</Text>
+            </View>
             <Switch value={isHihik} onValueChange={toggleHihikTheme} />
           </View>
         )}
-        <View style={styles.switcherSettingRow}>
-          <Text>{text("language_title", { language: locale })}</Text>
-          <IconButton style={{ backgroundColor: theme.colors.primary }}
-            iconColor={theme.colors.onPrimary} icon="chevron-down" onPress={handlePickLanguage} />
-          <ValuePickerDialog
+
+        <Pressable onPress={handlePickLanguage} style={styles.languageRow}>
+            <View style={styles.rowLeft}>
+                <MaterialIcons name="language" size={20} color={theme.colors.onSurfaceVariant} />
+                <Text style={styles.rowLabel}>{text("language")}</Text>
+            </View>
+            <View style={styles.languageValue}>
+                <Text style={{ color: theme.colors.primary, fontWeight: "600" }}>{locale.toUpperCase()}</Text>
+                <MaterialIcons name="chevron-right" size={20} color={theme.colors.onSurfaceVariant} />
+            </View>
+        </Pressable>
+        <ValuePickerDialog
             entityTitle={text("language")}
             description={text("language_description")}
             visible={isLanguagePickerVisible}
             onClose={() => setIsLanguagePickerVisible(false)}
             options={languageOptions}
             onSelectOption={handleChangeLanguage}
-          />
-        </View>
+        />
+
+        <View style={styles.divider} />
+
         <View style={styles.backupRestoreRow}>
-          <Button mode="contained" style={styles.settingBtn} onPress={handleBackup}>
+          <Button 
+            mode="contained-tonal" 
+            style={styles.settingBtn} 
+            onPress={handleBackup}
+            icon="cloud-upload"
+          >
             {text("settings_backup_button")}
           </Button>
-          <Button mode="contained" style={styles.settingBtn} onPress={handleRestore}>
+          <Button 
+            mode="contained-tonal" 
+            style={styles.settingBtn} 
+            onPress={handleRestore}
+            icon="cloud-download"
+          >
             {text("settings_restore_button")}
           </Button>
         </View>
@@ -162,22 +203,44 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 8,
-    marginBottom: 16,
-    width: "100%",
+    paddingVertical: 12,
+  },
+  rowLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+  },
+  rowLabel: {
+      fontSize: 16,
+      fontWeight: "500",
+  },
+  languageRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+  languageValue: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+  },
+  divider: {
+      height: 1,
+      backgroundColor: "rgba(0,0,0,0.1)",
+      marginVertical: 16,
   },
   backupRestoreRow: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 20,
+    justifyContent: "space-between",
+    gap: 12,
   },
   settingBtn: {
-    marginVertical: 8,
-    width: "50%",
+    flex: 1,
+    borderRadius: 12,
   },
   likeAnimation: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
   },
 });

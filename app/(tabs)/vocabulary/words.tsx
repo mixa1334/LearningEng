@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { Keyboard, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function WordsPage() {
   const theme = useAppTheme();
@@ -49,42 +50,43 @@ export default function WordsPage() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View
+      <Animated.View
+        entering={FadeInDown.springify()}
         style={[
           styles.navbar,
           {
-            backgroundColor: theme.colors.surfaceVariant,
-            borderColor: theme.colors.onSurfaceVariant,
+            backgroundColor: theme.colors.surface,
+            borderColor: theme.colors.outlineVariant,
           },
         ]}
       >
         <IconButton
           icon="close"
           onPress={clearSearch}
-          iconColor={theme.colors.onError}
-          containerColor={theme.colors.error}
+          iconColor={theme.colors.error}
+          containerColor={theme.colors.errorContainer}
           size={18}
           accessibilityLabel={text("vocabulary_clear_search_accessibility")}
         />
         <PickCategoryButton category={criteriaDto.category} onSelectCategory={onSelectCategory} truncateLength={7} />
 
-        <View style={[styles.searchContainer, { backgroundColor: theme.colors.surface }]}>
-          <Ionicons name="search" size={18} color={theme.colors.onSurface} />
+        <View style={[styles.searchContainer, { backgroundColor: theme.colors.surfaceVariant }]}>
+          <Ionicons name="search" size={18} color={theme.colors.onSurfaceVariant} />
           <TextInput
             placeholder={text("vocabulary_search_placeholder")}
             value={searchPattern}
             onChangeText={onTextSearch}
             style={[styles.searchInput, { color: theme.colors.onSurface }]}
-            placeholderTextColor={theme.colors.onSurface}
+            placeholderTextColor={theme.colors.onSurfaceVariant}
           />
         </View>
-      </View>
+      </Animated.View>
 
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
           // 60 is the height of the navbar
-          paddingTop: SPACING_MD + 60,
+          paddingTop: SPACING_MD + 70,
           paddingBottom: insets.bottom + TAB_BAR_BASE_HEIGHT,
           paddingHorizontal: SPACING_LG,
         }}
@@ -102,29 +104,33 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 60,
+    height: 70,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: SPACING_SM,
-    borderBottomEndRadius: 20,
-    borderBottomStartRadius: 20,
+    borderBottomEndRadius: 24,
+    borderBottomStartRadius: 24,
+    borderBottomWidth: 1,
     zIndex: 100,
-    gap: SPACING_MD,
+    gap: 8,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    minHeight: 36,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 40,
   },
   searchInput: {
     flex: 1,
     fontSize: 14,
-    marginLeft: 6,
+    marginLeft: 8,
   },
 });
-
-

@@ -5,6 +5,7 @@ import { userAlerts } from "@/src/util/userAlerts";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
+import Animated, { ZoomIn } from "react-native-reanimated";
 
 import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -57,25 +58,30 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
   };
 
   return (
-    <Modal transparent visible={visible} animationType="none" onRequestClose={exit}>
+    <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
-          <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
+          <Animated.View 
+            entering={ZoomIn.duration(200)}
+            style={[styles.dialog, { backgroundColor: theme.colors.surface }]} 
+            onStartShouldSetResponder={() => true}
+          >
             <View style={styles.headerContainer}>
-              <Text style={[styles.title, { color: theme.colors.onBackground }]}>
-                {text("vocabulary_edit_word_title")}
-              </Text>
+              <View>
+                <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+                    {text("vocabulary_edit_word_title")}
+                </Text>
+                <Text style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
+                    {text("vocabulary_edit_word_subtitle")}
+                </Text>
+              </View>
               <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
             </View>
 
-            <View>
-              <Text style={[styles.subtitle, { color: theme.colors.onBackground }]}>
-                {text("vocabulary_edit_word_subtitle")}
-              </Text>
-
+            <View style={styles.form}>
               <TouchableTextInput
                 label={text("vocabulary_english_word_label")}
                 initialValue={wordToEdit.word_en}
@@ -98,23 +104,25 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
             <View style={styles.actions}>
               <Button
-                mode="contained"
-                textColor={theme.colors.onError}
-                style={[styles.destructiveButton, { backgroundColor: theme.colors.error }]}
+                mode="contained-tonal"
+                textColor={theme.colors.error}
+                style={[styles.button, { backgroundColor: theme.colors.errorContainer }]}
                 onPress={handleDeleteWord}
+                icon="delete"
               >
                 {text("vocabulary_edit_word_delete_button")}
               </Button>
               <Button
                 mode="contained"
-                style={[styles.primaryButton, { backgroundColor: theme.colors.primary }]}
+                style={[styles.button, { backgroundColor: theme.colors.primary }]}
                 textColor={theme.colors.onPrimary}
                 onPress={handleEditWord}
+                icon="check"
               >
                 {text("vocabulary_edit_word_update_button")}
               </Button>
             </View>
-          </View>
+          </Animated.View>
         </Pressable>
       </KeyboardAvoidingView>
     </Modal>
@@ -123,46 +131,48 @@ export default function EditWordDialog({ visible, exit, word }: EditWordDialogPr
 
 const styles = StyleSheet.create({
   dialog: {
-    borderRadius: 24,
-    padding: 16,
+    borderRadius: 28,
+    padding: 24,
     width: "90%",
+    maxWidth: 400,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   backdrop: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  form: {
+      gap: 16,
+      marginVertical: 16,
   },
   actions: {
-    marginTop: 20,
+    marginTop: 8,
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    gap: 12,
+  },
+  button: {
+      flex: 1,
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    paddingLeft: 10,
-    paddingRight: 10,
+    alignItems: "flex-start",
   },
   title: {
     fontWeight: "700",
+    fontSize: 20,
+    marginBottom: 4,
   },
   subtitle: {
-    marginBottom: 12,
-    fontSize: 13,
-    opacity: 0.8,
-  },
-  primaryButton: {
-    marginLeft: 8,
-  },
-  destructiveButton: {
-    marginRight: 8,
+    fontSize: 14,
   },
   categoryPickerContainer: {
-    marginTop: 10,
-    marginBottom: 14,
-    paddingHorizontal: 8,
+    marginTop: 4,
   },
 });

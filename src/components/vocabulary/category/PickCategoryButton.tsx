@@ -6,6 +6,7 @@ import { Button, Text, useTheme } from "react-native-paper";
 
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { CategoryPicker } from "../category/CategoryPicker";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface PickCategoryButtonProps {
   readonly category?: Category;
@@ -42,15 +43,20 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
         style={[
           styles.categorySelector,
           {
-            backgroundColor: theme.colors.secondary,
+            backgroundColor: theme.colors.secondaryContainer,
           },
         ]}
         onPress={() => setShowCategoryPicker(!showCategoryPicker)}
         contentStyle={styles.categorySelectorButtonContent}
       >
         <View style={styles.categorySelectorContent}>
-          <Text style={styles.categoryEmoji}>{category?.icon}</Text>
-          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondary }]}>{categoryName}</Text>
+          {category ? (
+              <Text style={styles.categoryEmoji}>{category.icon}</Text>
+          ) : (
+              <MaterialIcons name="category" size={18} color={theme.colors.onSecondaryContainer} />
+          )}
+          <Text style={[styles.categoryLabel, { color: theme.colors.onSecondaryContainer }]}>{categoryName}</Text>
+          <MaterialIcons name="arrow-drop-down" size={20} color={theme.colors.onSecondaryContainer} />
         </View>
       </Button>
       <CategoryPicker visible={showCategoryPicker} onClose={handleClose} onSelectCategory={handleSelectCategory} />
@@ -60,21 +66,22 @@ export default function PickCategoryButton({ category, onSelectCategory, onClose
 
 const styles = StyleSheet.create({
   categorySelector: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 999,
+    borderRadius: 12,
   },
   categorySelectorContent: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: 8,
   },
   categoryEmoji: {
-    fontSize: 18,
+    fontSize: 16,
   },
   categoryLabel: {
     fontSize: 14,
+    fontWeight: "600",
   },
   categorySelectorButtonContent: {
-    justifyContent: "flex-start",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
 });

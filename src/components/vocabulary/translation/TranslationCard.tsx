@@ -103,7 +103,7 @@ export default function TranslationCard({ translationId }: TranslationCardProps)
         <View style={styles.swipeContainer}>
             <View style={styles.deleteBackground}>
                 <IconButton
-                    icon="close"
+                    icon="delete"
                     onPress={handleRemoveTranslation}
                     containerColor={theme.colors.error}
                     iconColor={theme.colors.onError}
@@ -119,17 +119,11 @@ export default function TranslationCard({ translationId }: TranslationCardProps)
                 {...panResponder.panHandlers}
             >
                 <Card style={[styles.historyCard, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
-                    <Card.Content
-                        style={{
-                            flexDirection: "column",
-                            gap: 15,
-                            marginVertical: 15,
-                        }}
-                    >
-                        <Text style={{ fontSize: 23, fontWeight: "900", textAlign: "center" }}>
+                    <Card.Content style={styles.cardContent}>
+                        <Text style={[styles.originalText, { color: theme.colors.onSurfaceVariant }]}>
                             {translation.text}
                         </Text>
-                        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, alignItems: "center", justifyContent: "center" }}>
+                        <View style={styles.translationsContainer}>
                             {
                                 translation.translated_array.map((t, index) => (
                                     <Pressable
@@ -137,35 +131,38 @@ export default function TranslationCard({ translationId }: TranslationCardProps)
                                         key={index.toString() + t}
                                         disabled={translatedText === t}
                                         style={({ pressed }) => [
+                                            styles.translationChip,
                                             {
-                                                backgroundColor: translatedText === t ? theme.colors.accept : theme.colors.secondary,
-                                                padding: 8,
-                                                borderRadius: 4,
+                                                backgroundColor: translatedText === t ? theme.colors.primaryContainer : theme.colors.surface,
+                                                borderColor: translatedText === t ? theme.colors.primary : theme.colors.surface,
+                                                borderWidth: 1,
                                             },
-                                            pressed && {
-                                                opacity: 0.8,
-                                                transform: [{ scale: 0.97 }],
-                                            },
+                                            pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
                                         ]}
                                     >
-                                        <Text style={{ color: translatedText === t ? theme.colors.onAcceptReject : theme.colors.onSecondary }}>{t}</Text>
+                                        <Text style={{ 
+                                            color: translatedText === t ? theme.colors.onPrimaryContainer : theme.colors.onSurface,
+                                            fontWeight: translatedText === t ? "600" : "400",
+                                            fontSize: 14
+                                        }}>
+                                            {t}
+                                        </Text>
                                     </Pressable>
                                 ))
                             }
                         </View>
                     </Card.Content>
-                    <Card.Actions style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
+                    <View style={styles.cardActions}>
                         <IconButton
-                            style={{ alignSelf: "center" }}
                             disabled={!translatedText}
                             icon="plus"
                             onPress={saveToVocabulary}
-                            containerColor={translatedText ? theme.colors.accept : theme.colors.surface}
-                            iconColor={translatedText ? theme.colors.onAcceptReject : theme.colors.onSurfaceDisabled}
+                            containerColor={translatedText ? theme.colors.primary : theme.colors.surface}
+                            iconColor={translatedText ? theme.colors.onPrimary : theme.colors.onSurfaceDisabled}
                             size={24}
                             accessibilityLabel={text("translation_add_to_vocabulary_accessibility")}
                         />
-                    </Card.Actions>
+                    </View>
                 </Card>
             </Animated.View>
         </View>
@@ -173,26 +170,6 @@ export default function TranslationCard({ translationId }: TranslationCardProps)
 }
 
 const styles = StyleSheet.create({
-    card: {
-        borderRadius: 12,
-        marginBottom: 30,
-    },
-    input: {
-        marginTop: 12,
-        marginBottom: 12,
-    },
-    result: {
-        fontSize: 22,
-        fontWeight: "700",
-        marginTop: 8,
-    },
-    actions: {
-        justifyContent: "space-between",
-        marginTop: 12,
-    },
-    historyCard: {
-        borderRadius: 20,
-    },
     swipeContainer: {
         marginBottom: 16,
         position: "relative",
@@ -201,6 +178,37 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         alignItems: "flex-end",
         justifyContent: "center",
-        paddingRight: 12,
+        paddingRight: 16,
+    },
+    historyCard: {
+        borderRadius: 24,
+        overflow: 'hidden',
+    },
+    cardContent: {
+        padding: 20,
+        gap: 16,
+    },
+    originalText: {
+        fontSize: 24,
+        fontWeight: "800",
+        textAlign: "center",
+        marginBottom: 8,
+    },
+    translationsContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 8,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    translationChip: {
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 12,
+    },
+    cardActions: {
+        flexDirection: "row",
+        justifyContent: "center",
+        paddingBottom: 16,
     },
 });

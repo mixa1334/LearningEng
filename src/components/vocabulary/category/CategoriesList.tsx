@@ -3,11 +3,13 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+import Animated, { FadeInDown, Layout } from "react-native-reanimated";
 import { getCardShadow } from "../../common/cardShadow";
 import { useHaptics } from "../../common/HapticsProvider";
 import { useSoundPlayer } from "../../common/SoundProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import EditCategoryDialog from "./EditCategoryDialog";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function CategoriesList() {
   const theme = useAppTheme();
@@ -35,29 +37,38 @@ export default function CategoriesList() {
         />
       )}
       <View style={styles.listContent}>
-        {userCategories.map((item) => (
-          <Pressable
+        {userCategories.map((item, index) => (
+          <Animated.View
             key={item.id.toString()}
-            style={({ pressed }) => [
-              styles.itemRow,
-              {
-                opacity: pressed ? 0.8 : 1,
-                transform: [{ scale: pressed ? 0.97 : 1 }],
-                backgroundColor: theme.colors.surfaceVariant,
-                borderColor: theme.colors.outlineVariant,
-              },
-              getCardShadow(theme),
-            ]}
-            onPress={() => openEditCategoryModal(item)}
+            entering={FadeInDown.delay(index * 50).springify()}
+            layout={Layout.springify()}
           >
-            <View style={styles.itemContent}>
-              <View style={styles.itemMain}>
-                <Text style={[styles.wordText, { color: theme.colors.onSurface }]} numberOfLines={1}>
-                  {item.icon} {item.name}
-                </Text>
+            <Pressable
+              style={({ pressed }) => [
+                styles.itemRow,
+                {
+                  opacity: pressed ? 0.8 : 1,
+                  transform: [{ scale: pressed ? 0.98 : 1 }],
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.outlineVariant,
+                },
+                getCardShadow(theme),
+              ]}
+              onPress={() => openEditCategoryModal(item)}
+            >
+              <View style={styles.itemContent}>
+                <View style={styles.iconContainer}>
+                    <Text style={styles.iconText}>{item.icon}</Text>
+                </View>
+                <View style={styles.itemMain}>
+                  <Text style={[styles.wordText, { color: theme.colors.onSurface }]} numberOfLines={1}>
+                    {item.name}
+                  </Text>
+                </View>
+                <MaterialIcons name="edit" size={20} color={theme.colors.onSurfaceVariant} />
               </View>
-            </View>
-          </Pressable>
+            </Pressable>
+          </Animated.View>
         ))}
       </View>
     </>
@@ -66,26 +77,39 @@ export default function CategoriesList() {
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingBottom: 4,
+    paddingBottom: 16,
     paddingHorizontal: 4,
+    gap: 12,
   },
   itemRow: {
-    borderRadius: 18,
-    marginVertical: 8,
-    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    overflow: "hidden",
   },
   itemMain: {
     flex: 1,
-    marginRight: 4,
+    marginRight: 12,
   },
   itemContent: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  iconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: "rgba(0,0,0,0.05)",
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 16,
+  },
+  iconText: {
+      fontSize: 20,
   },
   wordText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
   },
 });

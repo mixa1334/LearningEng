@@ -1,10 +1,18 @@
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-import { getCardShadow } from "../common/cardShadow";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useAutoScroll } from "../common/AutoScrollContext";
+import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
 
 interface ExpandedCardProps {
@@ -24,78 +32,114 @@ export default function ExpandedCard({
 }: ExpandedCardProps) {
   const { triggerScroll } = useAutoScroll();
   const theme = useAppTheme();
+  
   const [expanded, setExpanded] = useState(false);
 
+  const rotation = useDerivedValue(() => {
+    return withTiming(expanded ? 180 : 0, { duration: 300 });
+  }, [expanded]);
+
   const toggleExpanded = () => {
-    setExpanded((prev) => !prev);
-    if (autoScroll) {
-      triggerScroll();
+    const nextState = !expanded;
+    setExpanded(nextState);
+    if (autoScroll && nextState) {
+      // Small delay to allow animation to start
+      setTimeout(() => triggerScroll(), 300);
     }
   };
 
+  const arrowStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+    };
+  });
+
   return (
-    <TouchableOpacity
-      activeOpacity={touchableOpacity}
-      onPress={toggleExpanded}
+    <View
       style={[
-        styles.card,
+        styles.cardContainer,
         { backgroundColor: theme.colors.surfaceVariant },
         getCardShadow(theme),
       ]}
     >
-      <View>
-        <View style={[styles.headerRow, { marginBottom: expanded ? 16 : 0 }]}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+      <Animated.View 
+        layout={LinearTransition.duration(300)}
+        style={{ overflow: 'hidden', borderRadius: 24 }} // Clipping happens here
+      >
+        <Pressable
+          onPress={toggleExpanded}
+          style={({ pressed }) => [
+            styles.headerRow,
+            { opacity: pressed ? touchableOpacity : 1 },
+          ]}
+        >
+          <View style={styles.titleContainer}>
+            {icon && (
+              <MaterialIcons
+                name={icon}
+                size={20}
+                color={theme.colors.primary}
+                style={styles.icon}
+              />
+            )}
             <Text
               style={[
                 styles.sectionTitle,
-                {
-                  color: theme.colors.onSurface,
-                },
+                { color: theme.colors.onSurface },
               ]}
             >
               {title}
             </Text>
-            {icon && (
-              <MaterialIcons
-                name={icon}
-                size={16}
-                color={theme.colors.onSurface}
-              />
-            )}
           </View>
-          <Text
-            style={[
-              styles.expandIcon,
-              { color: theme.colors.onSurfaceVariant },
-            ]}
-          >
-            {expanded ? "▲" : "▼"}
-          </Text>
-        </View>
+          <Animated.View style={arrowStyle}>
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={24}
+              color={theme.colors.onSurfaceVariant}
+            />
+          </Animated.View>
+        </Pressable>
 
-        {expanded && <>{children}</>}
-      </View>
-    </TouchableOpacity>
+        {expanded && (
+          <Animated.View
+            entering={FadeIn.duration(300)}
+            exiting={FadeOut.duration(200)}
+          >
+            <View style={styles.contentInner}>{children}</View>
+          </Animated.View>
+        )}
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-    padding: SPACING_XL,
+  cardContainer: {
+    borderRadius: 24,
     marginBottom: SPACING_XL,
+    overflow: "visible", // Shadow needs visible overflow
   },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    padding: SPACING_XL,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "700",
+    letterSpacing: 0.5,
   },
-  expandIcon: {
-    fontSize: 16,
+  icon: {
+    marginRight: 4,
+  },
+  contentInner: {
+    paddingHorizontal: SPACING_XL,
+    paddingBottom: SPACING_XL,
   },
 });

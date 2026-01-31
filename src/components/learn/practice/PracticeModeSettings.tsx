@@ -5,8 +5,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button, IconButton, Switch } from "react-native-paper";
 
 import { getCardShadow } from "../../common/cardShadow";
-import { useLanguageContext } from "../../common/LanguageProvider";
 import { useHaptics } from "../../common/HapticsProvider";
+import { useLanguageContext } from "../../common/LanguageProvider";
 import { useSoundPlayer } from "../../common/SoundProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import { ValuePickerDialog } from "../../common/ValuePickerDialog";
@@ -46,15 +46,15 @@ export default function PracticeModeSettings() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
-      <IconButton
-        icon="refresh"
-        onPress={handleResetCriteria}
-        iconColor={theme.colors.onError}
-        containerColor={theme.colors.error}
-        size={18}
-        accessibilityLabel={text("practice_reset_criteria_accessibility")}
-        style={styles.resetButton}
-      />
+      <View style={styles.header}>
+          <Text style={[styles.title, { color: theme.colors.onSurface }]}>{text("practice_mode_title") || "Settings"}</Text>
+          <IconButton 
+            onPress={handleResetCriteria} 
+            iconColor={theme.colors.error}
+            icon="refresh"
+          />
+      </View>
+
       <View style={styles.rowContainer}>
         <Text style={[styles.label, { color: theme.colors.onSurface }]}>{text("practice_label_only_user_words")}</Text>
         <Switch value={wordType === EntityType.useradd} onValueChange={handleSwitchWordType} />
@@ -66,12 +66,12 @@ export default function PracticeModeSettings() {
           mode="contained-tonal"
           onPress={() => setIsLimitPickerVisible(true)}
           compact
-          style={{ borderRadius: 999, backgroundColor: theme.colors.secondary }}
-          contentStyle={{ paddingHorizontal: 5 }}
+          style={{ borderRadius: 8, backgroundColor: theme.colors.secondaryContainer }}
+          contentStyle={{ paddingHorizontal: 4 }}
           icon="chevron-down"
-          textColor={theme.colors.onSecondary}
+          textColor={theme.colors.onSecondaryContainer}
         >
-          <Text style={[styles.label, { color: theme.colors.onSecondary }]}>{practiceLimit}</Text>
+          <Text style={[styles.valueLabel, { color: theme.colors.onSecondaryContainer }]}>{practiceLimit}</Text>
         </Button>
         <ValuePickerDialog
           entityTitle={text("practice_limit_title")}
@@ -93,26 +93,34 @@ export default function PracticeModeSettings() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    paddingTop: 60,
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    borderRadius: 16,
+    padding: 20,
+    borderRadius: 24,
     marginTop: 8,
     gap: 16,
+  },
+  header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 8,
+  },
+  title: {
+      fontSize: 18,
+      fontWeight: "700",
   },
   rowContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
+    paddingVertical: 4,
   },
   label: {
     fontSize: 16,
     fontWeight: "500",
   },
-  resetButton: {
-    position: "absolute",
-    top: 3,
-    left: 3,
+  valueLabel: {
+      fontSize: 16,
+      fontWeight: "600",
   },
 });

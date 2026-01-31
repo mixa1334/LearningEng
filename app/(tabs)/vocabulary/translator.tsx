@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TranslatorPage() {
@@ -85,64 +86,79 @@ export default function TranslatorPage() {
       }}
     >
       <TranslatorSettings visible={isTranslatorSettingsVisible} onClose={() => setIsTranslatorSettingsVisible(false)} />
-      <Card style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
-        <Card.Title
-          titleStyle={{ color: theme.colors.onSurfaceVariant, alignSelf: "center" }}
-          title={<Pressable
-            onPress={switchLanguages}
-            style={({ pressed }) => [
-              {
-                backgroundColor: theme.colors.primary,
-                borderWidth: 1,
-                borderColor: theme.colors.outline,
-                borderRadius: 8,
-                paddingHorizontal: 6,
-                paddingVertical: 8,
-                opacity: pressed ? 0.8 : 1,
-                transform: [{ scale: pressed ? 0.97 : 1 }],
-              },
-            ]}
-          >
-            <Text style={{ color: theme.colors.onPrimary, fontSize: 16, fontWeight: "500" }}>{language === Language.ENGLISH ? text("translation_card_title_en_ru") : text("translation_card_title_ru_en")}</Text>
-          </Pressable>}
-        />
-        <Card.Content style={styles.content}>
-          <TextInput
-            mode="flat"
-            placeholder={language === Language.ENGLISH ? text("translation_placeholder_en") : text("translation_placeholder_ru")}
-            value={wordToTranslate}
-            onChangeText={setWordToTranslate}
-            onSubmitEditing={handleTranslate}
-            returnKeyType="search"
-            style={[styles.input, { borderRadius: 8 }]}
-          />
-        </Card.Content>
-        <Card.Actions style={styles.actions}>
-          <IconButton
-            icon="cog"
-            onPress={() => setIsTranslatorSettingsVisible(true)}
-            containerColor={theme.colors.primary}
-            iconColor={theme.colors.onPrimary}
-            size={24}
-            accessibilityLabel={text("translation_open_settings_accessibility")}
-          />
-          {isTranslating ? <View style={styles.loadingContainer}><LoadingContentSpinner /></View> : (
-            <Button mode="contained" icon="translate" onPress={handleTranslate} buttonColor={theme.colors.accept} textColor={theme.colors.onAcceptReject}>
-              {text("translation_translate_button")}
-            </Button>
-          )}
-          <IconButton
-            icon="history"
-            onPress={handleOpenHistory}
-            containerColor={theme.colors.primary}
-            iconColor={theme.colors.onPrimary}
-            size={24}
-            accessibilityLabel={text("translation_open_history_accessibility")}
-          />
-        </Card.Actions>
-      </Card>
+      
+      <Animated.View entering={FadeInDown.springify()}>
+        <Card style={[styles.card, { backgroundColor: theme.colors.surface }, getCardShadow(theme)]}>
+            <View style={styles.cardHeader}>
+                <Pressable
+                    onPress={switchLanguages}
+                    style={({ pressed }) => [
+                        styles.langSwitch,
+                        {
+                            backgroundColor: theme.colors.secondaryContainer,
+                            opacity: pressed ? 0.8 : 1,
+                            transform: [{ scale: pressed ? 0.97 : 1 }],
+                        },
+                    ]}
+                >
+                    <Text style={{ color: theme.colors.onSecondaryContainer, fontSize: 16, fontWeight: "600" }}>
+                        {language === Language.ENGLISH ? text("translation_card_title_en_ru") : text("translation_card_title_ru_en")}
+                    </Text>
+                </Pressable>
+                
+                <View style={{ flexDirection: 'row' }}>
+                    <IconButton
+                        icon="cog"
+                        onPress={() => setIsTranslatorSettingsVisible(true)}
+                        iconColor={theme.colors.onSurfaceVariant}
+                        size={24}
+                    />
+                    <IconButton
+                        icon="history"
+                        onPress={handleOpenHistory}
+                        iconColor={theme.colors.onSurfaceVariant}
+                        size={24}
+                    />
+                </View>
+            </View>
+
+            <Card.Content style={styles.content}>
+            <TextInput
+                mode="outlined"
+                placeholder={language === Language.ENGLISH ? text("translation_placeholder_en") : text("translation_placeholder_ru")}
+                value={wordToTranslate}
+                onChangeText={setWordToTranslate}
+                onSubmitEditing={handleTranslate}
+                returnKeyType="search"
+                style={[styles.input, { backgroundColor: theme.colors.surface }]}
+                outlineStyle={{ borderRadius: 12 }}
+            />
+            </Card.Content>
+            
+            <Card.Actions style={styles.actions}>
+            {isTranslating ? <View style={styles.loadingContainer}><LoadingContentSpinner /></View> : (
+                <Button 
+                    mode="contained" 
+                    icon="translate" 
+                    onPress={handleTranslate} 
+                    buttonColor={theme.colors.primary} 
+                    textColor={theme.colors.onPrimary}
+                    style={{ borderRadius: 12, flex: 1 }}
+                    contentStyle={{ height: 48 }}
+                >
+                {text("translation_translate_button")}
+                </Button>
+            )}
+            </Card.Actions>
+        </Card>
+      </Animated.View>
+
       <View style={styles.currentTranslationContainer}>
-        {latestTranslationId && <TranslationCard translationId={latestTranslationId} />}
+        {latestTranslationId && (
+            <Animated.View entering={FadeInDown.delay(200).springify()}>
+                <TranslationCard translationId={latestTranslationId} />
+            </Animated.View>
+        )}
       </View>
     </ScrollView>
   );
@@ -150,36 +166,41 @@ export default function TranslatorPage() {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 12,
+    borderRadius: 24,
     marginBottom: 25,
-    padding: 16,
+    padding: 8,
+  },
+  cardHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 8,
+      paddingTop: 8,
+  },
+  langSwitch: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 12,
   },
   content: {
-    marginVertical: 15,
+    marginVertical: 8,
   },
   input: {
-    marginTop: 12,
-    marginBottom: 12,
-  },
-  result: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginTop: 8,
+    fontSize: 18,
   },
   actions: {
-    justifyContent: "space-between",
-    marginTop: 12,
-  },
-  historyCard: {
-    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   currentTranslationContainer: {
-    paddingHorizontal: SPACING_XL,
+    paddingHorizontal: 8,
   },
   loadingContainer: {
-    width: 50,
+    alignSelf: "center",
+    width: "100%",
     height: 50,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

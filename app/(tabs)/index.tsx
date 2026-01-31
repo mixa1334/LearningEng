@@ -7,6 +7,7 @@ import PracticeMain from "@/src/components/learn/practice/PracticeMain";
 import { SPACING_XXL } from "@/src/resources/constants/layout";
 import React from "react";
 import { View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function LearnPage() {
   const { text } = useLanguageContext();
@@ -14,15 +15,15 @@ export default function LearnPage() {
   return (
     <AutoScrollProvider>
       <AnimatedScrollView headerTitle={text("tabs_learn_title")}>
-        <ContentDivider name={text("learn_tab_label")} />
+        <Animated.View entering={FadeInDown.delay(100).springify()}>
+            <ContentDivider name={text("learn_tab_label")} />
+            <LearningMainMode />
+        </Animated.View>
 
-        <LearningMainMode />
-
-        <View style={{ marginTop: SPACING_XXL * 1.5 }}>
+        <Animated.View entering={FadeInDown.delay(300).springify()} style={{ marginTop: SPACING_XXL * 1.5 }}>
           <ContentDivider name={text("review_tab_label")} />
-        </View>
-
-        <PracticeMain />
+          <PracticeMain />
+        </Animated.View>
       </AnimatedScrollView>
     </AutoScrollProvider>
   );

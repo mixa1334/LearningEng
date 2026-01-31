@@ -1,13 +1,15 @@
 import { SPACING_XL } from "@/src/resources/constants/layout";
 import { getDailyQuote, Quote } from "@/src/service/dailyQuoteService";
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native"; // Added ActivityIndicator
+import { StyleSheet, View } from "react-native";
 import { IconButton, Text } from "react-native-paper";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { getCardShadow } from "../common/cardShadow";
 import { useLanguageContext } from "../common/LanguageProvider";
 import { LoadingContentSpinner } from "../common/LoadingContentSpinner";
 import { useAppTheme } from "../common/ThemeProvider";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function QuoteCard() {
   const theme = useAppTheme();
@@ -52,50 +54,65 @@ export default function QuoteCard() {
     if (!quote) return null;
 
     return (
-      <>
-        <Text style={[styles.label, { color: theme.colors.onTertiary }]}>{text("profile_quote_today_label")}</Text>
+      <View>
+        <View style={styles.header}>
+             <MaterialIcons name="format-quote" size={24} color={theme.colors.onTertiary} style={{ opacity: 0.6 }} />
+             <Text style={[styles.label, { color: theme.colors.onTertiary }]}>{text("profile_quote_today_label")}</Text>
+        </View>
         <Text selectable style={[styles.quote, { color: theme.colors.onTertiary }]}>
-          “{quote.q}”
+          {quote.q}
         </Text>
         <Text style={[styles.author, { color: theme.colors.onTertiary }]}>— {quote.a}</Text>
-      </>
+      </View>
     );
   };
 
-  return <View style={[styles.card, { backgroundColor: theme.colors.tertiary }, getCardShadow(theme)]}>{renderContent()}</View>;
+  return (
+    <Animated.View 
+        entering={FadeInDown.delay(300).springify()}
+        style={[styles.card, { backgroundColor: theme.colors.tertiary }, getCardShadow(theme)]}
+    >
+        {renderContent()}
+    </Animated.View>
+  );
 }
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 28,
+    borderRadius: 24,
     padding: SPACING_XL,
     marginBottom: SPACING_XL,
+    minHeight: 150,
+    justifyContent: "center",
+  },
+  header: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 12,
   },
   label: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "700",
     textTransform: "uppercase",
-    marginBottom: 8,
+    letterSpacing: 1,
+    opacity: 0.8,
   },
   quote: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
+    lineHeight: 28,
     fontStyle: "italic",
-    lineHeight: 26,
+    marginBottom: 16,
   },
   author: {
-    marginTop: 12,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "500",
     textAlign: "right",
-  },
-  loader: {
-    marginVertical: 20,
+    opacity: 0.9,
   },
   errorContainer: {
-    marginVertical: 10,
-    display: "flex",
-    flexDirection: "column",
     alignItems: "center",
+    gap: 8,
   },
 });

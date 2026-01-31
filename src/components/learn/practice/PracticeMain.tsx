@@ -7,15 +7,15 @@ import PracticeModeWrapper, { PracticeModeChildProps } from "@/src/components/le
 import { usePractice } from "@/src/hooks/usePractice";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-paper";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Button, Text } from "react-native-paper";
+import Animated, { FadeInDown, LinearTransition, SlideInDown, SlideOutDown } from "react-native-reanimated";
 
 import { useAutoScroll } from "../../common/AutoScrollContext";
-import { useHaptics } from "../../common/HapticsProvider";
 import { getCardShadow } from "../../common/cardShadow";
+import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
-import { ValuePickerDialog } from "../../common/ValuePickerDialog";
 import PickCorrectEnglishWordMode from "./mods/PickCorrectEnglishWordMode";
 
 export enum ExtraMode {
@@ -33,6 +33,7 @@ const PracticeModeComponents: Record<
     titleTextKey: string;
     descriptionTextKey: string;
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => boolean;
+    icon: keyof typeof MaterialIcons.glyphMap;
   }
 > = {
   [ExtraMode.OVERVIEW]: {
@@ -40,30 +41,35 @@ const PracticeModeComponents: Record<
     titleTextKey: "practice_overview_title",
     descriptionTextKey: "practice_overview_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
+    icon: "view-carousel",
   },
   [ExtraMode.PAIRS]: {
     component: MatchPairsMode,
     titleTextKey: "practice_pairs_title",
     descriptionTextKey: "practice_pairs_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength >= 4,
+    icon: "style",
   },
   [ExtraMode.BUILDER]: {
     component: BuildingFromCharsMode,
     titleTextKey: "practice_builder_title",
     descriptionTextKey: "practice_builder_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength !== 0,
+    icon: "build",
   },
   [ExtraMode.PICK_ENGLISH]: {
     component: PickCorrectEnglishWordMode,
     titleTextKey: "practice_pick_english_title",
     descriptionTextKey: "practice_pick_english_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength > 4,
+    icon: "check-circle",
   },
   [ExtraMode.AUDIO]: {
     component: AudioMode,
     titleTextKey: "practice_audio_title",
     descriptionTextKey: "practice_audio_description",
     practiceWordsPoolLengthRule: (wordsPoolLength: number) => wordsPoolLength > 4,
+    icon: "headset",
   },
 };
 
@@ -76,7 +82,6 @@ export default function PracticeMain() {
   const [activeExtraMode, setActiveExtraMode] = useState<ExtraMode>(ExtraMode.OVERVIEW);
   const [isSessionStarted, setIsSessionStarted] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [isModeMenuVisible, setIsModeMenuVisible] = useState(false);
 
   const ActiveModeComponent = PracticeModeComponents[activeExtraMode].component;
   const activeModeTitleKey = PracticeModeComponents[activeExtraMode].titleTextKey;
@@ -90,15 +95,12 @@ export default function PracticeMain() {
   ];
 
   const handleModeChange = (newMode: ExtraMode) => {
-    setIsModeMenuVisible(false);
+    lightImpact();
     setIsSessionStarted(false);
     resetPracticeSet();
     setActiveExtraMode(newMode);
     setIsSettingsVisible(false);
   };
-
-  const activeModeLabel =
-    extraModeLabels.find((mode) => mode.value === activeExtraMode)?.label ?? "";
 
   const handleSessionStart = () => {
     setIsSessionStarted(true);
@@ -120,92 +122,92 @@ export default function PracticeMain() {
   const renderHeaderSection = () => {
     if (isSessionStarted) {
       return (
-        <View
+        <Animated.View
+          entering={FadeInDown.springify()}
+          layout={LinearTransition.springify()}
           style={[
             styles.topRow,
-            { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outline },
+            { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant },
             getCardShadow(theme),
           ]}
         >
-          <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>{text(activeModeTitleKey)}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+             <MaterialIcons name={PracticeModeComponents[activeExtraMode].icon} size={24} color={theme.colors.primary} />
+             <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>{text(activeModeTitleKey)}</Text>
+          </View>
           <Button
-            mode="contained-tonal"
+            mode="contained"
             onPress={handleSessionEnd}
             style={[styles.sessionBtn, { backgroundColor: theme.colors.reject }]}
             textColor={theme.colors.onAcceptReject}
             icon="flag-checkered"
+            compact
           >
             {text("practice_end_button")}
           </Button>
-        </View>
+        </Animated.View>
       );
     }
 
     return (
-      <View
-        style={[
-          styles.topRow,
-          { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outline },
-          getCardShadow(theme),
-        ]}
+      <Animated.View
+         layout={LinearTransition.springify()}
+         style={{ marginBottom: 16 }}
       >
-        <Pressable
-          onPress={handleSettingsToggler}
-          style={({ pressed }) => [
-            styles.settingToggler,
-            {
-              backgroundColor: isSettingsVisible ? theme.colors.error : theme.colors.surface,
-              opacity: pressed ? 0.8 : 1,
-              transform: [{ scale: pressed ? 0.95 : 1 }],
-            },
-          ]}
-        >
-          <MaterialIcons name="settings" size={24} color={isSettingsVisible ? theme.colors.onError : theme.colors.onSurface} />
-        </Pressable>
-
-        <View style={styles.modeDropdownContainer}>
-          <Pressable
-            onPress={() => {
-              lightImpact();
-              setIsModeMenuVisible(true);
-            }}
-            style={({ pressed }) => [
-              styles.modeDropdownHeader,
-              {
-                backgroundColor: theme.colors.surface,
-                opacity: pressed ? 0.9 : 1,
-                transform: [{ scale: pressed ? 0.97 : 1 }],
-              },
-            ]}
-          >
-            <Text
-              style={[styles.modeDropdownLabel, { color: theme.colors.onSurface }]}
-              numberOfLines={1}
+        <View style={styles.headerControls}>
+             <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false} 
+                contentContainerStyle={styles.modeScrollContent}
             >
-              {activeModeLabel}
-            </Text>
-            <MaterialIcons
-              name={"expand-more"}
-              size={22}
-              color={theme.colors.onSurface}
-            />
-          </Pressable>
-          <ValuePickerDialog
-            entityTitle={text("practice_mode_title")}
-            description={text("practice_mode_description")}
-            visible={isModeMenuVisible}
-            onClose={() => setIsModeMenuVisible(false)}
-            options={extraModeLabels}
-            onSelectOption={handleModeChange}
-          />
+                {extraModeLabels.map((mode) => {
+                    const isActive = activeExtraMode === mode.value;
+                    return (
+                        <Pressable
+                            key={mode.key}
+                            onPress={() => handleModeChange(mode.value as ExtraMode)}
+                            style={[
+                                styles.modeChip,
+                                { 
+                                    backgroundColor: isActive ? theme.colors.primary : theme.colors.surface,
+                                    borderColor: isActive ? theme.colors.primary : theme.colors.outlineVariant,
+                                }
+                            ]}
+                        >
+                            <Text style={[
+                                styles.modeChipLabel,
+                                { color: isActive ? theme.colors.onPrimary : theme.colors.onSurfaceVariant }
+                            ]}>
+                                {mode.label}
+                            </Text>
+                        </Pressable>
+                    )
+                })}
+            </ScrollView>
+            <Pressable
+                onPress={handleSettingsToggler}
+                style={({ pressed }) => [
+                    styles.settingToggler,
+                    {
+                    backgroundColor: isSettingsVisible ? theme.colors.primaryContainer : theme.colors.surface,
+                    opacity: pressed ? 0.8 : 1,
+                    },
+                ]}
+            >
+                <MaterialIcons name="tune" size={24} color={isSettingsVisible ? theme.colors.onPrimaryContainer : theme.colors.onSurface} />
+            </Pressable>
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
   const renderMainSection = () => {
     if (isSettingsVisible) {
-      return <PracticeModeSettings />;
+      return (
+        <Animated.View entering={SlideInDown} exiting={SlideOutDown}>
+             <PracticeModeSettings />
+        </Animated.View>
+      );
     }
     if (isSessionStarted) {
       return (
@@ -215,82 +217,87 @@ export default function PracticeMain() {
       );
     }
     return (
-      <View style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
+      <Animated.View 
+        entering={FadeInDown.delay(100).springify()}
+        style={[styles.centered, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}
+      >
+        <MaterialIcons 
+            name={PracticeModeComponents[activeExtraMode].icon} 
+            size={48} 
+            color={theme.colors.primary} 
+            style={{ marginBottom: 16, opacity: 0.8 }}
+        />
         <Text style={[styles.infoText, { color: theme.colors.onSurface }]}>
           {text(PracticeModeComponents[activeExtraMode].descriptionTextKey)}
         </Text>
         <Button
-          mode="contained-tonal"
+          mode="contained"
           onPress={handleSessionStart}
           style={[styles.reviewBtn, { backgroundColor: theme.colors.primary }]}
           textColor={theme.colors.onPrimary}
           icon="play"
+          contentStyle={{ height: 48 }}
         >
           {text("practice_start_button")}
         </Button>
-      </View>
+      </Animated.View>
     );
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       {renderHeaderSection()}
-
       {renderMainSection()}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  headerControls: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+  },
+  modeScrollContent: {
+      gap: 8,
+      paddingRight: 12,
+  },
+  modeChip: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 20,
+      borderWidth: 1,
+  },
+  modeChipLabel: {
+      fontSize: 14,
+      fontWeight: "600",
+  },
   settingToggler: {
-    borderRadius: 20,
-    padding: 12,
+    borderRadius: 12,
+    padding: 10,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "transparent",
   },
   topRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 16,
     borderWidth: 1,
     marginBottom: 16,
-    gap: 10,
-  },
-  modeDropdownContainer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    width: "100%",
-    marginTop: 8,
-  },
-  modeDropdownHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  modeDropdownLabel: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: "500",
-    marginRight: 8,
-  },
-  modeDropdownMenu: {
-    marginTop: 6,
-    borderRadius: 12,
-    overflow: "hidden",
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    borderRadius: 20,
+    padding: 32,
+    borderRadius: 24,
+    minHeight: 300,
+    borderWidth: 1,
   },
   infoText: {
     fontSize: 16,
@@ -298,8 +305,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   reviewBtn: {
-    marginTop: 12,
-    borderRadius: 8,
+    marginTop: 24,
+    borderRadius: 12,
+    width: "100%",
   },
   sessionBtn: {
     borderRadius: 8,

@@ -203,6 +203,9 @@
   "tabs_learn_title": "Изучение и повторение",
   "tabs_profile_title": "Профиль",
 
+  "profile_streak_label": "Текущая серия",
+  "days_count": "{{count}} дней",
+
   "nav_back_title": "Назад",
   "nav_back_accessibility": "Назад",
   "nav_create_accessibility": "Создать",

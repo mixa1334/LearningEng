@@ -4,6 +4,7 @@ import { userAlerts } from "@/src/util/userAlerts";
 import React, { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { Button, IconButton, Text, useTheme } from "react-native-paper";
+import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
 
 import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -50,15 +51,19 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
   };
 
   return (
-    <Modal transparent visible={visible} animationType="none" onRequestClose={exit}>
+    <Modal transparent visible={visible} animationType="fade" onRequestClose={exit}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <Pressable style={styles.backdrop} onPress={exit} accessibilityRole="button">
-          <View style={[styles.dialog, { backgroundColor: theme.colors.secondaryContainer }]} onStartShouldSetResponder={() => true}>
+          <Animated.View 
+            entering={ZoomIn.duration(200)}
+            style={[styles.dialog, { backgroundColor: theme.colors.surface }]} 
+            onStartShouldSetResponder={() => true}
+          >
             <View style={styles.headerContainer}>
-              <Text style={[styles.title, { color: theme.colors.onBackground }]}>
+              <Text style={[styles.title, { color: theme.colors.onSurface }]}>
                 {text("vocabulary_edit_category_title")}
               </Text>
               <IconButton icon="close" size={24} onPress={exit} accessibilityLabel="Close dialog" />
@@ -70,28 +75,32 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
                 onChange={setCategoryName}
               />
 
-              <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
+              <View style={styles.emojiContainer}>
+                <PickEmojiButton emoji={categoryToEdit?.icon} onSelectEmoji={setCategoryEmoji} />
+              </View>
             </View>
 
             <View style={styles.actions}>
               <Button
-                mode="contained"
-                textColor={theme.colors.onError}
-                style={{ backgroundColor: theme.colors.error }}
+                mode="contained-tonal"
+                textColor={theme.colors.error}
+                style={{ backgroundColor: theme.colors.errorContainer, flex: 1 }}
                 onPress={handleDeleteCategory}
+                icon="delete"
               >
                 {text("vocabulary_edit_category_delete_button")}
               </Button>
               <Button
                 mode="contained"
                 textColor={theme.colors.onPrimary}
-                style={{ backgroundColor: theme.colors.primary }}
+                style={{ backgroundColor: theme.colors.primary, flex: 1 }}
                 onPress={handleEditCategory}
+                icon="check"
               >
                 {text("vocabulary_edit_category_update_button")}
               </Button>
             </View>
-          </View>
+          </Animated.View>
         </Pressable>
       </KeyboardAvoidingView>
     </Modal>
@@ -100,32 +109,43 @@ export default function EditCategoryDialog({ visible, exit, category }: EditCate
 
 const styles = StyleSheet.create({
   form: {
-    alignItems: "center",
-    gap: 10,
+    gap: 16,
+    marginVertical: 16,
   },
   dialog: {
-    borderRadius: 24,
+    borderRadius: 28,
     padding: 24,
-    width: "80%",
-    gap: 30,
+    width: "90%",
+    maxWidth: 400,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   backdrop: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.6)",
   },
   actions: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    gap: 12,
+    marginTop: 8,
   },
   title: {
     fontWeight: "700",
+    fontSize: 20,
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 8,
   },
+  emojiContainer: {
+      alignItems: 'center',
+      padding: 8,
+  }
 });

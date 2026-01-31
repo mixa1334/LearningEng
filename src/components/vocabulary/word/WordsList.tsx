@@ -3,11 +3,13 @@ import { useVocabulary } from "@/src/hooks/useVocabulary";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+import Animated, { FadeInDown, Layout } from "react-native-reanimated";
 import { getCardShadow } from "../../common/cardShadow";
 import { useHaptics } from "../../common/HapticsProvider";
 import { useSoundPlayer } from "../../common/SoundProvider";
 import { useAppTheme } from "../../common/ThemeProvider";
 import EditWordDialog from "./EditWordDialog";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function WordsList() {
   const theme = useAppTheme();
@@ -32,36 +34,43 @@ export default function WordsList() {
       )}
 
       <View style={styles.listContent}>
-        {words.map((item) => (
-          <Pressable
+        {words.map((item, index) => (
+          <Animated.View
             key={item.id.toString()}
-            style={({ pressed }) => [
-              styles.itemRow,
-              {
-                opacity: pressed ? 0.8 : 1,
-                transform: [{ scale: pressed ? 0.97 : 1 }],
-                backgroundColor: theme.colors.surfaceVariant,
-                borderColor: theme.colors.outlineVariant,
-              },
-              getCardShadow(theme),
-            ]}
-            onPress={() => openEditWordModal(item)}
+            entering={FadeInDown.delay(index * 30).springify()}
+            layout={Layout.springify()}
           >
-            <View style={styles.itemContent}>
-              <View style={styles.iconContainer}>
-                <Text style={styles.iconText}>{item.category.icon}</Text>
-              </View>
+            <Pressable
+              style={({ pressed }) => [
+                styles.itemRow,
+                {
+                  opacity: pressed ? 0.8 : 1,
+                  transform: [{ scale: pressed ? 0.98 : 1 }],
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.outlineVariant,
+                },
+                getCardShadow(theme),
+              ]}
+              onPress={() => openEditWordModal(item)}
+            >
+              <View style={styles.itemContent}>
+                <View style={[styles.iconContainer, { backgroundColor: theme.colors.secondaryContainer }]}>
+                  <Text style={styles.iconText}>{item.category.icon}</Text>
+                </View>
 
-              <View style={styles.wordTexts}>
-                <Text style={[styles.wordPrimary, { color: theme.colors.onSurface }]} numberOfLines={1}>
-                  {item.word_en}
-                </Text>
-                <Text style={[styles.wordSecondary, { color: theme.colors.onSurfaceVariant }]} numberOfLines={1}>
-                  {item.word_ru}
-                </Text>
+                <View style={styles.wordTexts}>
+                  <Text style={[styles.wordPrimary, { color: theme.colors.onSurface }]} numberOfLines={1}>
+                    {item.word_en}
+                  </Text>
+                  <Text style={[styles.wordSecondary, { color: theme.colors.onSurfaceVariant }]} numberOfLines={1}>
+                    {item.word_ru}
+                  </Text>
+                </View>
+
+                <MaterialIcons name="chevron-right" size={24} color={theme.colors.onSurfaceVariant} />
               </View>
-            </View>
-          </Pressable>
+            </Pressable>
+          </Animated.View>
         ))}
       </View>
     </>
@@ -71,36 +80,38 @@ export default function WordsList() {
 const styles = StyleSheet.create({
   listContent: {
     backgroundColor: "transparent",
-    paddingBottom: 4,
+    paddingBottom: 16,
     paddingHorizontal: 4,
+    gap: 12,
   },
   itemRow: {
-    borderRadius: 18,
-    marginVertical: 8,
-    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    overflow: "hidden",
   },
   itemContent: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   iconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 999,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
+    marginRight: 16,
   },
   iconText: {
-    fontSize: 18,
+    fontSize: 22,
   },
   wordTexts: {
     flex: 1,
+    gap: 2,
   },
   wordPrimary: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
   },
   wordSecondary: {

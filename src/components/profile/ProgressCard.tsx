@@ -3,86 +3,109 @@ import { SPACING_XL } from "@/src/resources/constants/layout";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { useLanguageContext } from "../common/LanguageProvider";
 import { getCardShadow } from "../common/cardShadow";
 import { useAppTheme } from "../common/ThemeProvider";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function ProgressCard() {
   const { lastLearningDate, learnedToday, reviewedToday } = useUserData();
   const theme = useAppTheme();
   const { text } = useLanguageContext();
 
+  const StatRow = ({ icon, label, value }: { icon: keyof typeof MaterialIcons.glyphMap, label: string, value: string | number }) => (
+      <View style={styles.row}>
+          <View style={styles.rowLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: theme.colors.surface }]}>
+                <MaterialIcons name={icon} size={18} color={theme.colors.primary} />
+              </View>
+              <Text style={[styles.label, { color: theme.colors.onSurfaceVariant }]}>{label}</Text>
+          </View>
+          <Text style={[styles.value, { color: theme.colors.onSurface }]}>{value}</Text>
+      </View>
+  );
+
   return (
-    <View
+    <Animated.View
+      entering={FadeInDown.delay(150).springify()}
       style={[
         styles.card,
         { backgroundColor: theme.colors.surfaceVariant },
         getCardShadow(theme),
       ]}
     >
-      <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
-        {text("profile_progress_title")}
-      </Text>
-      <View style={styles.row}>
-        <Text
-          style={[styles.label, { color: theme.colors.onSurfaceVariant }]}
-        >
-          {text("profile_progress_last_learning")}
-        </Text>
-        <Text style={[styles.value, { color: theme.colors.onSurface }]}>
-          {lastLearningDate || "—"}
+      <View style={styles.header}>
+        <MaterialIcons name="insights" size={20} color={theme.colors.primary} />
+        <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>
+            {text("profile_progress_title")}
         </Text>
       </View>
-      <View style={styles.row}>
-        <Text
-          style={[styles.label, { color: theme.colors.onSurfaceVariant }]}
-        >
-          {text("profile_progress_learned_today")}
-        </Text>
-        <Text style={[styles.value, { color: theme.colors.onSurface }]}>
-          {learnedToday}
-        </Text>
+      
+      <View style={styles.statsContainer}>
+        <StatRow 
+            icon="history" 
+            label={text("profile_progress_last_learning")} 
+            value={lastLearningDate || "—"} 
+        />
+        <StatRow 
+            icon="school" 
+            label={text("profile_progress_learned_today")} 
+            value={learnedToday} 
+        />
+        <StatRow 
+            icon="refresh" 
+            label={text("profile_progress_reviewed_today")} 
+            value={reviewedToday} 
+        />
       </View>
-      <View style={styles.row}>
-        <Text
-          style={[styles.label, { color: theme.colors.onSurfaceVariant }]}
-        >
-          {text("profile_progress_reviewed_today")}
-        </Text>
-        <Text style={[styles.value, { color: theme.colors.onSurface }]}>
-          {reviewedToday}
-        </Text>
-      </View>
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
+    borderRadius: 24,
     padding: SPACING_XL,
     marginBottom: SPACING_XL,
   },
+  header: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 20,
+  },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "700",
-    marginBottom: 12,
+  },
+  statsContainer: {
+      gap: 16,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+  },
+  rowLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+  },
+  iconContainer: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: "center",
+      justifyContent: "center",
   },
   label: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "500",
   },
   value: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
-
-

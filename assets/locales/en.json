@@ -204,6 +204,9 @@
   "tabs_learn_title": "Learn & Review Words",
   "tabs_profile_title": "Profile",
 
+  "profile_streak_label": "Current Streak",
+  "days_count": "{{count}} days",
+
   "nav_back_title": "Back",
   "nav_back_accessibility": "Back",
   "nav_create_accessibility": "Create",

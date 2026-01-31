@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-paper";
 
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { MaterialIcons } from "@expo/vector-icons";
+import Animated, { FadeIn, FadeOut, interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { getCardShadow } from "../../common/cardShadow";
 import { useHaptics } from "../../common/HapticsProvider";
 import { useLanguageContext } from "../../common/LanguageProvider";
@@ -11,7 +12,7 @@ import { useAppTheme } from "../../common/ThemeProvider";
 import LearningErrorState from "../LearningErrorState";
 import WordCard from "../WordCard";
 
-const TAB_GAP = 15;
+const TAB_GAP = 4;
 
 export default function LearningMainMode() {
   const { reviewWord, learnWord, error, reloadDailySet, loadExtraDailySet } = useLearningDailySet();
@@ -52,7 +53,7 @@ export default function LearningMainMode() {
     lightImpact();
     const nextPos = nextIsLearn ? 0 : 1;
     setIsLearnTab(nextIsLearn);
-    tabPosition.value = withTiming(nextPos, { duration: 200 });
+    tabPosition.value = withTiming(nextPos, { duration: 300 });
   };
 
   const handleSelectLearn = () => {
@@ -72,10 +73,9 @@ export default function LearningMainMode() {
         style={[
           styles.tabHeader,
           {
-            backgroundColor: theme.colors.surfaceVariant,
-            borderColor: theme.colors.outline,
+            backgroundColor: theme.colors.surface,
+            borderColor: theme.colors.outlineVariant,
           },
-          getCardShadow(theme),
         ]}
         onLayout={(e) => setTabHeaderWidth(e.nativeEvent.layout.width)}
       >
@@ -121,18 +121,36 @@ export default function LearningMainMode() {
 
 
         {word === undefined ? (
-          <View style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant }, getCardShadow(theme)]}>
+          <Animated.View 
+            entering={FadeIn.duration(300)}
+            exiting={FadeOut.duration(200)}
+            style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}
+          >
+            <MaterialIcons name="check-circle-outline" size={64} color={theme.colors.primary} style={{ marginBottom: 16 }} />
             <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
               {isLearnTab ? text("learn_complete_message") : text("review_no_words_message")}
             </Text>
             {isLearnTab && (
-              <Button buttonColor={theme.colors.primary} textColor={theme.colors.onPrimary} onPress={loadExtraDailySet}>
+              <Button 
+                mode="contained"
+                buttonColor={theme.colors.primary} 
+                textColor={theme.colors.onPrimary} 
+                onPress={loadExtraDailySet}
+                style={{ marginTop: 24, borderRadius: 12 }}
+                contentStyle={{ height: 48 }}
+              >
                 {text("learn_load_more_words_button")}
               </Button>
             )}
-          </View>
+          </Animated.View>
         ) : (
-          <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
+          <Animated.View
+             key={word.id} // Key change triggers animation
+             entering={FadeIn.duration(300)}
+             style={{ width: '100%' }}
+          >
+            <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
+          </Animated.View>
         )}
     
     </View>
@@ -141,8 +159,8 @@ export default function LearningMainMode() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   tabHeader: {
     flexDirection: "row",
@@ -152,14 +170,17 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     alignSelf: "center",
-    marginBottom: 16,
+    marginBottom: 24,
     position: "relative",
+    width: "100%",
+    maxWidth: 350,
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 12,
     alignItems: "center",
     borderRadius: 30,
+    zIndex: 1,
   },
   tabIndicator: {
     position: "absolute",
@@ -175,14 +196,16 @@ const styles = StyleSheet.create({
   completeMsg: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
-    gap: 15,
-    borderRadius: 20,
+    padding: 32,
+    borderRadius: 24,
     width: "100%",
+    minHeight: 300,
+    borderWidth: 1,
   },
   emptyText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
+    lineHeight: 28,
   },
 });
