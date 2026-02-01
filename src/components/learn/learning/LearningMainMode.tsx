@@ -120,41 +120,41 @@ export default function LearningMainMode() {
       </View>
 
 
-      {word === undefined ? (
-        <Animated.View
-          key={theme.colors.surfaceVariant}
-          entering={FadeIn.duration(300)}
-          exiting={FadeOut.duration(200)}
-          style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}
-        >
-          <View style={styles.completeMsgContent}>
-            <MaterialIcons name="check-circle-outline" size={64} color={theme.colors.primary} />
-            <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
-              {isLearnTab ? text("learn_complete_message") : text("review_no_words_message")}
-            </Text>
+
+      <Animated.View
+        key={theme.colors.surfaceVariant}
+        entering={FadeIn.duration(300)}
+        exiting={FadeOut.duration(200)}
+        style={{ width: '100%' }}
+      >
+        {word === undefined ? (
+          <View style={[styles.completeMsg, { backgroundColor: theme.colors.surfaceVariant, borderColor: theme.colors.outlineVariant }, getCardShadow(theme)]}>
+            <View style={styles.completeMsgContent}>
+              <MaterialIcons name="check-circle-outline" size={64} color={theme.colors.primary} />
+              <Text style={[styles.emptyText, { color: theme.colors.onSurface }]}>
+                {isLearnTab ? text("learn_complete_message") : text("review_no_words_message")}
+              </Text>
+            </View>
+            {isLearnTab && (
+              <Button
+                mode="contained"
+                buttonColor={theme.colors.primary}
+                textColor={theme.colors.onPrimary}
+                onPress={loadExtraDailySet}
+                style={{ marginTop: 24, borderRadius: 12 }}
+                contentStyle={{ height: 48 }}
+              >
+                {text("learn_load_more_words_button")}
+              </Button>
+            )}
           </View>
-          {isLearnTab && (
-            <Button
-              mode="contained"
-              buttonColor={theme.colors.primary}
-              textColor={theme.colors.onPrimary}
-              onPress={loadExtraDailySet}
-              style={{ marginTop: 24, borderRadius: 12 }}
-              contentStyle={{ height: 48 }}
-            >
-              {text("learn_load_more_words_button")}
-            </Button>
-          )}
-        </Animated.View>
-      ) : (
-        <Animated.View
-          key={word.id}
-          entering={FadeIn.duration(300)}
-          style={{ width: '100%' }}
-        >
+
+        ) : (
+
           <WordCard word={word} accept={accept} acceptBtnName={acceptLabel} reject={reject} rejectBtnName={rejectLabel} />
-        </Animated.View>
-      )}
+
+        )}
+      </Animated.View>
 
     </View>
   );
