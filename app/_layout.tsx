@@ -27,7 +27,7 @@ function AppContent() {
       await SystemUI.setBackgroundColorAsync(theme.colors.surfaceVariant);
       setTimeout(async () => {
         await SplashScreen.hideAsync();
-      }, 150);
+      }, 200);
     }
 
     finalizeApp();
