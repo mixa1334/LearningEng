@@ -4,8 +4,12 @@ class StringHelper {
     return str.length > maxLength ? str.substring(0, maxLength - 2) + ".." : str;
   }
 
-  trimTextForSaving(text: string): string {
+  trim(text: string): string {
     return text.replaceAll(/(\r\n|\n|\r)/g, " ").trim();
+  }
+
+  processTextBeforeSaving(text: string, maxLength: number = 15): string {
+    return this.trim(this.truncate(text, maxLength));
   }
 }
 
