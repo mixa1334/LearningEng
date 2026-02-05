@@ -1,12 +1,6 @@
 import { Language } from "@/src/entity/types";
 import { Criteria } from "../Criteria";
 
-export type TranslationCriteriaDTO = {
-    searchPattern?: string;
-    textLanguage?: Language;
-    datetimeFrom?: string;
-};
-
 export class TranslationCriteria implements Criteria {
     searchPattern?: string;
     textLanguage?: Language;
@@ -31,7 +25,7 @@ export class TranslationCriteria implements Criteria {
         return this;
     }
 
-    buildCondition(): { query: string, params: any[] } {
+    buildQuery(): { query: string, params: any[] } {
         let { query, params } = { query: "1 = 1", params: [] as any[] };
         if (this.searchPattern) {
             query += ` AND text LIKE ?`;
@@ -49,18 +43,10 @@ export class TranslationCriteria implements Criteria {
         return { query, params };
     }
 
-    static fromRedux(dto: TranslationCriteriaDTO): TranslationCriteria {
+    clone(): TranslationCriteria {
         return new TranslationCriteria()
-            .appendSearchPattern(dto.searchPattern)
-            .appendTextLanguage(dto.textLanguage)
-            .appendDatetimeFrom(dto.datetimeFrom);
-    }
-
-    toRedux(): TranslationCriteriaDTO {
-        return {
-            searchPattern: this.searchPattern,
-            textLanguage: this.textLanguage,
-            datetimeFrom: this.datetimeFrom,
-        };
+            .appendSearchPattern(this.searchPattern)
+            .appendTextLanguage(this.textLanguage)
+            .appendDatetimeFrom(this.datetimeFrom);
     }
 }

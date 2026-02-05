@@ -1,13 +1,6 @@
 import { Category, EntityType } from "@/src/entity/types";
 import { Criteria } from "../Criteria";
 
-export type WordCriteriaDTO = {
-    category?: Category;
-    type?: EntityType;
-    searchPattern?: string;
-    isLearned?: boolean;
-};
-
 export class WordCriteria implements Criteria {
     category?: Category;
     type?: EntityType;
@@ -38,7 +31,7 @@ export class WordCriteria implements Criteria {
         return this;
     }
 
-    buildCondition(): { query: string, params: any[] } {
+    buildQuery(): { query: string, params: any[] } {
         let { query, params } = { query: "1 = 1", params: [] as any[] };
         if (this.category) {
             query += ` AND w.category_id = ?`;
@@ -65,22 +58,5 @@ export class WordCriteria implements Criteria {
             .appendType(this.type)
             .appendSearchPattern(this.searchPattern)
             .appendIsLearned(this.isLearned);
-    }
-
-    toRedux(): WordCriteriaDTO {
-        return {
-            category: this.category,
-            type: this.type,
-            searchPattern: this.searchPattern,
-            isLearned: this.isLearned,
-        };
-    }
-
-    static fromRedux(dto: WordCriteriaDTO): WordCriteria {
-        return new WordCriteria()
-            .appendCategory(dto.category)
-            .appendType(dto.type)
-            .appendSearchPattern(dto.searchPattern)
-            .appendIsLearned(dto.isLearned);
     }
 }

@@ -1,3 +1,4 @@
-export interface Criteria {
-    buildCondition(): { query: string, params: any[] };
+import { Queryable } from "./Queryable";
+
+export interface Criteria extends Queryable {
 }

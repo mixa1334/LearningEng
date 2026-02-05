@@ -1,22 +1,12 @@
 import { Criteria } from "./Criteria";
+import { Queryable } from "./Queryable";
 
-export type PageableDTO = {
+export class Pageable implements Queryable {
     lastId?: number;
-    limit: number;
-    direction: "asc" | "desc";
+    limit?: number;
+    direction: "asc" | "desc" = "asc";
     tableAlias?: string;
-};
-
-export class Pageable {
-    lastId?: number;
-    limit: number;
-    direction: "asc" | "desc";
-    tableAlias?: string;
-
-    constructor(limit: number) {
-        this.limit = limit;
-        this.direction = "asc";
-    }
+    criteria?: Criteria;
 
     setTableAlias(tableAlias?: string): Pageable {
         this.tableAlias = tableAlias;
@@ -33,8 +23,18 @@ export class Pageable {
         return this;
     }
 
-    buildQuery(criteria?: Criteria): { query: string, params: any[] } {
-        let { query, params } = criteria?.buildCondition() ?? { query: "1 = 1", params: [] as any[] };
+    setLimit(limit?: number): Pageable {
+        this.limit = limit;
+        return this;
+    }
+
+    addCriteria(criteria?: Criteria): Pageable {
+        this.criteria = criteria;
+        return this;
+    }
+
+    buildQuery(): { query: string, params: any[] } {
+        let { query, params } = this.criteria?.buildQuery() ?? { query: "1 = 1", params: [] as any[] };
         const idColumn = this.tableAlias ? `${this.tableAlias}.id` : "id";
         if (this.direction === "asc") {
             if (this.lastId) {
@@ -57,27 +57,11 @@ export class Pageable {
         return { query, params };
     }
 
-    toRedux(): PageableDTO {
-        return {
-            lastId: this.lastId,
-            tableAlias: this.tableAlias,
-            limit: this.limit,
-            direction: this.direction,
-        };
-    }
-
     clone(): Pageable {
-        return new Pageable(this.limit)
+        return new Pageable()
+            .setLimit(this.limit)
             .setLastId(this.lastId)
             .setTableAlias(this.tableAlias)
             .setDirection(this.direction);
-    }
-
-    static fromRedux(dto: PageableDTO): Pageable {
-        const pageable = new Pageable(dto.limit);
-        pageable.setLastId(dto.lastId);
-        pageable.setTableAlias(dto.tableAlias);
-        pageable.setDirection(dto.direction);
-        return pageable;
     }
 }
