@@ -36,7 +36,9 @@ export type UserData = {
   learnedToday: number;
   dailyGoal: number;
   dailyGoalAchieve: boolean;
-  
+}
+
+export type SystemData = {
   // appearance settings
   theme: THEMES;
   locale: Language | undefined;
@@ -47,7 +49,9 @@ export type UserData = {
   translatorEngine: TranslatorEngine;
   deleteTranslationAfterAddingToVocabulary: boolean;
   clearTranslatorInputField: boolean;
-};
+}
+
+export type StorageData = UserData & SystemData;
 
 export enum TranslatorEngine {
   FREE_API = "free_api",

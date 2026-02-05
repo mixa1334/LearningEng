@@ -1,8 +1,8 @@
 import Storage from "expo-sqlite/kv-store";
 import { Appearance } from "react-native";
-import { THEMES, TranslatorEngine, UserData } from "../entity/types";
+import { StorageData, THEMES, TranslatorEngine } from "../entity/types";
 
-export enum USER_DATA_KEYS {
+export enum STORAGE_KEYS {
   NAME = "name",
   TOTAL_LEARNED_WORDS = "totalLearnedWords",
   STREAK = "streak",
@@ -20,9 +20,9 @@ export enum USER_DATA_KEYS {
   CLEAR_TRANSLATOR_INPUT_FIELD = "clearTranslatorInputField",
 }
 
-export const ALL_USER_DATA_KEYS = Object.values(USER_DATA_KEYS) as string[];
+export const ALL_STORAGE_KEYS = Object.values(STORAGE_KEYS) as string[];
 
-export const DEFAULT_USER_DATA: UserData = {
+export const DEFAULT_STORAGE_DATA: StorageData = {
   name: "User",
   totalLearnedWords: 0,
   streak: 0,
@@ -42,58 +42,58 @@ export const DEFAULT_USER_DATA: UserData = {
   clearTranslatorInputField: false,
 };
 
-function mapStorageValueToUserData<K extends USER_DATA_KEYS>(key: K, value: string | null): UserData[K] {
-  if (value == null) return DEFAULT_USER_DATA[key];
+function mapValueToData<K extends STORAGE_KEYS>(key: K, value: string | null): StorageData[K] {
+  if (value == null) return DEFAULT_STORAGE_DATA[key];
 
   switch (key) {
-    case USER_DATA_KEYS.TOTAL_LEARNED_WORDS:
-    case USER_DATA_KEYS.STREAK:
-    case USER_DATA_KEYS.REVIEWED_TODAY:
-    case USER_DATA_KEYS.LEARNED_TODAY:
-    case USER_DATA_KEYS.DAILY_GOAL:
-      return Number(value) as UserData[K];
-    case USER_DATA_KEYS.DAILY_GOAL_ACHIEVE:
-    case USER_DATA_KEYS.SOUND_ENABLED:
-    case USER_DATA_KEYS.HAPTICS_ENABLED:
-    case USER_DATA_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY:
-    case USER_DATA_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD:
-      return (value === "true") as UserData[K];
+    case STORAGE_KEYS.TOTAL_LEARNED_WORDS:
+    case STORAGE_KEYS.STREAK:
+    case STORAGE_KEYS.REVIEWED_TODAY:
+    case STORAGE_KEYS.LEARNED_TODAY:
+    case STORAGE_KEYS.DAILY_GOAL:
+      return Number(value) as StorageData[K];
+    case STORAGE_KEYS.DAILY_GOAL_ACHIEVE:
+    case STORAGE_KEYS.SOUND_ENABLED:
+    case STORAGE_KEYS.HAPTICS_ENABLED:
+    case STORAGE_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY:
+    case STORAGE_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD:
+      return (value === "true") as StorageData[K];
     default:
-      return value as UserData[K];
+      return value as StorageData[K];
   }
 }
 
-export async function getUserProp<K extends USER_DATA_KEYS>(key: K): Promise<UserData[K]> {
+export async function getUserProp<K extends STORAGE_KEYS>(key: K): Promise<StorageData[K]> {
   const raw = await Storage.getItem(key);
-  return mapStorageValueToUserData(key, raw);
+  return mapValueToData(key, raw);
 }
 
-export async function getMultipleUserProps<K extends USER_DATA_KEYS>(keys: K[]): Promise<Pick<UserData, K>> {
+export async function getMultipleUserProps<K extends STORAGE_KEYS>(keys: K[]): Promise<Pick<StorageData, K>> {
   const values = await Storage.multiGet(keys);
-  const result = {} as Pick<UserData, K>;
+  const result = {} as Pick<StorageData, K>;
 
   for (const [key, value] of values) {
     const k = key as K;
-    result[k] = mapStorageValueToUserData(k, value);
+    result[k] = mapValueToData(k, value);
   }
   return result;
 }
 
-export async function getAllUserProps(): Promise<UserData> {
-  const values = await Storage.multiGet(ALL_USER_DATA_KEYS);
-  let result: UserData = { ...DEFAULT_USER_DATA };
+export async function getAllUserProps(): Promise<StorageData> {
+  const values = await Storage.multiGet(ALL_STORAGE_KEYS);
+  let result: StorageData = { ...DEFAULT_STORAGE_DATA };
   for (const [key, value] of values) {
-    const enumKey = key as USER_DATA_KEYS;
-    const mapped = mapStorageValueToUserData(enumKey, value);
+    const enumKey = key as STORAGE_KEYS;
+    const mapped = mapValueToData(enumKey, value);
     (result as any)[enumKey] = mapped;
   }
   return result;
 }
 
-export async function setUserProp<K extends USER_DATA_KEYS>(key: K, value: UserData[K]) {
+export async function setUserProp<K extends STORAGE_KEYS>(key: K, value: StorageData[K]) {
   await Storage.setItem(key, String(value));
 }
 
-export async function setMultipleUserProps<K extends USER_DATA_KEYS>(fields: [K, UserData[K]][]) {
+export async function setMultipleUserProps<K extends STORAGE_KEYS>(fields: [K, StorageData[K]][]) {
   await Storage.multiSet(fields.map(([key, value]) => [key, String(value)]));
 }
