@@ -1,7 +1,7 @@
 import { Language, Translation, TranslatorEngine } from "@/src/entity/types";
 import { translationService } from "@/src/service/translationService";
 import * as UserDataStorage from "@/src/storage/userDataStorageHelper";
-import { USER_DATA_KEYS } from "@/src/storage/userDataStorageHelper";
+import { STORAGE_KEYS } from "@/src/storage/userDataStorageHelper";
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../types";
 import { wrapThunk } from "../util/thunkUtils";
@@ -53,9 +53,9 @@ export const initTranslationThunk = createAsyncThunk<{
       async () => {
         const translations = await translationService.getAllTranslations();
         const userProps = await UserDataStorage.getMultipleUserProps([
-          USER_DATA_KEYS.TRANSLATOR_ENGINE,
-          USER_DATA_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY,
-          USER_DATA_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD,
+          STORAGE_KEYS.TRANSLATOR_ENGINE,
+          STORAGE_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY,
+          STORAGE_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD,
         ]);
         return {
           translations,

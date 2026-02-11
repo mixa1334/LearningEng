@@ -8,7 +8,6 @@ import { dateHelper } from "../util/dateHelper";
 
 
 class TranslationService {
-  private readonly MAX_TEXT_LENGTH = 20;
   private readonly TIMEOUT = 7000;
   private readonly FREE_API_TRANSLATOR_URL = "https://api.mymemory.translated.net";
   private readonly YANDEX_TRANSLATOR_URL = "https://dictionary.yandex.net/api/v1/dicservice.json";
@@ -39,16 +38,27 @@ class TranslationService {
     this.translatorEngine = translatorEngine;
   }
 
-  async translateWord(text: string, language: Language): Promise<Translation> {
-    const trimmedText = stringHelper.truncate(stringHelper.trimTextForSaving(text), this.MAX_TEXT_LENGTH);
+  async translateWord(text: string, language: Language, autoSave: boolean = true): Promise<Translation> {
+    const trimmedText = stringHelper.processTextBeforeSaving(text);
     let translatedText: string[];
+
     if (this.translatorEngine === TranslatorEngine.YANDEX_API) {
       translatedText = await this.translateWithYandexApi(trimmedText, language);
     } else {
       translatedText = await this.translateWithFreeApi(trimmedText, language);
     }
-    const newTranslation = { text: trimmedText, text_language: language, translated_array: translatedText };
-    return this.saveTranslation(newTranslation);
+
+    const newTranslation: Translation = {
+      id: 0,
+      text: trimmedText,
+      text_language: language,
+      translated_array: translatedText,
+      translation_date: dateHelper.getCurrentDateTime()
+    };
+    if (autoSave) {
+      return this.saveTranslation(newTranslation);
+    }
+    return newTranslation;
   }
 
   private async translateWithYandexApi(text: string, language: Language): Promise<string[]> {
@@ -66,7 +76,7 @@ class TranslationService {
           //todo: log and throw error
           return [];
         }
-        return def.tr.map((tr: any) => stringHelper.truncate(tr.text, this.MAX_TEXT_LENGTH));
+        return def.tr.map((tr: any) => stringHelper.processTextBeforeSaving(tr.text));
       })
       .catch(() => {
         console.error("Yandex translation API is not available");
@@ -83,8 +93,8 @@ class TranslationService {
     return this.freeApi
       .get("/get", { params })
       .then((response) => {
-        const translatedText = stringHelper.trimTextForSaving(response.data.responseData.translatedText);
-        return [stringHelper.truncate(translatedText, this.MAX_TEXT_LENGTH)];
+        const translatedText = response.data.responseData.translatedText;
+        return [stringHelper.processTextBeforeSaving(translatedText)];
       })
       .catch(() => {
         console.error("Free translation API is not available");
@@ -93,16 +103,17 @@ class TranslationService {
   }
 
   private async saveTranslation(newTranslation: NewTranslationDto): Promise<Translation> {
+    const translationDate = dateHelper.getCurrentDateTime();
     const insertedRow = await getDbInstance().runAsync(
-      `INSERT INTO translations (text, text_language, translated_array) VALUES (?, ?, ?)`,
-      [newTranslation.text, newTranslation.text_language, JSON.stringify(newTranslation.translated_array)]
+      `INSERT INTO translations (text, text_language, translated_array, translation_date) VALUES (?, ?, ?, ?)`,
+      [newTranslation.text, newTranslation.text_language, JSON.stringify(newTranslation.translated_array), translationDate]
     );
     return {
       id: insertedRow.lastInsertRowId,
       text: newTranslation.text,
       text_language: newTranslation.text_language,
       translated_array: newTranslation.translated_array,
-      translation_date: dateHelper.getCurrentDateTime(),
+      translation_date: translationDate,
     };
   }
 
@@ -112,7 +123,7 @@ class TranslationService {
       FROM translations
       ORDER BY translation_date DESC`
     );
-    return translations.map((t) => rowToTranslation(t));
+    return translations.map(rowToTranslation);
   }
 
   async removeTranslation(id: number): Promise<boolean> {

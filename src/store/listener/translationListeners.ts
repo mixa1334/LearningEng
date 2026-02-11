@@ -1,6 +1,6 @@
 import { translationService } from "@/src/service/translationService";
 import * as UserDataStorage from "@/src/storage/userDataStorageHelper";
-import { USER_DATA_KEYS } from "@/src/storage/userDataStorageHelper";
+import { STORAGE_KEYS } from "@/src/storage/userDataStorageHelper";
 import { clearTranslationsAction, initTranslationThunk, removeTranslationAction } from "../slice/translationSlice";
 import { startAppListening } from "./appListener";
 
@@ -26,7 +26,7 @@ export default function initTranslationListeners() {
       listenerApi.cancelActiveListeners();
       const translatorEngine = listenerApi.getState().translation.translatorEngine;
       translationService.setTranslatorEngine(translatorEngine);
-      await UserDataStorage.setUserProp(USER_DATA_KEYS.TRANSLATOR_ENGINE, translatorEngine);
+      await UserDataStorage.setUserProp(STORAGE_KEYS.TRANSLATOR_ENGINE, translatorEngine);
     },
   });
 
@@ -34,7 +34,7 @@ export default function initTranslationListeners() {
     predicate: (_, curr, prev) => curr.translation.deleteTranslationAfterAddingToVocabulary !== prev.translation.deleteTranslationAfterAddingToVocabulary,
     effect: async (_, listenerApi) => {
       const deleteTranslationAfterAddingToVocabulary = listenerApi.getState().translation.deleteTranslationAfterAddingToVocabulary;
-      await UserDataStorage.setUserProp(USER_DATA_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY, deleteTranslationAfterAddingToVocabulary);
+      await UserDataStorage.setUserProp(STORAGE_KEYS.DELETE_TRANSLATION_AFTER_ADDING_TO_VOCABULARY, deleteTranslationAfterAddingToVocabulary);
     },
   });
 
@@ -42,7 +42,7 @@ export default function initTranslationListeners() {
     predicate: (_, curr, prev) => curr.translation.clearTranslatorInputField !== prev.translation.clearTranslatorInputField,
     effect: async (_, listenerApi) => {
       const clearTranslatorInputField = listenerApi.getState().translation.clearTranslatorInputField;
-      await UserDataStorage.setUserProp(USER_DATA_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD, clearTranslatorInputField);
+      await UserDataStorage.setUserProp(STORAGE_KEYS.CLEAR_TRANSLATOR_INPUT_FIELD, clearTranslatorInputField);
     },
   });
 

@@ -8,7 +8,7 @@ import {
   editUserCategory,
   getCategoriesByType,
 } from "@/src/service/categoryService";
-import { WordCriteria, WordCriteriaDTO } from "@/src/service/criteria/impl/WordCriteria";
+import { WordCriteria } from "@/src/service/criteria/impl/WordCriteria";
 import {
   addNewWord,
   deleteAllUserWords,
@@ -20,8 +20,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../types";
 import { loadDailyWordSetThunk } from "./learnSlice";
 import { reloadPracticeThunk, resetPracticeSetThunk } from "./practiceSlice";
-
-const getDefaultCriteria = () => new WordCriteria().appendType(EntityType.useradd).toRedux();
 
 export type VocabularyState = {
   userCategories: Category[];
@@ -35,6 +33,10 @@ const initialVocabularyState: VocabularyState = {
   preloadedCategories: [],
   criteriaDto: getDefaultCriteria(),
   words: [],
+};
+
+const buildPageable = () => {
+  
 };
 
 export const addCategoryThunk = createAsyncThunk<void, NewCategoryDto>(

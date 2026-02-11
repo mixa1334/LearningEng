@@ -1,4 +1,4 @@
-import { updateAfterLearningWord, updateAfterReviewingWord } from "@/src/service/userDataService";
+import { userDataService } from "@/src/service/userDataService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const updateStatsAfterLearnThunk = createAsyncThunk<{
@@ -7,10 +7,10 @@ export const updateStatsAfterLearnThunk = createAsyncThunk<{
   streak: number;
   lastLearningDate: string;
   dailyGoalAchieve: boolean;
-}>("userData/updateStatisticsAfterLearning", async () => await updateAfterLearningWord());
+}>("userData/updateStatisticsAfterLearning", async () => await userDataService.updateAfterLearningWord());
 
 export const updateStatsAfterReviewThunk = createAsyncThunk<{
   reviewedToday: number;
-}>("userData/updateStatisticsAfterReviewing", async () => await updateAfterReviewingWord());
+}>("userData/updateStatisticsAfterReviewing", async () => await userDataService.updateAfterReviewingWord());
 
 
